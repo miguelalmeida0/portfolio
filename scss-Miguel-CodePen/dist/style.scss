@@ -1,0 +1,55 @@
+$primary-color: #112055;
+$primary-background-color: #112055;
+$primary-background-color-lighter:lighten($primary-background-color, 20%);
+$primary-background-color-darker: darken($primary-background-color, 20%);
+$secondary-background-color: #4f9d92;
+$hover-color: lighten($primary-background-color, 80%);
+$primary-text-color: #fff;
+$secondary-text-color: #000;
+
+.box__wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 20px;
+  padding: 20px;
+  font-family: sans-serif;
+}
+
+%box-style {
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 4px 3px 19px 0px rgba(0,0,0,0.3);
+  text-align: center;
+  &:hover {
+   box-shadow: none;
+    
+  }
+}
+
+
+.box-primary {
+  @extend %box-style;
+  background-color: $primary-color;
+  color: $primary-text-color;
+}
+
+
+.box-primary-lighter {
+@extend %box-style;
+  background-color: $primary-background-color-lighter;
+  color: $primary-text-color;
+  
+}
+
+.box-primary-darker {
+  @extend %box-style;
+  background-color: $primary-background-color-darker;
+  color: $primary-text-color
+}
+  
+  
+.box-secondary {
+ @extend %box-style;
+  background-color: $secondary-background-color;
+  color: $secondary-text-color;
+}
