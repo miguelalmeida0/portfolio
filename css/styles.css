@@ -97,7 +97,8 @@ header {
     font-weight: var(--font-weight-text);
     font-size: var(--header-size);  
     display: inline-block;
-    margin-left: 15px;   
+    margin-left: 50px;   
+    margin-bottom: 20px;
     display:table; 
     color:rgba(255, 255, 255, 0.568);
    
