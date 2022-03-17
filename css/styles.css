@@ -126,8 +126,6 @@ nav a:hover {
   height: 300px;
   object-fit: cover;
   border-radius: 50%;
-  -webkit-animation: fadeInRight 2s;
-  animation: fadeInRight 2s;
 }
 
 h1 {
