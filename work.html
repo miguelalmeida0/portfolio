@@ -5,14 +5,13 @@
   <!-- This is the title of my Portfolio! My logo is a little Penguin.-->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>More about Miguel Almeida</title>
+  <title>Work by Miguel Almeida</title>
   <link rel="shortcut icon" href="img/Logo10.svg" sizes="150x150">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
   <link
     rel="stylesheet"
@@ -23,13 +22,15 @@
   </head>
 
   <body>
-    <!-- The logo "and the navigation need to be here!-->
+    <div id="bg-image">
     <header class="page-header">
       <div class="profile">
         <br>
         <nav>
+          <div class="animation-header">
           <ul role="menubar" style="list-style-type:none">
-            <li role="presentation">   <a class="active" href="index.html"><i class="fa fa-fw fa-home"></i></a>
+            <li role="presentation"> <a href="index.html" class="logo-no"><img src="img/Logo10.svg" width="100"
+                  height="40" alt="Website-Logo"></a>
             </li>
             <li role="presentation"><a href="index.html" role="menuitem" class="nav-link">Home</a>
             </li>
@@ -41,6 +42,7 @@
               <a href="contact.html" role="menuitem" class="nav-link">Contact</a>
             </li>
           </ul>
+        </div>
           <br>
         </nav>
       </div>
@@ -48,16 +50,25 @@
     </header>
 
     <section>
-      <div class="animation1">
-        <h1> Work</h1>
-      </div>
+
+        <h1 class="title"> Work</h1>
+
 
         <div class="grid">
-
             <div class="grid_item">
-                <h2 class="title-box">Sadly no project!</h2>
-                <p class="grid-paragraph">I still don't have any projects, so these ones will remain black for now. But i've had tons of fun building these containers!</p>
+              <a href="https://miguelalmeida0.github.io/meet/">
+                <h2>Meet App</h2>
+            </a>
+                <a href="https://miguelalmeida0.github.io/meet/">
+                <img class="portfolio_img" alt="Screen shot of Meet App's main view"  src="img/meetAppScreen.png">
+              </a>
+                <p class="grid-paragraph">"Meet App is a serverless, progressive Web Apllication (PWA) built with React using a test-driven development (TDD) technique. This app uses the Google Calendar API to fetch upcoming events"</p>
+                <p>Created with: JavaScript, HTML, CSS, React, AWS Lambda, Serverless</p>
+                <a href="https://github.com/miguelalmeida0/meet"> View code on GitHub </a>
+                <br><br>
+                <a href="https://miguelalmeida0.github.io/meet/"> View App </a>
                 <a href="#"></a>
+                
             </div>
 
             <div class="grid_item">
