@@ -152,11 +152,6 @@ nav a:hover {
   box-shadow: 5px 4px 3px;
 }
 
-.round-image:hover {
-  -webkit-animation: headShake 4s;
-  animation: headShake 4s;
-}
-
 .round-image2 {
   text-align: center;
   width: 500px;
