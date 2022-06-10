@@ -522,8 +522,8 @@ button:focus,
   margin-top: 50px;
 }
 
-.case-study-button {
-  border-radius: 8px;
+.case-button {
+  border-radius: 15px;
 }
 
 @media screen and (min-width: 576px) {
