@@ -13,7 +13,7 @@
 
   /* Area for the font */
   --font-size: 16px;
-  --header-size: 20px;
+  --header-size: 18px;
   --h1-size: 40px;
   --font-weight-text: 200;
   --font-weight-header: 100;
@@ -28,6 +28,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -58,6 +59,11 @@ body {
 
 @media (max-width: 991px) {
   body.custom-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
     background-size: contain;
     background-position: center;
   }
@@ -88,7 +94,7 @@ header {
 }
 
 .less-width {
-  margin: 50px;
+  margin: 20px;
   font-size: 18px;
 }
 
@@ -139,6 +145,37 @@ nav a:hover {
   display: inline-block;
 }
 
+.about-text {
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+}
+
+.about-me {
+  margin: 20px 20px 0 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.away-top {
+  margin-top: 30px;
+  text-align: center;
+  margin-right: 100px;
+  margin-left: 100px;
+}
+
+.black {
+  color: rgb(255, 168, 68);
+}
+
+.thumb {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.bigger {
+  font-size: 20px;
+}
 .contact-header {
   display: inline-block;
 }
@@ -407,6 +444,122 @@ button:focus,
   opacity: 0.8;
 }
 
+/* Case Study Area */
+
+#wrapper-case {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20%;
+  padding: 45px;
+  width: 100%;
+  display: grid;
+  max-width: 80%;
+  clear: both;
+}
+
+@media (max-width: 600px) {
+  #wrapper-case {
+    float: none;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.case-study-text-title {
+  width: 40%;
+  font-size: 14px;
+  text-align: center;
+}
+
+.simplicity-center {
+  font-size: 14px;
+  text-align: center;
+  text-justify: auto;
+}
+
+.simplicity-left {
+  font-size: 14px;
+  text-align: left;
+  text-justify: auto;
+}
+
+.case-study-img-right {
+  float: right;
+  clear: left;
+  height: 250px;
+  width: 350px;
+  box-shadow: 6px 5px 15px;
+  margin-right: 20px;
+  margin-left: 30px;
+  position: relative;
+  margin-bottom: 20px;
+  border-radius: 13px;
+}
+
+.case-text {
+  font-size: 14px;
+  text-align: left;
+}
+
+.case-study-title {
+  text-align: left;
+}
+
+.case-study-img-left {
+  float: left;
+  clear: right;
+  height: 250px;
+  width: 350px;
+  box-shadow: -6px 5px 15px;
+  margin-right: 30px;
+  margin-left: 30px;
+  margin-bottom: 20px;
+  border-radius: 13px;
+}
+
+.study-space {
+  margin-top: 50px;
+}
+
+.case-study-button {
+  border-radius: 8px;
+}
+
+@media screen and (min-width: 576px) {
+  .wrapper-case {
+    padding: 5em 0.5em 1em;
+    justify-content: center;
+    justify-items: center;
+  }
+}
+
+/* UX Area */
+
+.ux-images {
+  align-items: center;
+  padding: 20px;
+}
+
+.container_text {
+  float: center;
+  margin-bottom: 50px;
+  margin-top: 20px;
+  width: 100%;
+  align-items: center;
+}
+
+.about-text-size {
+  font-size: 18px;
+}
+
+.container_text_notop {
+  float: center;
+  margin-top: 0;
+  margin-bottom: 50px;
+  width: 100%;
+  align-items: center;
+}
 /* ANIMATIONS */
 
 @keyframes color-change {
@@ -494,6 +647,7 @@ button:focus,
   box-shadow: 3px 3px 2px;
   -webkit-animation: fadeInDown 2s;
   animation: fadeInDown 2s;
+  margin: 10px;
 }
 
 /* Area for the Languages */
