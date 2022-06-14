@@ -117,6 +117,12 @@ header {
   text-decoration: none;
 }
 
+#about-me {
+  transition: var(--transition-speed);
+  list-style: none;
+  text-decoration: none;
+}
+
 .title {
   font-size: 32px;
   color: var(--white);
@@ -159,13 +165,126 @@ nav a:hover {
 
 .away-top {
   margin-top: 30px;
-  text-align: center;
+  text-align: justify;
   margin-right: 100px;
   margin-left: 100px;
 }
 
+.hero-image {
+  box-shadow: 0px 15px 30px;
+  justify-content: center;
+  margin-bottom: 60px;
+  width: 300px;
+  height: 300px;
+  display: grid;
+  transition: transform 0.25s ease;
+  cursor: zoom-in;
+  text-align: center;
+  max-width: 100%;
+  max-height: 100%;
+  vertical-align: middle;
+  object-fit: contain;
+}
+
+.hero-image2 {
+  box-shadow: 0px 15px 30px;
+  justify-content: center;
+  margin-bottom: 60px;
+  width: 50%;
+  display: grid;
+  transition: transform 0.25s ease;
+  cursor: zoom-in;
+  text-align: center;
+  max-width: 100%;
+  max-height: 100%;
+  vertical-align: middle;
+}
+
+.hero-image:active {
+  -webkit-transform: scale(2);
+  transform: scale(2);
+  cursor: zoom-out;
+}
+
+.hero-image2:active {
+  -webkit-transform: scale(2);
+  transform: scale(2);
+  cursor: zoom-out;
+}
+
+.hero-image > * {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  box-shadow: 10px 18px 30px;
+}
+
+#hero-group {
+  border-radius: 10px;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  display: grid;
+  gap: 0.125rem;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.table,
+.index-table,
+td {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 100px;
+  border-collapse: collapse;
+  box-shadow: 6px 5px 15px;
+  font-family: var(--font-family);
+  padding: 15px 18px;
+  font-weight: var(--font-weight-text);
+  letter-spacing: 0.1em;
+  max-width: 95vw;
+  border-radius: 3px;
+}
+
+.header-table {
+  width: 100%;
+}
+
+.goals {
+  color: white;
+  font-size: 14px;
+  width: 100%;
+  padding: 10px;
+  text-align: justify;
+  letter-spacing: 0cm;
+}
+
+.goals-title {
+  text-align: left;
+  color: rgb(255, 168, 68);
+}
+
+.goals-back {
+  color: white;
+  text-align: left;
+  font-size: 14px;
+  width: 70%;
+  list-style: circle;
+  margin-bottom: 100px;
+  padding: 10px;
+}
+
+.goals-front {
+  color: white;
+  text-align: left;
+  font-size: 14px;
+  width: 70%;
+  list-style: circle;
+  margin-bottom: 100px;
+  padding: 10px;
+}
+
 .black {
   color: rgb(255, 168, 68);
+  text-align: justify;
 }
 
 .thumb {
@@ -187,6 +306,17 @@ nav a:hover {
   object-fit: contain;
   border-radius: 50%;
   box-shadow: 5px 4px 3px;
+}
+
+.round-wrapper {
+  transition: transform 0.25s ease;
+  cursor: zoom-in;
+}
+
+.round-wrapper:active {
+  -webkit-transform: scale(1.5);
+  transform: scale(1.5);
+  cursor: zoom-out;
 }
 
 .round-image2 {
@@ -325,7 +455,6 @@ ul {
 }
 
 ul li + li {
-  margin-left: 10px;
   list-style: none;
 }
 
@@ -343,12 +472,11 @@ td {
   margin-right: auto;
   border: 1px solid var(--black);
   border-collapse: collapse;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 15 60px rgba(241, 234, 234, 0.1);
   font-family: var(--font-family);
   padding: 15px 18px;
   font-weight: var(--font-weight-text);
   letter-spacing: 0.1em;
-  overflow: scroll;
   max-width: 95vw;
   background-color: var(--background-color);
 }
@@ -451,10 +579,12 @@ button:focus,
   margin-right: auto;
   margin-bottom: 20%;
   padding: 45px;
-  width: 100%;
+  width: 70%;
   display: grid;
-  max-width: 80%;
+  max-width: 70%;
   clear: both;
+  font-family: "open sans", sans-serif;
+  letter-spacing: 0cm;
 }
 
 @media (max-width: 600px) {
@@ -472,16 +602,35 @@ button:focus,
   text-align: center;
 }
 
-.simplicity-center {
-  font-size: 14px;
+.title-case {
+  font-size: 32px;
+  color: var(--white);
+  margin-bottom: 50px;
   text-align: center;
-  text-justify: auto;
+}
+
+.simplicity-center {
+  font-size: 18px;
+  text-align: center;
+  letter-spacing: 0cm;
+}
+
+.simplicity-center-text {
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 15px;
 }
 
 .simplicity-left {
   font-size: 14px;
-  text-align: left;
-  text-justify: auto;
+  text-align: center;
+  margin-bottom: 15px;
+  float: none;
+}
+
+.simplicity-left-title {
+  font-size: 18px;
+  text-align: center;
 }
 
 .case-study-img-right {
@@ -489,17 +638,57 @@ button:focus,
   clear: left;
   height: 250px;
   width: 350px;
-  box-shadow: 6px 5px 15px;
+  box-shadow: 6px 5px 15px black;
   margin-right: 20px;
   margin-left: 30px;
   position: relative;
   margin-bottom: 20px;
   border-radius: 13px;
+  transition: transform 0.25s ease;
+  cursor: zoom-in;
+}
+
+.case-study-img-right:active {
+  -webkit-transform: scale(2);
+  transform: scale(2);
+  cursor: zoom-out;
+}
+
+.case-study-img-left:active {
+  -webkit-transform: scale(2);
+  transform: scale(2);
+  cursor: zoom-out;
+}
+
+.case-study-img-right-space {
+  float: center;
+
+  height: 250px;
+  width: 350px;
+  box-shadow: -6px 1px 15px black;
+  margin-right: 20px;
+  margin-left: 60px;
+  margin-bottom: 60px;
+  margin-top: 60px;
+  border-radius: 13px;
+  transition: transform 0.25s ease;
+  cursor: zoom-in;
+
+  display: grid;
+  justify-content: center;
+}
+
+.case-study-img-right-space:active {
+  -webkit-transform: scale(2);
+  transform: scale(2);
+  cursor: zoom-out;
 }
 
 .case-text {
   font-size: 14px;
   text-align: left;
+  color: white;
+  text-align: justify;
 }
 
 .case-study-title {
@@ -511,15 +700,35 @@ button:focus,
   clear: right;
   height: 250px;
   width: 350px;
-  box-shadow: -6px 5px 15px;
+  box-shadow: -6px 1px 15px rgba(255, 255, 255, 0.548);
   margin-right: 30px;
   margin-left: 30px;
   margin-bottom: 20px;
   border-radius: 13px;
+  transition: transform 0.25s ease;
+  cursor: zoom-in;
+}
+
+.case-study-img-left:active {
+  -webkit-transform: scale(2);
+  transform: scale(2);
+  cursor: zoom-out;
 }
 
 .study-space {
-  margin-top: 50px;
+  margin-top: 20px;
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+.debugging {
+  margin-top: 15px;
+}
+
+.credits-text {
+  margin-bottom: 150px;
+  font-size: 14px;
+  text-align: justify;
 }
 
 .case-button {
