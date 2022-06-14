@@ -17,22 +17,23 @@
   --h1-size: 40px;
   --font-weight-text: 200;
   --font-weight-header: 100;
-  --font-family: "open sans", sans-serif;
+  --font-family: "Poppins", sans-serif;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  font-family: "Poppins", sans-serif;
 }
 
 body {
-  font-family: var(--font-family);
   font-weight: var(--font-weight-text);
   font-size: var(--font-size);
   line-height: 1.6;
@@ -44,6 +45,7 @@ body {
   background-blend-mode: darken;
   background-size: cover;
   background-attachment: fixed;
+  font-family: "Poppins", sans-serif;
 }
 
 body {
@@ -88,6 +90,7 @@ header {
   text-align: center;
   font-weight: var(--font-weight-text);
   font-size: var(--header-size);
+  font-family: "Poppins", sans-serif;
   margin-left: 15px;
   display: table;
   color: rgba(255, 255, 255, 0.568);
@@ -333,7 +336,7 @@ td {
 }
 
 h1 {
-  font-family: var(--font-family);
+  font-family: "Poppins", sans-serif;
   font-weight: var(--font-weight-header);
   font-size: var(--h1-size);
   line-height: 1.6;
@@ -344,15 +347,15 @@ h1 {
 h2,
 h3 {
   font-size: var(--header-size);
+  font-family: "Poppins", sans-serif;
   text-align: center;
   letter-spacing: 2px;
   color: var(--white);
   font-weight: var(--font-weight-header);
-  font-family: "open sans", sans-serif;
 }
 
 p {
-  font-family: var(--font-family);
+  font-family: "Poppins", sans-serif;
   font-weight: var(--font-weight-text);
   font-size: 14px;
   line-height: 1.6;
@@ -422,7 +425,7 @@ input {
 }
 
 .color {
-  font-family: "open sans", sans-serif;
+  font-family: "Poppins", sans-serif;
   color: white;
 }
 
@@ -583,7 +586,7 @@ button:focus,
   display: grid;
   max-width: 70%;
   clear: both;
-  font-family: "open sans", sans-serif;
+  font-family: "Poppins", sans-serif;
   letter-spacing: 0cm;
 }
 
@@ -623,9 +626,17 @@ button:focus,
 
 .simplicity-left {
   font-size: 14px;
-  text-align: center;
+  text-align: justify;
   margin-bottom: 15px;
   float: none;
+}
+
+.simplicity-left-list {
+  font-size: 14px;
+  text-align: justify;
+  margin-bottom: 15px;
+  float: none;
+  list-style: circle;
 }
 
 .simplicity-left-title {
