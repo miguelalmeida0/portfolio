@@ -91,9 +91,13 @@ header {
   font-weight: var(--font-weight-text);
   font-size: var(--header-size);
   font-family: "Poppins", sans-serif;
-  margin-left: 15px;
+  margin-left: 20px;
   display: table;
   color: rgba(255, 255, 255, 0.568);
+  overflow-y: hidden;
+  min-height: 50px;
+  transition: height 0.66s ease-out;
+  height: 30px;
 }
 
 .less-width {
@@ -121,7 +125,7 @@ header {
 }
 
 #about-me {
-  transition: var(--transition-speed);
+  transition-duration: 5s;
   list-style: none;
   text-decoration: none;
 }
@@ -145,13 +149,25 @@ nav a:hover {
 }
 
 .animation-header {
-  display: inline-block;
+  display: block;
   -webkit-animation: fadeInDown 1s;
   animation: fadeInDown 1s;
 }
 
-.about-header {
-  display: inline-block;
+.animation-header {
+  display: block;
+  -webkit-animation: fadeInDown 1s;
+  animation: fadeInDown 1s;
+  scroll-behavior: smooth;
+  height: 30px;
+  overflow-y: hidden;
+}
+
+.animation-header-no {
+  display: block;
+  scroll-behavior: smooth;
+  height: 30px;
+  overflow-y: hidden;
 }
 
 .about-text {
@@ -164,6 +180,16 @@ nav a:hover {
   margin: 20px 20px 0 0;
   align-items: center;
   justify-content: center;
+}
+
+.page-header {
+  margin: 0px;
+  margin: 0;
+  padding: 0;
+  overflow-y: hidden;
+  min-height: 50px;
+  transition: height 0.66s ease-out;
+  height: 30px;
 }
 
 .away-top {
