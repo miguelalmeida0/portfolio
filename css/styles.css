@@ -415,6 +415,10 @@ image {
   animation-duration: 1.5s;
 }
 
+.impressum {
+  margin-bottom: 200px;
+}
+
 html,
 body {
   margin: 0;
