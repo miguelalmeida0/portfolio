@@ -777,6 +777,13 @@ button:focus,
   border-radius: 15px;
 }
 
+.case-button1 {
+  border-radius: 15px;
+  margin-bottom: 50px;
+  justify-content: center;
+  width: 170px;
+}
+
 @media screen and (min-width: 576px) {
   .wrapper-case {
     padding: 5em 0.5em 1em;
