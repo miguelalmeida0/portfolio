@@ -378,16 +378,7 @@ td {
   box-shadow: 5px 4px 3px;
 }
 
-.round-wrapper {
-  transition: transform 0.25s ease;
-  cursor: zoom-in;
-}
 
-.round-wrapper:active {
-  -webkit-transform: scale(1.5);
-  transform: scale(1.5);
-  cursor: zoom-out;
-}
 
 .round-image2 {
   text-align: center;
