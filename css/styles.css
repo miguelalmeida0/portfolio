@@ -129,6 +129,7 @@ header {
   list-style: none;
   text-decoration: none;
   display: block;
+  color: rgb(255, 255, 255);;
 }
 
 #about-me {
