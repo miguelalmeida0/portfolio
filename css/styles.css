@@ -25,12 +25,14 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
+  word-spacing: .15em;
 }
 
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
   font-family: "Poppins", sans-serif;
+  word-spacing: .15em;
 }
 
 body {
@@ -46,6 +48,7 @@ body {
   background-size: cover;
   background-attachment: fixed;
   font-family: "Poppins", sans-serif;
+  word-spacing: .15em;
 }
 
 body {
@@ -57,6 +60,7 @@ body {
     /* bottom, image */
       url("https://images.unsplash.com/photo-1513569771920-c9e1d31714af?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80");
   background-size: 2000px 830px;
+  word-spacing: .15em;
 }
 
 @media (max-width: 991px) {
@@ -788,6 +792,7 @@ font-weight:700;
 font-size:25px;
 margin-bottom:20px;
 color: white;
+word-spacing: 0px;
 }
 .section-container .columns.content .content-container p
 {
@@ -795,7 +800,9 @@ font-weight:400;
 font-size:14px;
 margin-bottom:20px;
 margin-bottom:15px;
-text-align:justify;
+text-align: left;
+word-spacing: 0px;
+
 }
 @media screen and (max-width:767px)
 {
