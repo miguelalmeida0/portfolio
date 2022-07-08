@@ -414,13 +414,18 @@ h3 {
 
 .card {
   border: 5px solid rgb(0, 0, 0);
-  height: 650px;
+  height: 680px;
   margin-top: 40px;
   padding: 30px;
   margin-bottom: 20px;
   grid-template-columns: 1fr 1fr;
   grid-gap: 20px;
   color: black;
+  min-width: 300px;
+}
+
+.card-img-top {
+  height: 170px;
 }
 
 .card-text {
@@ -855,7 +860,7 @@ th {
 /* Area for the Buttons */
 
 a {
-  color: var(--active-link);
+  color: rgb(190, 190, 231);
 }
 
 a:visited {
