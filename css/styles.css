@@ -44,7 +44,7 @@ body {
   background-color: var(--background-color);
   flex-direction: column;
   margin: auto;
-  background-image: url("https://images.unsplash.com/photo-1579802063117-87cd2ad50a88?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=928&q=80");
+  background-image: url("https://images.unsplash.com/photo-1608311820732-36092cc3470a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1227&q=80");
   background-blend-mode: darken;
   background-size: cover;
   background-attachment: fixed;
@@ -60,8 +60,8 @@ body {
       rgba(0, 0, 0, 0.3)
     ),
     /* bottom, image */
-      url("https://images.unsplash.com/photo-1579802063117-87cd2ad50a88?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=928&q=80");
-  background-size: 1700px 1700px;
+      url("https://images.unsplash.com/photo-1562814830-8286a3397045?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=830&q=80");
+  background-size: 1700px 2300px;
   word-spacing: .15em;
   
 }
@@ -145,11 +145,51 @@ header {
   list-style: none;
   text-decoration: none;
   font-size: 16px;
+
 }
 
 .title {
   font-size: 32px;
   color: var(--white);
+  margin-top: 100px;
+}
+
+.animation-image:hover {
+  -webkit-animation: headShake 4s;
+  animation: headShake 4s;
+}
+
+.animation-image-main {
+
+  animation: fade-up 800ms 200ms backwards;
+}
+
+.animation-text-main {
+  animation: fade-up 650ms 400ms backwards;
+}
+
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animation-text-after {
+  -webkit-animation: fadeIn 3s;
+  --animate-duration: fadeIn 3s;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.animation-arrow:hover {
+  -webkit-animation: bounceOutDown 4s;
+  animation: bounceOutDown 4s;
+
 }
 
 .logo-no:hover {
@@ -194,8 +234,13 @@ nav a:hover {
 
 .about-me {
   margin: 20px 20px 0 0;
+  margin-bottom: 100px;
   align-items: center;
   justify-content: center;
+}
+
+.img-nav {
+  color: white;
 }
 
 .page-header {
@@ -209,23 +254,35 @@ nav a:hover {
 }
 
 .away-top {
-  margin-top: 30px;
   text-align: left;
   font-size: 16px;
   margin-right: 100px;
   margin-left: 100px;
 }
 
-.away-top {
-  margin-top: 30px;
-  text-align: left;
+.away-top-center {
+  text-align: center;
   font-size: 16px;
   margin-right: 100px;
   margin-left: 100px;
+}
+
+.miguel-center {
+  text-align: center;
+}
+
+.computer-no-background {
+  text-align: center;
+  align-items: center;
+}
+
+.computer-background {
+  text-align: center;
+  align-items: center;
 }
 
 .away-top2 {
-  margin-top: 30px;
+  margin-top: 50px;
   text-align: center;
   margin-right: 100px;
   margin-left: 100px;
@@ -283,6 +340,7 @@ nav a:hover {
   border-radius: 50%;
 }
 
+
 #hero-group {
   border-radius: 10px;
   align-items: center;
@@ -292,6 +350,10 @@ nav a:hover {
   gap: 0.125rem;
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
 }
+
+/*#languages {
+  background-color: #ffffff;
+} */
 
 .table,
 .index-table,
@@ -353,7 +415,37 @@ td {
   justify-content: center;
   align-items: center;
   font-weight: 600;
+  font-size: 18px;
 
+}
+
+.black1 {
+  color: rgb(255, 255, 255);
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 18px;
+border-radius: 5%;
+}
+
+.black-text {
+  color: rgb(0, 0, 0);
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 18px;
+border-radius: 5%;
+font-size: 22px;
+font-family: "Poppins", sans-serif;
+text-align: center;
+letter-spacing: 1px;
+font-weight: var(--font-weight-header);
+}
+
+.language__name {
+  color: black;
 }
 
 .thumb {
@@ -378,12 +470,12 @@ td {
 
 .round-image {
   text-align: center;
-  width: 300px;
-  height: 300px;
-  object-fit: contain;
+  width: 400px;
+  height: 400px;
+  object-fit:cover;
   border-radius: 50%;
-  border: 7px solid #cac0c091;
-  box-shadow: 5px 4px 3px;
+  border: 1px solid #FAF8F6;
+  box-shadow: 6px 5px 7px #000000;
 }
 
 
@@ -412,7 +504,7 @@ h1 {
 
 h2,
 h3 {
-  font-size: var(--header-size);
+  font-size: 22px;
   font-family: "Poppins", sans-serif;
   text-align: center;
   letter-spacing: 1px;
@@ -422,8 +514,8 @@ h3 {
 
 .card {
   border: 5px solid rgb(0, 0, 0);
-  height: 750px;
-  margin-top: 40px;
+  height: 860px;
+  margin-top: 5px;
   padding: 30px;
   margin-bottom: 20px;
   grid-template-columns: 1fr 1fr;
@@ -433,7 +525,10 @@ h3 {
 }
 
 .card-img-top {
-  height: 170px;
+  height: 180px;
+  max-height: 180px;
+  min-height: 180px;
+
 }
 
 .card-text {
@@ -442,6 +537,7 @@ h3 {
 
 .btn {
   margin-bottom: 5px;
+  background-color: #222C22;
 
 }
 
@@ -452,9 +548,28 @@ h3 {
   width: 80%;
 }
 
+.container-initial {
+
+  margin-top: 150px;
+  margin-bottom: 100px;
+  margin-left: 50px;
+  margin-right: 50px;
+  color: white;
+
+
+}
+
+.container-initial-sub {
+  margin-top: 100px;
+  margin-bottom: 100px;
+  color: white;
+
+}
+
 .svg-text {
   text-align: center;
   padding: 20px;
+  font-size: 16px;
 }
 
 .svg-img {
@@ -472,7 +587,7 @@ h3 {
 p {
   font-family: "Poppins", sans-serif;
   font-weight: var(--font-weight-text);
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
   letter-spacing: 1px;
   color: var(--white);
@@ -484,7 +599,9 @@ p {
 
 .auto-type {
   color: #ffffff;
-  font-weight: 900
+  font-weight: 900;
+  background-color: #514541;
+
 }
 
 .font-email {
@@ -514,11 +631,19 @@ image {
   border-radius: 10%;
 }
 
+
 .social-media {
   text-decoration: none;
 }
 
+
 .social-media:hover {
+  animation: jello 4s;
+  transition: all 2s ease-in;
+  animation-duration: 1.5s;
+}
+
+.social-media-top:hover {
   animation: jello 4s;
   transition: all 2s ease-in;
   animation-duration: 1.5s;
@@ -657,7 +782,7 @@ textarea {
 .btn {
   width: 100%;
   padding: 0.5rem 1rem;
-  background-color: #3f4b41;
+  background-color: #514541;
   color: #fff;
   font-size: 1.1rem;
   border: none;
@@ -667,7 +792,7 @@ textarea {
 }
 
 .btn:hover {
-  background-color: #27ae60;
+  background-color: #A27C76;
 }
 
 .field:focus {
@@ -703,6 +828,10 @@ body {
   overflow-x: hidden;
   scroll-behavior: smooth;
 }
+
+
+
+
 
 /* This are is CSS for the forms */
 
@@ -783,7 +912,10 @@ li {
 display: flex;
 flex-wrap: wrap;
 margin-top: 40px;
+margin-left: 50px;
+margin-right: 50px;
 margin-bottom: 100px;
+min-width: 300px;
 }
 .section-container .columns
 {
@@ -795,11 +927,11 @@ width:50%;
 background-position:center;
 background-repeat:no-repeat;
 background-size:cover;
-height: 350px;
-min-height: 300px;
+min-height: 350px;
 border-radius:2%;
-
+box-shadow: 3px 5px 7px #000000;
 }
+
 .section-container .columns.content .content-container
 {
 padding:40px 50px;
@@ -818,7 +950,7 @@ font-weight:400;
 font-size:16px;
 margin-bottom:20px;
 margin-bottom:15px;
-text-align: left;
+
 word-spacing: 0px;
 
 }
@@ -851,6 +983,19 @@ margin-bottom:5px;
 }
 }
 
+.section-container-center
+{
+--bs-gutter-x: 1.5rem;
+--bs-gutter-y: 0;
+
+width:40%;
+align-items: center;
+justify-content: center;
+flex-wrap: wrap;
+margin-top: 40px;
+margin-bottom: 100px;
+min-width: 400px;
+}
 
 /* Area For the table */
 
@@ -882,7 +1027,7 @@ th {
 /* Area for the Buttons */
 
 a {
-  color: rgb(190, 190, 231);
+  color: rgb(224, 224, 224);
 }
 
 a:visited {
@@ -959,6 +1104,7 @@ button:focus,
 
   /* reduces the opacity of the button to 80% */
   opacity: 0.8;
+  
 }
 
 /* Case Study Area */
@@ -1134,9 +1280,14 @@ button:focus,
 
 .case-button1 {
   border-radius: 15px;
-  margin-bottom: 50px;
+  margin-bottom: 150px;
   justify-content: center;
   width: 170px;
+  background-color: #514541;
+}
+
+.case-button1:hover {
+  background-color: #A27C76;
 }
 
 @media screen and (min-width: 576px) {
@@ -1408,6 +1559,7 @@ button:focus,
   display: flex;
   justify-content: center;
   position: relative;
+
 }
 
 .language:hover .language__img {
@@ -1423,7 +1575,7 @@ button:focus,
   transition: all 300ms;
   font-size: 15px;
   opacity: 0;
-  color: white;
+  color: rgb(0, 0, 0);
 }
 .language:hover .language__name {
   transform: scale(1);

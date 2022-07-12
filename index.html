@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Miguel's Portfolio</title>
-  <link rel="shortcut icon" href="img/dummy.png" sizes="150x150">
+  <link rel="shortcut icon" href="https://images.unsplash.com/photo-1532007271951-c487760934ae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1160&q=80" sizes="150x150">
   	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" >
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
@@ -27,7 +27,7 @@
   />
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
   
   <link rel="stylesheet" type="text/css" href="css/styles.css">
 
@@ -70,7 +70,9 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="nav justify-content-center">
       <li class="nav-item">
-        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="index.html">  <img
+        src="https://images.unsplash.com/photo-1532007271951-c487760934ae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1160&q=80"
+        alt="Html Logo" class="img-nav" height="23" width="23" /></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#about-me">About Me</a>
@@ -106,25 +108,34 @@
 
 
 
- <div class="container">
+ <div class="container-initial">
   <div class="row">
     <div class="col">
+      <div class="animation-image-main">
       <img class="round-image"
-      src="img/NewPicture.jpeg" height="400" width="400"/>
+      src="img/new2.png" height="400" width="400"/>
+    </div>
     
     </div>
     <div class="col">
       <br><br><br><br>
-     <h2 class="h2-header">Hello, my name is Miguel Almeida</h2><h1 class="h2-header">I'm <span class="auto-type"></span></h1></h2> 
-    <span class="h2-header">Fluent in HTML, CSS, Javascript, React and Node.js.</span>
+      <div class="animation-text-main">
+     <h2 class="h2-header">Hello, my name is Miguel Almeida</h2><h1 class="h2-header">
+ 
+     I'm <span class="auto-type"></span></h1></h2> 
+     <span class="h2-header"><br>I am a Full-Stack Web-Developer with a background in aviation.</span>
+    <span class="h2-header"><br>Fluent in HTML, CSS, Javascript, React and Node.js.</span>
+    <br><br>
+    <a href="https://www.linkedin.com/in/miguel-ramos-almeida-36ab63b4/" class="social-media"  > <img src="img/linkedin.svg" height="40" width="40" alt="Linkedin Logo" class="social-media">
+    </a>
+      <a href="https://github.com/miguelalmeida0" class="social-media"> <img src="img/github.svg" height="32" width="32" alt="Instagram Logo" class="social-media">
+      </a>
     </div>
     
   </div>
  
  <br><br><br>
-  <h2 class="h2-header">My main goal is to develop websites and apps that can help human beings, in a company with great onboarding.
-  </h2> 
-
+  
 <script>
 let typed = new Typed(".auto-type", {
   strings:["a Web Developer based in Berlin.", "a UX Designer based in Berlin."] ,
@@ -138,6 +149,18 @@ let typed = new Typed(".auto-type", {
 </span>
 </div>
 
+<br><br>
+<div class="container-initial-sub">
+  <div class="row">
+    <div class="col">
+      <div class="animation-text-after">
+        <h2 class="h2-header">Computer lover, UX Designer, Music producer.</h2>
+<h2 class="h2-header">Fascinated about learning, my main goal is to develop websites and apps that can help human beings, in a company with great onboarding.
+</div>
+</h2> 
+</div>
+</div>
+</div>
 
 
 
@@ -145,10 +168,11 @@ let typed = new Typed(".auto-type", {
 <a href="img/Miguel_Almeida_Web_Developer.pdf" target="_blank" rel="noopener noreferrer"><button class="case-button1">Download my CV</button></a>
   
 
-</div>
+
 <br><br>
-  <h2>My Languages:</h2>
-  <section id="languages">
+<section id="languages">
+
+
     <div class="container">
       <div class="row">
  <section class="language_background">
@@ -187,7 +211,7 @@ let typed = new Typed(".auto-type", {
       <img src="https://cdn.iconscout.com/icon/free/png-256/react-3-1175109.png" alt="React Logo"
         class="language__img" />
     </figure>
-    <span class="language__name">React / React Native</span>
+    <span class="language__name">React</span>
   </div>
   
   <div class="language">
@@ -218,16 +242,11 @@ let typed = new Typed(".auto-type", {
     </figure>
     <span class="language__name">Express</span>
   </div>
-  <div class="language">
-    <figure class="language__img--wrapper">
-      <img src="img/figma.png" alt="Figma Logo"
-        class="language__img" />
-    </figure>
-    <span class="language__name">Figma</span>
-  </div>
+
 </div>
+
 </div>
-</div>
+
 
 </section>
  </section>
@@ -236,43 +255,186 @@ let typed = new Typed(".auto-type", {
  <div id="about-me">
  <h1 class="title"> About Me</h1>
  </div>
-
+<p>(This is my story!)</p>
+<img src="./img/down-arrow.svg" height="100" width="80" class="svg-img"  alt="music illustration">
 <div class="about-me">
-  <br>
+
   <div class="background-grey">
-  <h2 class="away-top"><span>Hi, I’m Miguel. A Computer lover. My dad used to bring these massive boxes of software from work and I would wait to see whether it was a game or some old app. It became my dream to create beautiful apps. Seeking opportunities in the web development field. Very passionate when it comes to UX Design also. After obtaining my User Experience degree, the natural move was always Web Development. <br><br>I've acquired knowledge on how the user’s brain works and interacts with an Interface, deeply fascinated with how to create those same interfaces. I went from understanding the User Experience, to building that experience!</span></h2>
+    <div class="text-sm-center">
+      <br><br>
+
+      <p class="text-sm-center text-lg-left"> 
+      
+    </div>
 </div>
-    
-  <br><br>
+
   </div>
 
 
+
+<!--<div class="container-steps">
+    <div class="row">
+
+      <div class="col align-self-center" >
+        <img src="./img/" height="250" width="250"/>
+        <h1>What am I looking for?</h1>
+        <p class="text-sm-start">
+          After obtaining my User Experience degree, the natural move was always Web Development. I'm very passionate when it comes to UX Design also. Seeking opportunities in the Web Development field, or perhaps a mix between Coding and UX! 
+        </p>  
+      </div>
+    </div>
+  </div> -->
+
+ <!-- <div class="display-center">
+
+  <div class="image">
+
+    <img class="image__img" src="./img/rockstar.png" height="500" width="400" alt="Me as a kid">
+    <div class="image__overlay image__overlay--primary">
+        <div class="image__title"></div>
+        <h1 class="big-title">Baby Steps</h1>
+        <p class="image__description">
+          When I was a kid my dad used to bring these massive boxes of software from work and I would wait to see whether it was a game or some old app. It became my dream to create beautiful apps.
+        </p>
+    </div>
+
+</div>
+<br><br>
+<img src="./img/down-arrow.svg" height="100" width="80" class="svg-img"  alt="music illustration">
+<br><br>
+
+
+
+<h1 class="big-title">Adult Life</h1>
+<div class="image">
+ 
+  <img class="image__img" src="./img/adult.jpg" height="500" width="400" alt="black and white image with an airplane">
+
+  <div class="image__overlay image__overlay--primary">
+
+      <div class="image__title"></div>
+   
+      <p class="image__description">
+        Working in aviation taught me that the best way to communicate with people is through empathy and patience. I love to meet and connect with new people, and I believe there’s always room for personal growth and improvement.
+      </p>
+  </div>
+</div>
+<br><br>
+  <img src="./img/down-arrow.svg" height="100" width="80" class="svg-img"  alt="music illustration">
+
+
+<br><br>
+<h1 class="big-title">What am I looking for?</h1>
+<div class="image">
+
+  <img class="image__img" src="./img/future.jpg" height="500" width="400" alt="black and white image with an airplane">
+  <div class="image__overlay image__overlay--primary">
+      <div class="image__title"></div>
+     
+      <p class="image__description">
+        After obtaining my User Experience degree, the natural move was always Web Development. I'm very passionate when it comes to UX Design also. Seeking opportunities in the Web Development field, or perhaps a mix between Coding and UX! 
+      </p>
+  </div>
+</div>
+</div>-->
+
+
+
+
   <section>
+
+    <div class="section-container">
+      
+
+      <div class="columns content">
+      
+         <div class="content-container">
+       
+         
+            <h5>Baby Steps</h5>
+            <p class="text-sm-start">
+              I love computers since I can remember so I’m finally pursuing my Tech dreams. My dad used to bring these massive boxes of software from work and I would wait to see whether it was a game or some old app. It became my dream to create beautiful apps and to make them as functional as possible.
+             
+            <p class="text-sm-start">
+              While looking for Tech Courses, I’ve found CareerFoundry’s 6-month Full-Stack Web Development course, and the experience couldn’t have been better!
+            </p>
+         </div>
+        </div>
+        <div class="columns image" style="background-image:url('img/baby.jpg')">
+          &nbsp;
+       </div>
+      </div>
+
+   <div class="section-container">
+    <div class="columns image" style="background-image:url('img/NewPicture.jpeg')">
+      &nbsp;
+   </div>
+      <div class="columns content">
+         <div class="content-container">
+            <h5>Adult Life</h5>
+            <p class="text-sm-start">
+              In my previous role, my key tasks were to follow the aircraft safety procedures, and secure the aircraft before the passengers came in. The direct and continuous communication with the flight deck to maintain the passengers safe and relaxed, helped me improve my multi-tasking skills.
+            </p>
+            <p class="text-sm-start">
+             I learned that the best way to communicate with people is through empathy and patience. I love to meet and connect with new people, and I believe there’s always room for personal growth and improvement.
+            </p>
+        
+         </div>
+      </div>
+    
+   </div>
+
+   <div class="section-container">
+    
+    <div class="columns content">
+       <div class="content-container">
+          <h5>What am I looking for?</h5>
+          <p class="text-sm-start">
+            After obtaining my User Experience degree, the natural move was always Web Development. I'm very passionate when it comes to UX Design also. Seeking opportunities in the Web Development field, or perhaps a mix between Coding and UX! 
+          </p>
+          <p class="text-sm-start">
+            My product building preferences are apps/websites that are aimed at improving the user’s everyday lives, but I’m open to different challenges!
+          </p>
+       </div>
+    </div>
+    <div class="columns image" style="background-image:url('img/future.jpg')">
+      &nbsp;
+    </div>
+ </div>
   
+ <div id="about-me">
+  <h1 class="title">Past Career/Skills</h1>
+  </div>
+<br><br>
     <div class="section-container">
       <div class="columns image" style="background-image:url('img/fly.jpg')">
          &nbsp;
       </div>
+
       <div class="columns content">
+      
          <div class="content-container">
+       
+         
             <h5>Ex-Cabin Crew</h5>
-            <p>
+            <p class="text-sm-start">
               Had more than 3000 flights. Trained around 30 cabin crew newcomers, explaining to them the daily procedures, when it comes to safety.
             </p>
-            <p>
+            <p class="text-sm-start">
               How to approach passengers or de-escalate possible violent situations. On some days I was around 1000 people per day!
             </p>
          </div>
+        </div>
       </div>
-   </div>
+
    <div class="section-container">
       <div class="columns content">
          <div class="content-container">
             <h5>UX/UI Designer</h5>
-            <p>
+            <p class="text-sm-start">
               While still working at my previous job I decided I wasn't happy and decided to build an intensive and long career-change move.
             </p>
-            <p>
+            <p class="text-sm-start">
               That's when I started studying UX Design and enrolled at the UX/UI Designer course in the UX Design Institute in Ireland.  Ironically, the final prototype project from the course was about an airline!
             </p>
         
@@ -284,22 +446,22 @@ let typed = new Typed(".auto-type", {
    </div>
 
    <div class="section-container">
-    <div class="columns image" style="background-image:url('img/coding-vs.png')">
+    <div class="columns image" style="background-image:url('https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80')">
        &nbsp;
     </div>
     <div class="columns content">
        <div class="content-container">
           <h5>Coding</h5>
-          <p><span>
+          <p class="text-sm-start"><span>
             My career change wouldn't be complete without coding, which was my all-time science to learn.
           </span>
           </p>
-          <p>
+          <p class="text-sm-start">
             <span>
            By the end of 2021, I had the opportunity to join Careerfoundry's Full-Stack Web Development degree and I've loved it!
           </span>
           </p>
-          <p>
+          <p class="text-sm-start">
             <span>
            When graduating from the course, I had a great variety of projects, from different languages and frameworks, super exciting!
           </span>
@@ -313,14 +475,13 @@ let typed = new Typed(".auto-type", {
    
 
      
-      <h2 class="away-top2"><span class="black">The truth is that I love computers since I can remember.</span> </h2>
+      <h2 class="away-top2"><span class="black1">The truth is that I love computers since I can remember</span> </h2>
       <h2 class="away-top2"><span class="black">My dad used to bring these massive boxes of software from work and I would wait to see whether it was a game or some old app. It became my dream to create beautiful apps.</span></h2>
 
    
    </div>
      
-    </p><h2 class="about-me"><span>Fluent in HTML, CSS, Javascript, React and Node.js.<br><br>The main goal is to join a company that provides great onboarding and mentorship.</span></h2>
-    </h2>
+    </p>
       <br><br>
     
 
@@ -332,14 +493,19 @@ let typed = new Typed(".auto-type", {
 <div class="container">
   <div class="row align-items-start">
   <div class="col">
+    
     <h1>Learning</h1>
-    <img src="./img/data-science-illustration-concept.jpg" class="svg-img" height="200" width="200" alt="learning illustration">
+    <div class="animation-image">
+    <img src="./img/flask.svg" class="svg-img" height="200" width="200" alt="learning illustration">
+  </div>
     <p class="svg-text">Addicted to information, I try to read a book every month.</p>
   </div>
 
     <div class="col">   
       <h1>Coding</h1> 
-      <img src="./img/blog-writer.png" height="200" width="250" class="svg-img"  alt="coding illustration">
+      <div class="animation-image">
+      <img src="./img/laptop.svg" height="200" width="250" class="svg-img"  alt="coding illustration">
+      </div>
       <p class="svg-text">I'll spend more than 10 hours on the computer without realizing it.</p> 
     </div>
 
@@ -347,7 +513,9 @@ let typed = new Typed(".auto-type", {
  
     <div class="col">
       <h1>Music</h1>
-      <img src="./img/cassette.svg" height="200" width="250" class="svg-img"  alt="music illustration">
+      <div class="animation-image">
+      <img src="./img/headphone.svg" height="200" width="250" class="svg-img"  alt="music illustration">
+      </div>
       <p class="svg-text">I produce all kinds of music for the past 10 years.</p>
    
     </div>
@@ -356,7 +524,10 @@ let typed = new Typed(".auto-type", {
 </div>
 
 
-      <div id="project-links"><h1 class="bigger1"><span class="black">Some of my Projects</span></h1></div>
+      <div id="project-links"><h1 class="bigger1"><span class="black1">Some of my Projects</span></h1>
+        <div class="animation-arrow">
+        <img src="./img/down-arrow.svg" height="80" width="80" class="svg-img"  alt="music illustration"></div>
+      </div>
 <div id="#project-links">
       <div class="container">
         <div class="row g-3">
@@ -365,8 +536,9 @@ let typed = new Typed(".auto-type", {
                     <img src="./img/angular.png" class="card-img-top" alt="myFlix photo">
                     <div class="card-body">
                         <h5 class="card-title">myFlix-Angular</h5>
-                        <p class="card-text"> Created with: Html, CSS, Angular, Typescript</p>
+                        <p class="card-text"> Created with: Angular, Typescript, Html and CSS </p>
                         <p class="card-text">  myFlix-Angular, this project was done through Angular, to display Movies/Directors and Genres information.</p>
+                        <br>
                         <a href="case-study-angular.html" target="_blank" class="btn btn-primary">Case Study</a>
                         <a href="https://github.com/miguelalmeida0/myFlix-Angular" target="_blank" class="btn btn-primary">Github</a>
                         <br>
@@ -375,16 +547,45 @@ let typed = new Typed(".auto-type", {
                 </div>
             </div>
             <div class="col-12 col-md-6 col-lg-4">
+              <div class="card">
+                  <img src="./img/fashion.png" class="card-img-top" alt="e-commerce website picture">
+                  <div class="card-body">
+                      <h5 class="card-title">Hybrid Fashion</h5>
+                      <p class="card-text"> Created with: React, HTML, CSS, Javascript</p>
+                      <p class="card-text">  A clothing and accessories website, the user can browse the different categories, Men's or Women's' Clothing, and get more info about them!</p>
+                      <br>
+                     <a href="https://github.com/miguelalmeida0/commerce-website/tree/master" target="_blank" class="btn btn-primary">Github</a>
+                  
+                     <a href="https://miguelalmeida0.github.io/commerce-website/" target="_blank" class="btn btn-primary">Live Demo</a>
+                  </div>
+              </div>
+          </div>
+            <div class="col-12 col-md-6 col-lg-4">
                 <div class="card">
                     <img src="./img/meetAppScreen.png" class="card-img-top" alt="Meet app photo">
                     <div class="card-body">
                         <h5 class="card-title">Meet App</h5>
                         <p class="card-text"> Created with: JavaScript, HTML, CSS, React, AWS Lambda, Serverless</p>
                         <p class="card-text">  Meet App is a progressive Web Apllication (PWA) built with React using a test-driven development (TDD) technique.</p>
-                    
+                        <br>
                        <a href="https://github.com/miguelalmeida0/meet" target="_blank" class="btn btn-primary">Github</a>
                     
                        <a href="https://miguelalmeida0.github.io/meet/" target="_blank" class="btn btn-primary">Live Demo</a>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card">
+                    <img src="./img/pokedex.png" class="card-img-top" alt="Pokedex app photo">
+                    <div class="card-body">
+                        <h5 class="card-title">Pokedex</h5>
+                        <p class="card-text"> Created with: JavaScript, jQuery, Bootstrap, HTML, CSS</p>
+                        <p class="card-text"> Displays a 150 pokemon list, their type, and height, through an external API. The user should click on a pokemon and obtain more info about it.</p>
+                        <br>
+                        <a href="https://github.com/miguelalmeida0/Pokedex" target="_blank" class="btn btn-primary">Github</a>
+                    
+                        <a href="https://miguelalmeida0.github.io/Pokedex/#" target="_blank" class="btn btn-primary">Live Demo</a>
                     </div>
                 </div>
             </div>
@@ -395,6 +596,7 @@ let typed = new Typed(".auto-type", {
                       <h5 class="card-title">Drive-In</h5>
                       <p class="card-text">  Created with: JavaScript, Node.js, MongoDB, Express, Rest API</p>
                       <p class="card-text">  Provides access to information about different movies, directors, and genres. Users will be able to sign up, and update their personal information.</p>
+                      <br>
                       <a href="case-study.html" target="_blank" class="btn btn-primary">Case Study</a>
                      <a href="https://github.com/miguelalmeida0/Drive-In" target="_blank" class="btn btn-primary">Github</a>
                   
@@ -402,20 +604,6 @@ let typed = new Typed(".auto-type", {
                   </div>
               </div>
           </div>
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="card">
-                    <img src="./img/pokedex.png" class="card-img-top" alt="Pokedex app photo">
-                    <div class="card-body">
-                        <h5 class="card-title">Pokedex</h5>
-                        <p class="card-text"> Created with: JavaScript, jQuery, Bootstrap, HTML, CSS</p>
-                        <p class="card-text"> Built to display the original 150 pokemon list, including their types, and their height. This is done through an external API. The user should click on a pokemon and obtain more info about it.</p>
-                       
-                        <a href="https://github.com/miguelalmeida0/Pokedex" target="_blank" class="btn btn-primary">Github</a>
-                    
-                        <a href="https://miguelalmeida0.github.io/Pokedex/#" target="_blank" class="btn btn-primary">Live Demo</a>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -430,7 +618,7 @@ let typed = new Typed(".auto-type", {
         <p id="find-me-here">Find me here:</p>
         <br>
         <div class="social-padding">
-        <a href="https://www.linkedin.com/in/miguel-ramos-almeida-36ab63b4/" class="social-media"  > <img src="img/Linkedin-aqui.svg" height="32" width="32" alt="Linkedin Logo" class="social-media">
+        <a href="https://www.linkedin.com/in/miguel-ramos-almeida-36ab63b4/" class="social-media"  > <img src="img/linkedin.svg" height="40" width="40" alt="Linkedin Logo" class="social-media">
         </a>
           <a href="https://github.com/miguelalmeida0" class="social-media"> <img src="img/github.svg" height="32" width="32" alt="Instagram Logo" class="social-media">
           </a>
@@ -452,9 +640,7 @@ let typed = new Typed(".auto-type", {
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>    
 <script src="js/tota11y.min.js"></script>
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-<script>
-  AOS.init({duration: 700});
-</script>
+
 </body>
 
 
