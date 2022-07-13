@@ -140,6 +140,14 @@ header {
   color: rgb(255, 255, 255);;
 }
 
+.nav-link:hover {
+  color: black;
+}
+
+a:hover {
+  color: white;
+}
+
 #about-me {
   transition-duration: 5s;
   list-style: none;
@@ -149,7 +157,7 @@ header {
 }
 
 .title {
-  font-size: 32px;
+  font-size: 25px;
   color: var(--white);
   margin-top: 100px;
 }
@@ -739,7 +747,6 @@ body {
 
 h2 {
   position: relative;
-  padding: 0 0 10px;
   margin-bottom: 10px;
 }
 
@@ -747,10 +754,30 @@ h2 {
   text-align: center;
 }
 
+.h2-text-credits {
+  text-align: center;
+  margin-right: 50px;
+  margin-left: 50px;
+  font-size: 16px;
+}
+
+.h2-header-credits {
+  text-align: center;
+  margin-right: 50px;
+  margin-left: 50px;
+  font-size: 22px;
+}
+
 .header-span {
  font-size: 16px;
  text-align: center;
 
+}
+
+.h2-header-main {
+  margin-left: 50px;
+  margin-right: 50px;
+  font-size: 18px;
 }
 
 
@@ -909,6 +936,9 @@ li {
   list-style-type: none;
 }
 
+#margin-study {
+width: 100%;
+}
 
 .section-container
 {
@@ -1150,29 +1180,43 @@ button:focus,
 }
 
 .simplicity-center {
-  font-size: 18px;
+  font-size: 16px;
   text-align: center;
   letter-spacing: 0cm;
+  margin-left: 150px;
+  margin-right: 150px;
+
 }
 
 .simplicity-center-text {
   text-align: center;
-  font-size: 14px;
+  font-size: 16px;
   margin-bottom: 15px;
 }
 
 .simplicity-left {
-  font-size: 14px;
-  text-align: justify;
+  font-size: 16px;
+
+  margin-bottom: 15px;
+  float: none;
+}
+
+.simplicity-left-text {
+margin-right: 80px;
+margin-left: 80px;
+  font-size: 16px;
+
   margin-bottom: 15px;
   float: none;
 }
 
 .simplicity-left-list {
-  font-size: 14px;
-  text-align: justify;
+  font-size: 16px;
+  text-align: left;
   margin-bottom: 15px;
   float: none;
+  margin-left: 150px;
+  margin-right: 150px;
   list-style: circle;
 }
 
@@ -1236,12 +1280,20 @@ button:focus,
   font-size: 14px;
   text-align: left;
   color: white;
-  text-align: justify;
+  text-align: left;
 }
 
 .case-study-title {
   text-align: left;
 }
+
+.img-fluid-xs { 
+padding: 20px;
+}
+
+
+
+
 
 .case-study-img-left {
   float: left;
@@ -1265,8 +1317,35 @@ button:focus,
 
 .study-space {
   margin-top: 20px;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
   text-align: center;
+ 
+}
+
+
+
+@media screen and (min-width: 576px) {
+  .study-space {
+    padding: 5em 0.5em 1em;
+    justify-content: center;
+    justify-items: center;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .case-study-img-right {
+    padding: 5em 0.5em 1em;
+    justify-content: center;
+    justify-items: center;
+  }
+}
+
+@media screen and (min-width: 576px) {
+  .credits-text {
+    padding: 5em 0.5em 1em;
+    justify-content: center;
+    justify-items: center;
+  }
 }
 
 .debugging {
@@ -1274,9 +1353,11 @@ button:focus,
 }
 
 .credits-text {
-  margin-bottom: 150px;
+  margin-bottom: 50px;
   font-size: 14px;
-  text-align: justify;
+  margin-right: 50px;
+  margin-left: 50px;
+
 }
 
 .case-button {
@@ -1414,6 +1495,11 @@ button:focus,
     text-align: center;
   }
 }
+
+.images-study {
+  min-width: 300px;
+  display: grid;
+} 
 
 /* UX Area */
 
