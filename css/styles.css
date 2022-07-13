@@ -137,7 +137,8 @@ header {
   list-style: none;
   text-decoration: none;
   display: block;
-  color: rgb(255, 255, 255);;
+  color: rgb(255, 255, 255);
+  scroll-behavior: smooth;
 }
 
 .nav-link:hover {
@@ -150,6 +151,7 @@ a:hover {
 
 #about-me {
   transition-duration: 5s;
+  scroll-behavior: smooth;
   list-style: none;
   text-decoration: none;
   font-size: 16px;
@@ -1637,6 +1639,7 @@ hr.new4 {
   width: 20%;
   margin: 130px auto;
   border-radius: 5px;
+  scroll-behavior: smooth;
 }
 
 hr:not([size]) {
