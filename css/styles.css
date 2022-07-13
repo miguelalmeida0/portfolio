@@ -347,6 +347,7 @@ nav a:hover {
 
 .columns image {
   border-radius: 50%;
+
 }
 
 
@@ -481,7 +482,7 @@ font-weight: var(--font-weight-header);
   text-align: center;
   width: 400px;
   height: 400px;
-  object-fit:cover;
+
   border-radius: 50%;
   border: 1px solid #FAF8F6;
   box-shadow: 6px 5px 7px #000000;
@@ -561,8 +562,9 @@ h3 {
 
   margin-top: 150px;
   margin-bottom: 100px;
-  margin-left: 50px;
-  margin-right: 50px;
+  /*margin-left: 50px; 
+  margin-right: 50px; */ 
+  /*my image looks good with these 2 properties but website gets less responsive in mobile */
   color: white;
 
 
