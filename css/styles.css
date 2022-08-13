@@ -124,6 +124,14 @@ header {
   background-image: none;
 }
 
+.navbar-expand .navbar-collapse {
+  background-color: black;
+}
+
+.bg-dark {
+  background-color: black !important;
+}
+
 .nav {
   position: relative;
   margin: 10px 1px;
