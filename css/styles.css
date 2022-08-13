@@ -118,6 +118,7 @@ header {
   text-decoration: none;
 }
 
+
 .navbar-default {
   background: #000 !important;
   background-image: none;
@@ -595,6 +596,12 @@ max-width: 300px;
 
 }
 
+.btn:active:visited {
+  margin-bottom: 5px;
+  background-color: #222C22 !important;
+
+}
+
 .container {
   margin-top: 50px;
   margin-bottom: 150px;
@@ -655,7 +662,7 @@ p {
 .auto-type {
   color: #ffffff;
   font-weight: 900;
-  background-color: #514541;
+  background-color: #212C21;
 
 }
 
@@ -886,7 +893,7 @@ textarea {
 .btn {
   width: 100%;
   padding: 0.5rem 1rem;
-  background-color: #514541;
+  background-color: #212C21;
   color: #fff;
   font-size: 1.1rem;
   border: none;
@@ -896,11 +903,29 @@ textarea {
 }
 
 .btn:hover {
-  background-color: #A27C76;
+ background-color:  #3b4d3b;
+}
+
+
+.btn-primary {
+  background-color: #212C21;
+}
+
+.btn-primary:hover:visited {
+  background-color:  #3b4d3b;
+}
+.btn:hover {
+  background-color: #3b4d3b;
+}
+
+.btn-primary:visited,.btn-primary:active {
+  outline: none ;
+  box-shadow: none;
+  background-color: none !important;
 }
 
 .field:focus {
-  border: 2px solid rgba(30, 85, 250, 0.47);
+  border: 2px solid #3b4d3b;
   background-color: #fff;
 }
 
@@ -1507,11 +1532,11 @@ box-shadow: 6px 5px 7px #000000;
   margin-bottom: 50px;
   justify-content: center;
   width: 170px;
-  background-color: #514541;
+  background-color: #212C21;
 }
 
 .case-button1:hover {
-  background-color: #A27C76;
+  background-color: #3b4d3b;
 }
 
 @media screen and (min-width: 576px) {
