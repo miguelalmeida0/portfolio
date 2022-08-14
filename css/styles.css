@@ -598,6 +598,10 @@ max-width: 300px;
   color: black;
 }
 
+.card-title {
+  color: black;
+}
+
 .btn {
   margin-bottom: 5px;
   background-color: #222C22;
