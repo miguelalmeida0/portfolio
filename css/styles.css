@@ -1223,6 +1223,7 @@ button {
   padding: 10px;
   border-radius: 8px;
   border-bottom: 2px solid rgba(0, 0, 0, 0.3);
+  -webkit-transition: border-radius 3s;
 }
 
 .button,
