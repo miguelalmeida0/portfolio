@@ -1553,12 +1553,12 @@ box-shadow: 6px 5px 7px #000000;
 }
 
 .case-button1 {
-  border-radius: 15px;
+  border-radius: 5px;
   margin-bottom: 50px;
   justify-content: center;
   width: 170px;
   background-color: #212C21;
-  -webkit-transition: border-radius 1s;
+  -webkit-transition: border-radius 0.9s;
 
 }
 
@@ -1567,15 +1567,9 @@ box-shadow: 6px 5px 7px #000000;
   color: white;
   transition: all 2s ease; 
   border-radius: 140px;
+  -webkit-transition: border-radius 3s;
 
 }
-
-.case-button1:after:hover {
- 
-  transition: ease-out 1.3s;
-
-}
-
 
 
 @media screen and (min-width: 576px) {
