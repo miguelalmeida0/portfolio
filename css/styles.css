@@ -148,10 +148,14 @@ header {
   display: block;
   color: rgb(255, 255, 255);
   scroll-behavior: smooth;
+  
 }
 
 .nav-link:hover {
-  color: black;
+  color: #212C21;
+transform: scaleX(1);
+  font-weight: bold;
+  border-radius: 30px;
 }
 
 a:hover {
@@ -912,10 +916,12 @@ textarea {
   outline: none;
   cursor: pointer;
   transition: 0.3s;
+  -webkit-transition: border-radius 0.7s;
 }
 
 .btn:hover {
  background-color:  #3b4d3b;
+ border-radius: 17px;
 }
 
 
@@ -1238,6 +1244,7 @@ button {
   border-bottom: 2px solid rgba(0, 0, 0, 0.3);
   transition: 0.9s opacity;
   transition-property: opacity;
+  -webkit-transition: border-radius 1s;
 }
 
 button:hover,
@@ -1246,6 +1253,10 @@ button:focus,
 .button:focus {
   /* lets the mouse appear as a hand when hovering over the button */
   cursor: pointer;
+  background-color: #0c682f;
+  color: white;
+  transition: all 2s ease; 
+  border-radius: 40px;
 
   /* reduces the opacity of the button to 80% */
   opacity: 0.8;
@@ -1545,11 +1556,25 @@ box-shadow: 6px 5px 7px #000000;
   justify-content: center;
   width: 170px;
   background-color: #212C21;
+  -webkit-transition: border-radius 1s;
+
 }
 
 .case-button1:hover {
-  background-color: #3b4d3b;
+  background-color: #0c682f;
+  color: white;
+  transition: all 2s ease; 
+  border-radius: 140px;
+
 }
+
+.case-button1:after:hover {
+ 
+  transition: ease-out 1.3s;
+
+}
+
+
 
 @media screen and (min-width: 576px) {
   .wrapper-case {
@@ -1612,7 +1637,7 @@ box-shadow: 6px 5px 7px #000000;
 }
 #projects .item .left .img img {
   object-fit: cover;
-  transition: 0.3s ease transform;
+ transition: transform 0.25s ease;
 }
 #projects .item:hover .left .img img {
   transform: scale(1.1);
