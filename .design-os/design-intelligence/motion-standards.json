@@ -1,0 +1,70 @@
+{
+  "version": "2026-07-02",
+  "frequencyDecisions": [
+    {
+      "frequency": "100+ times/day",
+      "decision": "no animation"
+    },
+    {
+      "frequency": "tens of times/day",
+      "decision": "remove or drastically reduce"
+    },
+    {
+      "frequency": "occasional",
+      "decision": "standard animation"
+    },
+    {
+      "frequency": "rare / first-time / milestone",
+      "decision": "delight can be considered"
+    }
+  ],
+  "durationsMs": {
+    "buttonPress": [100, 160],
+    "tooltipPopover": [125, 200],
+    "dropdownSelect": [150, 250],
+    "modalDrawer": [200, 500],
+    "defaultUiMax": 300
+  },
+  "easingCurves": {
+    "easeOut": "cubic-bezier(0.23, 1, 0.32, 1)",
+    "easeInOut": "cubic-bezier(0.77, 0, 0.175, 1)",
+    "drawer": "cubic-bezier(0.32, 0.72, 0, 1)"
+  },
+  "transformOriginRules": {
+    "popover": "scale from trigger",
+    "tooltip": "scale from trigger when anchored",
+    "modal": "center is acceptable",
+    "dropdown": "origin should match trigger edge"
+  },
+  "accessibilityRules": [
+    "prefers-reduced-motion required for movement",
+    "hover motion gated behind hover/pointer media query",
+    "keyboard-initiated high-frequency actions should not animate"
+  ],
+  "performanceRules": [
+    "animate transform and opacity by default",
+    "avoid transition: all",
+    "avoid animating layout properties",
+    "keep expensive blur/filter bounded",
+    "avoid continuous React state for mouse or scroll values"
+  ],
+  "springSuggestions": {
+    "subtleBounce": {
+      "type": "spring",
+      "duration": 0.5,
+      "bounce": 0.2
+    },
+    "traditional": {
+      "type": "spring",
+      "mass": 1,
+      "stiffness": 100,
+      "damping": 10
+    }
+  },
+  "gestureNotes": [
+    "use pointer capture during drag",
+    "ignore extra touch points after drag starts",
+    "use velocity for flick dismissals",
+    "apply damping at boundaries"
+  ]
+}

@@ -1,0 +1,419 @@
+@import "tailwindcss";
+@import "../tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+html {
+  scroll-behavior: auto;
+  scroll-padding-top: 6rem;
+}
+
+@theme inline {
+  --radius-sm: 1px;
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: 8px;
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-display: var(--font-mori);
+  --font-sans: var(--font-mori);
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(0.965 0.008 85);
+  --foreground: oklch(0.24 0.008 150);
+  --ink: oklch(0.2 0.01 150);
+  --card: oklch(0.978 0.006 85);
+  --card-foreground: oklch(0.24 0.008 150);
+  --popover: oklch(0.978 0.006 85);
+  --popover-foreground: oklch(0.24 0.008 150);
+  --primary: oklch(0.3 0.045 155);
+  --primary-foreground: oklch(0.97 0.008 85);
+  --secondary: oklch(0.92 0.014 80);
+  --secondary-foreground: oklch(0.3 0.045 155);
+  --muted: oklch(0.91 0.012 80);
+  --muted-foreground: oklch(0.46 0.025 140);
+  --accent: oklch(0.32 0.055 155);
+  --accent-foreground: oklch(0.97 0.008 85);
+  --accent-glow: oklch(0.45 0.075 155);
+  --border: oklch(0.3 0.045 155 / 0.16);
+  --input: oklch(0.91 0.012 80);
+  --ring: oklch(0.32 0.055 155);
+  --bg-image:
+    radial-gradient(1100px 650px at 88% -8%, oklch(0.55 0.06 155 / 0.1), transparent 62%),
+    radial-gradient(900px 600px at -8% 18%, oklch(0.88 0.018 90 / 0.55), transparent 62%),
+    radial-gradient(900px 600px at 50% 115%, oklch(0.5 0.05 150 / 0.08), transparent 62%),
+    linear-gradient(180deg, oklch(0.972 0.008 85) 0%, oklch(0.962 0.01 85) 60%, oklch(0.948 0.012 80) 100%);
+  --surface-shadow: 0 30px 80px -40px oklch(0 0 0 / 0.12);
+  --hero-shadow: 0 32px 80px -30px oklch(0 0 0 / 0.24);
+  --stroke-color: oklch(0.32 0.055 155 / 0.55);
+  --hero-photo-tint: oklch(0.18 0.04 220 / 0.18);
+  --hero-photo-vignette: radial-gradient(ellipse at center, transparent 55%, oklch(0.05 0.02 220 / 0.24) 100%);
+  --button-solid-bg: oklch(0.14 0.01 220);
+  --button-solid-foreground: oklch(1 0 0);
+  --interaction-duration: 180ms;
+  --interaction-duration-fast: 120ms;
+  --interaction-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --interaction-shadow: 0 14px 32px -22px oklch(0 0 0 / 0.32);
+}
+
+.dark {
+  --background: #050505;
+  --foreground: #f4eadc;
+  --ink: #fff7ea;
+  --card: #111111;
+  --card-foreground: #f4eadc;
+  --popover: #111111;
+  --popover-foreground: #f4eadc;
+  --primary: #e8a878;
+  --primary-foreground: #050505;
+  --secondary: #1a1a1a;
+  --secondary-foreground: #f4eadc;
+  --muted: #202020;
+  --muted-foreground: #9a948b;
+  --accent: #e8a878;
+  --accent-foreground: #050505;
+  --accent-glow: #f0c4a2;
+  --border: rgb(244 234 220 / 0.14);
+  --input: #202020;
+  --ring: #f0c4a2;
+  --bg-image:
+    linear-gradient(180deg, #050505 0%, #080808 52%, #050505 100%);
+  --surface-shadow: 0 30px 80px -40px oklch(0 0 0 / 0.55);
+  --hero-shadow: 0 32px 80px -30px oklch(0 0 0 / 0.65);
+  --stroke-color: rgb(232 168 120 / 0.52);
+  --hero-photo-tint: oklch(0.18 0.04 220 / 0.25);
+  --hero-photo-vignette: radial-gradient(ellipse at center, transparent 55%, oklch(0.05 0.02 220 / 0.55) 100%);
+  --button-solid-bg: var(--foreground);
+  --button-solid-foreground: var(--background);
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  .dark {
+    color-scheme: dark;
+  }
+
+  *,
+  *::before,
+  *::after {
+    border-color: var(--color-border);
+  }
+
+  html,
+  body,
+  #app {
+    min-height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-background);
+    background-image: var(--bg-image);
+    background-attachment: fixed;
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  em {
+    font-style: inherit;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-muted-foreground);
+}
+
+.surface-card {
+  border: 1px solid color-mix(in oklch, var(--border) 100%, transparent);
+  background: color-mix(in oklch, var(--card) 80%, transparent);
+  box-shadow: var(--surface-shadow);
+  backdrop-filter: blur(16px);
+}
+
+@media (max-width: 767px) {
+  body {
+    background-attachment: scroll;
+  }
+
+  .surface-card,
+  .backdrop-blur,
+  .backdrop-blur-md,
+  .backdrop-blur-xl {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+.button-solid {
+  background: var(--button-solid-bg);
+  color: var(--button-solid-foreground);
+}
+
+.interactive-button {
+  cursor: pointer;
+  will-change: transform;
+  transition:
+    transform var(--interaction-duration) var(--interaction-ease),
+    background-color var(--interaction-duration) var(--interaction-ease),
+    border-color var(--interaction-duration) var(--interaction-ease),
+    color var(--interaction-duration) var(--interaction-ease),
+    opacity var(--interaction-duration) var(--interaction-ease),
+    box-shadow var(--interaction-duration) var(--interaction-ease);
+}
+
+.interactive-button:hover,
+.interactive-button:focus-visible {
+  transform: translate3d(0, -1px, 0) scale(1.02);
+  box-shadow: var(--interaction-shadow);
+}
+
+.interactive-button:active {
+  transform: translate3d(0, 0, 0) scale(0.985);
+  transition-duration: var(--interaction-duration-fast);
+}
+
+.interactive-link {
+  position: relative;
+  cursor: pointer;
+  transition:
+    color var(--interaction-duration) var(--interaction-ease),
+    opacity var(--interaction-duration) var(--interaction-ease);
+}
+
+.interactive-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.14em;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.55;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--interaction-duration) var(--interaction-ease);
+}
+
+.interactive-link:hover::after,
+.interactive-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.interactive-surface {
+  cursor: pointer;
+  will-change: transform;
+  transition:
+    transform 200ms var(--interaction-ease),
+    border-color var(--interaction-duration) var(--interaction-ease),
+    background-color var(--interaction-duration) var(--interaction-ease),
+    box-shadow var(--interaction-duration) var(--interaction-ease);
+}
+
+.interactive-surface:hover,
+.interactive-surface:focus-within {
+  transform: translate3d(0, -3px, 0);
+  box-shadow: var(--interaction-shadow);
+}
+
+.interactive-surface:active {
+  transform: translate3d(0, -1px, 0) scale(0.992);
+  transition-duration: var(--interaction-duration-fast);
+}
+
+.interactive-row {
+  cursor: pointer;
+  transition:
+    color var(--interaction-duration) var(--interaction-ease),
+    background-color var(--interaction-duration) var(--interaction-ease),
+    border-color var(--interaction-duration) var(--interaction-ease),
+    transform var(--interaction-duration) var(--interaction-ease);
+}
+
+.interactive-row:hover,
+.interactive-row:focus-visible {
+  transform: translate3d(2px, 0, 0);
+}
+
+.interactive-copy {
+  cursor: copy;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interactive-button,
+  .interactive-link,
+  .interactive-surface,
+  .interactive-row {
+    transition-duration: 0.01ms !important;
+  }
+
+  .interactive-button:hover,
+  .interactive-button:focus-visible,
+  .interactive-button:active,
+  .interactive-surface:hover,
+  .interactive-surface:focus-within,
+  .interactive-surface:active,
+  .interactive-row:hover,
+  .interactive-row:focus-visible {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .interactive-link::after {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.text-stroke {
+  color: var(--stroke-color);
+}
+
+.page-gutter {
+  padding-inline: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.cv-page {
+  --background: oklch(0.985 0.005 85);
+  --foreground: oklch(0.18 0.01 50);
+  --muted-foreground: oklch(0.55 0.01 50);
+  --accent: oklch(0.62 0.14 35);
+  --accent-foreground: oklch(0.985 0.005 85);
+  --border: oklch(0.18 0.01 50 / 0.16);
+  --ring: var(--accent);
+  --button-solid-bg: var(--foreground);
+  --button-solid-foreground: var(--background);
+  background-color: var(--background);
+  background-image: none;
+}
+
+.dark .cv-page {
+  --background: #050505;
+  --foreground: #f4eadc;
+  --muted-foreground: #9a948b;
+  --accent: #e8a878;
+  --accent-foreground: #050505;
+  --border: rgb(244 234 220 / 0.16);
+  --ring: var(--accent);
+  --button-solid-bg: var(--foreground);
+  --button-solid-foreground: var(--background);
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.marquee-track {
+  animation: marquee-scroll 40s linear infinite;
+}
+
+@keyframes orbit {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-orbit {
+  animation: orbit 18s linear infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.animate-blink {
+  animation: blink 1.35s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

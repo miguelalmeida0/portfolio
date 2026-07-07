@@ -1,0 +1,27 @@
+{
+  "id": "late-check-fm-final-gate-v2-failed-resize-scroll",
+  "status": "rejected",
+  "conceptStatus": "promising",
+  "executionStatus": "failed",
+  "failureFamily": [
+    "final-gate-false-pass",
+    "viewport-edge-clipping",
+    "horizontal-scroll-partial-content",
+    "floating-object-resize-drift",
+    "blank-scroll-states"
+  ],
+  "screenshots": [
+    "screenshots/late-check-fm-01-floating-label-drifts-and-overlaps-on-resize.png",
+    "screenshots/late-check-fm-02-horizontal-scroll-cuts-room-board-text.png",
+    "screenshots/late-check-fm-03-partial-containers-and-random-empty-space.png",
+    "screenshots/late-check-fm-04-giant-type-cut-by-viewport-edge.png"
+  ],
+  "requiredPrevention": [
+    "final-ui-integrity-gate-v3",
+    "width-sweep-validation",
+    "viewport-edge-clipping-check",
+    "horizontal-scroll-safety-check",
+    "floating-object-resize-drift-check",
+    "blank-scroll-state-check"
+  ]
+}

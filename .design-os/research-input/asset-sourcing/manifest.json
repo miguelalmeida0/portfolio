@@ -1,0 +1,43 @@
+{
+  "version": "2026-07-02",
+  "items": [
+    {
+      "source": "Unsplash API docs",
+      "originalFile": "pasted-text.txt",
+      "archivedFile": "research-input/asset-sourcing/raw/unsplash-api-docs.md",
+      "contentType": "API documentation / implementation brief",
+      "confidence": "medium",
+      "mainEndpointsCovered": [
+        "GET /search/photos",
+        "GET /search/collections",
+        "GET /collections",
+        "GET /collections/:id",
+        "GET /collections/:id/photos",
+        "GET /topics",
+        "GET /topics/:id_or_slug",
+        "GET /topics/:id_or_slug/photos",
+        "stats endpoints"
+      ],
+      "usefulFields": [
+        "id",
+        "width",
+        "height",
+        "color",
+        "blur_hash",
+        "description",
+        "alt_description",
+        "user.name",
+        "user.username",
+        "urls.raw",
+        "urls.full",
+        "urls.regular",
+        "urls.small",
+        "urls.thumb",
+        "links.html",
+        "links.download",
+        "links.download_location"
+      ],
+      "whyItMattersForDesignOs": "Provides a native image sourcing workflow for real photographic atmosphere, source metadata, crop planning, palette relationship, alt text, and product-truth discipline in image-first frontend work."
+    }
+  ]
+}

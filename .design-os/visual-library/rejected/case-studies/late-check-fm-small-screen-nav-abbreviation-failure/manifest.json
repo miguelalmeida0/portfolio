@@ -1,0 +1,30 @@
+{
+  "id": "late-check-fm-small-screen-nav-abbreviation-failure",
+  "title": "Late Check FM Small-Screen Nav Abbreviation Failure",
+  "status": "rejected",
+  "verdict": "Rejected responsive navigation pattern.",
+  "project": "Late Check FM / Bunk Radio",
+  "date": "2026-07-04",
+  "failureType": [
+    "compact-navigation",
+    "responsive-navigation",
+    "accessibility",
+    "abbreviation-fallback"
+  ],
+  "failureSummary": "Small-screen navigation collapsed to cryptic two-letter labels such as IN, WL, BD, NW, RL, and BK instead of using a clear icon system or real menu pattern.",
+  "screenshots": [
+    "screenshots/late-check-fm-01-small-screen-two-letter-nav-abbreviations.png"
+  ],
+  "rulesAdded": [
+    "design-dna/navigation-responsiveness-rules.md",
+    "design-dna/mobile-navigation-defaults.md"
+  ],
+  "scoreCaps": {
+    "compactNavUsesArbitraryAbbreviations": 4,
+    "navHidesFullLabelsWithoutIcons": 4,
+    "navIconsLackAccessibleLabels": 5,
+    "activeCompactNavItemUnclear": 5,
+    "navLooksClippedBrokenAtSmallWidth": 3,
+    "noSmallScreenNavVariant": 5
+  }
+}

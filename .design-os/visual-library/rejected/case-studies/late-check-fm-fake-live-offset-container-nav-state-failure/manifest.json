@@ -1,0 +1,35 @@
+{
+  "id": "late-check-fm-fake-live-offset-container-nav-state-failure",
+  "title": "Late Check FM Fake Live, Offset Container, And Nav State Failure",
+  "status": "rejected",
+  "verdict": "Rejected execution, promising visual direction.",
+  "project": "Late Check FM",
+  "date": "2026-07-04",
+  "failureType": [
+    "fake-live-affordance",
+    "fake-realtime-copy",
+    "offset-container-alignment",
+    "layered-frame-corner",
+    "navigation-active-state",
+    "off-by-one-navigation-selection"
+  ],
+  "failureSummary": "The UI used fake live-feed language, showed messy offset/backplate corner geometry, and had nav active state mapped to the wrong item after clicks.",
+  "screenshots": [],
+  "screenshotsNote": "Screenshots referenced in Codex chat, not available to filesystem.",
+  "rulesAdded": [
+    "design-dna/no-fake-live-affordances-rules.md",
+    "design-dna/offset-container-alignment-rules.md",
+    "design-dna/navigation-active-state-rules.md"
+  ],
+  "scoreCaps": {
+    "fakeLiveBadge": 4,
+    "fakeLiveFeedLabel": 3,
+    "fakeLiveIconDot": 3,
+    "messyExposedBackingCorner": 4,
+    "misalignedMediaBackplate": 3,
+    "mismatchedRadiusBrokenCorner": 3,
+    "clickedNavItemDoesNotBecomeSelected": 2,
+    "adjacentRightSideItemBecomesSelected": 2,
+    "navItemNeverReceivesSelectedState": 2
+  }
+}

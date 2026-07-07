@@ -1,0 +1,53 @@
+{
+  "project": "Nocturne Field Guide",
+  "mode": "artistic editorial landing test",
+  "status": "rejected",
+  "createdAt": "2026-07-03",
+  "globalRuleCandidate": true,
+  "screenshots": [
+    {
+      "filename": "screenshots/nocturne-01-static-leaf-hero-amateur-svg.png",
+      "failureTypes": ["amateur_svg_illustration", "native_svg_tooltip", "static_no_signature_mechanic"],
+      "severity": "critical",
+      "description": "Static primitive botanical SVG with visible browser-native tooltip and no memorable interaction mechanic."
+    },
+    {
+      "filename": "screenshots/nocturne-02-orchid-plate-static-section.png",
+      "failureTypes": ["primitive_botanical_forms", "leader_line_collision", "clipped_words"],
+      "severity": "critical",
+      "description": "Orchid/specimen plate uses primitive shapes and lets illustration/annotation marks cut through readable text."
+    },
+    {
+      "filename": "screenshots/nocturne-03-native-tooltip-and-annotation-failure.png",
+      "failureTypes": ["native_svg_tooltip", "annotation_collision"],
+      "severity": "critical",
+      "description": "Browser-native tooltip appears over an art-directed SVG surface while annotation lines collide with labels."
+    },
+    {
+      "filename": "screenshots/nocturne-04-generic-dot-field-and-light-blob.png",
+      "failureTypes": ["generic_dot_field", "generic_light_blob", "ai_atmospheric_texture"],
+      "severity": "critical",
+      "description": "Generic dot field and vague light blob read as AI texture slop, not a reference-justified material system."
+    },
+    {
+      "filename": "screenshots/nocturne-05-weird-dotted-background-texture.png",
+      "failureTypes": ["generic_dot_field", "roleless_background_texture"],
+      "severity": "high",
+      "description": "Cropped evidence of repeated dot texture used as atmosphere."
+    }
+  ],
+  "requiredFuturePrevention": [
+    "No final pass if SVG illustration looks primitive.",
+    "No native browser tooltips in art-directed SVG.",
+    "No annotation leader line crossing text.",
+    "No dot field or background glow unless reference-justified.",
+    "No elite landing page without a signature interaction or explicit justification."
+  ],
+  "scorecardCaps": [
+    "native SVG tooltip visible max 4",
+    "leader line cuts word max 3",
+    "primitive illustration max 4",
+    "background reads as AI texture max 5",
+    "award references but no signature interaction max 6"
+  ]
+}

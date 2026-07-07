@@ -1,0 +1,155 @@
+{
+  "version": "2026-07-02",
+  "rawDirectory": "research-input/taste-motion-skills/raw",
+  "items": [
+    {
+      "originalAttachmentName": "Pasted text (2).txt",
+      "newFilename": "raw/emergent-e1-fullstack-system-prompt.md",
+      "inferredSource": "Emergent / E1",
+      "inferredContentType": "Full-stack agent operating prompt",
+      "confidence": "high",
+      "sha256": "88dd67c462810e694703a72e473a3045b8c8cf3af7ee2105f161651ac99e8db7",
+      "shortSummary": "Frontend-first full-stack workflow with mock data, contracts before backend, screenshot review, environment discipline, and frontend aha moment behavior.",
+      "keyMechanisms": [
+        "frontend-only mock first",
+        "mock data outside components",
+        "visible interactions must work",
+        "screenshot/log feedback before handoff",
+        "backend only after frontend proof"
+      ],
+      "whyItMattersForMiguelDesignOS": "Reinforces the frontend aha workflow and truthful mock-data rules already absorbed in the AI builder pass.",
+      "recommendedUse": [
+        "raw archive only",
+        "workflow",
+        "scorecard gate"
+      ]
+    },
+    {
+      "originalAttachmentName": "Pasted text (2)(2).txt",
+      "newFilename": "raw/design-taste-frontend-v1.skill.md",
+      "inferredSource": "Design Taste Frontend v1",
+      "inferredContentType": "High-agency frontend taste skill",
+      "confidence": "high",
+      "sha256": "afd119bdae290d4f00b0b02a5b47ca09011f9f3ed715608b8b32d723846467d8",
+      "shortSummary": "Original Taste frontend skill with dials, stack conventions, anti-AI tells, typography/color/layout bias correction, motion intensity rules, performance guardrails, and interaction-state requirements.",
+      "keyMechanisms": [
+        "design variance / motion / density dials",
+        "dependency verification",
+        "anti-AI-purple rules",
+        "grid over flex math",
+        "interaction states required",
+        "transform/opacity performance guardrails"
+      ],
+      "whyItMattersForMiguelDesignOS": "Adds hard preflight language for common AI frontend defaults and helps Design OS distinguish tasteful variance from generic template output.",
+      "recommendedUse": [
+        "distilled rule",
+        "skill",
+        "workflow",
+        "scorecard gate"
+      ]
+    },
+    {
+      "originalAttachmentName": "Pasted text (2)(3).txt",
+      "newFilename": "raw/emil-design-engineering.skill.md",
+      "inferredSource": "Emil Kowalski / Design Engineering",
+      "inferredContentType": "Design-engineering and animation craft skill",
+      "confidence": "high",
+      "sha256": "614831bc8da50be7513db0af0fdae3e7fc898e97b07179dc049d9d1ee3b2fa33",
+      "shortSummary": "Design engineering philosophy and motion standards covering taste, invisible detail, animation frequency, easing, durations, springs, interruptibility, component craft, performance, accessibility, and review format.",
+      "keyMechanisms": [
+        "taste is trained",
+        "unseen details compound",
+        "motion frequency decision table",
+        "no ease-in for UI",
+        "never animate from scale(0)",
+        "origin-aware popovers",
+        "transitions over keyframes for interruptibility",
+        "prefers-reduced-motion",
+        "Before / After / Why review table"
+      ],
+      "whyItMattersForMiguelDesignOS": "Becomes the backbone for motion craft, animation review standards, component polish, and delight-with-restraint rules.",
+      "recommendedUse": [
+        "distilled rule",
+        "skill",
+        "workflow",
+        "scorecard gate"
+      ]
+    },
+    {
+      "originalAttachmentName": "Pasted text (3)(1).txt",
+      "newFilename": "raw/design-taste-frontend.skill.md",
+      "inferredSource": "Design Taste Frontend current / v2",
+      "inferredContentType": "Anti-slop frontend skill for landing pages, portfolios, and redesigns",
+      "confidence": "high",
+      "sha256": "5245949c9a2e4ed7f60e64dc24b79d1020fb5711a3f703f912127c0513164d44",
+      "shortSummary": "Current Taste skill with brief inference, dials, design-system mapping, typography/color/layout discipline, AI tell bans, landing-page craft, image rules, motion motivation, redesign protocol, block-library contract, and final preflight.",
+      "keyMechanisms": [
+        "design read one-liner",
+        "official design system selection",
+        "zero em-dashes in visible UI",
+        "hero stack discipline",
+        "eyebrow count cap",
+        "logo wall rules",
+        "real images over div screenshots",
+        "section layout repetition ban",
+        "preflight checklist",
+        "block-library contract"
+      ],
+      "whyItMattersForMiguelDesignOS": "Provides a durable anti-AI-tell preflight and landing/portfolio craft layer without polluting dashboard rules.",
+      "recommendedUse": [
+        "distilled rule",
+        "skill",
+        "prompt template",
+        "scorecard gate"
+      ]
+    },
+    {
+      "originalAttachmentName": "Pasted text(62).txt",
+      "newFilename": "raw/imagegen-frontend-web.skill.md",
+      "inferredSource": "Imagegen Frontend Web",
+      "inferredContentType": "Image-generation art direction skill for website references",
+      "confidence": "high",
+      "sha256": "642e533e52cecbbc410ed66b3d9a138ab94460510b073f7350edfb18c970cd21",
+      "shortSummary": "Image-generation skill requiring one separate horizontal image per landing-page section, composition variety, clear funnel jobs, palette consistency, image-led art direction, and implementation-friendly references.",
+      "keyMechanisms": [
+        "one horizontal image per section",
+        "never compress a full page into one board",
+        "hero composition alternatives",
+        "section job discipline",
+        "composition anchor per section",
+        "consistent palette across generated references"
+      ],
+      "whyItMattersForMiguelDesignOS": "Strengthens image-first landing workflows and prevents unreadable generated boards from becoming coding targets.",
+      "recommendedUse": [
+        "distilled rule",
+        "workflow",
+        "prompt template",
+        "scorecard gate"
+      ]
+    },
+    {
+      "originalAttachmentName": "Pasted text(63).txt",
+      "newFilename": "raw/animation-vocabulary.skill.md",
+      "inferredSource": "Animation Vocabulary",
+      "inferredContentType": "Motion terminology reverse-lookup skill",
+      "confidence": "high",
+      "sha256": "d2cda8090189b077cab1030ab130af60b7c9cd38505902ad2c88e4c670fed429",
+      "shortSummary": "Glossary skill mapping vague descriptions of animation effects to precise motion terms with short definitions and close alternatives.",
+      "keyMechanisms": [
+        "name motion effects precisely",
+        "disambiguate close terms",
+        "keep motion vocabulary tight",
+        "use glossary terms in specs and prompts"
+      ],
+      "whyItMattersForMiguelDesignOS": "Lets agents name and specify motion clearly instead of saying bouncy, smooth, fancy, or cool.",
+      "recommendedUse": [
+        "skill",
+        "prompt template"
+      ]
+    }
+  ],
+  "sourceAvailabilityNotes": [
+    "No separate raw review-animations file was present in the six Downloads files. Review-animations and STANDARDS.md are distilled from the Emil design-engineering source.",
+    "No separate raw Impeccable delight or animation files were present in the six Downloads files. Delight and motion craft skills are distilled from the Emil, Taste, and imagegen mechanisms available in this batch."
+  ]
+}

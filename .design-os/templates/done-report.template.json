@@ -1,0 +1,179 @@
+{
+  "projectName": "Untitled Miguel Design OS Project",
+  "taskType": "visual-heavy-ui",
+  "mode": "implementation",
+  "isVisualWork": true,
+  "filesChanged": [],
+  "commandsRun": [],
+  "screenshots": {
+    "390": "",
+    "768": "",
+    "1440": ""
+  },
+  "screenshotReportPath": "",
+  "visualQa": {
+    "status": "blocked",
+    "captureMode": "blocked",
+    "noOverlap": false,
+    "noTextOnButtons": false,
+    "noWatermark": false,
+    "noHorizontalOverflow": false,
+    "noCutHeroObject": false,
+    "noCutHeroObjectJustification": "",
+    "notes": ""
+  },
+  "finalUiIntegrityGateRun": false,
+  "finalUiIntegrityGateVersion": "v3",
+  "finalUiIntegrityVerdict": "blocked",
+  "finalUiIntegrityBlockers": [
+    "Final UI integrity gate has not passed."
+  ],
+  "widthSweepTested": [
+    360,
+    400,
+    440,
+    480,
+    520,
+    560,
+    600,
+    640,
+    680,
+    720,
+    760,
+    800,
+    840,
+    880,
+    920,
+    960,
+    1000,
+    1040,
+    1080,
+    1120,
+    1160,
+    1200,
+    1240,
+    1280,
+    1320,
+    1360,
+    1400,
+    1440,
+    1480,
+    1520,
+    1560,
+    1600,
+    1640,
+    1680,
+    1720,
+    1760,
+    1800,
+    1840,
+    1880,
+    1920
+  ],
+  "heightMatrixTested": [
+    720,
+    844,
+    900,
+    1080
+  ],
+  "viewportMatrixTested": [
+    390,
+    430,
+    640,
+    768,
+    900,
+    1024,
+    1180,
+    1280,
+    1366,
+    1440,
+    1536,
+    1728,
+    1920
+  ],
+  "scrollSamplesTested": [
+    0,
+    0.1,
+    0.2,
+    0.35,
+    0.5,
+    0.65,
+    0.8,
+    0.9,
+    1
+  ],
+  "interactionStatesTested": [
+    "blocked"
+  ],
+  "finalUiIntegrityBlockerCount": 1,
+  "finalUiIntegrityScreenshotDir": "blocked",
+  "failedViewportStates": [
+    "blocked: final UI integrity gate has not passed"
+  ],
+  "passedViewportStates": [],
+  "clippedTextRemaining": true,
+  "textClipRemaining": true,
+  "overlapRemaining": true,
+  "floatingOverlapRemaining": false,
+  "viewportEdgeClippingRemaining": false,
+  "floatingObjectDriftRemaining": false,
+  "horizontalScrollPartialContentRemaining": false,
+  "blankScrollStateRemaining": false,
+  "mediaTextCollisionRemaining": false,
+  "navOverflowRemaining": false,
+  "fixedOverlayCollisionRemaining": false,
+  "accidentalWhitespaceRemaining": false,
+  "finalHandoffAllowed": false,
+  "screenshotEvidence": [],
+  "finalVerdict": "blocked",
+  "interactionQa": {
+    "deadButtons": [],
+    "notes": ""
+  },
+  "assetQa": {
+    "required": false,
+    "manifestPath": "",
+    "validated": false,
+    "notes": ""
+  },
+  "targetCopyQa": {
+    "required": false,
+    "reportPath": "",
+    "validated": false,
+    "notes": ""
+  },
+  "productQa": {
+    "appPurpose": "",
+    "designOsTestPurpose": "",
+    "rulesUnderTest": [],
+    "coreLoopQa": {
+      "required": false,
+      "loop": "",
+      "manuallyVerified": false,
+      "verificationNotes": ""
+    },
+    "persistenceQa": {
+      "userGeneratedData": false,
+      "routeChanges": "not-applicable",
+      "refresh": "not-applicable",
+      "browserReopen": "not-applicable",
+      "uiDisclosure": "not-applicable"
+    },
+    "dogfoodQa": {
+      "isDogfoodTarget": false,
+      "failuresBackPropagated": false,
+      "learningNotes": ""
+    }
+  },
+  "score": {
+    "current": 0,
+    "target": 90
+  },
+  "remainingWeaknesses": [
+    "Fill this with honest remaining visual weaknesses before validation."
+  ],
+  "blockers": [
+    "Fill this with unresolved blockers, or clear it only after evidence proves they are fixed."
+  ],
+  "finalStatus": "needs-work"
+}

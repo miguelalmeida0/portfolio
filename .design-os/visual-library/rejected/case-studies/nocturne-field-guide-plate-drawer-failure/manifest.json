@@ -1,0 +1,22 @@
+{
+  "id": "nocturne-field-guide-plate-drawer-failure",
+  "title": "Nocturne Field Guide Plate Drawer Failure",
+  "status": "rejected",
+  "dateAdded": "2026-07-04",
+  "source": "Design OS dogfood critique",
+  "screenshots": [],
+  "screenshotNote": "Screenshots referenced in Codex chat, not available to filesystem.",
+  "failureModes": [
+    "amateur botanical illustration",
+    "primitive SVG plates",
+    "generic ambient background blobs",
+    "signature interaction without million-dollar feeling",
+    "full-page build before hero illustration proof"
+  ],
+  "requiredPrevention": [
+    "Illustration-First Gate",
+    "No Ambient Background Blobs",
+    "Botanical / Organic Illustration Minimum Bar",
+    "asset-first illustration testing"
+  ]
+}

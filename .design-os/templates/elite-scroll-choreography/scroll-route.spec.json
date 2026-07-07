@@ -1,0 +1,19 @@
+{
+  "id": "example-scroll-route",
+  "name": "Example Scroll Route",
+  "orientationSequence": [
+    "vertical",
+    "horizontal",
+    "vertical"
+  ],
+  "stages": [],
+  "pinnedStages": [],
+  "horizontalSegments": [],
+  "verticalSegments": [],
+  "entryState": {},
+  "exitState": {},
+  "mobileFallback": {
+    "type": "vertical-chapters",
+    "preservedIdentity": []
+  }
+}

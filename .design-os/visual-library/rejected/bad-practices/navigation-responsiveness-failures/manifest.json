@@ -1,0 +1,14 @@
+{
+  "id": "navigation-responsiveness-failures",
+  "status": "rejected-bad-practice",
+  "caseStudy": "../../case-studies/bunk-radio-text-container-nav-failures/",
+  "evidence": [
+    "../../case-studies/bunk-radio-text-container-nav-failures/screenshots/bunk-radio-04-nav-labels-overflow-items.png",
+    "../../case-studies/bunk-radio-text-container-nav-failures/screenshots/bunk-radio-05-nav-resize-empty-space.png"
+  ],
+  "rules": [
+    "nav label outside item: max score 3",
+    "nav huge dead space at breakpoint: max score 4",
+    "nav lacks responsive variant: max score 5"
+  ]
+}

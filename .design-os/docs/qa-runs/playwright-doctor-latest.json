@@ -1,0 +1,56 @@
+{
+  "createdAt": "2026-07-01T17:47:09.328Z",
+  "status": "blocked",
+  "nodeVersion": "v26.0.0",
+  "platform": "darwin",
+  "arch": "arm64",
+  "osRelease": "25.4.0",
+  "cwd": "/Users/malmeida/Desktop/miguel-design-os",
+  "url": "",
+  "requestedBrowser": "auto",
+  "tempDirectory": "/var/folders/x6/0d36h_s16kj9j6jgw2m775480000gn/T",
+  "tmpdirOverrideUsed": false,
+  "tmpdirOverride": "",
+  "packages": {
+    "playwright": {
+      "available": false,
+      "error": "Cannot find package 'playwright' imported from /Users/malmeida/Desktop/miguel-design-os/tools/playwright-doctor.mjs"
+    },
+    "playwrightTest": {
+      "available": false,
+      "error": "Cannot find package '@playwright/test' imported from /Users/malmeida/Desktop/miguel-design-os/tools/playwright-doctor.mjs"
+    }
+  },
+  "browserBinaries": {
+    "chromium": {
+      "path": "",
+      "exists": false,
+      "error": ""
+    },
+    "webkit": {
+      "path": "",
+      "exists": false,
+      "error": ""
+    },
+    "chrome": {
+      "path": "",
+      "exists": false,
+      "error": "Chrome channel is checked by launch attempt."
+    }
+  },
+  "launchChecks": [
+    {
+      "browser": "playwright",
+      "ok": false,
+      "durationMs": 0,
+      "error": "Cannot find package 'playwright' imported from /Users/malmeida/Desktop/miguel-design-os/tools/playwright-doctor.mjs"
+    }
+  ],
+  "screenshotWrite": {
+    "ok": false,
+    "browser": "",
+    "path": "",
+    "error": ""
+  },
+  "suggestedNextCommand": "node tools/visual-qa.mjs --url http://localhost:5173 --name <project-name> --browser auto"
+}

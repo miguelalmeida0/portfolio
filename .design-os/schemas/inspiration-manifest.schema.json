@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://miguel-design-os.local/schemas/inspiration-manifest.schema.json",
+  "title": "Miguel Design OS Inspiration Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "projectName",
+    "purpose",
+    "localScreenshotsPath",
+    "sources",
+    "references",
+    "topThirtyStrongestReferences",
+    "topTenCompositionPatterns",
+    "topTenAntiPatternsToAvoid"
+  ],
+  "properties": {
+    "projectName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1
+    },
+    "localScreenshotsPath": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "sourceName",
+          "sourceUrl",
+          "referenceType",
+          "trustLevel",
+          "screenshotPath",
+          "screenshotLocalOnly",
+          "attributionNotes",
+          "composition",
+          "focalObject",
+          "mood",
+          "material",
+          "motion",
+          "interactionModel",
+          "intentionallyAbsent",
+          "literalTarget",
+          "notes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sourceName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sourceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "referenceType": {
+            "type": "string",
+            "enum": ["inspiration", "literal-target", "anti-pattern"]
+          },
+          "trustLevel": {
+            "type": "string",
+            "enum": ["high", "medium", "moodboard-only"]
+          },
+          "screenshotPath": {
+            "type": "string"
+          },
+          "screenshotLocalOnly": {
+            "type": "boolean"
+          },
+          "attributionNotes": {
+            "type": "string"
+          },
+          "composition": {
+            "type": "string",
+            "minLength": 1
+          },
+          "focalObject": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mood": {
+            "type": "string",
+            "minLength": 1
+          },
+          "material": {
+            "type": "string",
+            "minLength": 1
+          },
+          "motion": {
+            "type": "string",
+            "minLength": 1
+          },
+          "interactionModel": {
+            "type": "string",
+            "minLength": 1
+          },
+          "intentionallyAbsent": {
+            "type": "string",
+            "minLength": 1
+          },
+          "literalTarget": {
+            "type": "boolean"
+          },
+          "notes": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "topThirtyStrongestReferences": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "topTenCompositionPatterns": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "topTenAntiPatternsToAvoid": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

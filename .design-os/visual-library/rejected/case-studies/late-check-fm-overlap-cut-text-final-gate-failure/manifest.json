@@ -1,0 +1,34 @@
+{
+  "id": "late-check-fm-overlap-cut-text-final-gate-failure",
+  "title": "Late Check FM Overlap + Cut Text Final Gate Failure",
+  "status": "rejected",
+  "verdict": "Rejected final UI integrity state, promising direction.",
+  "project": "Late Check FM / Bunk Radio",
+  "date": "2026-07-04",
+  "failureType": [
+    "overlapping-containers",
+    "cut-text",
+    "fixed-overlay-collision",
+    "final-gate-missing",
+    "layout-integrity"
+  ],
+  "failureSummary": "The direction was promising, but final screenshots still showed overlapping containers, clipped words, and overlay collision. A fail-closed final UI integrity gate was missing.",
+  "screenshots": [
+    "screenshots/late-check-fm-01-overlapping-route-label-containers.png",
+    "screenshots/late-check-fm-02-cut-text-and-fixed-overlay-collision.png"
+  ],
+  "rulesAdded": [
+    "agent-workflows/final-ui-integrity-gate-workflow.md",
+    "skills/final-ui-integrity-gate/SKILL.md",
+    "design-dna/final-ui-integrity-gate-rules.md"
+  ],
+  "scoreCaps": {
+    "finalUiIntegrityGateNotRun": 5,
+    "finalUiIntegrityGateBlockedFailed": 4,
+    "clippedCriticalTextVisible": 2,
+    "wordCutOffInScreenshot": 2,
+    "overlappingContainersCoverText": 3,
+    "fixedStickyOverlayCoversContent": 3,
+    "unresolvedUserComplaintRemainsVisible": 2
+  }
+}

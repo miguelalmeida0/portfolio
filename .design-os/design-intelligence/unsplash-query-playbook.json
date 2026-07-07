@@ -1,0 +1,133 @@
+{
+  "version": "2026-07-02",
+  "categories": [
+    {
+      "name": "robotics / machine / industrial",
+      "usefulQueries": [
+        "robotics lab",
+        "industrial robot arm",
+        "machine workshop",
+        "precision manufacturing",
+        "automation factory",
+        "metal components macro"
+      ],
+      "usefulOrientation": ["landscape", "portrait", "squarish"],
+      "usefulColorFilters": ["black", "white", "blue", "orange"],
+      "imageRoles": ["hero atmosphere", "focal object", "macro detail", "texture/material"],
+      "avoidTerms": ["cute robot", "toy robot", "cartoon robot", "futuristic wallpaper"],
+      "commonStockCliches": ["glowing humanoid robot handshake", "generic AI robot face", "blue hologram robot"]
+    },
+    {
+      "name": "nocturnal botanical / flowers / greenhouse / moonlight",
+      "usefulQueries": [
+        "night garden",
+        "greenhouse flowers",
+        "moonlit flowers",
+        "botanical macro dark",
+        "orchid close up",
+        "misty greenhouse"
+      ],
+      "usefulOrientation": ["landscape", "portrait"],
+      "usefulColorFilters": ["black", "green", "teal", "purple"],
+      "imageRoles": ["hero atmosphere", "macro detail", "background atmosphere", "editorial fragment"],
+      "avoidTerms": ["flower bouquet stock", "wedding flowers", "flat floral pattern"],
+      "commonStockCliches": ["perfect bouquet on beige background", "over-saturated flower wallpaper"]
+    },
+    {
+      "name": "architecture / interior / spaces",
+      "usefulQueries": [
+        "minimal architecture interior",
+        "concrete gallery space",
+        "modern atrium",
+        "dark interior architecture",
+        "museum interior",
+        "industrial interior light"
+      ],
+      "usefulOrientation": ["landscape", "portrait"],
+      "usefulColorFilters": ["black", "white", "orange", "blue"],
+      "imageRoles": ["hero atmosphere", "environmental scene", "background atmosphere"],
+      "avoidTerms": ["luxury real estate stock", "empty office stock", "corporate lobby"],
+      "commonStockCliches": ["generic glass office lobby", "over-polished realtor interior"]
+    },
+    {
+      "name": "fashion/editorial / portraits",
+      "usefulQueries": [
+        "editorial portrait shadow",
+        "fashion portrait studio",
+        "cinematic portrait",
+        "profile portrait dramatic light",
+        "portrait silhouette",
+        "creative director portrait"
+      ],
+      "usefulOrientation": ["portrait", "squarish"],
+      "usefulColorFilters": ["black", "white", "red", "purple", "blue"],
+      "imageRoles": ["focal object", "editorial fragment", "selection thumbnail"],
+      "avoidTerms": ["business handshake", "smiling customer support", "stock team meeting"],
+      "commonStockCliches": ["generic smiling business person", "headset support portrait"]
+    },
+    {
+      "name": "product material / macro texture",
+      "usefulQueries": [
+        "brushed metal macro",
+        "glass reflection macro",
+        "fabric texture macro",
+        "carbon fiber macro",
+        "ceramic texture",
+        "water droplets macro"
+      ],
+      "usefulOrientation": ["squarish", "landscape"],
+      "usefulColorFilters": ["black", "white", "teal", "blue", "orange"],
+      "imageRoles": ["texture/material", "macro detail", "background atmosphere"],
+      "avoidTerms": ["abstract background wallpaper", "seamless texture"],
+      "commonStockCliches": ["generic bokeh texture", "flat stock texture with no depth"]
+    },
+    {
+      "name": "technology / lab / science",
+      "usefulQueries": [
+        "science lab detail",
+        "laboratory equipment",
+        "research lab dark",
+        "microscope detail",
+        "electronics circuit macro",
+        "clean room technology"
+      ],
+      "usefulOrientation": ["landscape", "portrait", "squarish"],
+      "usefulColorFilters": ["white", "blue", "teal", "black"],
+      "imageRoles": ["hero atmosphere", "proof object", "macro detail", "environmental scene"],
+      "avoidTerms": ["AI brain", "hologram interface", "fake futuristic dashboard"],
+      "commonStockCliches": ["scientist holding glowing tablet", "fake blue hologram over lab"]
+    },
+    {
+      "name": "landscape / atmospheric",
+      "usefulQueries": [
+        "fog landscape",
+        "desert dusk",
+        "mountain night",
+        "storm ocean",
+        "mist forest",
+        "sodium street light fog"
+      ],
+      "usefulOrientation": ["landscape"],
+      "usefulColorFilters": ["black", "blue", "orange", "teal", "white"],
+      "imageRoles": ["hero atmosphere", "background atmosphere", "closing image"],
+      "avoidTerms": ["travel postcard", "desktop wallpaper", "tourist landmark"],
+      "commonStockCliches": ["generic sunset mountain wallpaper", "overprocessed travel photo"]
+    },
+    {
+      "name": "abstract light / glass / water",
+      "usefulQueries": [
+        "glass caustics",
+        "abstract light shadow",
+        "water reflection dark",
+        "prism light",
+        "colored glass reflection",
+        "neon reflection water"
+      ],
+      "usefulOrientation": ["landscape", "squarish", "portrait"],
+      "usefulColorFilters": ["blue", "teal", "purple", "magenta", "black"],
+      "imageRoles": ["background atmosphere", "texture/material", "editorial fragment"],
+      "avoidTerms": ["generic gradient", "AI abstract", "wallpaper"],
+      "commonStockCliches": ["plain neon bokeh", "generic colorful blur"]
+    }
+  ]
+}

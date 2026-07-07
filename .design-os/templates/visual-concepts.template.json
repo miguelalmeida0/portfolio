@@ -1,0 +1,81 @@
+{
+  "projectName": "Untitled Miguel Design OS Project",
+  "selectedConceptId": "",
+  "approvalStatus": "pending",
+  "approvedBy": "",
+  "approvalNotes": "",
+  "concepts": [
+    {
+      "id": "safe-expected",
+      "name": "Safe Expected Direction",
+      "visualMetaphor": "A clear product-specific metaphor that avoids generic dashboard defaults.",
+      "composition": "Describe the first-screen structure, spatial hierarchy, and primary zones shown in the rendered preview.",
+      "focalObject": "Name the object that visibly dominates the first viewport.",
+      "emotionalHook": "Explain why the user should care before details appear.",
+      "hiddenInformation": "List dense details hidden until after the first meaningful action.",
+      "absentElements": "List cliches, extra panels, badges, or noise intentionally excluded.",
+      "clicheAvoidance": "Name the obvious theme route and how this concept avoids it.",
+      "desireMechanism": "Explain what makes the primary object desirable to choose or inspect.",
+      "responsiveStrategy": {
+        "1440": "Explain how the rendered composition uses wide space without scale inflation.",
+        "768": "Explain the tablet layout and what collapses or reflows.",
+        "390": "Explain the mobile first viewport, primary object, and action."
+      },
+      "failureMode": "Name what would make this concept fail.",
+      "previewRoute": "/concepts/safe-expected",
+      "screenshots": {
+        "1440": "docs/concepts/safe-expected/1440.png",
+        "768": "docs/concepts/safe-expected/768.png",
+        "390": "docs/concepts/safe-expected/390.png"
+      }
+    },
+    {
+      "id": "art-directed",
+      "name": "More Original Art-Directed Direction",
+      "visualMetaphor": "A stronger, less obvious metaphor tied to the product's core action.",
+      "composition": "Describe the staged or object-led composition shown in the rendered preview.",
+      "focalObject": "Name the dominant object, scene, or comparison moment.",
+      "emotionalHook": "Explain the mood or desire created before details.",
+      "hiddenInformation": "List information deferred until selection or inspection.",
+      "absentElements": "List expected app-builder tropes intentionally removed.",
+      "clicheAvoidance": "Explain how it avoids obvious AI slop or genre literalism.",
+      "desireMechanism": "Explain the visual or interaction reward that makes users click.",
+      "responsiveStrategy": {
+        "1440": "Explain the desktop composition and supporting context.",
+        "768": "Explain the tablet structure and preserved focal object.",
+        "390": "Explain the mobile stack and no-horizontal-scroll plan."
+      },
+      "failureMode": "Name the risk that would collapse this into generic UI.",
+      "previewRoute": "/concepts/art-directed",
+      "screenshots": {
+        "1440": "docs/concepts/art-directed/1440.png",
+        "768": "docs/concepts/art-directed/768.png",
+        "390": "docs/concepts/art-directed/390.png"
+      }
+    },
+    {
+      "id": "wild-controlled",
+      "name": "Wild But Controlled Direction",
+      "visualMetaphor": "A bold metaphor that still serves the product rather than decoration.",
+      "composition": "Describe the most differentiated first-screen layout shown in the rendered preview.",
+      "focalObject": "Name the object or scene that carries the concept.",
+      "emotionalHook": "Explain the strongest desired reaction.",
+      "hiddenInformation": "List technical or secondary content hidden initially.",
+      "absentElements": "List safe/generic conventions intentionally absent.",
+      "clicheAvoidance": "Explain how boldness avoids theme cliche and badge soup.",
+      "desireMechanism": "Explain how hover, selection, or reveal creates reward.",
+      "responsiveStrategy": {
+        "1440": "Explain the wide-screen drama without attacking the user with scale.",
+        "768": "Explain the tablet composition and interaction.",
+        "390": "Explain the mobile crop, primary action, and readable zones."
+      },
+      "failureMode": "Name what would make the concept too noisy, childish, or unclear.",
+      "previewRoute": "/concepts/wild-controlled",
+      "screenshots": {
+        "1440": "docs/concepts/wild-controlled/1440.png",
+        "768": "docs/concepts/wild-controlled/768.png",
+        "390": "docs/concepts/wild-controlled/390.png"
+      }
+    }
+  ]
+}

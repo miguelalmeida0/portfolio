@@ -1,0 +1,52 @@
+{
+  "version": "2026-07-02",
+  "preferredModel": "APCA",
+  "apca": {
+    "note": "APCA Lc is signed. Use absolute value for threshold comparison.",
+    "normalText": {
+      "pass": 60,
+      "passPlus": 75
+    },
+    "largeText": {
+      "pass": 45,
+      "passPlus": 60
+    },
+    "uiComponents": {
+      "pass": 30
+    }
+  },
+  "wcag2": {
+    "note": "Use WCAG 2.x when claiming formal accessibility compliance.",
+    "normalText": {
+      "aa": 4.5,
+      "aaa": 7
+    },
+    "largeText": {
+      "aa": 3,
+      "aaa": 4.5
+    },
+    "uiComponents": {
+      "aa": 3
+    }
+  },
+  "oklchLightnessHeuristics": {
+    "lightBackground": {
+      "backgroundLGreaterThan": 0.85,
+      "foregroundLGenerallyBelow": 0.45
+    },
+    "darkBackground": {
+      "backgroundLLessThan": 0.25,
+      "foregroundLGenerallyAbove": 0.75
+    },
+    "foregroundDecision": [
+      {
+        "whenBackgroundLGreaterThan": 0.6,
+        "use": "dark foreground"
+      },
+      {
+        "whenBackgroundLLessOrEqual": 0.6,
+        "use": "light foreground"
+      }
+    ]
+  }
+}

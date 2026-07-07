@@ -1,0 +1,72 @@
+{
+  "version": "2026-07-02",
+  "purpose": "Map vague motion descriptions to exact animation terms for specs, prompts, and reviews.",
+  "terms": [
+    {
+      "term": "origin-aware animation",
+      "definition": "A menu, popover, or panel scales/translates from the control or point that triggered it.",
+      "examplePrompt": "popover grows out of the button",
+      "closeAlternatives": ["transform-origin animation", "popover scale animation"]
+    },
+    {
+      "term": "stagger",
+      "definition": "A group of elements animate with small sequential delays rather than all at once.",
+      "examplePrompt": "items come in one by one",
+      "closeAlternatives": ["orchestration", "cascade"]
+    },
+    {
+      "term": "shared element transition",
+      "definition": "One visible element appears to persist and transform between two states or routes.",
+      "examplePrompt": "thumbnail expands into full card",
+      "closeAlternatives": ["layout transition", "hero transition"]
+    },
+    {
+      "term": "rubber-banding",
+      "definition": "A resisted overscroll or drag boundary effect that snaps back when released.",
+      "examplePrompt": "iOS overscroll snap-back",
+      "closeAlternatives": ["elastic overscroll", "spring boundary"]
+    },
+    {
+      "term": "morph",
+      "definition": "One shape, icon, or form transforms into another while preserving continuity.",
+      "examplePrompt": "one shape turns into another",
+      "closeAlternatives": ["shape morph", "path interpolation"]
+    },
+    {
+      "term": "crossfade",
+      "definition": "One element fades out while another fades in.",
+      "examplePrompt": "one image softly changes into another",
+      "closeAlternatives": ["opacity transition"]
+    },
+    {
+      "term": "clip-path reveal",
+      "definition": "Content is revealed by animating a hard-edged clipping shape.",
+      "examplePrompt": "panel wipes open with a hard edge",
+      "closeAlternatives": ["mask reveal", "wipe reveal"]
+    },
+    {
+      "term": "mask reveal",
+      "definition": "Content is revealed through a mask that can have soft or gradient edges.",
+      "examplePrompt": "image fades open through a soft shape",
+      "closeAlternatives": ["clip-path reveal", "gradient mask"]
+    },
+    {
+      "term": "number ticker",
+      "definition": "Digits roll or count to a new value.",
+      "examplePrompt": "metric numbers roll upward",
+      "closeAlternatives": ["count-up animation"]
+    },
+    {
+      "term": "interruptible animation",
+      "definition": "Motion can be redirected or stopped mid-flight when user input changes.",
+      "examplePrompt": "drag can change direction without snapping",
+      "closeAlternatives": ["gesture-driven animation"]
+    }
+  ],
+  "rules": [
+    "Return the best term first.",
+    "Include a one-line definition.",
+    "Offer close alternatives only when useful.",
+    "Do not use this as a motion implementation or approval skill."
+  ]
+}

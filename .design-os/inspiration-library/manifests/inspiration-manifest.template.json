@@ -1,0 +1,43 @@
+{
+  "projectName": "Untitled Miguel Design OS Project",
+  "purpose": "Collect local visual inspiration before frontend implementation.",
+  "localScreenshotsPath": "inspiration-library/screenshots/",
+  "sources": [
+    "Awwwards",
+    "FWA",
+    "CSS Design Awards",
+    "Godly.website",
+    "Pinterest moodboard queries"
+  ],
+  "references": [
+    {
+      "id": "ref-001",
+      "title": "Placeholder reference to replace before implementation",
+      "sourceName": "Awwwards",
+      "sourceUrl": "https://www.awwwards.com",
+      "referenceType": "inspiration",
+      "trustLevel": "high",
+      "screenshotPath": "",
+      "screenshotLocalOnly": true,
+      "attributionNotes": "Replace with exact source and attribution notes.",
+      "composition": "Describe the visible composition and spatial hierarchy.",
+      "focalObject": "Describe the dominant object or scene.",
+      "mood": "Describe the emotional tone.",
+      "material": "Describe texture, surface, depth, and visual material.",
+      "motion": "Describe motion or state-change model, or say still/static.",
+      "interactionModel": "Describe how the reference invites interaction.",
+      "intentionallyAbsent": "Describe what the reference avoids or hides.",
+      "literalTarget": false,
+      "notes": "Short scout note explaining why this reference matters."
+    }
+  ],
+  "topThirtyStrongestReferences": [
+    "ref-001"
+  ],
+  "topTenCompositionPatterns": [
+    "Dominant object stage with secondary context hidden until interaction."
+  ],
+  "topTenAntiPatternsToAvoid": [
+    "Copying screenshots or source-site watermarks into production UI."
+  ]
+}

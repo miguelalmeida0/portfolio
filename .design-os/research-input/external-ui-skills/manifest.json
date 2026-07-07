@@ -1,0 +1,111 @@
+{
+  "date": "2026-07-02",
+  "rawArchiveComplete": false,
+  "rawArchiveNote": "Requested npx installs failed with ENOTFOUND registry.npmjs.org. raw/ contains install-blocked source capsules, not full upstream raw skill files.",
+  "items": [
+    {
+      "originalSourceRepo": "https://github.com/emilkowalski/skills",
+      "skillName": "animation-vocabulary",
+      "installedPath": "skills/animation-vocabulary/ (existing Miguel-native skill preserved)",
+      "archivedRawPath": "research-input/external-ui-skills/raw/animation-vocabulary.install-blocked.md",
+      "contentType": "install-blocked source capsule",
+      "confidence": "medium",
+      "summary": "External install failed; Miguel's existing animation vocabulary skill was preserved and updated with requested example mappings.",
+      "keyMechanisms": [
+        "map vague motion descriptions to exact terms",
+        "use short definitions",
+        "separate naming from motion design or implementation"
+      ],
+      "miguelDesignOsIntegrationTarget": [
+        "skills/animation-vocabulary/SKILL.md",
+        "design-intelligence/animation-vocabulary.json"
+      ],
+      "conflictRisk": "high",
+      "recommendation": "merge examples only until a full external source archive can be reviewed"
+    },
+    {
+      "originalSourceRepo": "https://github.com/raphaelsalaja/userinterface-wiki",
+      "skillName": "userinterface-wiki",
+      "installedPath": "skills/userinterface-wiki/ (Miguel-native distillation)",
+      "archivedRawPath": "research-input/external-ui-skills/raw/userinterface-wiki.install-blocked.md",
+      "contentType": "install-blocked source capsule",
+      "confidence": "medium",
+      "summary": "External install failed; created a routeable Miguel-native broad UI craft skill from the requested categories.",
+      "keyMechanisms": [
+        "animation principles",
+        "timing functions",
+        "exit animations",
+        "CSS pseudo-elements",
+        "audio feedback",
+        "sound synthesis",
+        "morphing icons",
+        "container animation",
+        "laws of UX",
+        "predictive prefetching",
+        "typography",
+        "visual design"
+      ],
+      "miguelDesignOsIntegrationTarget": [
+        "skills/userinterface-wiki/SKILL.md",
+        "design-intelligence/userinterface-wiki-rules.json",
+        "design-intelligence/userinterface-wiki-guidance.md"
+      ],
+      "conflictRisk": "medium",
+      "recommendation": "keep as broad review router; defer motion code judgments to review-animations"
+    },
+    {
+      "originalSourceRepo": "https://github.com/jakubkrehel/oklch-skill",
+      "skillName": "oklch-skill",
+      "installedPath": "skills/oklch-contrast-palette/ (Miguel-native distillation)",
+      "archivedRawPath": "research-input/external-ui-skills/raw/oklch-skill.install-blocked.md",
+      "contentType": "install-blocked source capsule plus Migi-provided OKLCH/APCA rules",
+      "confidence": "high",
+      "summary": "External install failed; Migi-provided OKLCH/APCA rules were converted into Miguel Design OS rules, skills, and design intelligence.",
+      "keyMechanisms": [
+        "APCA as default perceptual contrast model",
+        "WCAG 2.x for formal/legal compliance",
+        "repair contrast by changing OKLCH lightness",
+        "detect HSL hue drift after OKLCH conversion",
+        "generate numeric OKLCH palette scales",
+        "reverse palette mapping for dark mode"
+      ],
+      "miguelDesignOsIntegrationTarget": [
+        "design-dna/oklch-contrast-and-palette-rules.md",
+        "skills/oklch-contrast-palette/SKILL.md",
+        "design-intelligence/oklch-palette-generation.json",
+        "design-intelligence/contrast-thresholds.json",
+        "design-intelligence/oklch-guidance.md"
+      ],
+      "conflictRisk": "medium",
+      "recommendation": "make the Miguel-native OKLCH/APCA gate source of truth for color tokens and contrast repair"
+    },
+    {
+      "originalSourceRepo": "https://github.com/jakubkrehel/make-interfaces-feel-better",
+      "skillName": "make-interfaces-feel-better",
+      "installedPath": "skills/make-interfaces-feel-better/ (Miguel-native distillation)",
+      "archivedRawPath": "research-input/external-ui-skills/raw/make-interfaces-feel-better.install-blocked.md",
+      "contentType": "install-blocked source capsule",
+      "confidence": "medium",
+      "summary": "External install failed; created a Miguel-native post-implementation polish skill.",
+      "keyMechanisms": [
+        "invisible details",
+        "interaction feedback",
+        "perceived performance",
+        "micro-polish",
+        "typography smoothing",
+        "consistent spacing",
+        "press/focus states",
+        "empty/loading/error states",
+        "no jank",
+        "no dead surfaces"
+      ],
+      "miguelDesignOsIntegrationTarget": [
+        "skills/make-interfaces-feel-better/SKILL.md",
+        "design-dna/interface-feel-rules.md",
+        "design-intelligence/interface-feel-checklist.json"
+      ],
+      "conflictRisk": "medium",
+      "recommendation": "route after layout exists and before screenshot scorecard review"
+    }
+  ]
+}

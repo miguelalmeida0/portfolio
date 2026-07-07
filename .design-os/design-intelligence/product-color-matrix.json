@@ -1,0 +1,46 @@
+{
+  "version": "2026-07-02",
+  "purpose": "Recommendation engine for product color direction. Migi taste, selected references, and visual spec override these defaults.",
+  "families": [
+    {
+      "id": "premium-command",
+      "useFor": ["dashboard", "command-center", "operations", "analytics"],
+      "base": ["soft charcoal", "warm off-white", "cool slate"],
+      "accent": ["electric blue", "oxide red", "signal amber"],
+      "avoid": ["murky green monochrome", "neon lime everywhere", "terminal black as default"],
+      "notes": "Use material range and state colors. Accent should mark action or selected data, not every border."
+    },
+    {
+      "id": "image-led-editorial",
+      "useFor": ["landing-page", "artistic", "cinematic", "portfolio"],
+      "base": ["image-derived neutral", "soft black", "paper white"],
+      "accent": ["one extracted image accent", "warm metallic", "muted saturated color"],
+      "avoid": ["generic SaaS blue", "purple AI gradients", "text over uncontrolled imagery"],
+      "notes": "Let imagery drive palette. Protect text with safe zones, scrims, plates, or separation."
+    },
+    {
+      "id": "mobile-consumer",
+      "useFor": ["mobile", "consumer-flow", "onboarding", "profile", "search"],
+      "base": ["warm light neutral", "soft dark neutral", "brand-tinted surface"],
+      "accent": ["single thumb-action accent", "selected-state accent", "success color"],
+      "avoid": ["desktop dashboard colors", "tiny low-contrast grey", "too many status colors"],
+      "notes": "Use strong action contrast and safe-area-friendly surfaces."
+    },
+    {
+      "id": "selection-gallery",
+      "useFor": ["roster", "gallery", "marketplace", "media-library", "configurator"],
+      "base": ["gallery neutral", "dark cinema neutral", "object-derived neutral"],
+      "accent": ["selected-state color", "rarity/class color", "preview highlight"],
+      "avoid": ["equal card color soup", "badge overload", "beige catalog if energy is needed"],
+      "notes": "Color should increase desire and selected-state clarity."
+    },
+    {
+      "id": "trust-product",
+      "useFor": ["finance", "health", "legal", "enterprise", "security"],
+      "base": ["high-contrast neutral", "ink", "warm grey"],
+      "accent": ["disciplined blue", "deep green", "amber warning"],
+      "avoid": ["playful gradients", "neon accents", "low-contrast soft UI"],
+      "notes": "Prioritize legibility, source/recency labels, and state meaning."
+    }
+  ]
+}

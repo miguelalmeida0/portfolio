@@ -1,0 +1,42 @@
+{
+  "projectName": "Untitled Miguel Design OS Project",
+  "targetScreens": ["390", "768", "1440"],
+  "targetImagePaths": {
+    "390": "",
+    "768": "",
+    "1440": ""
+  },
+  "currentScreenshotPaths": {
+    "390": "",
+    "768": "",
+    "1440": ""
+  },
+  "comparisonReportPath": "",
+  "excludedArtifacts": [
+    "Exclude watermarks.",
+    "Exclude editor UI.",
+    "Exclude browser chrome."
+  ],
+  "visualShellStatus": {
+    "staticShellBuilt": false,
+    "productFeaturesAddedBeforeShellParityApproval": false,
+    "shellParityApproved": false,
+    "notes": ""
+  },
+  "compositionMatchNotes": "",
+  "focalObjectMatchNotes": "",
+  "layoutMatchNotes": "",
+  "typographyMatchNotes": "",
+  "interactionMinimums": [],
+  "exactDifferences": [
+    "List exact target/current differences before validation."
+  ],
+  "intentionalDifferences": [],
+  "remainingMismatches": [
+    {
+      "description": "List any remaining mismatch and whether it blocks approval.",
+      "blocking": true
+    }
+  ],
+  "approvalStatus": "pending"
+}

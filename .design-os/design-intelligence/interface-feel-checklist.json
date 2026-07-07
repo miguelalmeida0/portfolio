@@ -1,0 +1,51 @@
+{
+  "version": "2026-07-02",
+  "stage": "after main layout, before screenshot review",
+  "checks": [
+    {
+      "id": "active-feedback",
+      "question": "Do pressable controls respond on hover/focus/active/disabled/loading states?",
+      "failCap": 70
+    },
+    {
+      "id": "focus-visible",
+      "question": "Are keyboard focus states visible, intentional, and consistent?",
+      "failCap": 60
+    },
+    {
+      "id": "state-specificity",
+      "question": "Are empty, loading, and error states specific to the product instead of generic placeholders?",
+      "failCap": 60
+    },
+    {
+      "id": "perceived-performance",
+      "question": "Does the UI acknowledge user action quickly without fake live/session claims?",
+      "failCap": 60
+    },
+    {
+      "id": "spacing-scale",
+      "question": "Does spacing follow a consistent rhythm instead of arbitrary one-off gaps?",
+      "failCap": 60
+    },
+    {
+      "id": "typography-polish",
+      "question": "Do numeric/data-heavy areas use tabular alignment where scanning matters?",
+      "failCap": 70
+    },
+    {
+      "id": "motion-fit",
+      "question": "Does any motion have purpose, correct duration, and reduced-motion behavior?",
+      "failCap": 60
+    },
+    {
+      "id": "dead-surfaces",
+      "question": "Do panels, cards, and controls have role-appropriate affordance and not feel like dead rectangles?",
+      "failCap": 60
+    },
+    {
+      "id": "jank",
+      "question": "Do state transitions avoid layout jank, content jumps, and clipped controls?",
+      "failCap": 50
+    }
+  ]
+}

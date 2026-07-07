@@ -1,0 +1,29 @@
+{
+  "projectName": "Untitled Miguel Design OS Project",
+  "runName": "screenshot-comparison",
+  "createdAt": "",
+  "targetImagePath": "",
+  "currentImagePath": "",
+  "dimensions": {
+    "target": {
+      "width": 0,
+      "height": 0,
+      "known": false
+    },
+    "current": {
+      "width": 0,
+      "height": 0,
+      "known": false
+    }
+  },
+  "dimensionsMatch": false,
+  "layoutMatchNotes": "Manual note required.",
+  "focalObjectMatchNotes": "Manual note required.",
+  "typographyMatchNotes": "Manual note required.",
+  "spacingMatchNotes": "Manual note required.",
+  "extraMissingUiNotes": "Manual note required.",
+  "exactRemainingDifferences": [
+    "List exact remaining differences before approval."
+  ],
+  "blockingDifferences": []
+}

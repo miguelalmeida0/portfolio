@@ -1,0 +1,13 @@
+{
+  "projectName": "Untitled Miguel Design OS Project",
+  "agentId": "01-inspiration-scout",
+  "agentName": "Inspiration Scout Agent",
+  "task": "Collect and classify visual inspiration before implementation.",
+  "mode": "inspiration",
+  "inputs": [],
+  "outputs": [],
+  "evidencePaths": [],
+  "commandsRun": [],
+  "blockers": [],
+  "status": "pending"
+}

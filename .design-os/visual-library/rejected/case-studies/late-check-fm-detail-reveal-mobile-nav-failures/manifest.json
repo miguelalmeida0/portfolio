@@ -1,0 +1,31 @@
+{
+  "id": "late-check-fm-detail-reveal-mobile-nav-failures",
+  "title": "Late Check FM Detail Reveal And Mobile Nav Failures",
+  "status": "rejected",
+  "verdict": "Rejected UX execution, promising visual direction.",
+  "project": "Late Check FM",
+  "date": "2026-07-04",
+  "failureType": [
+    "detail-reveal-anchor",
+    "trigger-detail-spatial-context",
+    "mobile-navigation-placement",
+    "route-navigation-persistence",
+    "scroll-navigation-access"
+  ],
+  "failureSummary": "Detail panels opened disconnected from selected cards, while mobile route navigation lived at the top of the page and disappeared during scroll.",
+  "screenshots": [],
+  "screenshotsNote": "Screenshots referenced in Codex chat, not available to filesystem.",
+  "rulesAdded": [
+    "design-dna/anchored-detail-reveal-rules.md",
+    "design-dna/mobile-navigation-defaults.md",
+    "design-dna/navigation-responsiveness-rules.md"
+  ],
+  "scoreCaps": {
+    "detailPanelDisconnectedFromTrigger": 4,
+    "selectedItemNotConnectedToDetail": 5,
+    "detailOpensBelowFoldWithoutFocusOrScroll": 4,
+    "mobileRouteNavDisappearsOnScroll": 3,
+    "mobileNavTopOnlyForRouteExperience": 4,
+    "compactNavNoBottomPersistentAccess": 4
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "target": "[data-scroll-object=\"hero-media\"]",
+  "trigger": "scroll progress",
+  "progressRange": [
+    0,
+    0.35
+  ],
+  "from": {
+    "opacity": 1,
+    "transform": "translate3d(0,0,0) scale(1)"
+  },
+  "to": {
+    "opacity": 1,
+    "transform": "translate3d(-24vw,0,0) scale(.72)"
+  },
+  "easing": "linear scroll-scrub or cubic-bezier(.2,.8,.2,1) for discrete transitions",
+  "propertyBudget": [
+    "transform",
+    "opacity",
+    "clip-path only when bounded"
+  ],
+  "layoutRisk": "moving object may cover headline at 768px",
+  "reducedMotionFallback": "static media card in first chapter"
+}

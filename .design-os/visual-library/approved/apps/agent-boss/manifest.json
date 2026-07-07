@@ -1,0 +1,73 @@
+{
+  "app": "agent-boss",
+  "status": "Approved app reference",
+  "productionAsset": false,
+  "items": [
+    {
+      "filename": "screenshots/01-mission-room-scenario-decision.png",
+      "noteFile": "screenshots/01-mission-room-scenario-decision.md",
+      "title": "Mission Room Scenario Decision",
+      "status": "Approved app reference",
+      "tags": ["enterprise", "mission-room", "scenario-cards", "verdict", "evidence", "control-plane", "governance"],
+      "bestUseCases": ["enterprise control", "AI operations", "policy review", "case workflow", "governance dashboard"],
+      "confidence": "high",
+      "visualLesson": "Use concrete scenarios to make abstract automation governance understandable.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/02-commerce-control-decision-map.png",
+      "noteFile": "screenshots/02-commerce-control-decision-map.md",
+      "title": "Commerce Control Decision Map",
+      "status": "Approved app reference",
+      "tags": ["decision-map", "enterprise", "governance", "policy", "risk", "axis-chart", "approval-flow"],
+      "bestUseCases": ["policy control", "risk review", "workflow routing", "approval systems", "enterprise governance"],
+      "confidence": "high",
+      "visualLesson": "Use spatial maps when two decision dimensions matter.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/03-tool-gateway-throughput-queue.png",
+      "noteFile": "screenshots/03-tool-gateway-throughput-queue.md",
+      "title": "Tool Gateway Throughput Queue",
+      "status": "Approved app reference",
+      "tags": ["operations", "queue", "throughput", "control-plane", "enterprise", "chart", "status-lanes"],
+      "bestUseCases": ["operations console", "tool gateway", "execution monitor", "queue management", "AI control plane"],
+      "confidence": "medium",
+      "visualLesson": "Use lane-based queues when operational items have mutually exclusive states.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/04-decision-intelligence-rollup.png",
+      "noteFile": "screenshots/04-decision-intelligence-rollup.md",
+      "title": "Decision Intelligence Rollup",
+      "status": "Approved app reference",
+      "tags": ["decision-intelligence", "rollup", "stacked-bars", "governance", "labels", "enterprise", "analytics"],
+      "bestUseCases": ["decision analytics", "control-plane monitoring", "governance reporting", "status taxonomy"],
+      "confidence": "medium",
+      "visualLesson": "Use rollups to explain state labels, not just count them.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/05-agent-economics-proof-cost-board.png",
+      "noteFile": "screenshots/05-agent-economics-proof-cost-board.md",
+      "title": "Agent Economics Proof Cost Board",
+      "status": "Approved app reference",
+      "tags": ["enterprise", "economics", "proof-state", "cost-control", "status-cards", "charts", "governance"],
+      "bestUseCases": ["enterprise dashboard", "risk/cost control", "AI operations", "proof workflow", "decision support"],
+      "confidence": "high",
+      "visualLesson": "Give every analytical card one job and one state.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/06-system-snapshot-task-start.png",
+      "noteFile": "screenshots/06-system-snapshot-task-start.md",
+      "title": "System Snapshot Task Start",
+      "status": "Approved app reference",
+      "tags": ["dashboard", "start-here", "enterprise", "workflow", "metrics", "task-list", "control-plane"],
+      "bestUseCases": ["enterprise home", "operations dashboard", "control-plane start page", "workflow launcher"],
+      "confidence": "medium",
+      "visualLesson": "Use a start-here section when a complex app has a preferred workflow.",
+      "productionAsset": false
+    }
+  ]
+}

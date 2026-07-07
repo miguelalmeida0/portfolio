@@ -1,0 +1,151 @@
+{
+  "folder": "visual-library/approved/inspiration/mobile-apps",
+  "status": "approved inspiration",
+  "productionAsset": false,
+  "items": [
+    {
+      "filename": "01-dark-media-profile-pair-mobile.png",
+      "noteFile": "01-dark-media-profile-pair-mobile.md",
+      "title": "Dark Media Profile Pair Mobile",
+      "status": "Approved inspiration",
+      "tags": ["dark-ui", "mobile", "media-roster", "profile", "glass", "creator-network", "selection-first", "cinematic"],
+      "bestUseCases": ["media browsing", "creator profile", "character roster", "social app", "selection-first UI", "live experience discovery"],
+      "confidence": "high",
+      "visualLesson": "Pair a cinematic browse surface with a strong profile/detail state.",
+      "sourceKnown": false,
+      "productionAsset": false
+    },
+    {
+      "filename": "02-dark-live-media-roster-mobile.png",
+      "noteFile": "02-dark-live-media-roster-mobile.md",
+      "title": "Dark Live Media Roster Mobile",
+      "status": "Approved inspiration",
+      "tags": ["dark-ui", "mobile", "media-cards", "avatar-rail", "floating-nav", "live-status", "roster"],
+      "bestUseCases": ["media browsing", "selection-first UI", "game roster", "creator discovery", "event/live app", "collectible content feed"],
+      "confidence": "high",
+      "visualLesson": "Use large live cards, avatar rails, and a light floating dock for selection-first browsing.",
+      "sourceKnown": false,
+      "productionAsset": false
+    },
+    {
+      "filename": "03-mint-glass-ai-gallery-detail-mobile.png",
+      "noteFile": "03-mint-glass-ai-gallery-detail-mobile.md",
+      "title": "Mint Glass AI Gallery Detail Mobile",
+      "status": "Approved inspiration",
+      "tags": ["mint-ui", "glass", "mobile", "creative-tool", "ai-gallery", "prompt-gallery", "detail-view", "frosted-controls"],
+      "bestUseCases": ["creative tool", "AI prompt gallery", "image editor", "creator app", "moodboard app", "generated media browser"],
+      "confidence": "medium",
+      "visualLesson": "Keep creative galleries soft and atmospheric while preserving persistent generation actions.",
+      "sourceKnown": false,
+      "productionAsset": false
+    },
+    {
+      "filename": "04-warm-meditation-breathing-flow-mobile.png",
+      "noteFile": "04-warm-meditation-breathing-flow-mobile.md",
+      "title": "Warm Meditation Breathing Flow Mobile",
+      "status": "Approved inspiration",
+      "tags": ["warm-ui", "mobile", "wellness", "meditation", "audio-player", "translucent-controls", "emotional-flow"],
+      "bestUseCases": ["mobile onboarding", "wellness app", "meditation app", "audio player", "breathing coach", "guided session flow"],
+      "confidence": "high",
+      "visualLesson": "Build a calm state progression from recommendation to active session playback.",
+      "sourceKnown": false,
+      "productionAsset": false
+    },
+    {
+      "filename": "05-terracotta-lighting-product-detail-mobile.png",
+      "noteFile": "05-terracotta-lighting-product-detail-mobile.md",
+      "title": "Terracotta Lighting Product Detail Mobile",
+      "status": "Approved inspiration",
+      "tags": ["product-detail", "mobile", "terracotta", "ecommerce", "configurator", "swatches", "material-ui", "premium-commerce"],
+      "bestUseCases": ["product detail", "product configurator", "ecommerce", "furniture app", "lighting catalog", "material-led product UI"],
+      "confidence": "high",
+      "visualLesson": "Let a physical product object lead before exposing variants, specs, and gallery.",
+      "sourceKnown": false,
+      "productionAsset": false
+    },
+    {
+      "filename": "06-planetary-selector-hero-detail-mobile.png",
+      "noteFile": "06-planetary-selector-hero-detail-mobile.md",
+      "title": "Planetary Selector Hero Detail Mobile",
+      "status": "Approved inspiration",
+      "tags": ["selection-first", "mobile", "hero-object", "dark-ui", "planetary", "roster-detail", "educational", "cinematic"],
+      "bestUseCases": ["selection-first UI", "educational app", "object browser", "character detail", "product discovery", "collectible catalog"],
+      "confidence": "high",
+      "visualLesson": "Move from roster/list selection into a stable hero object detail screen.",
+      "sourceKnown": false,
+      "productionAsset": false
+    },
+    {
+      "filename": "07-dark-mobility-map-status-mobile.png",
+      "noteFile": "07-dark-mobility-map-status-mobile.md",
+      "title": "Dark Mobility Map Status Mobile",
+      "status": "Approved inspiration",
+      "tags": ["mobility", "mobile", "dark-ui", "map", "telemetry", "status-gauge", "neon-accent", "device-control"],
+      "bestUseCases": ["mobility app", "map interface", "device control", "IoT dashboard", "vehicle status", "rental flow"],
+      "confidence": "high",
+      "visualLesson": "Show the operational loop across object, map, and device status states.",
+      "sourceKnown": false,
+      "productionAsset": false
+    },
+    {
+      "filename": "08-blue-taxi-trip-status-mobile.png",
+      "noteFile": "08-blue-taxi-trip-status-mobile.md",
+      "title": "Blue Taxi Trip Status Mobile",
+      "status": "Approved inspiration",
+      "tags": ["mobile", "service-flow", "3d-object", "trip-status", "blue-ui", "state-progression", "rating", "booking"],
+      "bestUseCases": ["ride-hailing", "logistics app", "service status", "booking flow", "object-state progression", "mobile onboarding"],
+      "confidence": "high",
+      "visualLesson": "Keep one focal object stable across service journey states.",
+      "sourceKnown": false,
+      "productionAsset": false
+    },
+    {
+      "filename": "09-cinematic-flight-booking-glass-desktop.png",
+      "noteFile": "09-cinematic-flight-booking-glass-desktop.md",
+      "title": "Cinematic Flight Booking Glass Desktop",
+      "status": "Approved inspiration",
+      "tags": ["desktop", "travel", "booking", "glass", "cinematic-hero", "form-panel", "blue-ui", "immersive"],
+      "bestUseCases": ["travel booking", "landing page", "search interface", "product configurator", "immersive hero", "booking dashboard"],
+      "confidence": "medium",
+      "visualLesson": "Combine an immersive hero image with a functional booking form.",
+      "sourceKnown": false,
+      "productionAsset": false
+    },
+    {
+      "filename": "10-space-flight-booking-hero-desktop.png",
+      "noteFile": "10-space-flight-booking-hero-desktop.md",
+      "title": "Space Flight Booking Hero Desktop",
+      "status": "Approved inspiration",
+      "tags": ["desktop", "travel", "landing-page", "cinematic", "blue-ui", "glass-form", "booking", "source-artifact"],
+      "bestUseCases": ["travel landing page", "booking app", "cinematic hero", "product search", "premium web app", "configurable service"],
+      "confidence": "medium",
+      "visualLesson": "Make the first viewport both aspirational and operational with side widgets and a glass form.",
+      "sourceKnown": false,
+      "productionAsset": false
+    },
+    {
+      "filename": "11-soft-hr-productivity-dashboard-system.png",
+      "noteFile": "11-soft-hr-productivity-dashboard-system.md",
+      "title": "Soft HR Productivity Dashboard System",
+      "status": "Approved inspiration",
+      "tags": ["dashboard", "hr", "productivity", "cream-ui", "metrics", "calendar", "onboarding", "operational"],
+      "bestUseCases": ["dashboard", "HR tool", "productivity app", "internal tool", "calendar system", "onboarding workflow"],
+      "confidence": "high",
+      "visualLesson": "Use warm modular density only when a dashboard is truly the product.",
+      "sourceKnown": false,
+      "productionAsset": false
+    },
+    {
+      "filename": "12-playful-security-dashboard-cards.png",
+      "noteFile": "12-playful-security-dashboard-cards.md",
+      "title": "Playful Security Dashboard Cards",
+      "status": "Approved inspiration",
+      "tags": ["dashboard", "security", "password-manager", "playful-ui", "dark-ui", "lavender", "coral", "cards", "account-health"],
+      "bestUseCases": ["security dashboard", "password manager", "account health", "consumer utility", "educational dashboard", "profile system"],
+      "confidence": "medium",
+      "visualLesson": "Make a technical security product approachable through varied cards and playful contrast.",
+      "sourceKnown": false,
+      "productionAsset": false
+    }
+  ]
+}

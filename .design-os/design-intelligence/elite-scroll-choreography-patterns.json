@@ -1,0 +1,1306 @@
+{
+  "version": "2026-07-04",
+  "purpose": "Reusable Miguel Design OS patterns for authored scroll routes, pinned stages, media transformations, card assembly, portal entry, chapter navigation, and reduced-motion storyboards.",
+  "patterns": [
+    {
+      "id": "scroll-route-choreography",
+      "name": "Scroll Route Choreography",
+      "whatItDoes": "The page route moves horizontally, then vertically, then horizontally again. Content behaves like territories on a physical board.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "Stiff",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    },
+    {
+      "id": "kinetic-poster-board-scroll",
+      "name": "Kinetic Poster Board Scroll",
+      "whatItDoes": "Huge type and work/media cards travel across a poster-like stage with illustration punctuation.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "Stiff",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    },
+    {
+      "id": "scroll-to-assemble-cards",
+      "name": "Scroll-to-Assemble Cards",
+      "whatItDoes": "Cards begin scattered, offset, rotated, or layered, then align into an ordered set as scroll progresses.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "Bucks Sauce",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    },
+    {
+      "id": "floating-object-stage",
+      "name": "Floating Object Stage",
+      "whatItDoes": "Product, media, or brand objects float at depth and settle around the main story.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "Bucks Sauce",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    },
+    {
+      "id": "review-theater-scroll",
+      "name": "Review Theater Scroll",
+      "whatItDoes": "Reviews and testimonials become staged brand artifacts instead of generic cards.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "Bucks Sauce",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    },
+    {
+      "id": "editorial-list-detail-reveal",
+      "name": "Editorial List Detail Reveal",
+      "whatItDoes": "Large list rows become scroll-visible anchors; selecting one opens a designed detail panel.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "Wembi",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    },
+    {
+      "id": "sticky-info-rail",
+      "name": "Sticky Info Rail",
+      "whatItDoes": "A pinned media or object stage stays fixed while detail copy, stats, or annotations change beside it.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "Wembi / editorial product pages",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    },
+    {
+      "id": "pinned-media-text-swap",
+      "name": "Pinned Media / Text Swap",
+      "whatItDoes": "One video or image stays pinned while headlines, labels, CTAs, and context rotate around it.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "video-first editorial interfaces",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    },
+    {
+      "id": "video-to-object-transform",
+      "name": "Video-to-Object Transform",
+      "whatItDoes": "Video starts as a full stage, then becomes a card, poster, keycard, phone screen, portal, or broadcast tile.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "Bunk Radio / broadcast interfaces",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    },
+    {
+      "id": "portal-object-entry",
+      "name": "Portal Object Entry",
+      "whatItDoes": "A small object on an empty stage becomes the entry point; scroll zooms, masks, or moves into it.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "Podium",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    },
+    {
+      "id": "media-constellation-scroll",
+      "name": "Media Constellation Scroll",
+      "whatItDoes": "Media items appear as spatial objects with varied scale, position, and depth.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "Podium",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    },
+    {
+      "id": "directional-page-transition",
+      "name": "Directional Page Transition",
+      "whatItDoes": "Navigation moves pages in from a clear direction so destinations feel like rooms.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "Don't Board Me",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    },
+    {
+      "id": "service-choice-ritual-selector",
+      "name": "Service / Choice Ritual Selector",
+      "whatItDoes": "A form-like choice becomes a focused ritual rather than a generic form.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "Don't Board Me",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    },
+    {
+      "id": "sticky-chapter-index",
+      "name": "Sticky Chapter Index",
+      "whatItDoes": "Navigation state is synchronized with scroll chapters, not just active color.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "editorial chapter systems",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    },
+    {
+      "id": "stack-to-deck-cards",
+      "name": "Stack-to-Deck Cards",
+      "whatItDoes": "Cards stack, peel, dock, fan out, or settle into a deck or drawer.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "physical card/deck interfaces",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    },
+    {
+      "id": "scroll-revealed-detail-density",
+      "name": "Scroll-Revealed Detail Density",
+      "whatItDoes": "More information appears only after the user commits scroll attention.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "editorial/product explainers",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    },
+    {
+      "id": "parallax-depth-field",
+      "name": "Parallax Depth Field",
+      "whatItDoes": "Foreground, midground, and background move at distinct depths tied to content or media.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "cinematic media stages",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    },
+    {
+      "id": "scroll-synced-mask-reveal",
+      "name": "Scroll-Synced Mask Reveal",
+      "whatItDoes": "Masks, clips, or panels reveal content as the user progresses.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "portal and reveal sites",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    },
+    {
+      "id": "mobile-simplified-scroll-path",
+      "name": "Mobile Simplified Scroll Path",
+      "whatItDoes": "Complex desktop choreography becomes simpler vertical chapters on mobile without losing identity.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "responsive choreography",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    },
+    {
+      "id": "reduced-motion-static-storyboard",
+      "name": "Reduced-Motion Static Storyboard",
+      "whatItDoes": "Reduced motion preserves the story as a static sequence with clear order.",
+      "whenToUse": [
+        "award-level landing, portfolio, editorial, brand, playful product, or video-first page",
+        "scroll needs to change spatial context or information depth",
+        "references ask for authored travel rather than section stacking"
+      ],
+      "whenNotToUse": [
+        "dense productivity tool",
+        "settings or form-heavy workflow",
+        "accessibility-critical path where ceremony blocks task completion",
+        "mobile-only utility flow where speed matters more than choreography"
+      ],
+      "referenceInspiration": "accessibility fallback",
+      "requiredIngredients": [
+        "route map",
+        "chapter map",
+        "moving object inventory",
+        "nav sync behavior",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "layout integrity risk list"
+      ],
+      "implementationApproach": "Choose the lightest honest stack: CSS scroll-driven animations, React scroll progress, Motion useScroll/useTransform, or GSAP ScrollTrigger for pin/scrub/horizontal choreography when required.",
+      "accessibilityFallback": "Content remains in DOM order, keyboard reachable, readable without scroll effects, and not hidden behind pointer-only gestures.",
+      "reducedMotionFallback": "Replace travel with static ordered chapters, instant state changes, or gentle opacity swaps that preserve the story sequence.",
+      "performanceRisks": [
+        "too many scroll listeners",
+        "layout-thrashing properties",
+        "unbounded video/canvas work",
+        "large images without sizing",
+        "sticky sections with offscreen transforms"
+      ],
+      "layoutIntegrityRisks": [
+        "moving objects covering text",
+        "blank pinned stages",
+        "horizontal overflow",
+        "nav losing contrast",
+        "mobile route squeezed from desktop",
+        "text clipped by masks"
+      ],
+      "commonFailureSigns": [
+        "fade-in sections only",
+        "random parallax without route",
+        "no nav chapter sync",
+        "objects do not actually assemble",
+        "reduced motion removes content",
+        "scroll traps users"
+      ],
+      "scoreCaps": [
+        "fake or invisible selected pattern: max 4",
+        "movement covers critical text: max 3",
+        "no mobile fallback: max 5",
+        "no reduced-motion fallback: max 5"
+      ],
+      "relatedSkills": [
+        "elite-scroll-choreography-director",
+        "scroll-choreography-review",
+        "signature-interaction-director",
+        "motion-craft-director",
+        "layout-integrity-review"
+      ]
+    }
+  ]
+}

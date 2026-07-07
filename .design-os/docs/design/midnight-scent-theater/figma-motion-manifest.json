@@ -1,0 +1,85 @@
+{
+  "project": "Midnight Scent Theater",
+  "sourceFigmaFile": "not-provided-local-fallback",
+  "motions": [
+    {
+      "id": "mst-curtain-lens-reveal",
+      "name": "Midnight curtain lens reveal",
+      "trigger": "initial hero entrance or scroll chapter enter",
+      "duration": 980,
+      "easing": "cubic-bezier(.76,0,.24,1) for curtain, cubic-bezier(.16,1,.3,1) for lens settle",
+      "keyframes": [
+        {
+          "frame": "01-start",
+          "time": 0,
+          "state": "Curtain folds closed; lens is a narrow horizontal slit; bottle is shadowed.",
+          "layers": ["mask / curtain-fold / reveal-start / left", "mask / moon-lens / start / slit", "hero-object / scent-bottle / shadow / hidden"]
+        },
+        {
+          "frame": "02-anticipation",
+          "time": 120,
+          "state": "Curtain compresses inward 8px; brass hardware marks tighten.",
+          "layers": ["foreground-object / brass-hardware / anticipation", "mask / curtain-fold / reveal-anticipation"]
+        },
+        {
+          "frame": "03-transformation",
+          "time": 520,
+          "state": "Curtain opens; moon circle expands into lens aperture; bottle silhouette begins reveal.",
+          "layers": ["mask / curtain-fold / open", "mask / moon-lens / transforming", "hero-object / scent-bottle / revealing"]
+        },
+        {
+          "frame": "04-settle",
+          "time": 820,
+          "state": "Bottle rises 12px; hero keyline draws on; smoke marks remain behind text-safe zones.",
+          "layers": ["hero-object / scent-bottle / settle", "connector / bottle-keyline / draw-on", "decorative / smoke-mark / background"]
+        },
+        {
+          "frame": "05-final",
+          "time": 980,
+          "state": "Editorial headline and CTA are stable; lens and bottle are final.",
+          "layers": ["hero-object / scent-bottle / final", "mask / moon-lens / final", "control / primary-cta / final"]
+        }
+      ],
+      "affectedLayers": ["curtain-fold masks", "moon-lens mask", "scent bottle silhouette", "brass hardware", "smoke marks", "headline safe zone", "primary CTA"],
+      "reducedMotionFallback": "Render final open lens and bottle immediately. Keep only 100-160ms button/focus feedback. No curtain slide, path morph, or smoke motion.",
+      "implementationTarget": "CSS",
+      "handoffNotes": "Use CSS transforms and clip-path for curtain/lens when possible. Use SVG attributes for lens geometry. Avoid runtime Figma Motion."
+    },
+    {
+      "id": "mst-squircle-to-bottle",
+      "name": "Scent bottle morph",
+      "trigger": "chapter transition from abstract product frame to hero bottle",
+      "duration": 640,
+      "easing": "cubic-bezier(.16,1,.3,1)",
+      "keyframes": [
+        { "frame": "01-start", "time": 0, "state": "Squircle product frame centered.", "layers": ["frame / product-object / start / squircle"] },
+        { "frame": "02-anticipation", "time": 90, "state": "Top edge narrows to imply neck anchor.", "layers": ["frame / product-object / anticipation / neck-anchor"] },
+        { "frame": "03-transformation", "time": 380, "state": "Shoulders, neck, stopper, and base separate into bottle proportions.", "layers": ["hero-object / scent-bottle / morphing"] },
+        { "frame": "04-settle", "time": 560, "state": "Bottle keyline and inner shadow settle.", "layers": ["hero-object / scent-bottle / settle"] },
+        { "frame": "05-final", "time": 640, "state": "Fictional perfume bottle silhouette final.", "layers": ["hero-object / scent-bottle / final"] }
+      ],
+      "affectedLayers": ["product object frame", "bottle silhouette", "bottle keyline"],
+      "reducedMotionFallback": "Replace morph with static final bottle after chapter change.",
+      "implementationTarget": "SVG",
+      "handoffNotes": "Use normalized SVG paths only. Do not claim arbitrary Figma vector paths morph cleanly until point structure is normalized."
+    },
+    {
+      "id": "mst-smoke-note-draw-on",
+      "name": "Smoke note draw-on",
+      "trigger": "scent note enters viewport",
+      "duration": 900,
+      "easing": "cubic-bezier(.22,1,.36,1)",
+      "keyframes": [
+        { "frame": "01-start", "time": 0, "state": "Smoke path hidden and aria-hidden.", "layers": ["decorative / smoke-mark / start"] },
+        { "frame": "02-anticipation", "time": 90, "state": "Opacity warms from 0 to 0.18.", "layers": ["decorative / smoke-mark / anticipation"] },
+        { "frame": "03-transformation", "time": 560, "state": "Stroke draws on behind scent-note label.", "layers": ["decorative / smoke-mark / drawing"] },
+        { "frame": "04-settle", "time": 760, "state": "Smoke opacity drops to background level.", "layers": ["decorative / smoke-mark / settle"] },
+        { "frame": "05-final", "time": 900, "state": "Smoke mark static, behind text-safe zone.", "layers": ["decorative / smoke-mark / final"] }
+      ],
+      "affectedLayers": ["smoke mark", "scent note label safe zone"],
+      "reducedMotionFallback": "Smoke mark appears static at final opacity with no draw-on.",
+      "implementationTarget": "SVG",
+      "handoffNotes": "Decorative only. Mark aria-hidden and keep behind content."
+    }
+  ]
+}

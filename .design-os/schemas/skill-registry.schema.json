@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://miguel-design-os.local/schemas/skill-registry.schema.json",
+  "title": "Miguel Design OS Skill Registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "skills"],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "skills": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "path",
+          "description",
+          "useWhen",
+          "doNotUseWhen",
+          "requiredInputs",
+          "outputContract",
+          "routeKeywords"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "useWhen": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "doNotUseWhen": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "requiredInputs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "outputContract": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "routeKeywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

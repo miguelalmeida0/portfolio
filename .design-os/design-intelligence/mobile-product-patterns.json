@@ -1,0 +1,93 @@
+{
+  "version": "2026-07-03",
+  "sourceCaseStudy": "visual-library/rejected/case-studies/shelf-circle-mobile-product-failures/",
+  "patterns": {
+    "modalSheetFit": {
+      "required": true,
+      "description": "Mobile modals, drawers, sheets, and detail panels must fit the viewport, respect safe areas, and keep actions reachable.",
+      "checks": [
+        "max-height defined",
+        "internal scroll for long content",
+        "primary action visible or sticky",
+        "safe-area-inset-bottom respected",
+        "close/dismiss reachable",
+        "bottom nav hidden, dimmed, or spatially separated"
+      ],
+      "blockedFailures": [
+        "sheet cut off",
+        "sheet opens too low",
+        "primary action below viewport",
+        "content cannot scroll",
+        "sheet collides with bottom nav"
+      ]
+    },
+    "bottomNavIconsLabels": {
+      "requiredForPracticalMobileProduct": true,
+      "description": "Bottom navigation destinations should use semantic icons plus readable labels.",
+      "preferredIconSets": [
+        "Material Symbols",
+        "Material Icons",
+        "Lucide",
+        "Heroicons"
+      ],
+      "checks": [
+        "one icon per destination",
+        "one readable label per destination",
+        "consistent icon family",
+        "active state affects icon and label",
+        "badges do not overlap labels/icons",
+        "safe-area support"
+      ]
+    },
+    "selectionStatePersistence": {
+      "required": true,
+      "description": "Selectable chips, tabs, object selectors, and segmented controls must visibly preserve selected state until changed.",
+      "checks": [
+        "selected state distinct",
+        "hover state distinct",
+        "pressed state distinct",
+        "focus state accessible",
+        "selected state persists after tap",
+        "aria-selected or equivalent when appropriate",
+        "state affects actual UI behavior"
+      ]
+    },
+    "controlIndicatorCollision": {
+      "required": true,
+      "description": "Active bars, underlines, progress strips, and selected indicators must never overlap label/content zones.",
+      "safeAlternatives": [
+        "active background",
+        "border state",
+        "icon state",
+        "color shift",
+        "separate progress area",
+        "indicator below control with spacing"
+      ],
+      "blockedFailures": [
+        "underline crosses label",
+        "active bar overlaps text",
+        "progress strip runs through button content",
+        "indicator makes selected state look broken"
+      ]
+    },
+    "addActionDifferentiation": {
+      "required": true,
+      "description": "Add/create actions must not look like existing content cards.",
+      "acceptedTreatments": [
+        "plus icon button",
+        "dashed action tile",
+        "floating action button",
+        "distinct CTA row",
+        "empty-state create panel",
+        "bottom sheet trigger",
+        "separate add module"
+      ],
+      "checks": [
+        "clear plus/create affordance",
+        "explicit label",
+        "different visual treatment from content",
+        "not confused with object/category card"
+      ]
+    }
+  }
+}

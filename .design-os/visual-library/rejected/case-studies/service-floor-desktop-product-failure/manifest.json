@@ -1,0 +1,71 @@
+{
+  "project": "Service Floor",
+  "mode": "desktop product / hospitality operations command surface",
+  "status": "rejected",
+  "createdAt": "2026-07-03",
+  "globalRuleCandidate": true,
+  "screenshots": [
+    {
+      "originalAttachmentName": "Screenshot 2026-07-03 at 15.26.59.png",
+      "filename": "screenshots/service-floor-random-domain-palette-map-label-collision.png",
+      "failureTypes": [
+        "random_domain_palette",
+        "map_label_collision",
+        "primary_object_buried_by_cards",
+        "dark_dashboard_regression"
+      ],
+      "severity": "high",
+      "description": "Full Service Floor view shows an arbitrary dark palette, a floor map whose labels collide with table cards, and a desktop product object buried inside generic dashboard panel structure.",
+      "correction": "Choose a hospitality-appropriate palette, protect floor-plan labels, and make the floor map the central command object with supporting panels around it.",
+      "relatedRules": [
+        "Domain Palette Fit",
+        "Spatial Labels Need Protected Zones",
+        "Desktop Command Surface Must Not Collapse Into Card Soup",
+        "P0 Layout Integrity"
+      ],
+      "scorecardCaps": [
+        "random domain palette max 5",
+        "spatial label collision max 4",
+        "generic card-soup regression max 5"
+      ],
+      "globalRuleCandidate": true
+    },
+    {
+      "originalAttachmentName": "Screenshot 2026-07-03 at 15.27.14.png",
+      "filename": "screenshots/service-floor-map-label-collision-closeup.png",
+      "failureTypes": [
+        "map_label_collision"
+      ],
+      "severity": "high",
+      "description": "Close-up shows a table card overlapping the Window section label and server text, destroying the map's spatial semantics.",
+      "correction": "Reserve label safe zones and define table/card z-index, offsets, and collision rules before drawing spatial objects.",
+      "relatedRules": [
+        "Spatial Labels Need Protected Zones",
+        "P0 Layout Integrity"
+      ],
+      "scorecardCaps": [
+        "spatial label collision max 4"
+      ],
+      "globalRuleCandidate": true
+    },
+    {
+      "originalAttachmentName": "Screenshot 2026-07-03 at 15.27.38.png",
+      "filename": "screenshots/service-floor-placebo-navigation-no-content-change.png",
+      "failureTypes": [
+        "placebo_navigation"
+      ],
+      "severity": "critical",
+      "description": "Kitchen navigation appears selected, but the visible screen remains the same floor map and selected-table content.",
+      "correction": "Ensure nav/tabs change visible product state, route, data scope, or content; otherwise remove the interactive control or make it disabled.",
+      "relatedRules": [
+        "No Placebo Navigation",
+        "Interaction Grammar"
+      ],
+      "scorecardCaps": [
+        "placebo navigation max 3"
+      ],
+      "globalRuleCandidate": true
+    }
+  ]
+}
+

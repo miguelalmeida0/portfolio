@@ -1,0 +1,73 @@
+{
+  "app": "equity",
+  "status": "Approved app reference",
+  "productionAsset": false,
+  "items": [
+    {
+      "filename": "screenshots/01-market-command-center-overview.png",
+      "noteFile": "screenshots/01-market-command-center-overview.md",
+      "title": "Market Command Center Overview",
+      "status": "Approved app reference",
+      "tags": ["finance", "terminal", "overview", "dark-ui", "ticker-tape", "search", "data-table", "command-center"],
+      "bestUseCases": ["financial terminal", "research dashboard", "market scanner", "portfolio monitor", "data-heavy operations"],
+      "confidence": "high",
+      "visualLesson": "Frame dense market data with search, ticker context, summary metrics, and a readable table.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/02-watchlist-coverage-board.png",
+      "noteFile": "screenshots/02-watchlist-coverage-board.md",
+      "title": "Watchlist Coverage Board",
+      "status": "Approved app reference",
+      "tags": ["finance", "watchlist", "coverage", "inspector-panel", "table", "dark-ui", "ticker-grid"],
+      "bestUseCases": ["watchlists", "research tools", "coverage dashboards", "data inspectors", "portfolio monitoring"],
+      "confidence": "high",
+      "visualLesson": "Pair dense lists with an inspector/detail panel when the user needs context.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/03-return-leaderboard-bars.png",
+      "noteFile": "screenshots/03-return-leaderboard-bars.md",
+      "title": "Return Leaderboard Bars",
+      "status": "Approved app reference",
+      "tags": ["finance", "leaderboard", "bars", "performance", "time-filter", "dark-ui", "comparison"],
+      "bestUseCases": ["leaderboard", "performance comparison", "finance terminal", "analytics ranking", "portfolio review"],
+      "confidence": "high",
+      "visualLesson": "Put comparison controls directly above comparative results.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/04-return-matrix-heatmap.png",
+      "noteFile": "screenshots/04-return-matrix-heatmap.md",
+      "title": "Return Matrix Heatmap",
+      "status": "Approved app reference",
+      "tags": ["finance", "heatmap", "matrix", "data-density", "comparison", "dark-ui", "table"],
+      "bestUseCases": ["financial matrix", "analytics table", "benchmark comparison", "research terminal", "portfolio analysis"],
+      "confidence": "high",
+      "visualLesson": "Use matrix views when users need cross-object and cross-time comparison.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/05-news-lens-headline-tape.png",
+      "noteFile": "screenshots/05-news-lens-headline-tape.md",
+      "title": "News Lens Headline Tape",
+      "status": "Approved app reference",
+      "tags": ["finance", "news", "headline-tape", "filters", "source-labels", "dark-ui", "sentiment", "live-feed"],
+      "bestUseCases": ["news terminal", "research feed", "source monitor", "market intelligence", "incident stream"],
+      "confidence": "high",
+      "visualLesson": "Put filters in a stable rail when the stream is long and source-heavy.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/06-quote-tape-range-table.png",
+      "noteFile": "screenshots/06-quote-tape-range-table.md",
+      "title": "Quote Tape Range Table",
+      "status": "Approved app reference",
+      "tags": ["finance", "quote-tape", "table", "range-bars", "dark-ui", "market-data", "scope-selector"],
+      "bestUseCases": ["quote tape", "market monitor", "operations table", "financial scanner", "range comparison"],
+      "confidence": "high",
+      "visualLesson": "Use range bars to explain current position relative to historical bounds.",
+      "productionAsset": false
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "projectName": "Untitled Miguel Design OS Project",
+  "taskType": "visual-heavy-ui",
+  "mode": "implementation",
+  "isVisualWork": true,
+  "targetScreenshots": {
+    "390": "",
+    "768": "",
+    "1440": ""
+  },
+  "currentScreenshots": {
+    "390": "",
+    "768": "",
+    "1440": ""
+  },
+  "viewportChecks": {
+    "390": {
+      "screenshot": "",
+      "primaryObjectVisible": false,
+      "primaryActionVisible": false,
+      "noHorizontalScroll": false,
+      "noOverlap": false,
+      "readableText": false,
+      "notes": ""
+    },
+    "768": {
+      "screenshot": "",
+      "primaryObjectVisible": false,
+      "primaryActionVisible": false,
+      "noHorizontalScroll": false,
+      "noOverlap": false,
+      "readableText": false,
+      "notes": ""
+    },
+    "1440": {
+      "screenshot": "",
+      "primaryObjectVisible": false,
+      "primaryActionVisible": false,
+      "noHorizontalScroll": false,
+      "noOverlap": false,
+      "readableText": false,
+      "notes": ""
+    }
+  },
+  "visualQa": {
+    "status": "needs-work",
+    "noOverlap": false,
+    "noTextOnButtons": false,
+    "noWatermark": false,
+    "noHorizontalOverflow": false,
+    "noCutHeroObject": false,
+    "noCutHeroObjectJustification": "",
+    "notes": ""
+  },
+  "overlapDetected": false,
+  "horizontalScrollDetected": false,
+  "unreadableTextDetected": false,
+  "deadButtonsFound": [],
+  "visualTargetComparison": {
+    "matchesComposition": false,
+    "matchesFocalObject": false,
+    "matchesHiddenInformation": false,
+    "notes": ""
+  },
+  "remainingWeaknesses": []
+}

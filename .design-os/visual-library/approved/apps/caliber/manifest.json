@@ -1,0 +1,95 @@
+{
+  "app": "caliber",
+  "status": "Approved app reference",
+  "productionAsset": false,
+  "items": [
+    {
+      "filename": "screenshots/01-character-led-rewrite-hero.png",
+      "noteFile": "screenshots/01-character-led-rewrite-hero.md",
+      "title": "Character-Led Rewrite Hero",
+      "status": "Approved app reference",
+      "tags": ["hero", "writing-tool", "character-art", "dark-ui", "serif", "creative-tool", "transformation"],
+      "bestUseCases": ["writing tool", "creative app", "AI workflow", "character-led landing", "transformation product"],
+      "confidence": "medium",
+      "visualLesson": "Use one strong focal character only when it clarifies the product metaphor.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/02-author-selection-mood-control.png",
+      "noteFile": "screenshots/02-author-selection-mood-control.md",
+      "title": "Author Selection Mood Control",
+      "status": "Approved app reference",
+      "tags": ["selection-first", "writing-tool", "slider", "author-cards", "dark-ui", "input-output", "creative-controls"],
+      "bestUseCases": ["creative tools", "AI controls", "rewrite app", "selection-first tool", "model/persona picker"],
+      "confidence": "medium",
+      "visualLesson": "Put selection controls before transformation controls when the selected mode changes the output.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/03-input-output-rewrite-workbench.png",
+      "noteFile": "screenshots/03-input-output-rewrite-workbench.md",
+      "title": "Input Output Rewrite Workbench",
+      "status": "Approved app reference",
+      "tags": ["workbench", "input-output", "writing-tool", "dark-ui", "quick-starts", "transformation", "editor"],
+      "bestUseCases": ["rewrite tool", "text transformation", "input-output workflow", "creative editor", "AI assistant"],
+      "confidence": "high",
+      "visualLesson": "Put source and result surfaces next to each other for transformation tasks.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/04-rewrite-loading-state.png",
+      "noteFile": "screenshots/04-rewrite-loading-state.md",
+      "title": "Rewrite Loading State",
+      "status": "Approved app reference",
+      "tags": ["loading-state", "writing-tool", "async", "process-visibility", "disabled-buttons", "dark-ui"],
+      "bestUseCases": ["AI workflow", "text generation", "processing state", "transformation tool", "async action"],
+      "confidence": "high",
+      "visualLesson": "Show processing where the result will appear.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/05-inline-diff-rewrite-animation.png",
+      "noteFile": "screenshots/05-inline-diff-rewrite-animation.md",
+      "title": "Inline Diff Rewrite Animation",
+      "status": "Approved app reference",
+      "tags": ["diff", "animation", "writing-tool", "transformation", "output-state", "dark-ui", "process-visibility"],
+      "bestUseCases": ["rewrite tool", "diff viewer", "AI output review", "content editor", "transformation visualization"],
+      "confidence": "high",
+      "visualLesson": "Make transformation visible when the process itself builds trust.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/06-final-rewrite-output-state.png",
+      "noteFile": "screenshots/06-final-rewrite-output-state.md",
+      "title": "Final Rewrite Output State",
+      "status": "Approved app reference",
+      "tags": ["final-state", "writing-tool", "output-review", "copy-action", "dark-ui", "transformation"],
+      "bestUseCases": ["AI writing tool", "output review", "transformation workflow", "editor", "copy/export flow"],
+      "confidence": "high",
+      "visualLesson": "Keep original and result visible after transformation.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/07-rewrite-lab-progress-trace.png",
+      "noteFile": "screenshots/07-rewrite-lab-progress-trace.md",
+      "title": "Rewrite Lab Progress Trace",
+      "status": "Approved app reference",
+      "tags": ["process-trace", "ai-workflow", "progress", "scoring", "transparency", "writing-tool", "dark-ui"],
+      "bestUseCases": ["AI workflow", "process trace", "generation pipeline", "evaluation UI", "automation transparency"],
+      "confidence": "high",
+      "visualLesson": "Explain multi-step AI or automation work with visible stages.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/08-candidate-scoring-output-panel.png",
+      "noteFile": "screenshots/08-candidate-scoring-output-panel.md",
+      "title": "Candidate Scoring Output Panel",
+      "status": "Approved app reference",
+      "tags": ["candidate-scoring", "output-selection", "ai-evaluation", "writing-tool", "transparent-ai", "dark-ui"],
+      "bestUseCases": ["AI evaluation", "candidate comparison", "writing tools", "recommendation systems", "output selection"],
+      "confidence": "high",
+      "visualLesson": "Show why an automated output was selected.",
+      "productionAsset": false
+    }
+  ]
+}

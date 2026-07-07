@@ -1,0 +1,57 @@
+{
+  "id": "bunk-radio-text-container-nav-failures",
+  "title": "Bunk Radio Text / Container / Nav Failures",
+  "status": "rejected-execution-promising-concept",
+  "dateAdded": "2026-07-04",
+  "source": "Design OS dogfood critique",
+  "conceptVerdict": "promising",
+  "executionVerdict": "rejected",
+  "screenshots": [
+    {
+      "filename": "bunk-radio-01-excessive-empty-whitespace.png",
+      "path": "screenshots/bunk-radio-01-excessive-empty-whitespace.png",
+      "failure": "huge unexplained empty whitespace"
+    },
+    {
+      "filename": "bunk-radio-02-card-covering-headline-text.png",
+      "path": "screenshots/bunk-radio-02-card-covering-headline-text.png",
+      "failure": "card covering headline text"
+    },
+    {
+      "filename": "bunk-radio-03-word-clipped-inside-red-card.png",
+      "path": "screenshots/bunk-radio-03-word-clipped-inside-red-card.png",
+      "failure": "word clipped inside card/container"
+    },
+    {
+      "filename": "bunk-radio-04-nav-labels-overflow-items.png",
+      "path": "screenshots/bunk-radio-04-nav-labels-overflow-items.png",
+      "failure": "nav labels overflow controls"
+    },
+    {
+      "filename": "bunk-radio-05-nav-resize-empty-space.png",
+      "path": "screenshots/bunk-radio-05-nav-resize-empty-space.png",
+      "failure": "nav resize creates huge empty space"
+    },
+    {
+      "filename": "bunk-radio-06-sticker-over-headline-text.png",
+      "path": "screenshots/bunk-radio-06-sticker-over-headline-text.png",
+      "failure": "sticker covering headline text"
+    }
+  ],
+  "failureModes": [
+    "text clipping",
+    "container/text collision",
+    "nav label overflow",
+    "responsive nav dead space",
+    "unexplained whitespace",
+    "overlay covering critical text"
+  ],
+  "requiredPrevention": [
+    "text/container integrity gate",
+    "nav responsiveness gate",
+    "no critical text overlap rule",
+    "no unexplained whitespace rule",
+    "breakpoint screenshot proof",
+    "hard score caps"
+  ]
+}

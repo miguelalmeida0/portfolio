@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://miguel-design-os.local/schemas/ui-scorecard.schema.json",
+  "title": "Miguel Design OS UI Scorecard",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "totalPoints", "categories", "blockers", "requiredReportFields"],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "totalPoints": {
+      "type": "integer",
+      "const": 100
+    },
+    "categories": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "points", "checks"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "points": {
+            "type": "integer"
+          },
+          "checks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "blockers": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["maxScore", "description"],
+        "properties": {
+          "maxScore": {
+            "type": "integer"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "skippedVisualConceptGate",
+        "textOnlyConcepts",
+        "approvalWithoutVisualPreviews",
+        "missingConceptScreenshots",
+        "sameConceptLayout",
+        "implementationBeforeConceptApproval",
+        "referenceFlattening",
+        "sameLayoutWithNewPaint",
+        "genericLayoutInsteadOfReference",
+        "primaryObjectReplacedByGrid",
+        "overlapCollision",
+        "decorativeMotionWithoutPurpose",
+        "aiScaleInflation",
+        "obviousThemeCliche",
+        "selectionFirstNoDesire",
+        "badgeGlowStatsAsExcitement"
+      ]
+    },
+    "requiredReportFields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

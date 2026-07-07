@@ -1,0 +1,104 @@
+{
+  "project": "Midnight Scent Theater",
+  "sourceFigmaFile": "not-provided-local-fallback",
+  "exports": [
+    {
+      "id": "mst-moon-lens",
+      "nodeName": "mask / moon-lens / default / aperture",
+      "role": "mask",
+      "motif": "moon/lens",
+      "format": "svg",
+      "viewBox": "0 0 640 360",
+      "accessibility": {
+        "decorative": false,
+        "title": "Moon lens aperture",
+        "description": "Editorial lens shape framing the Midnight Scent Theater perfume scene."
+      },
+      "colorStrategy": "material props separate from geometry",
+      "fixedFillsAllowed": false,
+      "responsiveBehavior": "Desktop oversized and cropped; mobile centered behind bottle.",
+      "codeComponent": "MoonLensMask",
+      "parityRisks": ["CSS ellipse masks differ from exported SVG masks", "Figma blur/blend parity must be checked in browser"]
+    },
+    {
+      "id": "mst-scent-bottle-silhouette",
+      "nodeName": "hero-object / scent-bottle / default / silhouette",
+      "role": "hero-object",
+      "motif": "scent bottle silhouette",
+      "format": "svg",
+      "viewBox": "0 0 240 520",
+      "accessibility": {
+        "decorative": false,
+        "title": "Midnight Scent Theater bottle silhouette",
+        "description": "Fictional perfume bottle silhouette used as the central product object."
+      },
+      "colorStrategy": "geometry exported neutral; material set through CSS variables",
+      "fixedFillsAllowed": false,
+      "responsiveBehavior": "Desktop large vertical object; mobile simplified cropped object.",
+      "codeComponent": "ScentBottleSilhouette",
+      "parityRisks": ["Boolean path simplification may alter bottle shoulder curve", "Morph path requires normalized points"]
+    },
+    {
+      "id": "mst-curtain-fold-mask",
+      "nodeName": "mask / curtain-fold / reveal-start / left",
+      "role": "mask",
+      "motif": "curtain reveal",
+      "format": "svg",
+      "viewBox": "0 0 360 720",
+      "accessibility": {
+        "decorative": true,
+        "title": "",
+        "description": ""
+      },
+      "colorStrategy": "theme material fill allowed only in composition, not reusable geometry",
+      "fixedFillsAllowed": false,
+      "responsiveBehavior": "Desktop side curtain; mobile top/bottom mask edge.",
+      "codeComponent": "CurtainRevealMask",
+      "parityRisks": ["Complex masks need browser compatibility checks", "Text safe zones must remain outside mask motion path"]
+    },
+    {
+      "id": "mst-smoke-mark",
+      "nodeName": "decorative / smoke-mark / background / scent-trail",
+      "role": "decorative",
+      "motif": "smoke mark",
+      "format": "svg",
+      "viewBox": "0 0 320 180",
+      "accessibility": {
+        "decorative": true,
+        "title": "",
+        "description": ""
+      },
+      "colorStrategy": "opacity and material controlled by CSS variables",
+      "fixedFillsAllowed": false,
+      "responsiveBehavior": "Reduce quantity and opacity on mobile; never cover labels.",
+      "codeComponent": "SmokeMark",
+      "parityRisks": ["Path morph decorative only", "Low opacity may fail against light variants"]
+    },
+    {
+      "id": "mst-couture-label",
+      "nodeName": "callout / couture-label / selected / scent-note",
+      "role": "callout",
+      "motif": "couture label",
+      "format": "svg",
+      "viewBox": "0 0 220 80",
+      "accessibility": {
+        "decorative": false,
+        "title": "Scent note label",
+        "description": "Label frame for scent chapter metadata."
+      },
+      "colorStrategy": "uses currentColor for reusable stroke",
+      "fixedFillsAllowed": false,
+      "responsiveBehavior": "Text remains live HTML where possible; SVG only frames the label.",
+      "codeComponent": "CoutureLabelFrame",
+      "parityRisks": ["Do not export live text as outlines", "Ensure label does not become meaningless badge"]
+    }
+  ],
+  "globalRules": [
+    "Preserve viewBox.",
+    "Use currentColor for reusable icon-like marks.",
+    "Do not bake fixed theme fills into reusable geometry.",
+    "Add title and desc when SVG carries meaning.",
+    "Mark decorative smoke and curtain atmosphere as aria-hidden in code.",
+    "Do not export Figma text as outlines when live HTML text is possible."
+  ]
+}

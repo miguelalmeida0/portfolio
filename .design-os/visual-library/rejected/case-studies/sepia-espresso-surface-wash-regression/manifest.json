@@ -1,0 +1,58 @@
+{
+  "project": "Nocturne Field Guide",
+  "mode": "artistic editorial landing page",
+  "status": "rejected",
+  "createdAt": "2026-07-03",
+  "failureType": "sepia_archive_brown_wash",
+  "whyRejected": "Migi had already rejected the muddy sepia/espresso/umber brown-black background family, and this design reused it as an archive/nocturne card surface.",
+  "globalRuleCandidate": true,
+  "screenshots": [
+    {
+      "originalAttachmentName": "Screenshot 2026-07-03 at 23.51.15.png",
+      "filename": "screenshots/sepia-card-background-closeup.png",
+      "failureShown": "Close-up of muddy sepia/espresso brown-black card surface.",
+      "severity": "P0",
+      "correction": "Remove the brown-black archive wash from the card surface and choose an authored palette with contrast proof.",
+      "relatedRules": [
+        "No sepia/espresso/umber archive wash",
+        "Art-directed palette exploration",
+        "Machine-generated palette anti-pattern"
+      ],
+      "scorecardCaps": [
+        "sepia/espresso/umber brown-black archive wash used as main page, stage, or app background: max 3/10",
+        "nocturne/archive/field-guide rationale used for banned brown-black surface: max 3/10"
+      ]
+    },
+    {
+      "originalAttachmentName": "Screenshot 2026-07-03 at 23.51.23.png",
+      "filename": "screenshots/nocturne-field-guide-sepia-regression.png",
+      "failureShown": "Full page using sepia card surfaces inside a nocturne field guide concept.",
+      "severity": "P0",
+      "correction": "Preserve useful composition only if needed; redesign the palette away from sepia/espresso/umber surfaces.",
+      "relatedRules": [
+        "No sepia/espresso/umber archive wash",
+        "No machine-generated palette",
+        "Palette must feel authored"
+      ],
+      "scorecardCaps": [
+        "banned sepia/espresso/umber archive surface wash appears in a screenshot: max 3/10"
+      ]
+    },
+    {
+      "originalAttachmentName": "Screenshot 2026-07-05 at 00.35.21.png",
+      "filename": "screenshots/cascade-lab-commander-note-sepia-container.png",
+      "failureShown": "Large operational note container using muddy sepia/espresso brown-black surface.",
+      "severity": "P0",
+      "correction": "Remove the sepia/espresso container surface and redesign the palette before continuing.",
+      "relatedRules": [
+        "No sepia container surfaces",
+        "No sepia/espresso/umber archive wash",
+        "Machine-generated palette anti-pattern"
+      ],
+      "scorecardCaps": [
+        "sepia/espresso/umber surface appears on card/panel/container: max score 2",
+        "final handoff claims success while sepia container remains visible: max score 2"
+      ]
+    }
+  ]
+}

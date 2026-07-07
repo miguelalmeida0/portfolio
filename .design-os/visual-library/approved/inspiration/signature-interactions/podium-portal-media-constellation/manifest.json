@@ -1,0 +1,51 @@
+{
+  "name": "Podium Portal Media Constellation",
+  "source": "Podium",
+  "url": "https://podium.global/",
+  "status": "approved-inspiration",
+  "createdAt": "2026-07-03T21:03:41.525Z",
+  "mechanics": [
+    "small beautiful shape on empty page",
+    "small videos or animations inside the shape",
+    "shape feels like a crack or portal",
+    "scroll slowly enters inside the shape",
+    "rewarding media windows during scroll",
+    "named work containers appear after portal experience"
+  ],
+  "patterns": [
+    "Portal Object Entry",
+    "Media Constellation Stage"
+  ],
+  "screenshots": [
+    {
+      "originalAttachmentName": "codex-clipboard-4e8d3612-f3db-4636-a381-b8a05c21508b.png",
+      "filename": "podium-02-media-constellation-work-grid.png",
+      "path": "screenshots/podium-02-media-constellation-work-grid.png"
+    },
+    {
+      "originalAttachmentName": "Screenshot 2026-07-03 at 22.47.03.png",
+      "filename": "podium-01-portal-object-white-stage.png",
+      "path": "screenshots/podium-01-portal-object-white-stage.png"
+    },
+    {
+      "originalAttachmentName": "codex-clipboard-db9d1bfb-e766-4f4d-813c-618e248355cc.png",
+      "filename": "podium-03-media-constellation-work-grid-expanded.png",
+      "path": "screenshots/podium-03-media-constellation-work-grid-expanded.png"
+    }
+  ],
+  "note": "Screenshots saved from Codex attachments.",
+  "doNotCopy": [
+    "brand identity",
+    "logos",
+    "mascots",
+    "exact colors",
+    "site copy",
+    "proprietary media"
+  ],
+  "transfer": [
+    "interaction mechanic",
+    "motion role",
+    "layout logic",
+    "fallback requirements"
+  ]
+}

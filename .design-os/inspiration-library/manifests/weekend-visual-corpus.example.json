@@ -1,0 +1,43 @@
+{
+  "projectName": "Weekend Visual Corpus",
+  "purpose": "Example manifest for a local weekend corpus that documents references without committing screenshot sets.",
+  "localScreenshotsPath": "inspiration-library/screenshots/weekend-visual-corpus/",
+  "sources": [
+    "Awwwards",
+    "FWA",
+    "CSS Design Awards",
+    "Mobbin",
+    "Pinterest moodboard queries"
+  ],
+  "references": [
+    {
+      "id": "weekend-award-stage-001",
+      "title": "Award-style cinematic product stage",
+      "sourceName": "Awwwards",
+      "sourceUrl": "https://www.awwwards.com",
+      "referenceType": "inspiration",
+      "trustLevel": "high",
+      "screenshotPath": "",
+      "screenshotLocalOnly": true,
+      "attributionNotes": "Source URL retained; screenshot not captured in this example.",
+      "composition": "Full-screen stage with one dominant object and restrained supporting text.",
+      "focalObject": "Primary product or character object.",
+      "mood": "Premium, cinematic, controlled.",
+      "material": "Deep surfaces, sharp highlight discipline, strong negative space.",
+      "motion": "Slow reveal or state transition that clarifies hierarchy.",
+      "interactionModel": "Inspect or select one object before seeing deeper information.",
+      "intentionallyAbsent": "No dashboard wall, no badge soup, no source-site watermark.",
+      "literalTarget": false,
+      "notes": "Use as composition evidence, not a production asset source."
+    }
+  ],
+  "topThirtyStrongestReferences": [
+    "weekend-award-stage-001"
+  ],
+  "topTenCompositionPatterns": [
+    "Dominant object stage with secondary information held at the edges."
+  ],
+  "topTenAntiPatternsToAvoid": [
+    "Using target screenshots or watermarked source images as production assets."
+  ]
+}

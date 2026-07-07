@@ -1,0 +1,32 @@
+{
+  "id": "late-check-fm-final-gate-v1-failed",
+  "title": "Late Check FM Final Gate V1 Failed",
+  "status": "rejected-enforcement-failure",
+  "dateAdded": "2026-07-04",
+  "source": "Design OS dogfood critique",
+  "screenshots": [
+    {
+      "filename": "late-check-fm-01-floating-label-overlaps-at-large-width.png",
+      "path": "screenshots/late-check-fm-01-floating-label-overlaps-at-large-width.png",
+      "failure": "floating label/container overlaps another container at larger width"
+    },
+    {
+      "filename": "late-check-fm-02-cut-text-after-integrity-gate.png",
+      "path": "screenshots/late-check-fm-02-cut-text-after-integrity-gate.png",
+      "failure": "cut text still present after integrity gate"
+    }
+  ],
+  "failureModes": [
+    "final gate false pass",
+    "floating container drift",
+    "intermediate width layout failure",
+    "cut text after validation"
+  ],
+  "requiredPrevention": [
+    "Final UI Integrity Gate v2",
+    "expanded viewport matrix",
+    "scroll sample matrix",
+    "fail-closed handoff contract",
+    "floating container positioning rules"
+  ]
+}

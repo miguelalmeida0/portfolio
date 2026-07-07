@@ -1,0 +1,31 @@
+{
+  "projectName": "",
+  "sourcePolicy": "Unsplash images are visual source material, not owned product proof.",
+  "images": [
+    {
+      "localFilename": "",
+      "localPath": "",
+      "usageType": "local",
+      "unsplashPhotoId": "",
+      "sourcePageUrl": "",
+      "downloadUrl": "",
+      "photographerName": "",
+      "photographerUsername": "",
+      "description": "",
+      "altDescription": "",
+      "originalWidth": 0,
+      "originalHeight": 0,
+      "dominantColor": "",
+      "blurHash": "",
+      "selectedCropOrientation": "",
+      "imageRole": "",
+      "sectionUsage": "",
+      "whySelected": "",
+      "paletteRelationship": "",
+      "textOverlaySafeZoneNotes": "",
+      "attributionNote": "",
+      "productTruthNote": "",
+      "remoteUrlUsed": ""
+    }
+  ]
+}

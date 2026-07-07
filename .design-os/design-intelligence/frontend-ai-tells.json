@@ -1,0 +1,239 @@
+{
+  "version": "2026-07-02",
+  "namedTells": {
+    "decorative_orbital_overlay": {
+      "type": "visual_ai_tell",
+      "description": "Fake orbital/radar/sonar circular lines used as atmosphere.",
+      "rejected": true,
+      "reason": "Repeated AI-builder motif with no semantic value.",
+      "correction": "Use image, typography, material, color, or functional diagram instead."
+    },
+    "unreadable_floating_navigation": {
+      "type": "navigation_ai_tell",
+      "description": "Creative or floating navigation placed over images, giant type, or changing backgrounds without readability protection.",
+      "rejected": true,
+      "reason": "Navigation contrast depends on a lucky crop or scroll position.",
+      "correction": "Use safe placement, scrim, blur, quiet surface, adaptive inverse text, position shift, contextual collapse, or non-overlapping placement."
+    },
+    "forced_brand_chrome": {
+      "type": "identity_ai_tell",
+      "description": "Logo, app name, initials badge, or wordmark added from template habit.",
+      "rejected": true,
+      "reason": "Migi often wants identity in the composition rather than persistent top chrome.",
+      "correction": "Justify brand chrome in the visual spec or remove it."
+    },
+    "decorative_hairline_filler": {
+      "type": "layout_ai_tell",
+      "description": "Tiny separator rules, red hairlines, label rails, or ticks added as fake editorial detail.",
+      "rejected": true,
+      "reason": "Ornamental lines add no structure and repeat across generated pages.",
+      "correction": "Use real hierarchy, spacing, image crop, color field, or meaningful content boundaries."
+    },
+    "cut_off_mobile_sheet": {
+      "type": "mobile_product_ai_tell",
+      "description": "Modal, drawer, or bottom sheet is placed too low, clipped by the viewport, hides actions, ignores safe areas, or cannot scroll long content.",
+      "rejected": true,
+      "reason": "A clipped sheet breaks mobile product usability before visual taste is evaluated.",
+      "correction": "Use max-height, internal scroll, safe-area padding, visible/sticky actions, reachable close control, and spatial separation from bottom nav."
+    },
+    "overlapping_control_indicator": {
+      "type": "interaction_ai_tell",
+      "description": "Underline, active bar, progress strip, or selected indicator overlaps a button, chip, tab, nav item, or segmented-control label.",
+      "rejected": true,
+      "reason": "Control decoration that crosses content looks broken and reduces readability.",
+      "correction": "Move the indicator outside the label zone or use active background, border, icon, color shift, or separate progress area."
+    },
+    "non_persistent_selection": {
+      "type": "interaction_ai_tell",
+      "description": "Chips, tabs, object selectors, category buttons, or segmented controls look selectable but do not visibly preserve selected state.",
+      "rejected": true,
+      "reason": "Users cannot understand the committed state or product behavior.",
+      "correction": "Persist selected state until changed, separate hover/pressed/focus/selected states, and bind state to actual UI behavior."
+    },
+    "text_only_bottom_nav": {
+      "type": "mobile_navigation_ai_tell",
+      "description": "Practical mobile product bottom navigation uses labels without meaningful icons.",
+      "rejected": true,
+      "reason": "Text-only bottom nav is slower to scan and feels less like a polished mobile product.",
+      "correction": "Use a consistent semantic icon family, icon plus label for each destination, and active state on both icon and text."
+    },
+    "add_card_masquerades_as_content": {
+      "type": "mobile_product_ai_tell",
+      "description": "Add/create affordance is styled like a normal content or object card.",
+      "rejected": true,
+      "reason": "Users may confuse a creation action with an existing item.",
+      "correction": "Use plus/create affordance, dashed action surface, distinct CTA row, floating action button, or separate add module."
+    },
+    "random_domain_palette": {
+      "type": "palette_ai_tell",
+      "description": "Palette looks cool in isolation but does not fit product domain, user environment, task pressure, emotional state, or state color semantics.",
+      "rejected": true,
+      "reason": "Color becomes arbitrary styling instead of product communication.",
+      "correction": "Define Domain Palette Fit before tokens: domain, environment, pressure, emotion, state colors, and random palette rejected."
+    },
+    "sepia_archive_brown_wash": {
+      "type": "palette_ai_tell",
+      "description": "Muddy sepia, espresso, umber, tobacco, parchment, or brown-black archive wash used as a page, stage, card, panel, sidebar, nav, or framed object background.",
+      "rejected": true,
+      "reason": "Migi has explicitly rejected this recurring generated-app palette. It makes unrelated projects feel like the same nocturne/archive/botanical template.",
+      "correction": "Remove the brown-black surface family. Use an authored palette from the concept or references, such as ink blue, aubergine-black, deep green-black, mineral grey, true black/cream, or another contrast-tested system."
+    },
+    "placebo_navigation": {
+      "type": "interaction_ai_tell",
+      "description": "Navigation, tabs, filters, or segmented controls change active visual state but do not change visible content, route, scope, filter, or product state.",
+      "rejected": true,
+      "reason": "Navigation becomes theater and breaks trust.",
+      "correction": "Every selected state must map to a visible product-state change; remove, disable, or mark unimplemented destinations."
+    },
+    "map_label_collision": {
+      "type": "layout_ai_tell",
+      "description": "Map, floor-plan, seating-chart, timeline, or canvas labels are covered by objects, cards, glows, badges, or controls.",
+      "rejected": true,
+      "reason": "Spatial labels carry orientation and meaning; covering them breaks the product model.",
+      "correction": "Reserve label safe zones, define object collision rules, and keep labels on protected layers."
+    },
+    "primary_object_buried_by_cards": {
+      "type": "desktop_product_ai_tell",
+      "description": "The product's main object, such as a map, floor plan, timeline, canvas, roster, or queue, is buried under support cards/panels.",
+      "rejected": true,
+      "reason": "Desktop command surfaces need a central object; cards should support, not replace it.",
+      "correction": "Name the primary object and build support panels around it as inspector, queue, controls, and metrics."
+    },
+    "dark_dashboard_regression": {
+      "type": "dashboard_ai_tell",
+      "description": "A product surface collapses into generic dark dashboard/card soup instead of a domain-specific command surface.",
+      "rejected": true,
+      "reason": "It erases product specificity and makes unrelated tools feel the same.",
+      "correction": "Use domain palette fit, primary-object hierarchy, varied support panels, and real interaction state."
+    },
+    "clipped_primary_text": {
+      "type": "layout_ai_tell",
+      "description": "Important headings, labels, buttons, or chart/canvas text are visibly cut off by line-height, masks, parent overflow, transforms, sticky containers, or viewport framing.",
+      "rejected": true,
+      "reason": "Readable language is the baseline of visual quality; partial clipping makes the UI feel untested and unfinished.",
+      "correction": "Fix line-height, padding, overflow, transform origin, responsive height, and text role. Change the layout if the text cannot fit."
+    },
+    "catastrophic_diagram_overlap": {
+      "type": "diagram_ai_tell",
+      "description": "Labels, badges, callouts, measurement chips, selected outlines, ruler text, construction lines, and objects collide until a graph/diagram/canvas becomes unreadable.",
+      "rejected": true,
+      "reason": "The product object itself becomes untrustworthy because spatial meaning, measurement, and selected state are visually broken.",
+      "correction": "Use coordinate, layer, object, label-lane, callout-route, badge-safe-zone, and collision models before implementation."
+    },
+    "performance_hostile_diagram_canvas": {
+      "type": "performance_ai_tell",
+      "description": "Diagram or canvas surfaces repeat heavy shadows, filters, glows, dense DOM/SVG layers, or layout-bound interactions with no rendering budget.",
+      "rejected": true,
+      "reason": "Interactive spatial products must feel immediate; janky pan, zoom, drag, hover, or selection is product failure.",
+      "correction": "Choose SVG, Canvas/Konva, D3, or React Flow deliberately; limit expensive effects, throttle interaction work, precompute layout, and document a performance budget."
+    }
+  },
+  "categories": {
+    "visualTells": [
+      "generic AI-purple / blue gradient default",
+      "generic glassmorphism everywhere",
+      "neon or outer glow used as polish",
+      "pure black without material nuance",
+      "fake div-based product screenshots",
+      "decorative colored status dots without semantic state",
+      "decorative orbital/radar/HUD circle overlays",
+      "fake sonar rings or generic orbit graphics"
+    ],
+    "paletteTells": [
+      "muddy brown or black generated-app background",
+      "generic charcoal plus orange",
+      "generic blue-grey SaaS palette",
+      "AI purple or blue glow used as identity",
+      "washed-out beige premium cliche",
+      "green terminal palette without reference support",
+      "neon lime tech palette without reference support",
+      "safe neutral surfaces with one predictable accent",
+      "artistic or landing page has no palette exploration",
+      "random domain palette with no product-environment reasoning",
+      "sepia/espresso/umber archive brown wash rationalized as nocturne, field guide, botanical, brass, tobacco, parchment, vintage, cinematic, or premium"
+    ],
+    "typographyTells": [
+      "Inter used as premium default without reason",
+      "serif chosen automatically for premium or creative",
+      "oversized headline without layout reason",
+      "em-dashes in visible UI copy",
+      "section-number eyebrows",
+      "uppercase eyebrow above every section"
+    ],
+    "copyTells": [
+      "generic names such as Acme, Nexus, SmartFlow, Cloudly, John Doe",
+      "fake-perfect numbers or fake spec precision",
+      "poetic micro-meta labels that do not help the user",
+      "photo-credit captions used as decoration",
+      "fake live/session/version labels"
+    ],
+    "layoutTells": [
+      "three equal feature cards as default",
+      "endless centered sections",
+      "repeated same-family sections",
+      "zigzag image/text sections beyond two in a row",
+      "split-header pattern used as filler",
+      "container/card soup",
+      "decorative hairline or label-rail filler",
+      "map, floor-plan, seating-chart, timeline, or canvas labels covered by cards/glows/objects"
+    ],
+    "heroTells": [
+      "left-text/right-image chosen by default",
+      "hero overstuffed with micro-labels, trust, pricing, and features",
+      "hero version label without launch context",
+      "scroll cue in hero",
+      "trust/logo wall inside hero",
+      "forced app-name/logo chrome in hero or nav without need"
+    ],
+    "ctaTells": [
+      "duplicate CTA intent",
+      "CTA text wraps on desktop",
+      "weak button contrast",
+      "too many competing CTAs"
+    ],
+    "logoSocialProofTells": [
+      "plain text wordmark wall",
+      "logo labels below logos",
+      "quietly trusted by wording",
+      "social-proof avatars with generic eggs",
+      "initials badge or logo mark added by default"
+    ],
+    "animationTells": [
+      "fade-and-rise everywhere",
+      "animation with no purpose",
+      "ease-in on UI motion",
+      "scale(0) entrance",
+      "transition: all",
+      "missing prefers-reduced-motion"
+    ],
+    "dashboardTells": [
+      "dashboard inherits landing-page Taste rules blindly",
+      "terminal panel spam",
+      "same-weight card field",
+      "chart wallpaper",
+      "fake live telemetry",
+      "primary object buried by cards",
+      "dark dashboard regression",
+      "placebo navigation in dashboard tabs"
+    ],
+    "mobileTells": [
+      "desktop layout squeezed into phone",
+      "touch targets too small",
+      "bottom nav cramped or cryptic",
+      "hover-only behavior on touch",
+      "floating nav unreadable over image/type background",
+      "cut-off mobile sheet or modal",
+      "active indicator overlaps control label",
+      "selectable chip/item does not preserve selected state",
+      "text-only bottom nav in practical product flow",
+      "add/create card masquerades as content"
+    ],
+    "diagram": [
+      "catastrophic_diagram_overlap",
+      "performance_hostile_diagram_canvas"
+    ],
+    "layout": [
+      "clipped_primary_text"
+    ]
+  }
+}

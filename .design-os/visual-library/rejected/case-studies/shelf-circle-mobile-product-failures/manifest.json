@@ -1,0 +1,89 @@
+{
+  "project": "Shelf Circle",
+  "mode": "mobile product flow / selection-first product",
+  "createdAt": "2026-07-03",
+  "screenshots": [
+    {
+      "originalAttachmentName": "Screenshot 2026-07-03 at 12.16.42.png",
+      "filename": "screenshots/control-indicator-overlaps-button-label.png",
+      "failureType": "overlapping_control_indicator",
+      "severity": "high",
+      "description": "The active or progress bar overlaps the Available button label area and makes the control feel broken.",
+      "correction": "Move the indicator outside the protected label zone or use active background, border, icon, or a separate progress area.",
+      "relatedRules": [
+        "Control Decoration Cannot Collide With Control Content",
+        "P0 Layout Integrity"
+      ],
+      "scorecardCaps": [
+        "active/underline bar overlaps button label: max score 4",
+        "control decoration collides with content: max score 5"
+      ]
+    },
+    {
+      "originalAttachmentName": "Screenshot 2026-07-03 at 12.16.54.png",
+      "filename": "screenshots/bottom-nav-missing-icons.png",
+      "failureType": "text_only_bottom_nav",
+      "severity": "medium",
+      "description": "The mobile bottom navigation uses labels without icons, reducing scanability and mobile product clarity.",
+      "correction": "Use meaningful icons plus readable labels, with active state affecting both icon and text.",
+      "relatedRules": [
+        "Mobile Bottom Navigation Requires Icons and Labels",
+        "Mobile Navigation Defaults"
+      ],
+      "scorecardCaps": [
+        "mobile product bottom nav has labels but no icons: max score 6",
+        "bottom nav icons are missing or semantically unclear: max score 6"
+      ]
+    },
+    {
+      "originalAttachmentName": "Screenshot 2026-07-03 at 12.17.08.png",
+      "filename": "screenshots/add-card-masquerades-content.png",
+      "failureType": "add_card_masquerades_as_content",
+      "severity": "high",
+      "description": "The add-new tile resembles an object card and can be mistaken for content.",
+      "correction": "Use a clearly distinct plus/create affordance such as a dashed action surface, FAB, CTA row, or separate add module.",
+      "relatedRules": [
+        "Add Actions Must Not Masquerade As Content Items",
+        "Selection / Gallery / Browse Mode"
+      ],
+      "scorecardCaps": [
+        "add/new action looks like a normal content item: max score 5",
+        "add action placement causes confusion with list content: max score 5"
+      ]
+    },
+    {
+      "originalAttachmentName": "Screenshot 2026-07-03 at 12.17.40.png",
+      "filename": "screenshots/modal-sheet-cut-off-mobile.png",
+      "failureType": "cut_off_mobile_sheet",
+      "severity": "critical",
+      "description": "The detail bottom sheet opens too low and appears clipped by the mobile viewport.",
+      "correction": "Constrain sheet height, use internal scroll for long content, keep actions visible or sticky, and respect safe-area bottom.",
+      "relatedRules": [
+        "Modal and Bottom Sheet Fit Is Non-Negotiable",
+        "P0 Layout Integrity",
+        "Mobile Product Flow Mode"
+      ],
+      "scorecardCaps": [
+        "mobile modal/sheet is cut off: max score 3",
+        "primary modal action below viewport: max score 4"
+      ]
+    },
+    {
+      "originalAttachmentName": "Screenshot 2026-07-03 at 12.18.07.png",
+      "filename": "screenshots/nonpersistent-object-chip-selection.png",
+      "failureType": "non_persistent_selection",
+      "severity": "high",
+      "description": "Object-name chips appear selectable, but the selected state is not visibly durable.",
+      "correction": "Persist selected state until changed, distinguish hover/pressed/focus/selected states, and update behavior from local state.",
+      "relatedRules": [
+        "Selectable Controls Must Preserve State",
+        "Selection / Gallery / Browse Mode",
+        "Interface Feel"
+      ],
+      "scorecardCaps": [
+        "selectable chip/item does not retain selected state: max score 4",
+        "hover/active/selected states are visually confused: max score 5"
+      ]
+    }
+  ]
+}

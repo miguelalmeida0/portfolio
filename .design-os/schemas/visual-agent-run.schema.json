@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://miguel-design-os.local/schemas/visual-agent-run.schema.json",
+  "title": "Miguel Design OS Visual Agent Run",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "projectName",
+    "agentId",
+    "agentName",
+    "task",
+    "mode",
+    "inputs",
+    "outputs",
+    "evidencePaths",
+    "commandsRun",
+    "blockers",
+    "status"
+  ],
+  "properties": {
+    "projectName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agentId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agentName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["inspiration", "visual-concept", "literal-target-copy", "visual-qa", "productionize"]
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidencePaths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "commandsRun": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "passed", "blocked", "needs-review"]
+    }
+  }
+}

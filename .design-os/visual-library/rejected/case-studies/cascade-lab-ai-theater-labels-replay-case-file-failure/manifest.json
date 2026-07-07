@@ -1,0 +1,26 @@
+{
+  "id": "cascade-lab-ai-theater-labels-replay-case-file-failure",
+  "title": "Cascade Lab AI Theater Labels, Replay, And Case File Failure",
+  "date": "2026-07-05",
+  "verdict": "rejected-execution",
+  "project": "Cascade Lab",
+  "failure_patterns": [
+    "ai-theater-status-chips",
+    "replay-mission-chrome",
+    "oversized-metadata-strips",
+    "fake-case-file-identifiers",
+    "viewport-bottom-content-cutoff"
+  ],
+  "rule_files": [
+    "design-dna/no-ai-theater-chrome-rules.md",
+    "design-dna/viewport-edge-clipping-rules.md"
+  ],
+  "screenshots": [
+    "screenshots/cascade-lab-01-ai-theater-status-chips.png",
+    "screenshots/cascade-lab-02-replay-metadata-strip-ai-slop.png",
+    "screenshots/cascade-lab-03-replay-mission-chrome-wastes-page-space.png",
+    "screenshots/cascade-lab-04-bottom-content-clipped-amateur.png",
+    "screenshots/cascade-lab-05-case-file-cl-number-ai-slop.png"
+  ],
+  "source": "Migi critique in Codex chat"
+}

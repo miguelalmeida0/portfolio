@@ -1,0 +1,62 @@
+{
+  "app": "portfolio",
+  "status": "Approved app reference",
+  "productionAsset": false,
+  "items": [
+    {
+      "filename": "screenshots/01-editorial-identity-hero.png",
+      "noteFile": "screenshots/01-editorial-identity-hero.md",
+      "title": "Editorial Identity Hero",
+      "status": "Approved app reference",
+      "tags": ["portfolio", "hero", "editorial", "serif", "dark-ui", "portrait-card", "personal-brand"],
+      "bestUseCases": ["portfolio", "personal site", "editorial profile", "founder page", "authored case-study home"],
+      "confidence": "high",
+      "visualLesson": "Make the first viewport signal the person or object immediately with one strong proof object.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/02-calm-frontend-manifesto-section.png",
+      "noteFile": "screenshots/02-calm-frontend-manifesto-section.md",
+      "title": "Calm Frontend Manifesto Section",
+      "status": "Approved app reference",
+      "tags": ["editorial", "manifesto", "serif", "dark-ui", "copy-led", "proof-panels", "calm-interface"],
+      "bestUseCases": ["portfolio", "about page", "product philosophy", "founder profile", "editorial landing section"],
+      "confidence": "high",
+      "visualLesson": "Use one large value statement and one or two proof panels instead of many feature cards.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/03-selected-work-editorial-catalog.png",
+      "noteFile": "screenshots/03-selected-work-editorial-catalog.md",
+      "title": "Selected Work Editorial Catalog",
+      "status": "Approved app reference",
+      "tags": ["portfolio", "case-studies", "editorial-catalog", "dark-ui", "project-cards", "restrained-navigation"],
+      "bestUseCases": ["portfolio", "case-study index", "work archive", "editorial catalog", "project history"],
+      "confidence": "high",
+      "visualLesson": "Use row-based case-study cards when the work needs explanation more than thumbnail browsing.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/04-longform-story-index-layout.png",
+      "noteFile": "screenshots/04-longform-story-index-layout.md",
+      "title": "Longform Story Index Layout",
+      "status": "Approved app reference",
+      "tags": ["longform", "editorial", "timeline-index", "dark-ui", "serif", "reading-experience", "story-page"],
+      "bestUseCases": ["about page", "long-form case study", "founder story", "editorial article", "product manifesto"],
+      "confidence": "high",
+      "visualLesson": "Give long-form content structure through an index, progress, and section anchors.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/05-contact-terminal-segmented-intake.png",
+      "noteFile": "screenshots/05-contact-terminal-segmented-intake.md",
+      "title": "Contact Terminal Segmented Intake",
+      "status": "Approved app reference",
+      "tags": ["contact", "terminal-ui", "segmented-control", "onboarding", "dark-ui", "personal-brand", "visitor-routing"],
+      "bestUseCases": ["portfolio contact", "onboarding intake", "visitor routing", "personal site", "lightweight questionnaire"],
+      "confidence": "high",
+      "visualLesson": "Turn contact or onboarding into a clear intent-selection flow when it helps routing.",
+      "productionAsset": false
+    }
+  ]
+}

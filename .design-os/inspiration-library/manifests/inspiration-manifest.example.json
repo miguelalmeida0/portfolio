@@ -1,0 +1,68 @@
+{
+  "projectName": "Robot Skill Forge",
+  "purpose": "Collect inspiration for a cinematic robot character-selection experience without using reference screenshots as production assets.",
+  "localScreenshotsPath": "inspiration-library/screenshots/robot-skill-forge/",
+  "sources": [
+    "Awwwards",
+    "FWA",
+    "CSS Design Awards",
+    "Godly.website",
+    "Pinterest moodboard queries"
+  ],
+  "references": [
+    {
+      "id": "rsf-awwwards-stage-001",
+      "title": "Award-style cinematic product stage",
+      "sourceName": "Awwwards",
+      "sourceUrl": "https://www.awwwards.com",
+      "referenceType": "inspiration",
+      "trustLevel": "high",
+      "screenshotPath": "inspiration-library/screenshots/robot-skill-forge/awwwards-stage-001.png",
+      "screenshotLocalOnly": true,
+      "attributionNotes": "Source URL retained; screenshot is local-only reference evidence.",
+      "composition": "A single dominant object occupies the center, with secondary information compressed into edge zones.",
+      "focalObject": "The primary product/character form.",
+      "mood": "Cinematic, premium, controlled tension.",
+      "material": "High contrast surfaces with disciplined highlights and deep negative space.",
+      "motion": "Slow reveal and selection emphasis rather than decorative motion.",
+      "interactionModel": "Choose or inspect the central object first; details reveal after intent.",
+      "intentionallyAbsent": "No dense stat grid, no badge soup, no generic dashboard wall.",
+      "literalTarget": false,
+      "notes": "Strong evidence for object-first composition and hidden secondary information."
+    },
+    {
+      "id": "rsf-pinterest-roster-001",
+      "title": "Moodboard roster energy",
+      "sourceName": "Pinterest",
+      "sourceUrl": "https://www.pinterest.com/search/pins/?q=game%20character%20select%20UI",
+      "referenceType": "inspiration",
+      "trustLevel": "moodboard-only",
+      "screenshotPath": "",
+      "screenshotLocalOnly": true,
+      "attributionNotes": "Pinterest used only as moodboard discovery, not award-quality evidence.",
+      "composition": "Multiple selectable characters create a choice moment with a stronger selected state.",
+      "focalObject": "Selectable character cards.",
+      "mood": "Collectible, energetic, comparison-driven.",
+      "material": "Layered cards, silhouettes, and selection glow used sparingly.",
+      "motion": "Hover/selected reward only.",
+      "interactionModel": "Pick one character, then inspect loadout details.",
+      "intentionallyAbsent": "No product brochure copy before selection.",
+      "literalTarget": false,
+      "notes": "Useful moodboard energy only; do not treat it as award-quality proof."
+    }
+  ],
+  "topThirtyStrongestReferences": [
+    "rsf-awwwards-stage-001",
+    "rsf-pinterest-roster-001"
+  ],
+  "topTenCompositionPatterns": [
+    "Dominant character stage with edge-context rails.",
+    "Roster cards that make the selected object feel committed.",
+    "Progressive disclosure: desire first, diagnostics second."
+  ],
+  "topTenAntiPatternsToAvoid": [
+    "Using target screenshots as production assets.",
+    "Overlapping badges, labels, and card controls.",
+    "Generic dark robotics dashboard with stat-badge clutter."
+  ]
+}

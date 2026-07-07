@@ -1,0 +1,98 @@
+{
+  "version": "2026-07-02",
+  "compositionAnchors": [
+    "asymmetric split",
+    "centered over image",
+    "bottom-left over image",
+    "editorial manifesto",
+    "image-as-canvas",
+    "mini minimalist",
+    "bento proof grid",
+    "sticky stack",
+    "horizontal narrative strip",
+    "full-width product theater"
+  ],
+  "backgroundModes": [
+    "solid surface",
+    "full-bleed image",
+    "masked image environment",
+    "subtle texture",
+    "editorial white space",
+    "dark cinematic field",
+    "soft tonal gradient",
+    "material panel",
+    "split color field"
+  ],
+  "ctaVariants": [
+    "primary button",
+    "button plus text link",
+    "inline text CTA",
+    "sticky lower CTA",
+    "demo launcher",
+    "waitlist input",
+    "contact intent",
+    "portfolio view intent"
+  ],
+  "heroScales": [
+    "giant statement",
+    "mid editorial",
+    "mini minimalist",
+    "image-led scene",
+    "product-stage hero"
+  ],
+  "sectionSystems": [
+    "hook",
+    "trust",
+    "feature proof",
+    "product demo",
+    "social proof",
+    "before after",
+    "pricing",
+    "storytelling",
+    "final CTA"
+  ],
+  "signatureComponents": [
+    "sticky-scroll stack",
+    "animated line drawing",
+    "media mask",
+    "comparison slider",
+    "logo-only wall",
+    "proof object",
+    "interactive demo card",
+    "selected quote"
+  ],
+  "conceptSpines": [
+    "from problem to proof",
+    "cinematic product reveal",
+    "editorial manifesto",
+    "trust-first conversion",
+    "interactive experience",
+    "portfolio as artifact"
+  ],
+  "secondReadMoments": [
+    "small proof detail",
+    "quiet material shift",
+    "contextual caption",
+    "hidden interaction hint",
+    "data-backed claim",
+    "unexpected image crop",
+    "microcopy that clarifies value"
+  ],
+  "rejectedMotifs": [
+    {
+      "id": "decorative_orbital_overlay",
+      "description": "Circular orbit, radar, sonar, HUD, target, or concentric arc overlays used as atmosphere.",
+      "correction": "Use image composition, typography, material, color field, or functional diagram instead."
+    },
+    {
+      "id": "decorative_hairline_filler",
+      "description": "Tiny separator lines, red rules, label rails, or ornamental ticks near headings.",
+      "correction": "Use real typography hierarchy, spacing, image crop, color field, or meaningful content boundaries."
+    },
+    {
+      "id": "forced_brand_chrome",
+      "description": "Logo/app-name/initials chrome added by default instead of being part of the selected direction.",
+      "correction": "Justify identity chrome in the visual spec or remove it."
+    }
+  ]
+}

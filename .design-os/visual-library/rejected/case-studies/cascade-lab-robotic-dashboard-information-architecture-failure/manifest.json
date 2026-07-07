@@ -1,0 +1,39 @@
+{
+  "id": "cascade-lab-robotic-dashboard-information-architecture-failure",
+  "project": "Cascade Lab",
+  "status": "rejected",
+  "createdAt": "2026-07-05",
+  "failureType": "dashboard taste and information architecture",
+  "screenshots": [
+    "screenshots/cascade-lab-01-dull-robotic-dark-dashboard-palette.png",
+    "screenshots/cascade-lab-02-overloaded-single-page-process-ui.png",
+    "screenshots/cascade-lab-03-dashboard-reference-gap-and-route-underuse.png"
+  ],
+  "primaryFailures": [
+    "dull robotic AI dashboard palette",
+    "one-note dark technical surface system",
+    "too much information on one page",
+    "navigation routes underused",
+    "elite dashboard reference gap"
+  ],
+  "rulesCreated": [
+    "design-dna/human-dashboard-palette-rules.md",
+    "design-dna/dashboard-route-architecture-rules.md"
+  ],
+  "relatedApprovedInspiration": [
+    "visual-library/approved/inspiration/01-command-centers-dashboards/"
+  ],
+  "relatedBadPractices": [
+    "visual-library/rejected/bad-practices/robotic-dashboard-palette/",
+    "visual-library/rejected/bad-practices/one-page-dashboard-information-pileup/",
+    "visual-library/rejected/bad-practices/dashboard-route-underuse/",
+    "visual-library/rejected/bad-practices/elite-dashboard-reference-gap/"
+  ],
+  "scoreCaps": [
+    "robotic AI dashboard palette: max score 5",
+    "complex dashboard crams multiple workflows into one page: max score 5",
+    "navigation exists but does not create distinct route jobs: max score 5",
+    "approved dashboard references provided but output ignores them: max score 5"
+  ]
+}
+

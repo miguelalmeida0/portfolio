@@ -1,0 +1,51 @@
+{
+  "version": "strict-3-image-direction-gate-v1",
+  "purpose": "Prompt structures for generated visual direction images used before visual-heavy implementation.",
+  "globalInstructions": [
+    "Generate frontend design reference images, not abstract art.",
+    "Make images implementation-friendly with coherent layout, hierarchy, and plausible UI.",
+    "Avoid fake broken UI text, nonsense logos, distorted typography, random artifacts, and illegible microcopy.",
+    "Generated images are visual north stars, not production assets."
+  ],
+  "directions": [
+    {
+      "id": "A",
+      "name": "Safe Refined",
+      "intent": "Polished, controlled, lower-risk direction.",
+      "mustVary": ["composition", "palette", "typography mood", "image/media strategy", "motion concept", "navigation approach"]
+    },
+    {
+      "id": "B",
+      "name": "Artistic Expressive",
+      "intent": "Stronger art-directed direction with more personality.",
+      "mustVary": ["composition", "palette", "typography mood", "image/media strategy", "motion concept", "navigation approach"]
+    },
+    {
+      "id": "C",
+      "name": "Unexpected High-Character",
+      "intent": "Boldest memorable direction that remains readable and usable.",
+      "mustVary": ["composition", "palette", "typography mood", "image/media strategy", "motion concept", "navigation approach"]
+    }
+  ],
+  "modeDifferences": {
+    "landing": ["poster logic", "image-led scene", "sparse copy zones", "section rhythm"],
+    "dashboard": ["attraction zone", "graph-rich surface", "varied panel weights", "compact readable density"],
+    "mobile": ["screen-first flow", "bottom navigation by default for 3+ destinations", "safe areas", "thumb-friendly hierarchy"],
+    "portfolio": ["project navigation as experience", "identity spine", "media-led rhythm"],
+    "creative": ["art-directed composition", "unexpected rhythm", "fewer stronger objects"],
+    "editorial": ["typographic hierarchy", "image/text rhythm", "reading flow"]
+  },
+  "analysisChecklist": [
+    "visual thesis",
+    "palette",
+    "typography",
+    "layout/composition",
+    "image/media role",
+    "navigation",
+    "motion feeling",
+    "risks",
+    "what AI default it avoids",
+    "what must not be copied literally"
+  ]
+}
+

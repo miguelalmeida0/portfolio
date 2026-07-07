@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://miguel-design-os.local/schemas/screenshot-report.schema.json",
+  "title": "Miguel Design OS Screenshot Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "projectName",
+    "taskType",
+    "mode",
+    "isVisualWork",
+    "targetScreenshots",
+    "currentScreenshots",
+    "viewportChecks",
+    "visualQa",
+    "overlapDetected",
+    "horizontalScrollDetected",
+    "unreadableTextDetected",
+    "deadButtonsFound",
+    "visualTargetComparison",
+    "remainingWeaknesses"
+  ],
+  "properties": {
+    "projectName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "taskType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["visual-concept", "literal-target-copy", "visual-repair", "implementation", "review"]
+    },
+    "isVisualWork": {
+      "type": "boolean"
+    },
+    "targetScreenshots": {
+      "$ref": "#/$defs/viewportScreenshots"
+    },
+    "currentScreenshots": {
+      "$ref": "#/$defs/viewportScreenshots"
+    },
+    "viewportChecks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["390", "768", "1440"],
+      "properties": {
+        "390": {
+          "$ref": "#/$defs/viewportCheck"
+        },
+        "768": {
+          "$ref": "#/$defs/viewportCheck"
+        },
+        "1440": {
+          "$ref": "#/$defs/viewportCheck"
+        }
+      }
+    },
+    "visualQa": {
+      "$ref": "#/$defs/visualQa"
+    },
+    "overlapDetected": {
+      "type": "boolean"
+    },
+    "horizontalScrollDetected": {
+      "type": "boolean"
+    },
+    "unreadableTextDetected": {
+      "type": "boolean"
+    },
+    "deadButtonsFound": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "visualTargetComparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["matchesComposition", "matchesFocalObject", "matchesHiddenInformation", "notes"],
+      "properties": {
+        "matchesComposition": {
+          "type": "boolean"
+        },
+        "matchesFocalObject": {
+          "type": "boolean"
+        },
+        "matchesHiddenInformation": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "remainingWeaknesses": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "viewportScreenshots": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["390", "768", "1440"],
+      "properties": {
+        "390": {
+          "type": "string"
+        },
+        "768": {
+          "type": "string"
+        },
+        "1440": {
+          "type": "string"
+        }
+      }
+    },
+    "viewportCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["screenshot", "primaryObjectVisible", "primaryActionVisible", "noHorizontalScroll", "noOverlap", "readableText", "notes"],
+      "properties": {
+        "screenshot": {
+          "type": "string"
+        },
+        "primaryObjectVisible": {
+          "type": "boolean"
+        },
+        "primaryActionVisible": {
+          "type": "boolean"
+        },
+        "noHorizontalScroll": {
+          "type": "boolean"
+        },
+        "noOverlap": {
+          "type": "boolean"
+        },
+        "readableText": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "visualQa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "noOverlap",
+        "noTextOnButtons",
+        "noWatermark",
+        "noHorizontalOverflow",
+        "noCutHeroObject",
+        "noCutHeroObjectJustification",
+        "notes"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["passing", "needs-work", "blocked", "manual-review"]
+        },
+        "noOverlap": {
+          "type": "boolean"
+        },
+        "noTextOnButtons": {
+          "type": "boolean"
+        },
+        "noWatermark": {
+          "type": "boolean"
+        },
+        "noHorizontalOverflow": {
+          "type": "boolean"
+        },
+        "noCutHeroObject": {
+          "type": "boolean"
+        },
+        "noCutHeroObjectJustification": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

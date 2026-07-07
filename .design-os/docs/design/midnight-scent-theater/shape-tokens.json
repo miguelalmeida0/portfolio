@@ -1,0 +1,50 @@
+{
+  "project": "Midnight Scent Theater",
+  "type": "shape-token-system",
+  "colorPolicy": "Geometry tokens only. Brand/material colors are separate from shape tokens.",
+  "primitiveTokens": {
+    "shape.radius.xs": { "value": 4, "unit": "px", "type": "radius" },
+    "shape.radius.sm": { "value": 8, "unit": "px", "type": "radius" },
+    "shape.radius.md": { "value": 16, "unit": "px", "type": "radius" },
+    "shape.radius.lg": { "value": 28, "unit": "px", "type": "radius" },
+    "shape.radius.xl": { "value": 44, "unit": "px", "type": "radius" },
+    "shape.smoothing.none": { "value": 0, "type": "smoothing" },
+    "shape.smoothing.ios": { "value": 0.62, "type": "smoothing" },
+    "shape.family.round": { "value": "round", "type": "family" },
+    "shape.family.squircle": { "value": "superellipse", "type": "family" },
+    "shape.family.notch": { "value": "notch", "type": "family" },
+    "shape.family.bevel": { "value": "bevel", "type": "family" },
+    "shape.keyline.thin": { "value": 1, "unit": "px", "type": "keyline" },
+    "shape.keyline.medium": { "value": 1.5, "unit": "px", "type": "keyline" },
+    "shape.offset.sm": { "value": 8, "unit": "px", "type": "offset" },
+    "shape.offset.md": { "value": 16, "unit": "px", "type": "offset" }
+  },
+  "semanticTokens": {
+    "shape.surface.card": { "family": "squircle", "radius": "shape.radius.md", "smoothing": "shape.smoothing.ios" },
+    "shape.surface.sheet": { "family": "squircle", "radius": "shape.radius.lg", "smoothing": "shape.smoothing.ios" },
+    "shape.surface.media": { "family": "lens", "radius": "shape.radius.xl", "textSafeOffset": "shape.offset.md" },
+    "shape.interactive.button": { "family": "squircle", "radius": "shape.radius.sm", "smoothing": "shape.smoothing.ios" },
+    "shape.interactive.chip": { "family": "capsule", "radius": "shape.radius.xl", "smoothing": "shape.smoothing.ios" },
+    "shape.icon.container": { "family": "squircle", "radius": "shape.radius.sm", "stroke": "shape.keyline.thin" },
+    "shape.editorial.mask": { "family": "moon-lens-or-curtain-fold", "textSafeOffset": "shape.offset.md" },
+    "shape.motion.morphable": { "family": "compatible-parametric", "requiresCompatibilityNotes": true }
+  },
+  "projectTokens": {
+    "project.hero.shapeFamily": "moon-lens + scent-bottle-silhouette",
+    "project.motion.morphFamily": "circle-to-lens + squircle-to-bottle + curtain-fold-to-mask + petal-to-smoke",
+    "project.surface.smoothing": 0.62,
+    "project.icon.strokeWidth": 1.75
+  },
+  "cssVariables": {
+    "--shape-radius-xs": "4px",
+    "--shape-radius-sm": "8px",
+    "--shape-radius-md": "16px",
+    "--shape-radius-lg": "28px",
+    "--shape-radius-xl": "44px",
+    "--shape-keyline-thin": "1px",
+    "--shape-keyline-medium": "1.5px",
+    "--shape-offset-sm": "8px",
+    "--shape-offset-md": "16px",
+    "--shape-smoothing-model": "superellipse-0.62"
+  }
+}

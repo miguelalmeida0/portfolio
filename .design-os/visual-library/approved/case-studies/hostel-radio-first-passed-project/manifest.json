@@ -1,0 +1,63 @@
+{
+  "project": "Hostel Radio",
+  "originalName": "Late Check FM",
+  "id": "hostel-radio-first-passed-project",
+  "status": "approved",
+  "approvalType": "first passed Design OS random project",
+  "createdAt": "2026-07-04",
+  "mode": "visual-heavy random project",
+  "concept": "Gen-Z hostel / radio / broadcast landing experience",
+  "repoVerifiedEvidence": [
+    "visual-library/approved/case-studies/late-check-fm-first-passed-project/"
+  ],
+  "recoveryContextOnly": {
+    "externalProjectPath": "/Users/malmeida/Desktop/design-os-random-test",
+    "githubRemote": "https://github.com/miguelalmeida0/hostel-radio.git",
+    "passedTag": "hostel-radio-v1-passed",
+    "note": "Supplied recovery context only; not verified from this Design OS repo during handover repair."
+  },
+  "passedBecause": [
+    "unsafe experimental scroll was removed or simplified",
+    "hero-only video rule preserved readability",
+    "cards remained readable",
+    "mobile layout quality held up",
+    "Final UI Integrity Gate v3 became the pass condition"
+  ],
+  "keyLessons": [
+    "readability beats scroll choreography",
+    "layout integrity beats visual ambition",
+    "advanced scroll is not production-default until rebuilt and proven",
+    "mobile-proven structure can be the source of truth when desktop experiments break"
+  ],
+  "validatedRules": [
+    "Final UI Integrity Gate v3",
+    "Hero-only media default",
+    "Text/container integrity",
+    "Viewport-edge clipping prevention",
+    "Horizontal scroll safety",
+    "Scroll readability first"
+  ],
+  "screenshots": [],
+  "screenshotStatus": "Passed-state screenshots were not available in the Design OS worktree when this canonical alias was created.",
+  "relatedApprovedCaseStudies": [
+    "visual-library/approved/case-studies/late-check-fm-first-passed-project/"
+  ],
+  "relatedRejectedCaseStudies": [
+    "visual-library/rejected/case-studies/late-check-fm-final-gate-v1-failed/",
+    "visual-library/rejected/case-studies/late-check-fm-final-gate-v2-failed-resize-scroll/",
+    "visual-library/rejected/case-studies/late-check-fm-scroll-media-text-collision/",
+    "visual-library/rejected/case-studies/late-check-fm-persistent-video-overlay-container-thinning/",
+    "visual-library/rejected/case-studies/late-check-fm-detail-reveal-mobile-nav-failures/",
+    "visual-library/rejected/case-studies/late-check-fm-fake-live-offset-container-nav-state-failure/"
+  ],
+  "benchmarkTags": [
+    "first-passed-random-project",
+    "gen-z-hostel",
+    "hostel-radio",
+    "late-check-fm",
+    "video-first-hero",
+    "broadcast-typography",
+    "stable-scroll",
+    "final-ui-integrity-v3"
+  ]
+}

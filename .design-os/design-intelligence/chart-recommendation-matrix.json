@@ -1,0 +1,70 @@
+{
+  "version": "2026-07-02",
+  "purpose": "Chart recommendation matrix distilled for Miguel Design OS. Use with skills/data-visualization-selection.",
+  "recommendations": [
+    {
+      "dataShape": "trend-over-time",
+      "primary": "line-chart",
+      "secondary": ["area-chart", "sparkline"],
+      "useWhen": "time axis and direction/rate of change matter",
+      "avoidWhen": "fewer than 4 points or no time dimension",
+      "fallback": "timestamp/value table and line styles beyond color"
+    },
+    {
+      "dataShape": "category-comparison",
+      "primary": "sorted-bar-chart",
+      "secondary": ["grouped-bar", "ranked-list"],
+      "useWhen": "ranking or magnitude comparison matters",
+      "avoidWhen": "too many categories without search/table",
+      "fallback": "value labels and sortable table"
+    },
+    {
+      "dataShape": "part-to-whole",
+      "primary": "stacked-bar-or-waffle",
+      "secondary": ["donut-for-simple-overview"],
+      "useWhen": "proportion matters more than precision",
+      "avoidWhen": "many categories or small differences",
+      "fallback": "percentage table"
+    },
+    {
+      "dataShape": "target-performance",
+      "primary": "bullet-chart",
+      "secondary": ["gauge-for-single-hero-kpi", "progress-track"],
+      "useWhen": "metric has defined target or threshold",
+      "avoidWhen": "no target exists",
+      "fallback": "visible value, target, and threshold labels"
+    },
+    {
+      "dataShape": "forecast-uncertainty",
+      "primary": "line-with-confidence-band",
+      "secondary": ["scenario-toggle"],
+      "useWhen": "prediction and uncertainty matter",
+      "avoidWhen": "no historical baseline or low confidence",
+      "fallback": "actual/forecast toggle and table"
+    },
+    {
+      "dataShape": "intensity-matrix",
+      "primary": "heatmap",
+      "secondary": ["matrix-table"],
+      "useWhen": "2D intensity is the insight",
+      "avoidWhen": "exact values are primary",
+      "fallback": "numeric grid table and legend"
+    },
+    {
+      "dataShape": "flow-or-funnel",
+      "primary": "funnel-or-sankey",
+      "secondary": ["waterfall", "linear-stage-list"],
+      "useWhen": "sequential conversion or quantity movement matters",
+      "avoidWhen": "stages are not real",
+      "fallback": "stage table with counts and drop-off"
+    },
+    {
+      "dataShape": "relationship-network",
+      "primary": "network-graph",
+      "secondary": ["adjacency-matrix", "tree"],
+      "useWhen": "topology or relationships matter",
+      "avoidWhen": "precise reading or mobile use is primary",
+      "fallback": "adjacency list"
+    }
+  ]
+}

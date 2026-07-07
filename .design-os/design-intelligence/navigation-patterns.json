@@ -1,0 +1,159 @@
+{
+  "patterns": [
+    {
+      "id": "classic-top-bar",
+      "name": "Classic Top Bar",
+      "whenToUse": "Use when clarity, convention, or enterprise familiarity matters more than originality.",
+      "whenNotToUse": "Avoid as the default for creative, portfolio, artistic, or image-led pages where the nav should support a stronger composition.",
+      "visualBehavior": "Logo or wordmark, primary links, and optional CTA arranged in a horizontal strip.",
+      "accessibilityRisk": "Can become crowded, low-contrast, or too small when compressed.",
+      "mobileBehavior": "Collapse to bottom nav for app-like experiences with 3+ destinations, or a compact menu for scrolling-first websites.",
+      "antiPatterns": ["generic SaaS bar", "sticky pill by default", "overpopulated links"],
+      "migiNotes": "Allowed when it earns clarity. Rejected when it is just navbar gravity."
+    },
+    {
+      "id": "split-corner-navigation",
+      "name": "Split Corner Navigation",
+      "whenToUse": "Use for editorial, portfolio, or landing pages where the canvas needs breathing room and the nav can frame the composition.",
+      "whenNotToUse": "Avoid when the product has many destinations or needs fast repeated switching.",
+      "visualBehavior": "Identity in one corner with links, menu, or CTA distributed across other corners.",
+      "accessibilityRisk": "Spatial separation can hide relationships if labels are unclear.",
+      "mobileBehavior": "Convert to compact menu plus primary CTA or bottom nav when app-like.",
+      "antiPatterns": ["random corner links", "weak active state", "links too far from context"],
+      "migiNotes": "Good for making nav feel composed instead of pasted."
+    },
+    {
+      "id": "centered-wordmark-navigation",
+      "name": "Centered Wordmark Navigation",
+      "whenToUse": "Use when brand identity is the primary anchor and links can orbit or sit at edges.",
+      "whenNotToUse": "Avoid in dense tools where center space is needed for search, tabs, or status.",
+      "visualBehavior": "Wordmark sits centrally while links are balanced around it or pushed to edges.",
+      "accessibilityRisk": "Can reduce scannability if the link order is unconventional.",
+      "mobileBehavior": "Keep wordmark as page identity and move primary destinations to bottom nav or menu.",
+      "antiPatterns": ["centered logo with generic link row", "wordmark stealing all space"],
+      "migiNotes": "Works when the wordmark is part of the page rhythm."
+    },
+    {
+      "id": "editorial-header-strip",
+      "name": "Editorial Header Strip",
+      "whenToUse": "Use for portfolio, magazine, studio, or creative landing pages with minimal link needs.",
+      "whenNotToUse": "Avoid when many destinations need persistent visibility.",
+      "visualBehavior": "Thin, restrained header that reads like editorial metadata.",
+      "accessibilityRisk": "Small labels can lose contrast or touch size.",
+      "mobileBehavior": "Preserve the editorial identity while moving deeper navigation into a menu.",
+      "antiPatterns": ["tiny unreadable labels", "metadata with no interaction clarity"],
+      "migiNotes": "Excellent when the page content carries the experience."
+    },
+    {
+      "id": "oversized-typographic-menu",
+      "name": "Oversized Typographic Menu",
+      "whenToUse": "Use for bold portfolio, agency, experimental, or brand-world pages where navigation is a visual object.",
+      "whenNotToUse": "Avoid in productivity apps or pages where the menu would compete with task content.",
+      "visualBehavior": "Menu labels or wordmark become large type and part of the hero composition.",
+      "accessibilityRisk": "Oversized type can crop, obscure hierarchy, or confuse link affordance.",
+      "mobileBehavior": "Use a deliberate menu screen or compact high-character trigger.",
+      "antiPatterns": ["giant type with no readable interaction", "cropped labels without intent"],
+      "migiNotes": "High-character, but only when usability remains obvious."
+    },
+    {
+      "id": "floating-contact-anchor",
+      "name": "Floating Contact Anchor",
+      "whenToUse": "Use when contact/action is a primary business goal and can become a compositional anchor.",
+      "whenNotToUse": "Avoid when it becomes a generic floating pill unrelated to the layout.",
+      "visualBehavior": "CTA floats separately from the link system, often in a corner or edge.",
+      "accessibilityRisk": "Can overlap content or lose focus order if not planned.",
+      "mobileBehavior": "Convert to sticky bottom action, bottom nav item, or safe-area aware floating button.",
+      "antiPatterns": ["generic contact pill", "overlapping hero", "unclear CTA state"],
+      "migiNotes": "CTA placement should feel authored, not pasted."
+    },
+    {
+      "id": "menu-first-minimal-nav",
+      "name": "Menu-First Minimal Nav",
+      "whenToUse": "Use for cinematic, artistic, or focused pages where visible links would weaken the scene.",
+      "whenNotToUse": "Avoid for task-heavy products where users need direct destination switching.",
+      "visualBehavior": "Few visible links, often one strong menu trigger plus optional CTA.",
+      "accessibilityRisk": "Hidden navigation can reduce discoverability.",
+      "mobileBehavior": "Use a clear menu trigger with accessible expanded state.",
+      "antiPatterns": ["mystery menu", "hamburger with no label in unfamiliar context"],
+      "migiNotes": "Minimal can be premium when the page itself carries orientation."
+    },
+    {
+      "id": "spatial-canvas-navigation",
+      "name": "Spatial / Canvas Navigation",
+      "whenToUse": "Use when a hero object, image, 3D stage, or immersive scene can hold links spatially.",
+      "whenNotToUse": "Avoid if links will become hard to find or collide with focal imagery.",
+      "visualBehavior": "Nav items live around the scene or object rather than inside a conventional bar.",
+      "accessibilityRisk": "Spatial placement needs strong focus order and contrast.",
+      "mobileBehavior": "Recompose into a compact menu or bottom nav while preserving the scene.",
+      "antiPatterns": ["random labels floating over busy imagery", "text over focal object"],
+      "migiNotes": "One of the strongest ways to escape default navbar gravity."
+    },
+    {
+      "id": "portfolio-index-navigation",
+      "name": "Portfolio Index Navigation",
+      "whenToUse": "Use for studios, creative portfolios, project galleries, or work-first sites.",
+      "whenNotToUse": "Avoid for transactional products where project-index behavior is irrelevant.",
+      "visualBehavior": "Work/About/Process/Contact or project links behave like part of an index or gallery system.",
+      "accessibilityRisk": "Index-like layouts need clear link grouping and keyboard order.",
+      "mobileBehavior": "Convert to stacked index, compact menu, or bottom nav depending on destination count.",
+      "antiPatterns": ["plain portfolio grid", "nav detached from project browsing"],
+      "migiNotes": "Makes navigation part of browsing, not chrome."
+    },
+    {
+      "id": "vertical-side-navigation",
+      "name": "Vertical Side Navigation",
+      "whenToUse": "Use for editorial layouts, dashboards, or staged pages where side labels support composition.",
+      "whenNotToUse": "Avoid when it wastes mobile space or creates cryptic rails.",
+      "visualBehavior": "Small side rail, rotated labels, or vertical grouping along an edge.",
+      "accessibilityRisk": "Rotated text and icon-only rails can be hard to read.",
+      "mobileBehavior": "Convert to bottom nav, compact tabs, or menu.",
+      "antiPatterns": ["cryptic side rail", "desktop rail squeezed onto mobile"],
+      "migiNotes": "Useful only when it clarifies hierarchy or reinforces the page structure."
+    },
+    {
+      "id": "bottom-navigation",
+      "name": "Bottom Navigation",
+      "whenToUse": "Default for mobile apps and mobile product flows with 3+ primary destinations.",
+      "whenNotToUse": "Avoid for documentation sites, desktop-first enterprise tools, editor software, or scrolling-first websites unless justified.",
+      "visualBehavior": "Primary destinations sit in a safe-area aware bottom bar or dock.",
+      "accessibilityRisk": "Can become cramped, generic, or unclear if icons and labels are weak.",
+      "mobileBehavior": "Use generous touch targets, readable labels, intentional active state, and safe-area support.",
+      "antiPatterns": ["generic Android-looking bar", "oversized dock", "tiny icon strip"],
+      "migiNotes": "The mobile default for app-like experiences."
+    },
+    {
+      "id": "contextual-section-navigation",
+      "name": "Contextual Section Navigation",
+      "whenToUse": "Use when section progression, story, or content state changes matter.",
+      "whenNotToUse": "Avoid if changing nav context will confuse users about available destinations.",
+      "visualBehavior": "Nav highlights or adapts as the user moves through sections.",
+      "accessibilityRisk": "State changes need clear semantics and keyboard support.",
+      "mobileBehavior": "Use section progress, sticky context, or compact contextual controls.",
+      "antiPatterns": ["nav changes without explanation", "lost global escape"],
+      "migiNotes": "Good for story-led pages when global orientation remains clear."
+    },
+    {
+      "id": "floating-dock-island-navigation",
+      "name": "Floating Dock / Island Navigation",
+      "whenToUse": "Use when a compact nav object fits the brand and does not fight the hero.",
+      "whenNotToUse": "Avoid as a default premium trope or when it obscures content.",
+      "visualBehavior": "Small floating cluster with links, icons, or actions.",
+      "accessibilityRisk": "Needs focus ring, contrast, hit targets, and collision checks.",
+      "mobileBehavior": "Convert to bottom nav or safe-area aware compact dock.",
+      "antiPatterns": ["generic glass pill", "sticky black bar with new colors"],
+      "migiNotes": "Only works when it feels intentional, not automatic."
+    },
+    {
+      "id": "hidden-progressive-navigation",
+      "name": "Hidden / Progressive Navigation",
+      "whenToUse": "Use for cinematic or highly focused landing experiences where primary action matters more than link browsing.",
+      "whenNotToUse": "Avoid for content-heavy, ecommerce, dashboard, or app-like experiences.",
+      "visualBehavior": "Global links are hidden behind a clear menu or revealed contextually.",
+      "accessibilityRisk": "Discoverability and keyboard access must be protected.",
+      "mobileBehavior": "Use an accessible menu drawer or progressive sheet.",
+      "antiPatterns": ["hidden links with no visible trigger", "menu that traps focus"],
+      "migiNotes": "Useful when minimal nav lets the page become a scene."
+    }
+  ]
+}
+

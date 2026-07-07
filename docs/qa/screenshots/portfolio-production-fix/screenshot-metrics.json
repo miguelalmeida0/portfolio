@@ -1,0 +1,600 @@
+{
+  "generatedAt": "2026-07-05T19:31:38.282Z",
+  "responsive": [
+    {
+      "width": 1440,
+      "height": 900,
+      "root": {
+        "title": "Miguel Almeida / Frontend Product Engineer / Berlin",
+        "overflowX": 0,
+        "heroLine": "Product UI. Reusable systems.",
+        "heroKicker": "Berlin / Remote",
+        "navItems": [
+          {
+            "text": "Work",
+            "rect": {
+              "x": 457,
+              "y": 14,
+              "width": 121,
+              "height": 29
+            }
+          },
+          {
+            "text": "Story",
+            "rect": {
+              "x": 592,
+              "y": 14,
+              "width": 121,
+              "height": 29
+            }
+          },
+          {
+            "text": "CV",
+            "rect": {
+              "x": 727,
+              "y": 14,
+              "width": 121,
+              "height": 29
+            }
+          },
+          {
+            "text": "Contact",
+            "rect": {
+              "x": 863,
+              "y": 14,
+              "width": 121,
+              "height": 29
+            }
+          }
+        ],
+        "heroActions": [
+          {
+            "text": "View work",
+            "href": "#work",
+            "download": null
+          },
+          {
+            "text": "Download CV",
+            "href": "/src/lib/assets/miguel-almeida-cv.pdf",
+            "download": "miguel-almeida-cv.pdf"
+          },
+          {
+            "text": "Contact",
+            "href": "#contact",
+            "download": null
+          }
+        ],
+        "portrait": {
+          "x": 0,
+          "y": 70,
+          "width": 1440,
+          "height": 1078
+        },
+        "heroTitle": {
+          "x": 144,
+          "y": 613,
+          "width": 1152,
+          "height": 251
+        }
+      },
+      "work": {
+        "overflowX": 0,
+        "featured": {
+          "x": 40,
+          "width": 1360,
+          "height": 570
+        },
+        "supporting": [
+          {
+            "x": 40,
+            "width": 671,
+            "height": 577
+          },
+          {
+            "x": 729,
+            "width": 671,
+            "height": 577
+          }
+        ],
+        "mediaOverflow": [
+          0,
+          0,
+          0
+        ]
+      },
+      "contact": {
+        "overflowX": 0,
+        "heading": "Want the practical version?",
+        "emailCard": {
+          "x": 40,
+          "y": 424,
+          "width": 431,
+          "height": 194,
+          "scrollWidth": 429,
+          "clientWidth": 429
+        }
+      },
+      "cv": {
+        "overflowX": 0,
+        "title": "CV / The Sheet — Miguel Almeida · Frontend Engineer · Berlin",
+        "sheetText": "Miguel Almeida / CV / The Sheet p. 01 / 01 Profile Early passion for technology, then UX, then code. Currently at F24 in Berlin, shipping critical communication software used by thousands of users worldwide. Contact miguelalmeida1592@gmail.com Copy +351 918 500 305linkedin.com/in"
+      }
+    },
+    {
+      "width": 1280,
+      "height": 900,
+      "root": {
+        "title": "Miguel Almeida / Frontend Product Engineer / Berlin",
+        "overflowX": 0,
+        "heroLine": "Product UI. Reusable systems.",
+        "heroKicker": "Berlin / Remote",
+        "navItems": [
+          {
+            "text": "Work",
+            "rect": {
+              "x": 384,
+              "y": 14,
+              "width": 118,
+              "height": 29
+            }
+          },
+          {
+            "text": "Story",
+            "rect": {
+              "x": 515,
+              "y": 14,
+              "width": 118,
+              "height": 29
+            }
+          },
+          {
+            "text": "CV",
+            "rect": {
+              "x": 646,
+              "y": 14,
+              "width": 118,
+              "height": 29
+            }
+          },
+          {
+            "text": "Contact",
+            "rect": {
+              "x": 778,
+              "y": 14,
+              "width": 118,
+              "height": 29
+            }
+          }
+        ],
+        "heroActions": [
+          {
+            "text": "View work",
+            "href": "#work",
+            "download": null
+          },
+          {
+            "text": "Download CV",
+            "href": "/src/lib/assets/miguel-almeida-cv.pdf",
+            "download": "miguel-almeida-cv.pdf"
+          },
+          {
+            "text": "Contact",
+            "href": "#contact",
+            "download": null
+          }
+        ],
+        "portrait": {
+          "x": 0,
+          "y": 70,
+          "width": 1280,
+          "height": 958
+        },
+        "heroTitle": {
+          "x": 64,
+          "y": 636,
+          "width": 1152,
+          "height": 228
+        }
+      },
+      "work": {
+        "overflowX": 0,
+        "featured": {
+          "x": 38,
+          "width": 1203,
+          "height": 635
+        },
+        "supporting": [
+          {
+            "x": 38,
+            "width": 593,
+            "height": 649
+          },
+          {
+            "x": 649,
+            "width": 593,
+            "height": 649
+          }
+        ],
+        "mediaOverflow": [
+          0,
+          0,
+          0
+        ]
+      },
+      "contact": {
+        "overflowX": 0,
+        "heading": "Want the practical version?",
+        "emailCard": {
+          "x": 38,
+          "y": 425,
+          "width": 380,
+          "height": 192,
+          "scrollWidth": 378,
+          "clientWidth": 378
+        }
+      },
+      "cv": {
+        "overflowX": 0,
+        "title": "CV / The Sheet — Miguel Almeida · Frontend Engineer · Berlin",
+        "sheetText": "Miguel Almeida / CV / The Sheet p. 01 / 01 Profile Early passion for technology, then UX, then code. Currently at F24 in Berlin, shipping critical communication software used by thousands of users worldwide. Contact miguelalmeida1592@gmail.com Copy +351 918 500 305linkedin.com/in"
+      }
+    },
+    {
+      "width": 1024,
+      "height": 900,
+      "root": {
+        "title": "Miguel Almeida / Frontend Product Engineer / Berlin",
+        "overflowX": 0,
+        "heroLine": "Product UI. Reusable systems.",
+        "heroKicker": "Berlin / Remote",
+        "navItems": [
+          {
+            "text": "Work",
+            "rect": {
+              "x": 260,
+              "y": 14,
+              "width": 118,
+              "height": 29
+            }
+          },
+          {
+            "text": "Story",
+            "rect": {
+              "x": 388,
+              "y": 14,
+              "width": 118,
+              "height": 29
+            }
+          },
+          {
+            "text": "CV",
+            "rect": {
+              "x": 517,
+              "y": 14,
+              "width": 118,
+              "height": 29
+            }
+          },
+          {
+            "text": "Contact",
+            "rect": {
+              "x": 646,
+              "y": 14,
+              "width": 118,
+              "height": 29
+            }
+          }
+        ],
+        "heroActions": [
+          {
+            "text": "View work",
+            "href": "#work",
+            "download": null
+          },
+          {
+            "text": "Download CV",
+            "href": "/src/lib/assets/miguel-almeida-cv.pdf",
+            "download": "miguel-almeida-cv.pdf"
+          },
+          {
+            "text": "Contact",
+            "href": "#contact",
+            "download": null
+          }
+        ],
+        "portrait": {
+          "x": 0,
+          "y": 70,
+          "width": 1024,
+          "height": 766
+        },
+        "heroTitle": {
+          "x": 41,
+          "y": 672,
+          "width": 942,
+          "height": 192
+        }
+      },
+      "work": {
+        "overflowX": 0,
+        "featured": {
+          "x": 31,
+          "width": 963,
+          "height": 638
+        },
+        "supporting": [
+          {
+            "x": 31,
+            "width": 473,
+            "height": 855
+          },
+          {
+            "x": 520,
+            "width": 473,
+            "height": 855
+          }
+        ],
+        "mediaOverflow": [
+          0,
+          0,
+          0
+        ]
+      },
+      "contact": {
+        "overflowX": 0,
+        "heading": "Want the practical version?",
+        "emailCard": {
+          "x": 31,
+          "y": 421,
+          "width": 475,
+          "height": 192,
+          "scrollWidth": 473,
+          "clientWidth": 473
+        }
+      },
+      "cv": {
+        "overflowX": 0,
+        "title": "CV / The Sheet — Miguel Almeida · Frontend Engineer · Berlin",
+        "sheetText": "Miguel Almeida / CV / The Sheet p. 01 / 01 Profile Early passion for technology, then UX, then code. Currently at F24 in Berlin, shipping critical communication software used by thousands of users worldwide. Contact miguelalmeida1592@gmail.com Copy +351 918 500 305linkedin.com/in"
+      }
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "root": {
+        "title": "Miguel Almeida / Frontend Product Engineer / Berlin",
+        "overflowX": 0,
+        "heroLine": "Product UI. Reusable systems.",
+        "heroKicker": "Berlin / Remote",
+        "navItems": [
+          {
+            "text": "Work",
+            "rect": {
+              "x": 135,
+              "y": 16,
+              "width": 118,
+              "height": 29
+            }
+          },
+          {
+            "text": "Story",
+            "rect": {
+              "x": 262,
+              "y": 16,
+              "width": 118,
+              "height": 29
+            }
+          },
+          {
+            "text": "CV",
+            "rect": {
+              "x": 388,
+              "y": 16,
+              "width": 118,
+              "height": 29
+            }
+          },
+          {
+            "text": "Contact",
+            "rect": {
+              "x": 514,
+              "y": 16,
+              "width": 118,
+              "height": 29
+            }
+          }
+        ],
+        "heroActions": [
+          {
+            "text": "View work",
+            "href": "#work",
+            "download": null
+          },
+          {
+            "text": "Download CV",
+            "href": "/src/lib/assets/miguel-almeida-cv.pdf",
+            "download": "miguel-almeida-cv.pdf"
+          },
+          {
+            "text": "Contact",
+            "href": "#contact",
+            "download": null
+          }
+        ],
+        "portrait": {
+          "x": 0,
+          "y": 195,
+          "width": 768,
+          "height": 575
+        },
+        "heroTitle": {
+          "x": 96,
+          "y": 786,
+          "width": 576,
+          "height": 196
+        }
+      },
+      "work": {
+        "overflowX": 0,
+        "featured": {
+          "x": 23,
+          "width": 722,
+          "height": 917
+        },
+        "supporting": [
+          {
+            "x": 23,
+            "width": 722,
+            "height": 802
+          },
+          {
+            "x": 23,
+            "width": 722,
+            "height": 822
+          }
+        ],
+        "mediaOverflow": [
+          0,
+          0,
+          0
+        ]
+      },
+      "contact": {
+        "overflowX": 0,
+        "heading": "Want the practical version?",
+        "emailCard": {
+          "x": 23,
+          "y": 407,
+          "width": 355,
+          "height": 192,
+          "scrollWidth": 353,
+          "clientWidth": 353
+        }
+      },
+      "cv": {
+        "overflowX": 0,
+        "title": "CV / The Sheet — Miguel Almeida · Frontend Engineer · Berlin",
+        "sheetText": "Miguel Almeida / CV / The Sheet p. 01 / 01 Profile Early passion for technology, then UX, then code. Currently at F24 in Berlin, shipping critical communication software used by thousands of users worldwide. Contact miguelalmeida1592@gmail.com Copy +351 918 500 305linkedin.com/in"
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "root": {
+        "title": "Miguel Almeida / Frontend Product Engineer / Berlin",
+        "overflowX": 0,
+        "heroLine": "Product UI. Reusable systems.",
+        "heroKicker": "Berlin / Remote",
+        "navItems": [
+          {
+            "text": "Work",
+            "rect": {
+              "x": 8,
+              "y": 10,
+              "width": 89,
+              "height": 34
+            }
+          },
+          {
+            "text": "Story",
+            "rect": {
+              "x": 103,
+              "y": 10,
+              "width": 89,
+              "height": 34
+            }
+          },
+          {
+            "text": "CV",
+            "rect": {
+              "x": 198,
+              "y": 10,
+              "width": 89,
+              "height": 34
+            }
+          },
+          {
+            "text": "Contact",
+            "rect": {
+              "x": 293,
+              "y": 10,
+              "width": 89,
+              "height": 34
+            }
+          }
+        ],
+        "heroActions": [
+          {
+            "text": "View work",
+            "href": "#work",
+            "download": null
+          },
+          {
+            "text": "Download CV",
+            "href": "/src/lib/assets/miguel-almeida-cv.pdf",
+            "download": "miguel-almeida-cv.pdf"
+          },
+          {
+            "text": "Contact",
+            "href": "#contact",
+            "download": null
+          }
+        ],
+        "portrait": {
+          "x": 0,
+          "y": 211,
+          "width": 390,
+          "height": 292
+        },
+        "heroTitle": {
+          "x": 16,
+          "y": 667,
+          "width": 359,
+          "height": 141
+        }
+      },
+      "work": {
+        "overflowX": 0,
+        "featured": {
+          "x": 20,
+          "width": 350,
+          "height": 827
+        },
+        "supporting": [
+          {
+            "x": 20,
+            "width": 350,
+            "height": 719
+          },
+          {
+            "x": 20,
+            "width": 350,
+            "height": 739
+          }
+        ],
+        "mediaOverflow": [
+          0,
+          0,
+          0
+        ]
+      },
+      "contact": {
+        "overflowX": 0,
+        "heading": "Want the practical version?",
+        "emailCard": {
+          "x": 20,
+          "y": 282,
+          "width": 350,
+          "height": 184,
+          "scrollWidth": 348,
+          "clientWidth": 348
+        }
+      },
+      "cv": {
+        "overflowX": 0,
+        "title": "CV / The Sheet — Miguel Almeida · Frontend Engineer · Berlin",
+        "sheetText": "Miguel Almeida / CV / The Sheet p. 01 / 01 Profile Early passion for technology, then UX, then code. Currently at F24 in Berlin, shipping critical communication software used by thousands of users worldwide. Contact miguelalmeida1592@gmail.com Copy +351 918 500 305linkedin.com/in"
+      }
+    }
+  ]
+}

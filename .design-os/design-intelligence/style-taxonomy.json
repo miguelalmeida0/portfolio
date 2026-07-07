@@ -1,0 +1,48 @@
+{
+  "version": "2026-07-02",
+  "purpose": "Distilled style taxonomy. Use with skills/visual-style-selection.",
+  "families": [
+    {
+      "id": "minimal-swiss",
+      "bestFor": ["documentation", "enterprise", "professional tools", "trust products"],
+      "strengths": ["clarity", "contrast", "grid discipline"],
+      "risks": ["sterile", "generic SaaS", "too safe"],
+      "tokenBias": {"radius": "low", "shadow": "minimal", "density": "medium-high"}
+    },
+    {
+      "id": "glass-atmospheric",
+      "bestFor": ["premium SaaS", "image-led UI", "editorial landing"],
+      "strengths": ["depth", "mood", "layering"],
+      "risks": ["contrast failure", "performance", "glass-on-glass soup"],
+      "tokenBias": {"blur": "controlled", "accent": "limited", "contrastProtection": "required"}
+    },
+    {
+      "id": "artistic-editorial",
+      "bestFor": ["landing", "creative", "portfolio", "brand story"],
+      "strengths": ["memorability", "composition", "type-as-material"],
+      "risks": ["readability loss", "product clarity loss"],
+      "tokenBias": {"layout": "asymmetric", "copy": "sparse", "imageRole": "environment-or-focal"}
+    },
+    {
+      "id": "data-command",
+      "bestFor": ["dashboard", "analytics", "operations"],
+      "strengths": ["density", "state clarity", "chart integration"],
+      "risks": ["terminal panel spam", "card soup", "chart wallpaper"],
+      "tokenBias": {"density": "high", "panelWeight": "varied", "graphComplexity": "high"}
+    },
+    {
+      "id": "mobile-consumer-polished",
+      "bestFor": ["mobile flows", "onboarding", "profile", "search", "home"],
+      "strengths": ["thumb clarity", "screen rhythm", "native feel"],
+      "risks": ["Dribbble still with no flow", "scaled website"],
+      "tokenBias": {"safeArea": "strict", "nav": "bottom-or-compact", "touchTarget": "comfortable"}
+    },
+    {
+      "id": "vibrant-playful",
+      "bestFor": ["consumer", "education", "youth", "creative tools"],
+      "strengths": ["energy", "distinctiveness", "approachability"],
+      "risks": ["childish", "too loud", "contrast problems"],
+      "tokenBias": {"colorCount": "controlled", "motion": "feedback-led", "radius": "medium-high"}
+    }
+  ]
+}

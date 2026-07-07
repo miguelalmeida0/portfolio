@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://miguel-design-os.local/schemas/visual-qa-report.schema.json",
+  "title": "Miguel Design OS Visual QA Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "projectName",
+    "runName",
+    "url",
+    "createdAt",
+    "status",
+    "finalStatus",
+    "captureMode",
+    "browserRequested",
+    "browserUsed",
+    "browserAttempts",
+    "tempDirectory",
+    "tmpdirOverrideUsed",
+    "tmpdirOverride",
+    "inputDir",
+    "originalScreenshotPaths",
+    "screenshots",
+    "checks",
+    "manualChecklist",
+    "buttonInventory",
+    "deadButtons",
+    "consoleErrors",
+    "blockers",
+    "notes"
+  ],
+  "properties": {
+    "projectName": { "type": "string", "minLength": 1 },
+    "runName": { "type": "string", "minLength": 1 },
+    "url": { "type": "string", "minLength": 1 },
+    "createdAt": { "type": "string", "minLength": 1 },
+    "status": {
+      "type": "string",
+      "enum": ["captured", "blocked", "needs-manual-review", "passing", "failing"]
+    },
+    "finalStatus": {
+      "type": "string",
+      "enum": ["passing", "blocked", "needs-human-review"]
+    },
+    "captureMode": {
+      "type": "string",
+      "enum": ["automated", "manual-import", "blocked"]
+    },
+    "browserRequested": {
+      "type": "string"
+    },
+    "browserUsed": {
+      "type": "string"
+    },
+    "browserAttempts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/browserAttempt" }
+    },
+    "tempDirectory": {
+      "type": "string"
+    },
+    "tmpdirOverrideUsed": {
+      "type": "boolean"
+    },
+    "tmpdirOverride": {
+      "type": "string"
+    },
+    "inputDir": {
+      "type": "string"
+    },
+    "originalScreenshotPaths": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "screenshots": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["390", "768", "1440"],
+      "properties": {
+        "390": { "type": "string" },
+        "768": { "type": "string" },
+        "1440": { "type": "string" }
+      }
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "captured390",
+        "captured768",
+        "captured1440",
+        "noHorizontalOverflow",
+        "pageConsoleChecked",
+        "buttonInventoryCaptured",
+        "deadButtonInventoryCaptured"
+      ],
+      "properties": {
+        "captured390": { "type": "boolean" },
+        "captured768": { "type": "boolean" },
+        "captured1440": { "type": "boolean" },
+        "noHorizontalOverflow": { "type": "boolean" },
+        "pageConsoleChecked": { "type": "boolean" },
+        "buttonInventoryCaptured": { "type": "boolean" },
+        "deadButtonInventoryCaptured": { "type": "boolean" }
+      }
+    },
+    "manualChecklist": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "noOverlap",
+        "noTextOnButtons",
+        "noWatermark",
+        "noHorizontalOverflow",
+        "noCutHeroObject",
+        "noDeadButtons",
+        "objectSwapInvariance"
+      ],
+      "properties": {
+        "noOverlap": { "$ref": "#/$defs/manualCheck" },
+        "noTextOnButtons": { "$ref": "#/$defs/manualCheck" },
+        "noWatermark": { "$ref": "#/$defs/manualCheck" },
+        "noHorizontalOverflow": { "$ref": "#/$defs/manualCheck" },
+        "noCutHeroObject": { "$ref": "#/$defs/manualCheck" },
+        "noDeadButtons": { "$ref": "#/$defs/manualCheck" },
+        "objectSwapInvariance": { "$ref": "#/$defs/manualCheck" }
+      }
+    },
+    "buttonInventory": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/controlInventoryItem" }
+    },
+    "deadButtons": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/controlInventoryItem" }
+    },
+    "consoleErrors": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "blockers": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "notes": { "type": "string" }
+  },
+  "$defs": {
+    "manualCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "notes"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["pass", "fail", "manual", "not-applicable"]
+        },
+        "notes": { "type": "string" }
+      }
+    },
+    "controlInventoryItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "role", "disabled", "hasHref", "hasClickHandler", "notes"],
+      "properties": {
+        "text": { "type": "string" },
+        "role": { "type": "string" },
+        "disabled": { "type": "boolean" },
+        "hasHref": { "type": "boolean" },
+        "hasClickHandler": { "type": "boolean" },
+        "notes": { "type": "string" }
+      }
+    },
+    "browserAttempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["browser", "ok", "durationMs", "error"],
+      "properties": {
+        "browser": { "type": "string" },
+        "ok": { "type": "boolean" },
+        "durationMs": { "type": "number" },
+        "error": { "type": "string" }
+      }
+    }
+  }
+}

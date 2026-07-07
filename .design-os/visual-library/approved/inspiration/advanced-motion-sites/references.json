@@ -1,0 +1,164 @@
+{
+  "status": "approved motion-study references",
+  "captureStatus": "References supplied by name in the motion upgrade brief. Full live animation capture was not performed in this pass.",
+  "productionAsset": false,
+  "references": [
+    {
+      "siteName": "Graffico",
+      "url": "not supplied in brief",
+      "observedMechanics": [
+        "brand-led motion system",
+        "scroll progression",
+        "menu and navigation states",
+        "media-led section transitions",
+        "section handoffs"
+      ],
+      "likelyMotionPatterns": [
+        "pinned section",
+        "scrubbed timeline",
+        "kinetic typography",
+        "reel overlay",
+        "hover image trail"
+      ],
+      "navigationBehavior": "Navigation is expected to behave as part of the motion system rather than as a static bar.",
+      "mediaBehavior": "Media should reveal, crop, mask, or progress as a storytelling object.",
+      "sectionBehavior": "Sections should hand off to each other through scroll timing, not restart with identical fade-ups.",
+      "whatToTransfer": [
+        "motion as brand voice",
+        "section-by-section choreography",
+        "menu/reel state discipline"
+      ],
+      "whatNotToCopy": [
+        "brand identity",
+        "source imagery",
+        "exact content",
+        "effects without product purpose"
+      ],
+      "designOsModeFit": [
+        "portfolio",
+        "creative",
+        "agency",
+        "cinematic"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "siteName": "Manet",
+      "url": "not supplied in brief",
+      "observedMechanics": [
+        "full-bleed media environment",
+        "reel state",
+        "minimal navigation choreography",
+        "large type over moving image",
+        "atmospheric section pacing"
+      ],
+      "likelyMotionPatterns": [
+        "image-as-canvas reveal",
+        "reel overlay",
+        "menu reveal",
+        "scroll-linked parallax",
+        "typography reveal"
+      ],
+      "navigationBehavior": "Navigation should stay sparse, legible, and timed with the hero/media state.",
+      "mediaBehavior": "Media acts as environment and emotional driver, not as a rectangular asset in a grid.",
+      "sectionBehavior": "Sections should preserve cinematic atmosphere beyond the first viewport.",
+      "whatToTransfer": [
+        "image/media as motion environment",
+        "minimal chrome",
+        "safe text zones over motion"
+      ],
+      "whatNotToCopy": [
+        "brand visuals",
+        "exact reel content",
+        "unreadable overlays",
+        "motion that hides navigation"
+      ],
+      "designOsModeFit": [
+        "landing",
+        "portfolio",
+        "creative",
+        "agency",
+        "cinematic"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "siteName": "UXBert",
+      "url": "not supplied in brief",
+      "observedMechanics": [
+        "product-story progression",
+        "interface/media reveal",
+        "scroll-triggered explanation",
+        "CTA feedback",
+        "section state changes"
+      ],
+      "likelyMotionPatterns": [
+        "scroll-triggered reveal",
+        "image-to-panel expansion",
+        "staggered typography",
+        "view transition",
+        "component state animation"
+      ],
+      "navigationBehavior": "Navigation should support product comprehension and current section awareness.",
+      "mediaBehavior": "Media can reveal product proof or interface states instead of acting as decoration.",
+      "sectionBehavior": "Sections should turn product explanation into progressive state changes.",
+      "whatToTransfer": [
+        "motion as product explanation",
+        "stateful interface reveals",
+        "CTA and section feedback"
+      ],
+      "whatNotToCopy": [
+        "specific product claims",
+        "fake interface proof",
+        "decorative product screens",
+        "motion that reduces clarity"
+      ],
+      "designOsModeFit": [
+        "landing",
+        "product",
+        "agency"
+      ],
+      "confidence": "low"
+    },
+    {
+      "siteName": "Podium",
+      "url": "not supplied in brief",
+      "observedMechanics": [
+        "scroll storytelling",
+        "staged product sections",
+        "progress or status motion",
+        "media sequence",
+        "section continuity"
+      ],
+      "likelyMotionPatterns": [
+        "pinned scroll scene",
+        "progress indicator",
+        "horizontal container animation",
+        "scrubbed timeline",
+        "micro-feedback"
+      ],
+      "navigationBehavior": "Navigation should preserve orientation through scroll progression and section awareness.",
+      "mediaBehavior": "Media should sequence with the product story and avoid decorative wallpaper.",
+      "sectionBehavior": "Sections should build momentum toward action instead of repeating the same entrance.",
+      "whatToTransfer": [
+        "product momentum through motion",
+        "meaningful status/progress animation",
+        "scroll-state proof"
+      ],
+      "whatNotToCopy": [
+        "exact brand language",
+        "fake live/status indicators",
+        "motion unrelated to product state",
+        "janky scroll effects"
+      ],
+      "designOsModeFit": [
+        "landing",
+        "product",
+        "cinematic",
+        "agency"
+      ],
+      "confidence": "low"
+    }
+  ]
+}
+

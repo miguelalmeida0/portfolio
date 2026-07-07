@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://miguel-design-os.local/schemas/skill-verdict.schema.json",
+  "title": "Miguel Design OS Skill Verdict",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "skillId", "task", "phase", "status", "evidence", "machineVerdict", "repairTasks", "nextSkills", "notes"],
+  "properties": {
+    "version": { "type": "string" },
+    "skillId": { "type": "string" },
+    "task": { "type": "string" },
+    "phase": { "type": "string" },
+    "status": { "type": "string", "enum": ["pass", "needs-repair", "blocked", "not-applicable"] },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "pathOrCommand", "summary"],
+        "properties": {
+          "type": { "type": "string" },
+          "pathOrCommand": { "type": "string" },
+          "summary": { "type": "string" }
+        }
+      }
+    },
+    "machineVerdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["score", "scoreCaps", "blockers"],
+      "properties": {
+        "score": { "type": ["number", "null"] },
+        "scoreCaps": { "type": "array", "items": { "type": "string" } },
+        "blockers": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "repairTasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["priority", "ownerSkill", "target", "action", "acceptanceCheck"],
+        "properties": {
+          "priority": { "type": "string", "enum": ["P0", "P1", "P2"] },
+          "ownerSkill": { "type": "string" },
+          "target": { "type": "string" },
+          "action": { "type": "string" },
+          "acceptanceCheck": { "type": "string" }
+        }
+      }
+    },
+    "nextSkills": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "string" }
+  }
+}

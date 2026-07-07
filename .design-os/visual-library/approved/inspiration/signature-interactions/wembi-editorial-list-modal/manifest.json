@@ -1,0 +1,55 @@
+{
+  "name": "Wembi Editorial List Modal",
+  "source": "Wembi",
+  "url": "https://www.wembi.ai/",
+  "status": "approved-inspiration",
+  "createdAt": "2026-07-03T21:03:41.517Z",
+  "mechanics": [
+    "beautiful white/light background",
+    "strong font/text use",
+    "list containers that open designed information popups",
+    "minimal navigation",
+    "one precise accent color",
+    "editorial tech without generic SaaS"
+  ],
+  "patterns": [
+    "Editorial List Detail Modal"
+  ],
+  "screenshots": [
+    {
+      "originalAttachmentName": "codex-clipboard-a2e82399-5c4f-4290-8243-b9f7fc589048.png",
+      "filename": "wembi-01-light-hero-type-and-object.png",
+      "path": "screenshots/wembi-01-light-hero-type-and-object.png"
+    },
+    {
+      "originalAttachmentName": "codex-clipboard-5e4ef775-fe1c-4b6d-8d95-41ec82026c27.png",
+      "filename": "wembi-02-list-section-with-highlight.png",
+      "path": "screenshots/wembi-02-list-section-with-highlight.png"
+    },
+    {
+      "originalAttachmentName": "codex-clipboard-b4421cbc-3e26-47f7-a112-735d858a4e06.png",
+      "filename": "wembi-03-field-list-highlight-and-card.png",
+      "path": "screenshots/wembi-03-field-list-highlight-and-card.png"
+    },
+    {
+      "originalAttachmentName": "codex-clipboard-da412340-dd86-41dc-b56a-c8c80e7aac9f.png",
+      "filename": "wembi-04-list-item-detail-modal.png",
+      "path": "screenshots/wembi-04-list-item-detail-modal.png"
+    }
+  ],
+  "note": "Screenshots saved from Codex attachments.",
+  "doNotCopy": [
+    "brand identity",
+    "logos",
+    "mascots",
+    "exact colors",
+    "site copy",
+    "proprietary media"
+  ],
+  "transfer": [
+    "interaction mechanic",
+    "motion role",
+    "layout logic",
+    "fallback requirements"
+  ]
+}

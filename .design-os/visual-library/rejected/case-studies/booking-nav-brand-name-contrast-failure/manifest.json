@@ -1,0 +1,29 @@
+{
+  "id": "booking-nav-brand-name-contrast-failure",
+  "title": "Booking Nav And Brand Name Contrast Failure",
+  "status": "rejected",
+  "verdict": "Rejected execution pattern.",
+  "date": "2026-07-04",
+  "failureType": [
+    "navigation-active-state",
+    "nav-item-never-selected",
+    "brand-chrome-readability",
+    "app-name-low-contrast",
+    "variable-background-readability"
+  ],
+  "failureSummary": "A Booking nav item never became selected, and the Microclimate app name lost readability over darker background regions.",
+  "screenshots": [
+    "screenshots/booking-nav-item-never-selected.png",
+    "screenshots/app-name-low-contrast-dark-background.png"
+  ],
+  "rulesAdded": [
+    "design-dna/navigation-active-state-rules.md",
+    "design-dna/brand-chrome-readability-rules.md"
+  ],
+  "scoreCaps": {
+    "navItemNeverReceivesSelectedState": 2,
+    "clickedNavItemDoesNotBecomeSelected": 2,
+    "brandNameLowContrastOnDarkBackground": 3,
+    "brandChromeOverVariableBackgroundNoStrategy": 4
+  }
+}

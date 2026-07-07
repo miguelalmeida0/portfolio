@@ -1,0 +1,33 @@
+{
+  "objectSetName": "Untitled Object Set",
+  "url": "",
+  "createdAt": "",
+  "objectsTested": [],
+  "screenshotPaths": {},
+  "stableFrame": {
+    "confirmed": "manual",
+    "notes": "Confirm the frame stays stable across object swaps."
+  },
+  "crop": {
+    "confirmed": "manual",
+    "notes": "Confirm no object is accidentally cut."
+  },
+  "scale": {
+    "confirmed": "manual",
+    "notes": "Confirm scale remains intentional across objects."
+  },
+  "objectPosition": {
+    "confirmed": "manual",
+    "notes": "Confirm object positioning remains stable."
+  },
+  "horizontalOverflow": {
+    "confirmed": "manual",
+    "notes": "Confirm no object creates horizontal overflow."
+  },
+  "overlap": {
+    "confirmed": "manual",
+    "notes": "Confirm swapped objects do not collide with UI."
+  },
+  "failures": [],
+  "finalStatus": "manual-review"
+}

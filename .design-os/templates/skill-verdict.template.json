@@ -1,0 +1,30 @@
+{
+  "version": "p0-2026-07-04",
+  "skillId": "example-skill",
+  "task": "Describe the task being reviewed.",
+  "phase": "review",
+  "status": "needs-repair",
+  "evidence": [
+    {
+      "type": "screenshot",
+      "pathOrCommand": "docs/qa/example-1440.png",
+      "summary": "Replace with the evidence path, command, or blocked-evidence note."
+    }
+  ],
+  "machineVerdict": {
+    "score": null,
+    "scoreCaps": [],
+    "blockers": []
+  },
+  "repairTasks": [
+    {
+      "priority": "P0",
+      "ownerSkill": "example-owner-skill",
+      "target": "file, selector, artifact, or behavior to fix",
+      "action": "Describe the repair.",
+      "acceptanceCheck": "Describe the evidence required to close this repair."
+    }
+  ],
+  "nextSkills": [],
+  "notes": "Copy this template into a project report and replace example values."
+}

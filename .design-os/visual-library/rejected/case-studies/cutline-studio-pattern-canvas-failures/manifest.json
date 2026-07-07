@@ -1,0 +1,76 @@
+{
+  "project": "Cutline Studio",
+  "mode": "pattern canvas / diagram product surface",
+  "status": "rejected",
+  "createdAt": "2026-07-03",
+  "globalRuleCandidate": true,
+  "screenshots": [
+    {
+      "originalAttachmentName": "Screenshot 2026-07-03 at 19.20.23.png",
+      "filename": "screenshots/text-cut-off-under-section-heading.png",
+      "failureTypes": [
+        "text_clipped",
+        "layout_integrity_failure"
+      ],
+      "severity": "critical",
+      "description": "Primary heading text is cut off underneath, showing that text metrics, line-height, overflow, or viewport positioning were not protected.",
+      "correction": "Protect heading boxes with real line-height, vertical padding, overflow strategy, and screenshot checks. Important text must never be cropped by parent containers or viewport framing.",
+      "relatedRules": [
+        "P0 Layout Integrity",
+        "Text Baseline / Clipping Integrity"
+      ],
+      "scorecardCaps": [
+        "primary heading or important text clipped max 3",
+        "text visibly escapes or is cut off max 2-3"
+      ],
+      "globalRuleCandidate": true
+    },
+    {
+      "originalAttachmentName": "Screenshot 2026-07-03 at 19.20.33.png",
+      "filename": "screenshots/pattern-canvas-overlapping-labels-and-objects.png",
+      "failureTypes": [
+        "pattern_canvas_overlap",
+        "label_collision",
+        "weak_spatial_logic",
+        "construction_line_noise"
+      ],
+      "severity": "critical",
+      "description": "Pattern canvas shows overlapping pattern pieces, callouts, chips, ruler labels, construction lines, and labels with no credible collision model.",
+      "correction": "Define coordinate, layer, object, label, and callout models before drawing. Reserve protected label lanes, route callouts outside shapes, and run diagram integrity QA.",
+      "relatedRules": [
+        "Diagram Canvas System",
+        "Spatial Labels Need Protected Zones",
+        "Data Viz Hardening Review"
+      ],
+      "scorecardCaps": [
+        "pattern canvas label/object collision max 3",
+        "diagram/canvas has no collision model max 4"
+      ],
+      "globalRuleCandidate": true
+    },
+    {
+      "originalAttachmentName": "Screenshot 2026-07-03 at 19.21.29.png",
+      "filename": "screenshots/pattern-canvas-catastrophic-overlap-closeup.png",
+      "failureTypes": [
+        "catastrophic_diagram_overlap",
+        "badge_callout_collision",
+        "unreadable_canvas",
+        "performance_risk"
+      ],
+      "severity": "critical",
+      "description": "Close-up shows badge, label, measurement, and piece-name layers colliding into an unreadable diagram. This also implies heavy overdraw and interaction/performance risk.",
+      "correction": "Reduce competing layers, define label priority and protected zones, separate badges/callouts from core labels, and enforce a canvas performance budget.",
+      "relatedRules": [
+        "No Catastrophic Diagram Overlap",
+        "Diagram / Canvas Performance Discipline",
+        "P0 Layout Integrity"
+      ],
+      "scorecardCaps": [
+        "catastrophic diagram overlap max 2",
+        "selected state or badge obscures core data max 4",
+        "canvas performance/jank without mitigation max 5"
+      ],
+      "globalRuleCandidate": true
+    }
+  ]
+}

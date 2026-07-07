@@ -1,0 +1,159 @@
+{
+  "project": "Tempo Loom",
+  "mode": "mobile product flow",
+  "status": "approved",
+  "createdAt": "2026-07-03",
+  "screenshots": [
+    {
+      "originalAttachmentName": "codex-clipboard-10378fd4-69df-4759-81c2-4684532ea62d.png",
+      "filename": "screenshots/practice-home-tempo-control.png",
+      "screenType": "practice home tempo control",
+      "approvedMechanics": [
+        "dominant BPM hierarchy",
+        "count-in and time selected states",
+        "cue timeline",
+        "add cue action differentiated from content",
+        "bottom navigation icons and labels"
+      ],
+      "transferGuidance": "Lead with the primary control, keep supporting controls compact, and make current selection visibly persistent.",
+      "avoidCopying": "Do not force a giant BPM display into unrelated products.",
+      "relatedRules": [
+        "Mobile Product Flow Mode",
+        "Mobile Bottom Navigation Requires Icons And Labels",
+        "Selectable Controls Must Preserve State",
+        "Add Actions Must Not Masquerade As Content Items"
+      ],
+      "benchmarkTags": [
+        "mobile-product",
+        "functional-control-ui",
+        "tempo-control",
+        "stateful-ui"
+      ]
+    },
+    {
+      "originalAttachmentName": "codex-clipboard-a864510c-d5c8-4c7c-a5c2-d67095e26107.png",
+      "filename": "screenshots/practice-home-actions-and-bottom-nav.png",
+      "screenType": "practice actions and bottom navigation",
+      "approvedMechanics": [
+        "clear start action",
+        "previous and next controls",
+        "session notes",
+        "bottom navigation safe placement",
+        "active nav state"
+      ],
+      "transferGuidance": "Keep the primary action reachable and make bottom nav stable, icon-supported, and separate from the content stack.",
+      "avoidCopying": "Do not reuse this exact nav shape as a default for every mobile app.",
+      "relatedRules": [
+        "Mobile Bottom Navigation Requires Icons And Labels",
+        "Button Proportion Discipline",
+        "Mobile Product Interaction Integrity"
+      ],
+      "benchmarkTags": [
+        "mobile-product",
+        "bottom-navigation",
+        "action-placement",
+        "notes-flow"
+      ]
+    },
+    {
+      "originalAttachmentName": "codex-clipboard-74a4a503-2725-48a7-baad-ad99f80f81a3.png",
+      "filename": "screenshots/loops-library-selected-state.png",
+      "screenType": "loop library selected state",
+      "approvedMechanics": [
+        "selected loop card",
+        "cue marker selected state",
+        "delete affordance",
+        "add cue action differentiation",
+        "consistent bottom nav"
+      ],
+      "transferGuidance": "Use persistent selected surfaces for list/object choice and keep destructive/actions visually distinct from content.",
+      "avoidCopying": "Do not turn every selection-first UI into this exact dark list treatment.",
+      "relatedRules": [
+        "Selectable Controls Must Preserve State",
+        "Selection / Gallery / Browse Mode",
+        "Add Actions Must Not Masquerade As Content Items"
+      ],
+      "benchmarkTags": [
+        "selection-first",
+        "mobile-product",
+        "selected-state",
+        "loop-library"
+      ]
+    },
+    {
+      "originalAttachmentName": "codex-clipboard-b96ef9b0-9fb8-4bbe-8b39-818661aa93da.png",
+      "filename": "screenshots/record-cues-functional-controls.png",
+      "screenType": "record cues functional controls",
+      "approvedMechanics": [
+        "truthful no-audio-analysis copy",
+        "visual count-in controls",
+        "time signature selected state",
+        "product-specific add marker action",
+        "record nav active state"
+      ],
+      "transferGuidance": "Use product-specific copy and control labels instead of generic forms or fake AI/live claims.",
+      "avoidCopying": "Do not copy the music-specific cue model into products that do not need rehearsal timing.",
+      "relatedRules": [
+        "Truthful State Product Naming",
+        "Selectable Controls Must Preserve State",
+        "No Fake Live / Session Status Slop"
+      ],
+      "benchmarkTags": [
+        "truthful-state",
+        "functional-controls",
+        "music-utility",
+        "mobile-product"
+      ]
+    },
+    {
+      "originalAttachmentName": "codex-clipboard-2c1ea917-e8da-4cb8-972e-97242f5b3465.png",
+      "filename": "screenshots/saved-sets-notes-flow.png",
+      "screenType": "saved sets notes flow",
+      "approvedMechanics": [
+        "notes capture",
+        "save current set action",
+        "saved set history cards",
+        "compact readable density",
+        "consistent typography and surface family"
+      ],
+      "transferGuidance": "Keep saved-history and notes flows compact, readable, and aligned to the product's real loop.",
+      "avoidCopying": "Do not force this saved-set model onto apps where persistence is not part of the promise.",
+      "relatedRules": [
+        "Persistence Truth Rule",
+        "Frontend Aha Moment",
+        "Mobile Product Flow Mode"
+      ],
+      "benchmarkTags": [
+        "saved-state",
+        "notes-flow",
+        "compact-density",
+        "mobile-product"
+      ]
+    },
+    {
+      "originalAttachmentName": "codex-clipboard-6b76c954-5c8d-4fbe-a9a8-c8c70a797ce6.png",
+      "filename": "screenshots/settings-control-behavior.png",
+      "screenType": "settings control behavior",
+      "approvedMechanics": [
+        "clear toggle states",
+        "reduced motion control",
+        "reset demo state action",
+        "settings screen consistency",
+        "active settings nav state"
+      ],
+      "transferGuidance": "Make settings part of the same product language and expose motion/feedback controls truthfully.",
+      "avoidCopying": "Do not assume every mobile app should use the same dark toggle styling.",
+      "relatedRules": [
+        "Motion Craft",
+        "Useful Motion Over Decorative Motion",
+        "Mobile Product Flow Mode"
+      ],
+      "benchmarkTags": [
+        "settings",
+        "motion-control",
+        "toggle-state",
+        "mobile-product"
+      ]
+    }
+  ]
+}

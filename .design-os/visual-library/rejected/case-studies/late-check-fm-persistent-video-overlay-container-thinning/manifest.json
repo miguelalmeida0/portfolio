@@ -1,0 +1,37 @@
+{
+  "id": "late-check-fm-persistent-video-overlay-container-thinning",
+  "title": "Late Check FM Persistent Video Overlay + Container Thinning",
+  "status": "rejected",
+  "verdict": "Rejected execution, promising concept.",
+  "project": "Late Check FM / Bunk Radio",
+  "date": "2026-07-04",
+  "failureType": [
+    "persistent-media-overlay",
+    "media-over-text",
+    "container-thinning",
+    "scroll-media-misuse",
+    "layout-integrity"
+  ],
+  "conceptAssessment": "The Gen-Z hostel concept, bold editorial card language, and video-first hero direction remain promising.",
+  "failureSummary": "The video persisted across the page, overlapped room and event cards, and caused containers to become too narrow for readable text.",
+  "screenshots": [
+    "screenshots/late-check-fm-01-video-overlapping-room-board.png",
+    "screenshots/late-check-fm-02-containers-thinned-to-fit-video.png",
+    "screenshots/late-check-fm-03-event-cards-skinny-and-text-broken.png",
+    "screenshots/late-check-fm-04-video-covering-event-card-content.png"
+  ],
+  "rulesAdded": [
+    "design-dna/video-media-placement-rules.md",
+    "design-dna/text-container-integrity-rules.md",
+    "design-dna/media-text-protected-zone-rules.md"
+  ],
+  "scoreCaps": {
+    "videoImageCoversCriticalText": 3,
+    "persistentVideoOverlayWithoutReservedLane": 4,
+    "contentContainersThinnedToFitMedia": 3,
+    "cardsUnreadableBecauseOfMediaPlacement": 3,
+    "videoRemainsAfterHeroWithNoDefinedRole": 5,
+    "mediaPlacementForcesAwkwardTextWrapping": 4,
+    "mediaObjectWinsOverContentIntegrity": 3
+  }
+}

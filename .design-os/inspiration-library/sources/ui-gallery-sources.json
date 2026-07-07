@@ -1,0 +1,46 @@
+{
+  "collectionGoals": [
+    {
+      "category": "award-winning web screenshots",
+      "targetCount": 50,
+      "bestSources": ["Awwwards", "FWA", "CSS Design Awards", "Godly.website", "SiteInspire"],
+      "purpose": "First-impression composition, interaction, visual craft, and motion references."
+    },
+    {
+      "category": "mobile app screenshots",
+      "targetCount": 50,
+      "bestSources": ["Mobbin", "Dribbble", "Behance"],
+      "purpose": "Mobile flows, app density, navigation, and interaction models."
+    },
+    {
+      "category": "selection/gallery/roster screenshots",
+      "targetCount": 50,
+      "bestSources": ["Pinterest", "Behance", "Dribbble", "Awwwards"],
+      "purpose": "Choice moments, card/roster energy, object desire, and selection reward."
+    },
+    {
+      "category": "cinematic/immersive UI screenshots",
+      "targetCount": 30,
+      "bestSources": ["FWA", "Awwwards", "CSS Design Awards", "Pinterest"],
+      "purpose": "Stage-like composition, focal object drama, and atmosphere."
+    },
+    {
+      "category": "product configurator screenshots",
+      "targetCount": 30,
+      "bestSources": ["Awwwards", "Behance", "Dribbble", "Pinterest"],
+      "purpose": "Object customization, preview/action relationship, and product inspection."
+    },
+    {
+      "category": "AI companion/chat/voice UI screenshots",
+      "targetCount": 30,
+      "bestSources": ["Mobbin", "Dribbble", "Behance", "Pinterest"],
+      "purpose": "Conversation UI, voice states, avatar/object presence, and trust cues."
+    }
+  ],
+  "policy": {
+    "downloadLargeSets": false,
+    "screenshotsLocalByDefault": true,
+    "copyrightedScreenshotsRequireExplicitApprovalBeforeCommit": true,
+    "visualTargetsAreEvidenceNotProductionAssets": true
+  }
+}

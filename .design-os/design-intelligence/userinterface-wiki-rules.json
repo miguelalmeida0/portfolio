@@ -1,0 +1,101 @@
+{
+  "version": "2026-07-02",
+  "categories": [
+    {
+      "id": "animation-principles",
+      "whenToUse": "When motion communicates state, feedback, hierarchy, continuity, or perceived performance.",
+      "keyRules": ["motion must have purpose", "high-frequency actions need restraint", "reduced motion is required"],
+      "antiPatterns": ["fade-and-rise everywhere", "decorative motion", "motion that delays task completion"],
+      "workflows": ["motion-craft-director", "review-animations"],
+      "interactionWithExistingSkills": "review-animations is source of truth for code approval."
+    },
+    {
+      "id": "timing-functions",
+      "whenToUse": "When specifying easing, duration, or interaction feel.",
+      "keyRules": ["use ease-out or custom curves for UI entrance", "avoid ease-in for UI response", "keep common UI motion under 300ms"],
+      "antiPatterns": ["linear UI movement", "ease-in on press feedback", "slow motion on repeated actions"],
+      "workflows": ["motion-craft-director", "review-animations"],
+      "interactionWithExistingSkills": "Use animation-vocabulary for naming and review-animations for enforcement."
+    },
+    {
+      "id": "exit-animations",
+      "whenToUse": "When removing overlays, toasts, modals, routes, or list items.",
+      "keyRules": ["exit should be faster than entrance when appropriate", "preserve spatial relationship", "do not block core task"],
+      "antiPatterns": ["disappearing instantly when state continuity matters", "long dramatic exits for frequent UI"],
+      "workflows": ["motion-craft-director"],
+      "interactionWithExistingSkills": "Use review-animations for code-level approval."
+    },
+    {
+      "id": "css-pseudo-elements",
+      "whenToUse": "For decorative layers, focus rings, overlays, separators, shadows, masks, or generated affordance effects.",
+      "keyRules": ["keep semantic content in DOM", "control z-index/layering", "avoid blocking pointer/focus"],
+      "antiPatterns": ["critical text in pseudo-elements", "pseudo-elements covering controls", "unbounded decorative layers"],
+      "workflows": ["userinterface-wiki", "make-interfaces-feel-better"],
+      "interactionWithExistingSkills": "Use anti-ai-slop-review when pseudo-elements become decoration noise."
+    },
+    {
+      "id": "audio-feedback",
+      "whenToUse": "Only when sound has a product role such as confirmation, alert, rhythm, or playful identity.",
+      "keyRules": ["must have mute", "must have visual equivalent", "must not surprise in serious domains"],
+      "antiPatterns": ["audio-only feedback", "unmuteable sounds", "sound as generic delight"],
+      "workflows": ["delight-opportunity-director", "userinterface-wiki"],
+      "interactionWithExistingSkills": "Delight skill decides whether audio belongs at all."
+    },
+    {
+      "id": "sound-synthesis",
+      "whenToUse": "For lightweight local audio cues when approved by product context.",
+      "keyRules": ["short", "quiet", "optional", "state-mapped"],
+      "antiPatterns": ["long loops", "alerts with no meaning", "sound that hides missing UI feedback"],
+      "workflows": ["delight-opportunity-director"],
+      "interactionWithExistingSkills": "Never bypass accessibility or user control."
+    },
+    {
+      "id": "morphing-icons",
+      "whenToUse": "When an icon changes state and continuity improves comprehension.",
+      "keyRules": ["state mapping must be obvious", "keep geometry readable", "respect reduced motion"],
+      "antiPatterns": ["icon morphs that obscure meaning", "cute transitions on frequent controls"],
+      "workflows": ["animation-vocabulary", "motion-craft-director"],
+      "interactionWithExistingSkills": "Use vocabulary for naming, motion craft for planning."
+    },
+    {
+      "id": "container-animation",
+      "whenToUse": "When cards, drawers, panels, or lists resize/reflow after state changes.",
+      "keyRules": ["animate transform/opacity where possible", "preserve containment", "avoid layout jank"],
+      "antiPatterns": ["animating height without bounds", "content escaping during transition", "container motion hiding state"],
+      "workflows": ["review-animations", "screenshot-scorecard-review"],
+      "interactionWithExistingSkills": "Layout integrity rules override animation."
+    },
+    {
+      "id": "laws-of-ux",
+      "whenToUse": "When reviewing hierarchy, grouping, decision load, memory load, target size, or timing.",
+      "keyRules": ["use proximity and common region", "reduce unnecessary choices", "keep targets reachable", "make state visible"],
+      "antiPatterns": ["same-weight everything", "cryptic navigation", "small targets", "hidden system status"],
+      "workflows": ["frontend-art-director-review", "anti-ai-slop-review"],
+      "interactionWithExistingSkills": "Use with Design OS scorecard caps."
+    },
+    {
+      "id": "predictive-prefetching",
+      "whenToUse": "When local app flow can feel faster by preparing likely next content.",
+      "keyRules": ["prefetch likely next state", "do not lie about completion", "show truthful loading when uncertain"],
+      "antiPatterns": ["fake instant AI", "hidden backend failure", "prefetching unrelated heavy assets"],
+      "workflows": ["frontend-aha-moment-workflow", "truthful-state-product-naming"],
+      "interactionWithExistingSkills": "Truthful state rules override perceived-performance tricks."
+    },
+    {
+      "id": "typography",
+      "whenToUse": "Always for data, dashboard, pricing, editorial, and dense UI.",
+      "keyRules": ["use tabular numbers for aligned numeric data", "control line length", "create hierarchy through weight, size, contrast, and spacing"],
+      "antiPatterns": ["default Inter everywhere without reason", "giant type as fake premium", "numbers jittering across rows"],
+      "workflows": ["visual-spec-compiler", "make-interfaces-feel-better"],
+      "interactionWithExistingSkills": "Scale calibration and layout integrity still apply."
+    },
+    {
+      "id": "visual-design",
+      "whenToUse": "When reviewing grouping, rhythm, material, hierarchy, and surface polish.",
+      "keyRules": ["use proximity/similarity/common region", "vary hierarchy intentionally", "keep surfaces role-based"],
+      "antiPatterns": ["card soup", "random decoration", "pure black shadows", "arbitrary spacing"],
+      "workflows": ["frontend-art-director-review", "make-interfaces-feel-better"],
+      "interactionWithExistingSkills": "Reference-locked build mode remains the source of visual direction."
+    }
+  ]
+}

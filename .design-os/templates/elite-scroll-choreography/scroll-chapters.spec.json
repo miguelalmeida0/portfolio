@@ -1,0 +1,12 @@
+{
+  "id": "chapter-01",
+  "label": "Opening",
+  "start": 0,
+  "end": 0.2,
+  "activeNavState": "opening",
+  "visibleObjects": [],
+  "pinnedObject": null,
+  "informationDensity": "low",
+  "interactionState": "read-only",
+  "reducedMotionState": "static ordered chapter"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "text-overflow-and-clipping",
+  "status": "rejected-bad-practice",
+  "caseStudy": "../../case-studies/bunk-radio-text-container-nav-failures/",
+  "evidence": [
+    "../../case-studies/bunk-radio-text-container-nav-failures/screenshots/bunk-radio-02-card-covering-headline-text.png",
+    "../../case-studies/bunk-radio-text-container-nav-failures/screenshots/bunk-radio-03-word-clipped-inside-red-card.png",
+    "../../case-studies/bunk-radio-text-container-nav-failures/screenshots/bunk-radio-06-sticker-over-headline-text.png"
+  ],
+  "rules": [
+    "critical text clipped: max score 2",
+    "sticker/card covers headline word: max score 3",
+    "unresolved text/container issue appears in screenshot: max score 3"
+  ]
+}

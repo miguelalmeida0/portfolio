@@ -1,0 +1,77 @@
+{
+  "project": "Design OS Random UI",
+  "mode": "AI texture and amateur illustration failure",
+  "status": "rejected",
+  "createdAt": "2026-07-03",
+  "globalRuleCandidate": true,
+  "screenshots": [
+    {
+      "originalAttachmentName": "Screenshot 2026-07-03 at 22.59.47.png",
+      "filename": "screenshots/ai-light-blob-background.png",
+      "failureTypes": [
+        "ai_ambient_light_blob",
+        "unmotivated_texture",
+        "generic_advanced_ui_atmosphere"
+      ],
+      "severity": "critical",
+      "description": "Dark UI uses a foggy central light blob as a generic advanced texture with no declared source, material logic, or role.",
+      "correction": "Remove the blob and use a real visual thesis such as product object, image environment, material field, color plane, or functional lighting tied to the scene.",
+      "relatedRules": [
+        "No AI Ambient Blob",
+        "Shape Role Discipline",
+        "Human Palette Direction"
+      ],
+      "scorecardCaps": [
+        "unmotivated ambient blob max 4"
+      ],
+      "globalRuleCandidate": true
+    },
+    {
+      "originalAttachmentName": "Screenshot 2026-07-03 at 23.01.01.png",
+      "filename": "screenshots/weird-dotted-background-texture.png",
+      "failureTypes": [
+        "decorative_dot_texture",
+        "generic_ai_atmosphere",
+        "roleless_background_pattern"
+      ],
+      "severity": "critical",
+      "description": "Repeating dotted/star-field texture is used as fake atmosphere rather than functional data, grid, material, or brand pattern.",
+      "correction": "Remove decorative dot textures unless explicitly requested and justified as functional data, a real grid, a brand pattern, or sourced material texture.",
+      "relatedRules": [
+        "No Decorative Dot Texture",
+        "No Generic AI Atmosphere",
+        "Visual Style Selection"
+      ],
+      "scorecardCaps": [
+        "dotted background texture max 4"
+      ],
+      "globalRuleCandidate": true
+    },
+    {
+      "originalAttachmentName": "Screenshot 2026-07-03 at 23.01.31.png",
+      "filename": "screenshots/amateur-illustration-text-collision.png",
+      "failureTypes": [
+        "amateur_vector_illustration",
+        "text_collision",
+        "clipped_words",
+        "roleless_shapes",
+        "callout_line_crosses_text"
+      ],
+      "severity": "critical",
+      "description": "Amateur botanical-style vector illustration uses unstable geometry and lets stems, arcs, labels, and callout lines cross or cut readable words.",
+      "correction": "Create a shape inventory, layer model, label lanes, callout routes, and collision checks; remove the illustration if it cannot preserve text-safe zones.",
+      "relatedRules": [
+        "Vector Form System Director",
+        "Text Safe Zones",
+        "Label Collision Discipline",
+        "P0 Layout Integrity"
+      ],
+      "scorecardCaps": [
+        "amateur illustration max 4",
+        "line crosses text max 3",
+        "words clipped by illustration max 3"
+      ],
+      "globalRuleCandidate": true
+    }
+  ]
+}

@@ -1,0 +1,235 @@
+{
+  "version": "motion-masterpiece-v1",
+  "guidance": "Use the lightest local/free tool that can express the required motion layers. Migi taste, accessibility, and performance override novelty.",
+  "tiers": [
+    {
+      "tool": "CSS transitions / keyframes",
+      "useWhen": [
+        "simple hover/focus/press states",
+        "small entry animations",
+        "opacity/transform reveals",
+        "low-complexity UI feedback"
+      ],
+      "doNotUseWhen": [
+        "scroll-linked scenes",
+        "pinned choreography",
+        "complex timelines",
+        "interruptible gesture states unless carefully structured"
+      ],
+      "bestPatterns": [
+        "button feedback",
+        "focus rings",
+        "small transform/opacity reveals",
+        "loading shimmer when meaningful"
+      ],
+      "risks": [
+        "transition-all",
+        "layout animation",
+        "copy-pasted fade-up",
+        "no interruption control"
+      ],
+      "reducedMotionStrategy": "Disable nonessential transforms and preserve opacity/state changes.",
+      "performanceNotes": "Prefer transform and opacity; avoid animating layout, filters, and large shadows.",
+      "routesToSkill": "motion-craft-director"
+    },
+    {
+      "tool": "CSS Scroll-Driven Animations",
+      "useWhen": [
+        "progressive scroll-linked visual changes",
+        "simple scroll-timeline effects",
+        "browser-native scroll animation where support is acceptable"
+      ],
+      "doNotUseWhen": [
+        "complex cross-browser production requirements without fallback",
+        "sophisticated pinned sequences requiring precise callbacks"
+      ],
+      "bestPatterns": [
+        "scroll progress",
+        "simple image reveal",
+        "timeline-linked opacity/transform",
+        "section progress indicators"
+      ],
+      "risks": [
+        "browser support gaps",
+        "insufficient fallback",
+        "hard-to-debug scroll coupling"
+      ],
+      "reducedMotionStrategy": "Replace scroll-linked transforms with static end states or simple progress indicators.",
+      "performanceNotes": "Keep affected elements bounded and avoid layout-dependent properties.",
+      "routesToSkill": "advanced-motion-choreography"
+    },
+    {
+      "tool": "Motion for React",
+      "useWhen": [
+        "React/Vite apps",
+        "scroll-linked values",
+        "parallax",
+        "clip-path image reveals",
+        "horizontal sticky scroll",
+        "component state animation",
+        "layout animation",
+        "micro-interactions"
+      ],
+      "doNotUseWhen": [
+        "massive cinematic pinned timelines where GSAP is better",
+        "adding dependencies is not allowed"
+      ],
+      "bestPatterns": [
+        "component presence transitions",
+        "layout shared transitions",
+        "scroll value transforms",
+        "gesture feedback",
+        "staggered lists"
+      ],
+      "risks": [
+        "over-animating every component",
+        "layout thrash from poor variants",
+        "missing reduced-motion gate"
+      ],
+      "reducedMotionStrategy": "Use reducedMotion hooks or preference checks to remove transforms and reduce duration.",
+      "performanceNotes": "Keep variant trees shallow and avoid animating many large images simultaneously.",
+      "routesToSkill": "motion-craft-director"
+    },
+    {
+      "tool": "GSAP + ScrollTrigger",
+      "useWhen": [
+        "award-level landing pages",
+        "pinned sections",
+        "scrubbed scroll scenes",
+        "snap-to-section experiences",
+        "horizontal container animation",
+        "timeline choreography",
+        "section handoffs",
+        "heavy art-directed scroll experiences"
+      ],
+      "doNotUseWhen": [
+        "tiny UI feedback",
+        "simple apps where dependency weight is unjustified",
+        "high-frequency product controls"
+      ],
+      "bestPatterns": [
+        "pinned media scenes",
+        "scrubbed timelines",
+        "section handoff choreography",
+        "horizontal galleries",
+        "scrollytelling"
+      ],
+      "risks": [
+        "scroll jank",
+        "accessibility loss from hijacked flow",
+        "overbuilt marketing motion",
+        "dependency misuse"
+      ],
+      "reducedMotionStrategy": "Disable ScrollTrigger timelines and render static key states with direct navigation.",
+      "performanceNotes": "Pin sparingly, keep timelines bounded, batch reads/writes, and test mobile separately.",
+      "routesToSkill": "advanced-motion-choreography"
+    },
+    {
+      "tool": "Lenis",
+      "useWhen": [
+        "smooth scroll coordination",
+        "parallax-heavy pages",
+        "GSAP ScrollTrigger sync",
+        "cinematic landing pages",
+        "scroll feel improvement"
+      ],
+      "doNotUseWhen": [
+        "apps where native scroll is better",
+        "accessibility-sensitive/productivity flows where smooth scroll hurts speed",
+        "scroll performance is unstable"
+      ],
+      "bestPatterns": [
+        "cinematic page scroll",
+        "parallax coordination",
+        "smooth scrollytelling"
+      ],
+      "risks": [
+        "scroll hijacking feel",
+        "keyboard/screen-reader friction",
+        "mobile performance degradation"
+      ],
+      "reducedMotionStrategy": "Use native scroll when reduced motion is enabled.",
+      "performanceNotes": "Sync carefully with animation loops and avoid stacking with other scroll managers.",
+      "routesToSkill": "advanced-motion-choreography"
+    },
+    {
+      "tool": "View Transition API",
+      "useWhen": [
+        "route transitions",
+        "gallery/project transitions",
+        "image-to-detail transitions",
+        "portfolio/project pages",
+        "stateful visual transitions"
+      ],
+      "doNotUseWhen": [
+        "unsupported-browser critical paths without fallback"
+      ],
+      "bestPatterns": [
+        "thumbnail to detail",
+        "page-to-page continuity",
+        "selected item expansion"
+      ],
+      "risks": [
+        "support gaps",
+        "disorienting route motion",
+        "missing fallback"
+      ],
+      "reducedMotionStrategy": "Use instant route changes or short opacity changes.",
+      "performanceNotes": "Keep transition snapshots small and avoid animating huge full pages without reason.",
+      "routesToSkill": "advanced-motion-choreography"
+    },
+    {
+      "tool": "WAAPI",
+      "useWhen": [
+        "performant programmatic animation",
+        "isolated component motion",
+        "animation controlled from JavaScript without a full library"
+      ],
+      "doNotUseWhen": [
+        "large choreography needing timeline ergonomics",
+        "simple CSS-only feedback"
+      ],
+      "bestPatterns": [
+        "interruptible component animations",
+        "small controlled sequences",
+        "imperative feedback"
+      ],
+      "risks": [
+        "hand-rolled complexity",
+        "inconsistent timing",
+        "forgotten cancellation"
+      ],
+      "reducedMotionStrategy": "Skip WAAPI playback and set final state immediately.",
+      "performanceNotes": "Cancel/reverse animations explicitly and avoid layout properties.",
+      "routesToSkill": "review-animations"
+    },
+    {
+      "tool": "Rive / Lottie",
+      "useWhen": [
+        "authored illustrations",
+        "character/logo/brand animations",
+        "interactive vector moments"
+      ],
+      "doNotUseWhen": [
+        "layout choreography",
+        "fake delight that blocks content",
+        "huge assets without purpose"
+      ],
+      "bestPatterns": [
+        "brand mascot",
+        "success state",
+        "empty state",
+        "explainer illustration"
+      ],
+      "risks": [
+        "heavy files",
+        "non-semantic animation",
+        "delight masking poor UX"
+      ],
+      "reducedMotionStrategy": "Show static poster frame or first meaningful state.",
+      "performanceNotes": "Lazy-load and bound to earned moments.",
+      "routesToSkill": "delight-opportunity-director"
+    }
+  ]
+}
+

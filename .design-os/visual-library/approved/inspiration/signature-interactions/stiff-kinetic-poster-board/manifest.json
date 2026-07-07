@@ -1,0 +1,35 @@
+{
+  "name": "Stiff Kinetic Poster Board",
+  "source": "Stiff",
+  "url": "https://stiff.madebybuzzworthy.com/",
+  "status": "approved-inspiration",
+  "createdAt": "2026-07-03T21:03:41.502Z",
+  "mechanics": [
+    "elite SVG/mascot animations",
+    "left-to-right then down scroll route",
+    "huge comedic poster typography",
+    "vertical repeated Work rail",
+    "framed work cards",
+    "expressive brand voice"
+  ],
+  "patterns": [
+    "Kinetic Poster Board",
+    "Scroll Route Choreography"
+  ],
+  "screenshots": [],
+  "note": "Screenshots referenced in Codex chat notes, not available to filesystem.",
+  "doNotCopy": [
+    "brand identity",
+    "logos",
+    "mascots",
+    "exact colors",
+    "site copy",
+    "proprietary media"
+  ],
+  "transfer": [
+    "interaction mechanic",
+    "motion role",
+    "layout logic",
+    "fallback requirements"
+  ]
+}

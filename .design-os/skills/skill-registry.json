@@ -1,0 +1,2935 @@
+{
+  "version": "p0-2026-07-01",
+  "skills": [
+    {
+      "id": "advanced-motion-choreography",
+      "path": "skills/advanced-motion-choreography/SKILL.md",
+      "description": "Plan, specify, and evaluate award-level motion systems for cinematic, artistic, landing, agency, portfolio, editorial, and experimental UIs.",
+      "useWhen": [
+        "user asks for advanced animations",
+        "user asks for cinematic or artistic motion",
+        "Awwwards, Godly, Recent, Graffico, Manet, UXBert, or Podium motion is referenced",
+        "landing or portfolio page needs scroll choreography",
+        "navigation, menu, reel, media, or section motion matters"
+      ],
+      "doNotUseWhen": [
+        "pure bug fix",
+        "backend-only task",
+        "minimal static page",
+        "high-frequency productivity UI where motion should be reduced",
+        "user explicitly asks for no motion"
+      ],
+      "requiredInputs": [
+        "selected Design OS mode",
+        "active dials",
+        "motion references",
+        "selected direction",
+        "visual spec",
+        "layout skeleton",
+        "navigation strategy",
+        "image/media strategy"
+      ],
+      "outputContract": [
+        "docs/design/motion-choreography-plan.md",
+        "motion references",
+        "motion thesis",
+        "motion vocabulary",
+        "five motion layers",
+        "signature motion moment",
+        "section-by-section motion map",
+        "tool stack decision",
+        "reduced-motion plan",
+        "performance budget",
+        "acceptance criteria"
+      ],
+      "routeKeywords": [
+        "advanced animation",
+        "advanced animations",
+        "cinematic motion",
+        "artistic motion",
+        "award-winning motion",
+        "awwwards motion",
+        "godly motion",
+        "recent motion",
+        "scroll animation",
+        "scroll animations",
+        "appearing while scrolling",
+        "portfolio motion",
+        "motion choreography",
+        "pinned section",
+        "scrubbed timeline",
+        "scrolltrigger",
+        "gsap",
+        "lenis",
+        "kinetic typography",
+        "motion benchmark",
+        "motion sequence",
+        "graffico",
+        "manet",
+        "uxbert",
+        "podium"
+      ]
+    },
+    {
+      "id": "animation-vocabulary",
+      "path": "skills/animation-vocabulary/SKILL.md",
+      "description": "Map vague motion descriptions to precise animation terminology for specs, prompts, and reviews.",
+      "useWhen": [
+        "Migi asks what an animation is called",
+        "motion is described visually but not named",
+        "an agent needs correct motion vocabulary before writing a spec"
+      ],
+      "doNotUseWhen": [
+        "no motion vocabulary is needed",
+        "the task is a pure implementation bug"
+      ],
+      "requiredInputs": [
+        "motion description",
+        "optional screenshot, video, or UI context"
+      ],
+      "outputContract": [
+        "best term",
+        "1-line definition",
+        "close alternatives",
+        "usage note"
+      ],
+      "routeKeywords": [
+        "animation vocabulary",
+        "what is this animation called",
+        "motion term",
+        "easing name",
+        "interaction animation"
+      ]
+    },
+    {
+      "id": "anti-ai-slop-review",
+      "path": "skills/anti-ai-slop-review/SKILL.md",
+      "description": "Review an existing UI for common AI-builder failure modes and concrete fixes.",
+      "useWhen": [
+        "reviewing existing UI",
+        "design feels generic, safe, boring, or AI-generated",
+        "anti-slop checks are needed before completion"
+      ],
+      "doNotUseWhen": [
+        "no UI exists yet",
+        "pure backend, data, or infrastructure task",
+        "implementation only for an approved design"
+      ],
+      "requiredInputs": [
+        "screenshots or runnable UI",
+        "product type",
+        "primary object and primary action",
+        "inspiration or approved direction",
+        "rejected direction"
+      ],
+      "outputContract": [
+        "visual thesis found",
+        "AI-slop failures",
+        "score caps applied",
+        "top structural fix",
+        "top interaction fix",
+        "top responsive fix",
+        "patch recommendation"
+      ],
+      "routeKeywords": [
+        "review",
+        "audit",
+        "anti-slop",
+        "ai slop",
+        "generic",
+        "boring",
+        "same layout",
+        "badge soup",
+        "container soup",
+        "critique"
+      ]
+    },
+    {
+      "id": "anti-ai-tell-preflight",
+      "path": "skills/anti-ai-tell-preflight/SKILL.md",
+      "description": "Run Taste-style anti-AI-tell preflight for landing, portfolio, marketing, and redesign work before final handoff.",
+      "useWhen": [
+        "final review of landing, portfolio, marketing, or redesign UI",
+        "page risks generic AI-builder tells",
+        "Taste preflight is required before handoff"
+      ],
+      "doNotUseWhen": [
+        "backend-only task",
+        "dashboard-only task unless AI tells are visible"
+      ],
+      "requiredInputs": [
+        "design read",
+        "active dials",
+        "visual spec",
+        "screenshot evidence when UI exists"
+      ],
+      "outputContract": [
+        "brief inference",
+        "preflight checklist",
+        "pass/fail",
+        "score caps",
+        "required fixes"
+      ],
+      "routeKeywords": [
+        "anti AI tell",
+        "anti-ai-tell",
+        "Taste preflight",
+        "landing preflight",
+        "generic AI page",
+        "em dash",
+        "duplicate CTA",
+        "CTA wrap"
+      ]
+    },
+    {
+      "id": "artifact-contract-validator",
+      "path": "skills/artifact-contract-validator/SKILL.md",
+      "description": "Validate that required Design OS artifacts, specs, reports, screenshots, manifests, proof captures, and gate outputs exist and are semantically consistent before implementation or final handoff.",
+      "useWhen": [
+        "handoff claims completion",
+        "required gates may be missing",
+        "artifact consistency must be checked",
+        "before final response on nontrivial UI work"
+      ],
+      "doNotUseWhen": [
+        "tiny task with no artifacts",
+        "direction-only brainstorming"
+      ],
+      "requiredInputs": [
+        "mode",
+        "artifact list",
+        "claimed status"
+      ],
+      "outputContract": [
+        "artifact-contract-report.md",
+        "artifact-contract-report.json",
+        "pass/partial/block verdict"
+      ],
+      "routeKeywords": [
+        "artifact contract",
+        "validate artifacts",
+        "missing docs",
+        "handoff validation",
+        "gate outputs"
+      ]
+    },
+    {
+      "id": "brand-voice-as-interface-director",
+      "path": "skills/brand-voice-as-interface-director/SKILL.md",
+      "description": "Turns brand voice into interface mechanics across CTAs, nav labels, cards, details, reviews, states, and microcopy while preserving clarity.",
+      "useWhen": [
+        "playful, editorial, brand, landing, hospitality, media, or creative site feels generic",
+        "CTAs or microcopy need authored product voice",
+        "references include strong voice, ritual selectors, review theater, or comedic poster typography"
+      ],
+      "doNotUseWhen": [
+        "regulated copy must remain strict",
+        "pure visual pass with no copy issue",
+        "high-frequency utility needs literal minimal labels"
+      ],
+      "requiredInputs": [
+        "product type",
+        "audience",
+        "brand personality",
+        "current copy",
+        "user emotional state"
+      ],
+      "outputContract": [
+        "voice thesis",
+        "vocabulary bank",
+        "forbidden language",
+        "CTA lexicon",
+        "surface copy map",
+        "clarity guardrails"
+      ],
+      "routeKeywords": [
+        "brand voice",
+        "copy voice",
+        "generic SaaS copy",
+        "CTA voice",
+        "playful copy",
+        "review theater",
+        "microcopy",
+        "hotel template copy"
+      ]
+    },
+    {
+      "id": "character-object-illustrator",
+      "path": "skills/character-object-illustrator/SKILL.md",
+      "description": "Plan and review believable character, mascot, product-object, botanical, animal, human, and organic illustrations with silhouette, linework, detail, material, and simplification strategy before implementation.",
+      "useWhen": [
+        "character, mascot, botanical, animal, human, or product object illustration is needed",
+        "organic forms must look believable",
+        "a specimen or field-guide plate is requested"
+      ],
+      "doNotUseWhen": [
+        "standard iconography is enough",
+        "no organic or object illustration is present"
+      ],
+      "requiredInputs": [
+        "subject",
+        "reference grammar",
+        "silhouette strategy",
+        "linework strategy"
+      ],
+      "outputContract": [
+        "silhouette study",
+        "detail budget",
+        "material strategy",
+        "believability criteria"
+      ],
+      "routeKeywords": [
+        "character illustrator",
+        "object illustrator",
+        "botanical plate",
+        "organic illustration",
+        "mascot",
+        "specimen"
+      ]
+    },
+    {
+      "id": "chart-system-director",
+      "path": "skills/chart-system-director/SKILL.md",
+      "description": "Prevent broken, fake, or decorative charts by defining visualization intent, data contracts, chart type, library choice, labels, axes, legends, interactions, states, responsiveness, and accessibility before implementation.",
+      "useWhen": [
+        "dashboards",
+        "analytics",
+        "charts",
+        "time series",
+        "comparisons",
+        "rankings",
+        "distributions",
+        "financial or market views",
+        "operational metrics",
+        "bars, lines, maps, tables, heatmaps, sparklines, timelines, gauges, or diagrams that encode data"
+      ],
+      "doNotUseWhen": [
+        "pure decorative illustration",
+        "static copy-only UI",
+        "no chart/data/diagram work"
+      ],
+      "requiredInputs": [
+        "user question",
+        "data fields or mock data",
+        "product decision",
+        "target screen/component",
+        "responsive targets"
+      ],
+      "outputContract": [
+        "visualization intent",
+        "data contract",
+        "chart type selection",
+        "library recommendation",
+        "axis/scale plan",
+        "label/legend plan",
+        "interaction plan",
+        "empty/loading/error states",
+        "responsive/accessibility plan",
+        "screenshot QA checklist",
+        "tooltip plan"
+      ],
+      "routeKeywords": [
+        "chart",
+        "graph",
+        "data visualization",
+        "visualization intent",
+        "data contract",
+        "dashboard chart",
+        "time series",
+        "bar chart",
+        "line chart",
+        "heatmap",
+        "sparkline",
+        "gauge",
+        "donut",
+        "axis",
+        "legend",
+        "tooltip",
+        "Vega-Lite",
+        "Observable Plot",
+        "D3",
+        "ECharts",
+        "Recharts",
+        "Chart.js",
+        "Nivo",
+        "React Flow",
+        "React Konva",
+        "Konva"
+      ]
+    },
+    {
+      "id": "creative-orchestration-director",
+      "path": "skills/creative-orchestration-director/SKILL.md",
+      "description": "Orchestrate multi-skill Design OS work into a self-correcting loop with creative state, evidence routing, machine-readable verdicts, repair queues, owner skills, acceptance checks, and next-skill decisions.",
+      "useWhen": [
+        "task spans multiple skills, phases, or quality gates",
+        "critique, audit, scorecard, screenshot review, or dogfood report must become fixes",
+        "Design OS itself is being improved",
+        "a review needs a repair queue, owner skills, and acceptance checks",
+        "multi-skill visual work needs direction, spec, implementation, evidence, critique, repair, and hardening"
+      ],
+      "doNotUseWhen": [
+        "single narrow skill is sufficient",
+        "pure bug fix with no Design OS process question",
+        "user asks for a quick answer without workflow orchestration"
+      ],
+      "requiredInputs": [
+        "task",
+        "current phase",
+        "candidate skills",
+        "available evidence",
+        "open blockers or audit findings"
+      ],
+      "outputContract": [
+        "skill route",
+        "creative state ledger",
+        "evidence plan",
+        "machine-readable verdict summary",
+        "repair queue",
+        "owner skill per repair",
+        "next skill or stop condition"
+      ],
+      "routeKeywords": [
+        "orchestrate skills",
+        "skill orchestration",
+        "self-correcting",
+        "repair loop",
+        "repair queue",
+        "machine-readable verdict",
+        "creative state",
+        "evidence routing",
+        "skill audit",
+        "fix the skills",
+        "improve each skill",
+        "turn critique into fixes",
+        "dogfood loop"
+      ]
+    },
+    {
+      "id": "creative-prototype-spike-director",
+      "path": "skills/creative-prototype-spike-director/SKILL.md",
+      "description": "Force high-risk visual mechanics, signature interactions, illustration assets, scroll choreography, WebGL effects, and unusual navigation concepts to be proven in small isolated prototypes before full-page build.",
+      "useWhen": [
+        "creative promise is risky",
+        "signature interaction is unproven",
+        "hero illustration or scroll choreography must be proven",
+        "WebGL/canvas/custom nav risk exists"
+      ],
+      "doNotUseWhen": [
+        "standard UI pattern",
+        "minor bug fix",
+        "full implementation already approved and mechanic is proven"
+      ],
+      "requiredInputs": [
+        "risky mechanic",
+        "success criteria",
+        "fallback requirement"
+      ],
+      "outputContract": [
+        "creative-prototype-spike-plan.md",
+        "creative-prototype-spike-review.md",
+        "proceed/revise/abandon decision"
+      ],
+      "routeKeywords": [
+        "prototype spike",
+        "creative spike",
+        "prove mechanic",
+        "isolated prototype",
+        "risky interaction"
+      ]
+    },
+    {
+      "id": "creative-session-state-manager",
+      "path": "skills/creative-session-state-manager/SKILL.md",
+      "description": "Maintain evolving creative session state: brief facts, Migi approvals, rejected directions, selected direction, open risks, artifact graph, required gates, and next actions.",
+      "useWhen": [
+        "nontrivial design or frontend work starts",
+        "user feedback changes direction",
+        "a run resumes from partial context",
+        "Migi critique or approval must be preserved"
+      ],
+      "doNotUseWhen": [
+        "tiny one-command task",
+        "pure code edit with no design/session context"
+      ],
+      "requiredInputs": [
+        "current request",
+        "existing docs/design and docs/qa artifacts",
+        "Migi feedback"
+      ],
+      "outputContract": [
+        "creative-session-state.md",
+        "creative-session-state.json",
+        "artifact graph",
+        "next action"
+      ],
+      "routeKeywords": [
+        "session state",
+        "creative state",
+        "remember feedback",
+        "resume design run",
+        "Migi approval",
+        "artifact graph"
+      ]
+    },
+    {
+      "id": "dashboard-graph-system",
+      "path": "skills/dashboard-graph-system/SKILL.md",
+      "description": "Design or review graph-rich dashboard systems with meaningful chart selection, dashboard attraction zones, chart bounds, data-shape rationale, accessibility fallbacks, palette/material discipline, and anti-decorative-chart enforcement.",
+      "useWhen": [
+        "dashboard or command center uses multiple charts or graph systems",
+        "BI, analytics, monitoring, forecasts, heatmaps, funnels, KPIs, maps, or operational data products",
+        "dashboard needs graph richness without decorative chart wallpaper"
+      ],
+      "doNotUseWhen": [
+        "no dashboard or graph system is involved",
+        "single simple static stat card",
+        "backend-only data work"
+      ],
+      "requiredInputs": [
+        "dashboard purpose",
+        "user decisions",
+        "data shapes",
+        "reference anchors",
+        "responsive targets"
+      ],
+      "outputContract": [
+        "graph system strategy",
+        "major/supporting charts",
+        "chart rationale",
+        "accessibility fallbacks",
+        "chart bounds strategy",
+        "responsive chart behavior"
+      ],
+      "routeKeywords": [
+        "dashboard graph",
+        "graph system",
+        "dashboard charts",
+        "BI dashboard",
+        "monitoring dashboard",
+        "forecast dashboard",
+        "KPI",
+        "heatmap",
+        "analytics dashboard",
+        "chart-system-director"
+      ]
+    },
+    {
+      "id": "data-visualization-selection",
+      "path": "skills/data-visualization-selection/SKILL.md",
+      "description": "Chart and graph-selection skill for dashboards, analytics, BI, monitoring, forecasting, maps, funnels, networks, sentiment, finance, and any UI where data visualization must support real decisions.",
+      "useWhen": [
+        "dashboard or analytics work includes meaningful charts",
+        "BI, monitoring, forecasting, maps, funnels, network graphs, sentiment, finance, or graph-rich UI is involved",
+        "chart type, accessibility fallback, rendering strategy, or chart bounds need to be selected or reviewed"
+      ],
+      "doNotUseWhen": [
+        "no charts or data visualizations are involved",
+        "purely decorative static illustration",
+        "copy-only or backend-only task"
+      ],
+      "requiredInputs": [
+        "data shape",
+        "user decision",
+        "data volume",
+        "update frequency",
+        "accessibility constraints",
+        "responsive target viewports"
+      ],
+      "outputContract": [
+        "chart-selection report",
+        "primary chart type",
+        "rejected chart alternatives",
+        "accessibility fallback",
+        "rendering/performance strategy",
+        "chart bounds strategy",
+        "responsive behavior"
+      ],
+      "routeKeywords": [
+        "chart",
+        "charts",
+        "graph",
+        "graphs",
+        "analytics",
+        "business intelligence",
+        "data visualization",
+        "dashboard chart",
+        "line chart",
+        "bar chart",
+        "heatmap",
+        "funnel",
+        "forecast",
+        "anomaly",
+        "map",
+        "network",
+        "donut",
+        "gauge",
+        "bullet chart",
+        "visualization",
+        "chart-system-director"
+      ]
+    },
+    {
+      "id": "data-viz-hardening-review",
+      "path": "skills/data-viz-hardening-review/SKILL.md",
+      "description": "Stress-test charts, diagrams, labels, legends, axes, canvases, maps, timelines, and visual encodings with real-world data and viewport edge cases after implementation.",
+      "useWhen": [
+        "after implementing charts",
+        "after implementing diagrams",
+        "after implementing spatial maps",
+        "after implementing pattern canvases",
+        "after implementing timelines",
+        "before calling visualizations final",
+        "label/legend/tooltip/axis/canvas hardening"
+      ],
+      "doNotUseWhen": [
+        "Fast Direction Gate",
+        "early visual direction selection",
+        "UI with no visualization/canvas/diagram"
+      ],
+      "requiredInputs": [
+        "target visualization(s)",
+        "screenshots or source",
+        "data edge cases if available",
+        "breakpoints/locales/accessibility targets"
+      ],
+      "outputContract": [
+        "visualization hardening table",
+        "edge-case risks",
+        "required fixes",
+        "state review",
+        "responsive/accessibility review",
+        "hardening verdict",
+        "diagram integrity report or blocked reason"
+      ],
+      "routeKeywords": [
+        "data viz hardening",
+        "chart hardening",
+        "diagram hardening",
+        "label overflow",
+        "legend break",
+        "tooltip overflow",
+        "long labels",
+        "many data points",
+        "no data chart",
+        "visualization edge cases",
+        "diagram integrity check",
+        "data-diagram",
+        "collision detector",
+        "canvas performance",
+        "diagram jank",
+        "catastrophic overlap"
+      ]
+    },
+    {
+      "id": "delight-opportunity-director",
+      "path": "skills/delight-opportunity-director/SKILL.md",
+      "description": "Identify earned personality and delight moments without delaying, blocking, or masking the core product task.",
+      "useWhen": [
+        "success, empty, loading, milestone, error, or interaction states need personality",
+        "UI needs tasteful delight",
+        "a polish pass should add character without noise"
+      ],
+      "doNotUseWhen": [
+        "core loop is broken",
+        "domain seriousness makes delight inappropriate",
+        "motion/accessibility cannot be supported"
+      ],
+      "requiredInputs": [
+        "product domain",
+        "core task",
+        "brand register",
+        "candidate states"
+      ],
+      "outputContract": [
+        "earned delight moments",
+        "moments to avoid",
+        "personality register",
+        "implementation notes",
+        "accessibility/performance constraints"
+      ],
+      "routeKeywords": [
+        "delight",
+        "personality",
+        "empty state",
+        "success state",
+        "loading state",
+        "milestone",
+        "easter egg"
+      ]
+    },
+    {
+      "id": "design-start-image-exploration",
+      "path": "skills/design-start-image-exploration/SKILL.md",
+      "description": "Legacy paid image direction exploration wrapper. Disabled by default; may only call paid image APIs with Migi's exact written approval and --paid-ok.",
+      "useWhen": [
+        "new visual-heavy app",
+        "new landing page",
+        "portfolio",
+        "creative or artistic page",
+        "dashboard visual redesign",
+        "mobile product flow",
+        "major UI direction change",
+        "Lovable-level visual direction selection"
+      ],
+      "doNotUseWhen": [
+        "bug fix",
+        "backend-only work",
+        "copy-only change",
+        "tiny refactor",
+        "already-approved visual direction",
+        "zero visual/UI work"
+      ],
+      "requiredInputs": [
+        "product brief",
+        "selected visual mode",
+        "active design dials",
+        "references if any",
+        "exact Migi approval phrase when paid image generation should run",
+        "--paid-ok flag when paid image generation should run",
+        "OPENAI_API_KEY only after paid approval exists"
+      ],
+      "outputContract": [
+        "blocked-report.md when paid approval, paid flag, SDK, API key, or API access is missing",
+        "docs/design/direction-options.md if paid images were generated or blocked",
+        "generated/moodboards/<slug>/manifest.json only for approved paid runs",
+        "generated/moodboards/<slug>/prompts.md only for approved paid runs",
+        "fallback to no-image direction gate when paid generation is blocked"
+      ],
+      "routeKeywords": [
+        "paid image generation",
+        "paid direction images",
+        "design direction images",
+        "generate direction images",
+        "image direction gate",
+        "direction image gate",
+        "gpt-image",
+        "OPENAI_API_KEY image generation",
+        "I approve paid API image generation for this run"
+      ]
+    },
+    {
+      "id": "designed-detail-reveal-director",
+      "path": "skills/designed-detail-reveal-director/SKILL.md",
+      "description": "Plans non-default detail reveals such as drawers, sleeves, split views, pull-outs, station boards, and ritual selectors with state, focus, keyboard, and responsive behavior.",
+      "useWhen": [
+        "list, card, media, work item, service, or object needs designed detail behavior",
+        "default modal would feel generic",
+        "references include Wembi-like list/detail or ritual selectors"
+      ],
+      "doNotUseWhen": [
+        "standard dialog is correct",
+        "simple alert or confirmation",
+        "no interactive detail state"
+      ],
+      "requiredInputs": [
+        "trigger elements",
+        "detail content model",
+        "selected direction",
+        "responsive targets",
+        "accessibility constraints"
+      ],
+      "outputContract": [
+        "reveal pattern",
+        "trigger/state model",
+        "focus and close behavior",
+        "keyboard behavior",
+        "responsive fallback",
+        "text overflow handling"
+      ],
+      "routeKeywords": [
+        "detail reveal",
+        "designed drawer",
+        "detail panel",
+        "sleeve",
+        "split view",
+        "pull-out",
+        "ritual selector",
+        "list detail"
+      ]
+    },
+    {
+      "id": "diagram-canvas-system",
+      "path": "skills/diagram-canvas-system/SKILL.md",
+      "description": "Design and review spatial diagrams, maps, editors, pattern canvases, node graphs, floor maps, timeline canvases, seating charts, workflow builders, and object-based product surfaces with coordinate, layer, object, label, collision, selection, and responsive models.",
+      "useWhen": [
+        "pattern drafting canvas",
+        "floor maps",
+        "node graphs",
+        "workflow builders",
+        "architecture diagrams",
+        "timelines",
+        "spatial maps",
+        "seating charts",
+        "product object canvases",
+        "editors with selectable objects",
+        "diagrams with labels, guides, callouts, or connected objects"
+      ],
+      "doNotUseWhen": [
+        "normal chart only",
+        "plain card/list UI",
+        "static decorative illustration with no product object"
+      ],
+      "requiredInputs": [
+        "primary product object",
+        "object types",
+        "labels",
+        "desired interactions",
+        "viewport targets",
+        "inspector/details behavior"
+      ],
+      "outputContract": [
+        "primary product object",
+        "coordinate system",
+        "canvas bounds",
+        "layer model",
+        "object model",
+        "label model",
+        "collision strategy",
+        "selection model",
+        "zoom/pan model if needed",
+        "responsive behavior",
+        "keyboard/accessibility model",
+        "hardening test cases",
+        "diagram integrity detector plan"
+      ],
+      "routeKeywords": [
+        "diagram",
+        "canvas",
+        "spatial map",
+        "floor map",
+        "seating chart",
+        "pattern canvas",
+        "pattern drafting",
+        "node graph",
+        "workflow builder",
+        "architecture diagram",
+        "timeline canvas",
+        "label collision",
+        "coordinate system",
+        "layer model",
+        "object model",
+        "React Konva",
+        "Konva",
+        "diagram integrity",
+        "data-diagram-root",
+        "data-diagram-object",
+        "label lanes",
+        "callout routes",
+        "badge safe zones",
+        "catastrophic diagram overlap",
+        "canvas performance budget",
+        "pattern canvas overlap"
+      ]
+    },
+    {
+      "id": "elite-scroll-choreography-director",
+      "path": "skills/elite-scroll-choreography-director/SKILL.md",
+      "description": "Plan award-level scroll choreography where scrolling changes spatial route, object position, information depth, media scale, navigation state, or interaction context.",
+      "useWhen": [
+        "elite/Awwwards/million-dollar website feel is requested",
+        "landing, portfolio, editorial, brand, playful product, or video-first site needs authored scroll",
+        "references include horizontal routes, pinned media, card assembly, portal entry, media constellations, or directional transitions"
+      ],
+      "doNotUseWhen": [
+        "normal dashboard",
+        "dense productivity tool",
+        "settings/forms page",
+        "high-frequency utility flow",
+        "accessibility-critical task path where ceremony blocks usage"
+      ],
+      "requiredInputs": [
+        "project type",
+        "brand personality",
+        "reference mechanics",
+        "primary media/object",
+        "content amount",
+        "mobile behavior",
+        "reduced-motion requirements"
+      ],
+      "outputContract": [
+        "selected scroll pattern",
+        "route map",
+        "chapter map",
+        "pinned/sticky stage plan",
+        "moving object inventory",
+        "information reveal plan",
+        "nav sync plan",
+        "motion timeline",
+        "responsive fallback",
+        "reduced-motion fallback",
+        "QA checklist"
+      ],
+      "routeKeywords": [
+        "elite scroll",
+        "scroll choreography",
+        "scroll route",
+        "horizontal scroll",
+        "scroll-to-assemble",
+        "sticky rail",
+        "pinned media",
+        "portal entry",
+        "media constellation",
+        "scroll travel",
+        "cards assemble",
+        "award-level scroll",
+        "awwwards scroll"
+      ]
+    },
+    {
+      "id": "emil-design-engineering",
+      "path": "skills/emil-design-engineering/SKILL.md",
+      "description": "General design-engineering craft review for component polish, invisible details, animation decisions, performance, and accessibility.",
+      "useWhen": [
+        "UI needs an elite craft pass",
+        "component polish, interaction details, animation choices, or invisible details need review",
+        "frontend feels functional but not refined"
+      ],
+      "doNotUseWhen": [
+        "backend-only task",
+        "raw visual concept before implementation"
+      ],
+      "requiredInputs": [
+        "screen or component under review",
+        "design intent",
+        "available screenshots or code references"
+      ],
+      "outputContract": [
+        "Before / After / Why table",
+        "component craft findings",
+        "motion decisions",
+        "performance/accessibility notes",
+        "required fixes"
+      ],
+      "routeKeywords": [
+        "emil",
+        "design engineering",
+        "component craft",
+        "invisible polish",
+        "craft pass",
+        "microinteraction"
+      ]
+    },
+    {
+      "id": "evidence-backed-critique",
+      "path": "skills/evidence-backed-critique/SKILL.md",
+      "description": "Finished UI critique mode combining design-director judgment, screenshot/browser evidence, Nielsen heuristic scoring, cognitive load, persona red flags, priority issues, and persisted snapshots.",
+      "useWhen": [
+        "Migi asks critique this",
+        "Migi uploads screenshots for review",
+        "dogfood app reaches final state",
+        "UI feels wrong but exact issue is unclear",
+        "post-build quality scoring is needed"
+      ],
+      "doNotUseWhen": [
+        "Fast Direction Gate",
+        "creating first direction options",
+        "writing implementation code",
+        "quick small fixes unless explicitly requested"
+      ],
+      "requiredInputs": [
+        "target app/page/component",
+        "screenshot(s) or browser URL if available",
+        "design mode",
+        "user goal",
+        "relevant Design OS rules",
+        "previous critique snapshot if available"
+      ],
+      "outputContract": [
+        "full critique report",
+        "Nielsen score /40",
+        "P0-P3 issue list",
+        "cognitive load assessment",
+        "persona red flags",
+        "next recommended actions",
+        "saved snapshot if possible"
+      ],
+      "routeKeywords": [
+        "evidence-backed critique",
+        "critique this",
+        "finished UI critique",
+        "Nielsen heuristic",
+        "cognitive load",
+        "persona red flags",
+        "dogfood critique",
+        "critique snapshot"
+      ]
+    },
+    {
+      "id": "evidence-to-repair-planner",
+      "path": "skills/evidence-to-repair-planner/SKILL.md",
+      "description": "Convert screenshots, detector reports, scorecard findings, critique notes, and user complaints into ordered repair tasks with verification commands.",
+      "useWhen": [
+        "review finds issues",
+        "screenshot shows failure",
+        "Migi critique needs fixes",
+        "detector report failed"
+      ],
+      "doNotUseWhen": [
+        "no evidence exists",
+        "brainstorming before implementation"
+      ],
+      "requiredInputs": [
+        "screenshots or reports",
+        "user complaint",
+        "score caps"
+      ],
+      "outputContract": [
+        "evidence-to-repair-plan.md",
+        "evidence-to-repair-plan.json",
+        "ordered repair table"
+      ],
+      "routeKeywords": [
+        "repair plan",
+        "fix from screenshot",
+        "evidence to repair",
+        "critique to tasks",
+        "detector findings"
+      ]
+    },
+    {
+      "id": "failure-memory-retrieval-router",
+      "path": "skills/failure-memory-retrieval-router/SKILL.md",
+      "description": "Retrieve relevant rejected case studies, bad-practice evidence, score caps, and prevention rules before planning, implementation, or review.",
+      "useWhen": [
+        "task resembles prior failure",
+        "Migi mentions recurring problem",
+        "before high-risk visual generation",
+        "before repair planning"
+      ],
+      "doNotUseWhen": [
+        "no design memory is relevant",
+        "fresh backend-only task"
+      ],
+      "requiredInputs": [
+        "task or failure query",
+        "visual-library rejected memory",
+        "scorecard"
+      ],
+      "outputContract": [
+        "failure-memory-retrieval.md",
+        "failure-memory-retrieval.json",
+        "activated score caps"
+      ],
+      "routeKeywords": [
+        "failure memory",
+        "rejected case study",
+        "bad practice",
+        "past failure",
+        "retrieve rejection",
+        "recurring failure"
+      ]
+    },
+    {
+      "id": "final-ui-integrity-gate",
+      "path": "skills/final-ui-integrity-gate/SKILL.md",
+      "description": "Fail-closed final UI integrity v3 review before handoff, using a width-sweep/height/scroll/state matrix to block clipped text, viewport-edge clipping, floating drift, horizontal partial content, nav overflow, media/text collision, fixed overlay collision, accidental whitespace, and unreadable containers.",
+      "useWhen": [
+        "before final handoff for frontend implementation",
+        "before final handoff for landing pages or app redesigns",
+        "after screenshot capture and layout review",
+        "when clipped text, overlaps, floating object drift, nav overflow, media/text collision, or unreadable UI risk exists"
+      ],
+      "doNotUseWhen": [
+        "backend-only task with no visual UI",
+        "direction-only planning before implementation",
+        "text-only documentation edit"
+      ],
+      "requiredInputs": [
+        "local URL",
+        "v3 width sweep",
+        "height matrix",
+        "legacy viewport matrix if used",
+        "scroll samples",
+        "interaction states",
+        "screenshot paths",
+        "user's original complaint",
+        "changed files",
+        "final implementation state"
+      ],
+      "outputContract": [
+        "final UI integrity v3 verdict",
+        "blocker count",
+        "passed and failed sampled viewport states",
+        "final handoff allowed flag",
+        "check/evidence/result/severity/fix table",
+        "blockers list",
+        "screenshot evidence",
+        "required fixes before handoff"
+      ],
+      "routeKeywords": [
+        "final ui integrity",
+        "final integrity gate",
+        "final handoff",
+        "clipped text",
+        "cut text",
+        "overlapping containers",
+        "floating object drift",
+        "viewport edge clipping",
+        "horizontal scroll partial content",
+        "width sweep",
+        "height matrix",
+        "viewport matrix",
+        "scroll samples",
+        "nav overflow",
+        "media text collision",
+        "fixed overlay",
+        "unreadable ui",
+        "visual integrity"
+      ]
+    },
+    {
+      "id": "frontend-art-director-review",
+      "path": "skills/frontend-art-director-review/SKILL.md",
+      "description": "Ruthless elite redesign critique focused on visual thesis, composition, focal object, material, atmosphere, desire, and interaction reward.",
+      "useWhen": [
+        "elite redesign critique requested",
+        "UI needs art-direction judgment",
+        "product feels safe, generic, flat, boring, or junior",
+        "redesign direction needs approval or rejection"
+      ],
+      "doNotUseWhen": [
+        "small bug fixing",
+        "implementation details only",
+        "approved design needs only technical cleanup"
+      ],
+      "requiredInputs": [
+        "current screenshots or runnable UI",
+        "product type",
+        "primary object and action",
+        "intended audience",
+        "inspiration or approved thesis if any"
+      ],
+      "outputContract": [
+        "verdict",
+        "visual thesis",
+        "focal object",
+        "composition assessment",
+        "material/atmosphere",
+        "desire mechanism",
+        "interaction reward",
+        "concept failures",
+        "execution failures",
+        "required redesign move",
+        "scorecard caps"
+      ],
+      "routeKeywords": [
+        "elite",
+        "art director",
+        "art-director",
+        "ruthless",
+        "redesign critique",
+        "visual thesis",
+        "principal design",
+        "top-tier"
+      ]
+    },
+    {
+      "id": "illustration-art-director",
+      "path": "skills/illustration-art-director/SKILL.md",
+      "description": "Direct, plan, and review custom illustration systems before frontend implementation, especially botanical, character, mascot, product-object, editorial SVG, hero illustration, custom SVG scene, field-guide, specimen, and illustration-heavy landing work.",
+      "useWhen": [
+        "custom illustration is the visual hero",
+        "botanical, character, mascot, product object, editorial SVG, or custom SVG scene work is requested",
+        "illustration quality must be proven before full-page composition"
+      ],
+      "doNotUseWhen": [
+        "ordinary text-only layout",
+        "standard icon library is sufficient",
+        "no custom illustration is present"
+      ],
+      "requiredInputs": [
+        "illustration subject",
+        "references",
+        "desired emotional world",
+        "output medium",
+        "approval requirement"
+      ],
+      "outputContract": [
+        "illustration art direction",
+        "style guide",
+        "asset options",
+        "isolated hero illustration",
+        "illustration gate review"
+      ],
+      "routeKeywords": [
+        "illustration-first gate",
+        "botanical illustration",
+        "hero illustration",
+        "mascot illustration",
+        "character illustration",
+        "product object illustration",
+        "field guide",
+        "specimen plate"
+      ]
+    },
+    {
+      "id": "illustration-quality-review",
+      "path": "skills/illustration-quality-review/SKILL.md",
+      "description": "Review custom illustration, SVG scenes, botanical plates, character/mascot art, product-object illustration, editorial visuals, and hero illustration for professional quality before full-page build or final handoff.",
+      "useWhen": [
+        "illustration-heavy UI needs review",
+        "hero illustration quality is uncertain",
+        "botanical, character, mascot, object, or SVG scene looks amateur"
+      ],
+      "doNotUseWhen": [
+        "no custom illustration is present",
+        "pure layout or copy review"
+      ],
+      "requiredInputs": [
+        "isolated illustration",
+        "style guide",
+        "reference grammar",
+        "screenshot or rendered proof"
+      ],
+      "outputContract": [
+        "quality verdict",
+        "failure table",
+        "score caps",
+        "approval/blocker recommendation"
+      ],
+      "routeKeywords": [
+        "illustration quality",
+        "amateur illustration",
+        "childlike drawing",
+        "primitive botanical",
+        "ellipse leaves",
+        "asset-first illustration"
+      ]
+    },
+    {
+      "id": "image-first-frontend",
+      "path": "skills/image-first-frontend/SKILL.md",
+      "description": "Build visual-heavy frontend work from image or section references first, with deep extraction of typography, spacing, component logic, colors, image roles, design-system tokens, and anti-drift implementation.",
+      "useWhen": [
+        "image, screenshot, generated reference, or section reference should drive implementation",
+        "visual-heavy frontend risks generic code drift",
+        "image-first implementation needs analysis before code"
+      ],
+      "doNotUseWhen": [
+        "no visual references exist and image generation is unavailable",
+        "tiny technical fix",
+        "backend-only task"
+      ],
+      "requiredInputs": [
+        "visual references",
+        "product brief",
+        "section count",
+        "responsive targets",
+        "design-system constraints"
+      ],
+      "outputContract": [
+        "image-first analysis",
+        "extracted typography/spacing/component/color/image rules",
+        "visual shell",
+        "anti-drift checks",
+        "screenshot proof"
+      ],
+      "routeKeywords": [
+        "image-first frontend",
+        "image first frontend",
+        "section references",
+        "generated references",
+        "visual reference implementation",
+        "screenshot to frontend",
+        "image-driven frontend"
+      ]
+    },
+    {
+      "id": "image-first-website-to-code",
+      "path": "skills/image-first-website-to-code/SKILL.md",
+      "description": "Image-first website-to-code skill for premium landing pages, hero sections, marketing sites, product pages, editorial/portfolio websites, and visually important redesigns where section references must be generated or selected, analyzed deeply, then implemented faithfully.",
+      "useWhen": [
+        "premium website, landing page, hero section, marketing site, product page, editorial site, portfolio site, or website redesign is visually important",
+        "image generation or strong visual section references should drive implementation",
+        "website implementation risks drifting from visual references into generic coded sections"
+      ],
+      "doNotUseWhen": [
+        "technical bug fix",
+        "backend-only task",
+        "Literal Target Copy Mode where the supplied target must be copied directly",
+        "existing design system must be preserved exactly"
+      ],
+      "requiredInputs": [
+        "site type",
+        "section count",
+        "visual references or image generation availability",
+        "target audience",
+        "product purpose",
+        "responsive targets"
+      ],
+      "outputContract": [
+        "image-first website analysis",
+        "section reference list",
+        "text/type/spacing/button/color/image extraction",
+        "implementation contract",
+        "anti-drift checks",
+        "screenshot QA"
+      ],
+      "routeKeywords": [
+        "image-to-code",
+        "image first",
+        "image-first",
+        "website",
+        "landing page",
+        "hero",
+        "marketing site",
+        "product page",
+        "portfolio",
+        "editorial",
+        "premium website",
+        "section image",
+        "section references",
+        "website redesign",
+        "web page"
+      ]
+    },
+    {
+      "id": "interaction-state-matrix-director",
+      "path": "skills/interaction-state-matrix-director/SKILL.md",
+      "description": "Specify and review interactive component states across default, hover, focus-visible, active, selected, selected+hover, selected+focus, disabled, loading, error, empty, and responsive variants.",
+      "useWhen": [
+        "UI has stateful controls",
+        "nav/tabs/chips/cards/buttons need states",
+        "selected+hover or focus readability risk exists",
+        "component states need proof"
+      ],
+      "doNotUseWhen": [
+        "static artifact with no interaction"
+      ],
+      "requiredInputs": [
+        "interactive object list",
+        "visual spec",
+        "accessibility requirements"
+      ],
+      "outputContract": [
+        "interaction-state-matrix.md",
+        "interaction-state-matrix.json"
+      ],
+      "routeKeywords": [
+        "state matrix",
+        "selected hover",
+        "focus visible",
+        "interactive states",
+        "control states"
+      ]
+    },
+    {
+      "id": "landing-page-craft-director",
+      "path": "skills/landing-page-craft-director/SKILL.md",
+      "description": "Direct landing, portfolio, marketing, and visual redesign pages with image-first section craft, varied rhythm, CTA path, concept spine, and anti-Blogspot discipline.",
+      "useWhen": [
+        "landing page, portfolio, marketing site, product story, or redesign visual pass",
+        "page needs image-first section planning",
+        "section rhythm, CTA variation, concept spine, or Taste rules matter"
+      ],
+      "doNotUseWhen": [
+        "dashboard or app workflow is primary",
+        "minor copy edit",
+        "backend-only task"
+      ],
+      "requiredInputs": [
+        "page goal",
+        "audience",
+        "reference anchors",
+        "image/source availability",
+        "conversion path"
+      ],
+      "outputContract": [
+        "design read",
+        "concept spine",
+        "section jobs",
+        "composition anchors",
+        "background modes",
+        "CTA variations",
+        "image roles",
+        "anti-AI-tell plan"
+      ],
+      "routeKeywords": [
+        "landing craft",
+        "landing page craft",
+        "portfolio craft",
+        "marketing page",
+        "Taste",
+        "imagegen frontend web",
+        "section rhythm",
+        "concept spine"
+      ]
+    },
+    {
+      "id": "landing-page-pattern-director",
+      "path": "skills/landing-page-pattern-director/SKILL.md",
+      "description": "Select and enforce landing page patterns for artistic, poster, image-led, conversion, product-demo, trust, storytelling, and premium marketing pages while blocking generic Blogspot/SaaS section stacks.",
+      "useWhen": [
+        "landing page, hero page, marketing page, product page, portfolio, editorial, or brand page",
+        "page risks becoming generic feature-section stack",
+        "landing pattern, hero architecture, section rhythm, image role, and CTA strategy need to be selected"
+      ],
+      "doNotUseWhen": [
+        "dashboard or app workflow is primary",
+        "small copy edit",
+        "backend-only task"
+      ],
+      "requiredInputs": [
+        "landing goal",
+        "reference anchors",
+        "audience",
+        "image/source availability",
+        "CTA goal"
+      ],
+      "outputContract": [
+        "selected landing pattern",
+        "hero architecture",
+        "section rhythm",
+        "copy density",
+        "image role",
+        "CTA strategy",
+        "forbidden drift"
+      ],
+      "routeKeywords": [
+        "landing pattern",
+        "landing page",
+        "hero page",
+        "poster",
+        "marketing page",
+        "product page",
+        "storytelling",
+        "conversion",
+        "trust page"
+      ]
+    },
+    {
+      "id": "layout-integrity-review",
+      "path": "skills/layout-integrity-review/SKILL.md",
+      "description": "Review implemented UI for text clipping, word overflow, container collisions, nav responsiveness, whitespace density, breakpoint survival, and obvious screenshot layout failures after implementation.",
+      "useWhen": [
+        "visual-heavy page has been implemented",
+        "landing page, product UI, or mobile flow needs final layout integrity review",
+        "custom nav, stickers, cards, badges, overlays, large display type, or scroll/sticky/pinned experience is present",
+        "screenshots show clipped text, nav overflow, container collision, or accidental blank space"
+      ],
+      "doNotUseWhen": [
+        "no UI has been implemented yet",
+        "pure backend task",
+        "direction-only work before screenshots exist"
+      ],
+      "requiredInputs": [
+        "screenshots or runnable URL",
+        "viewports checked",
+        "critical text areas",
+        "nav behavior",
+        "known user complaints"
+      ],
+      "outputContract": [
+        "issue table",
+        "evidence",
+        "why it fails",
+        "required fix",
+        "severity",
+        "verdict"
+      ],
+      "routeKeywords": [
+        "layout integrity",
+        "text clipping",
+        "word clipped",
+        "text overflow",
+        "container overflow",
+        "nav overflow",
+        "nav responsiveness",
+        "sticker covers text",
+        "card covers headline",
+        "huge blank space",
+        "breakpoint survival"
+      ]
+    },
+    {
+      "id": "make-interfaces-feel-better",
+      "path": "skills/make-interfaces-feel-better/SKILL.md",
+      "description": "Post-implementation polish pass for interfaces that work but feel stiff, dead, generic, unresponsive, or under-polished; checks feedback, states, perceived performance, spacing, focus, and micro-polish.",
+      "useWhen": [
+        "main layout exists",
+        "visible interactions mostly work",
+        "UI feels stiff, dead, generic, or unresponsive",
+        "before final screenshot-scorecard review"
+      ],
+      "doNotUseWhen": [
+        "visual direction is not selected",
+        "main layout does not exist",
+        "core loop is broken",
+        "backend-only task"
+      ],
+      "requiredInputs": [
+        "visual spec",
+        "design-system tokens",
+        "main layout",
+        "visible interactions",
+        "available screenshots"
+      ],
+      "outputContract": [
+        "Interface Feel Pass",
+        "dead/stiff surfaces found",
+        "feedback improvements",
+        "perceived performance improvements",
+        "state improvements",
+        "jank risks",
+        "remaining manual checks"
+      ],
+      "routeKeywords": [
+        "interface feel",
+        "feel better",
+        "polish pass",
+        "micro polish",
+        "dead UI",
+        "stiff UI",
+        "unresponsive",
+        "active feedback",
+        "focus state",
+        "empty state",
+        "loading state",
+        "error state"
+      ]
+    },
+    {
+      "id": "material-surface-director",
+      "path": "skills/material-surface-director/SKILL.md",
+      "description": "Direct and review material, texture, fill, surface, atmosphere, grain, glass, paper, smoke, metal, ink, fabric, stone, liquid, and light treatments so they feel domain-specific rather than generic AI decoration.",
+      "useWhen": [
+        "material surface or texture needs direction",
+        "background atmosphere includes grain, glow, blobs, or texture",
+        "cheap fake material is a risk"
+      ],
+      "doNotUseWhen": [
+        "no material, texture, fill, or atmosphere decision is needed"
+      ],
+      "requiredInputs": [
+        "domain material",
+        "reference basis",
+        "texture role",
+        "shape inventory"
+      ],
+      "outputContract": [
+        "material plan",
+        "allowed texture",
+        "rejected atmosphere",
+        "score caps"
+      ],
+      "routeKeywords": [
+        "material surface",
+        "texture",
+        "paper grain",
+        "generic glow",
+        "background atmosphere",
+        "surface"
+      ]
+    },
+    {
+      "id": "media-object-stage-director",
+      "path": "skills/media-object-stage-director/SKILL.md",
+      "description": "Defines how video, image, and media behave as primary interface objects with crop, mask, sticky, poster, portal, card, broadcast tile, fallback, and safe-zone strategy.",
+      "useWhen": [
+        "video/image/media is a primary object",
+        "media should transform, dock, mask, pin, or reveal details",
+        "references include Podium-like media stage, Bunk Radio-like broadcast, or cinematic work grids"
+      ],
+      "doNotUseWhen": [
+        "small incidental thumbnails",
+        "dense utility product where media is secondary",
+        "copy-only or backend-only work"
+      ],
+      "requiredInputs": [
+        "selected direction",
+        "media assets or references",
+        "desired media role",
+        "supported breakpoints"
+      ],
+      "outputContract": [
+        "media role",
+        "media state map",
+        "crop strategy",
+        "text safe zones",
+        "poster/loading/error fallback",
+        "controls/caption plan",
+        "reduced-motion behavior"
+      ],
+      "routeKeywords": [
+        "media stage",
+        "video object",
+        "broadcast tile",
+        "portal media",
+        "media constellation",
+        "sticky media",
+        "image stage"
+      ]
+    },
+    {
+      "id": "mobile-product-flow",
+      "path": "skills/mobile-product-flow/SKILL.md",
+      "description": "Design or review mobile-first product flows with native-feeling hierarchy, safe-area behavior, thumb-friendly actions, icon+label bottom navigation by default for 3+ primary destinations, modal/sheet fit, persistent selection states, distinct add/create affordances, screen-by-screen proof, and prevention of scaled-down website UI.",
+      "useWhen": [
+        "mobile app, mobile web flow, onboarding, profile, search, home, or consumer app screen",
+        "mobile visual-library references are used",
+        "390-first hierarchy, bottom nav, safe areas, touch targets, sheet fit, selected state, add action, or mobile-native feel matters"
+      ],
+      "doNotUseWhen": [
+        "desktop-only dashboard",
+        "backend-only task",
+        "small text edit"
+      ],
+      "requiredInputs": [
+        "mobile core loop",
+        "screen sequence",
+        "reference anchors",
+        "safe-area constraints",
+        "touch/gesture needs",
+        "modal/sheet fit needs",
+        "selection state needs",
+        "add/create action needs"
+      ],
+      "outputContract": [
+        "mobile core loop",
+        "mobile nav plan",
+        "safe-area plan",
+        "modal/sheet fit strategy",
+        "mobile nav icon strategy",
+        "selection state strategy",
+        "add/create action strategy",
+        "control indicator collision check",
+        "thumb/action plan",
+        "bottom-nav default or exception",
+        "screen sequence",
+        "390 proof plan"
+      ],
+      "routeKeywords": [
+        "mobile",
+        "mobile app",
+        "mobile flow",
+        "onboarding",
+        "profile",
+        "bottom nav",
+        "safe area",
+        "thumb",
+        "390",
+        "native feel"
+      ]
+    },
+    {
+      "id": "motion-craft-director",
+      "path": "skills/motion-craft-director/SKILL.md",
+      "description": "Plan product motion with purpose, frequency fit, timing, signature moments, feedback, transitions, delight, reduced motion, and performance budget.",
+      "useWhen": [
+        "planning motion for a product or brand UI",
+        "visual spec needs motion strategy",
+        "motion should communicate state, hierarchy, continuity, or delight"
+      ],
+      "doNotUseWhen": [
+        "reviewing existing motion code only",
+        "static documentation task"
+      ],
+      "requiredInputs": [
+        "product mode",
+        "user frequency",
+        "core interactions",
+        "brand/product register"
+      ],
+      "outputContract": [
+        "motion purpose",
+        "frequency profile",
+        "hero/signature moment",
+        "feedback layer",
+        "transition layer",
+        "delight layer",
+        "reduced-motion behavior"
+      ],
+      "routeKeywords": [
+        "motion craft",
+        "motion strategy",
+        "animation plan",
+        "signature motion",
+        "microinteraction",
+        "reduced motion"
+      ]
+    },
+    {
+      "id": "animejs-motion-director",
+      "path": "skills/animejs-motion-director/SKILL.md",
+      "description": "Plan, implement, and review controlled Anime.js motion for timeline choreography, staggered DOM/SVG/object motion, weather particles, selected-state transitions, tactile feedback, React/Next scoping, cleanup, reduced motion, and screenshot-proofed product motion.",
+      "useWhen": [
+        "project proposes Anime.js, animejs, JavaScript timeline choreography, DOM/SVG animation, CSS variable animation, staggered object motion, selected card-to-detail continuity, weather particles, terrarium particles, or tactile JavaScript hover/focus feedback",
+        "CSS transitions are not enough and a bounded motion primitive is needed",
+        "React/Next implementation needs scoped Anime.js cleanup and reduced-motion behavior"
+      ],
+      "doNotUseWhen": [
+        "simple CSS transition is enough",
+        "motion is decorative wallpaper",
+        "layout, typography, contrast, interaction clarity, accessibility, responsiveness, or product logic is still weak",
+        "reduced-motion fallback or screenshot proof cannot be provided"
+      ],
+      "requiredInputs": [
+        "motion purpose",
+        "components using Anime.js",
+        "CSS-only animation list",
+        "signature motion moment",
+        "reduced-motion fallback",
+        "cleanup plan",
+        "screenshot proof plan"
+      ],
+      "outputContract": [
+        "Anime.js Motion Gate",
+        "motion plan",
+        "scoped React/Next pattern",
+        "cleanup strategy",
+        "reduced-motion fallback",
+        "mobile behavior",
+        "QA screenshot plan"
+      ],
+      "routeKeywords": [
+        "anime.js",
+        "animejs",
+        "anime js",
+        "createScope",
+        "createTimeline",
+        "stagger",
+        "timeline choreography",
+        "SVG animation",
+        "CSS variable animation",
+        "weather particles",
+        "terrarium particles",
+        "selected card animation",
+        "rail detail continuity"
+      ]
+    },
+    {
+      "id": "oklch-contrast-palette",
+      "path": "skills/oklch-contrast-palette/SKILL.md",
+      "description": "Color-science gate for semantic tokens, OKLCH palette scales, APCA/WCAG contrast, dark mode, chart/state colors, hue drift, and lightness-based contrast repair.",
+      "useWhen": [
+        "defining color tokens",
+        "generating palette scales",
+        "repairing contrast",
+        "auditing dark mode",
+        "reviewing color accessibility",
+        "dashboard, chart, state, or brand colors need perceptual discipline"
+      ],
+      "doNotUseWhen": [
+        "pure backend task",
+        "copy-only edit",
+        "existing token system must remain unchanged"
+      ],
+      "requiredInputs": [
+        "semantic color tokens",
+        "foreground/background pairs",
+        "contrast target",
+        "dark mode requirements",
+        "chart/state color roles if any"
+      ],
+      "outputContract": [
+        "OKLCH / APCA palette pass",
+        "APCA targets",
+        "WCAG targets when formal compliance is claimed",
+        "lightness repairs",
+        "hue drift risk",
+        "numeric scale",
+        "dark mode mapping"
+      ],
+      "routeKeywords": [
+        "OKLCH",
+        "APCA",
+        "contrast",
+        "palette",
+        "color tokens",
+        "dark mode",
+        "WCAG",
+        "hue drift",
+        "color accessibility",
+        "palette scale"
+      ]
+    },
+    {
+      "id": "physical-interface-props-director",
+      "path": "skills/physical-interface-props-director/SKILL.md",
+      "description": "Plans tactile UI props such as stickers, labels, tickets, stamps, keycards, rails, tabs, pins, and cards with role, material, text-fit, protected zones, motion, and responsiveness.",
+      "useWhen": [
+        "interface uses tactile physical props",
+        "references include labels, tickets, ingredient cards, work cards, keycards, or stickers",
+        "props need to feel useful rather than decorative"
+      ],
+      "doNotUseWhen": [
+        "ordinary cards or forms are enough",
+        "props are not part of selected visual direction",
+        "high-frequency utility flow"
+      ],
+      "requiredInputs": [
+        "selected direction",
+        "prop references",
+        "product domain",
+        "copy lengths",
+        "responsive targets"
+      ],
+      "outputContract": [
+        "prop inventory",
+        "role per prop",
+        "material language",
+        "text-fit strategy",
+        "protected zones",
+        "layer plan",
+        "responsive fallback"
+      ],
+      "routeKeywords": [
+        "physical props",
+        "stickers",
+        "labels",
+        "tickets",
+        "stamps",
+        "keycards",
+        "tabs",
+        "pins",
+        "prop text fit"
+      ]
+    },
+    {
+      "id": "preference-model-migi-taste-learner",
+      "path": "skills/preference-model-migi-taste-learner/SKILL.md",
+      "description": "Maintain a Migi-specific preference model from explicit feedback, approved references, rejected failures, palette bans, interaction preferences, and concept-preservation notes.",
+      "useWhen": [
+        "Migi gives taste feedback",
+        "direction is approved or rejected",
+        "postmortem should update memory",
+        "preference needs durable record"
+      ],
+      "doNotUseWhen": [
+        "feedback is ambiguous and not design-related",
+        "one-off implementation bug"
+      ],
+      "requiredInputs": [
+        "Migi quote or artifact",
+        "scope",
+        "evidence"
+      ],
+      "outputContract": [
+        "migi-preference-model.md",
+        "migi-preference-model.json",
+        "proposed memory patches"
+      ],
+      "routeKeywords": [
+        "Migi taste",
+        "preference model",
+        "taste learner",
+        "likes dislikes",
+        "approved rejected"
+      ]
+    },
+    {
+      "id": "production-hardening-review",
+      "path": "skills/production-hardening-review/SKILL.md",
+      "description": "Post-build hardening review for long text, empty/error/loading states, slow networks, weird input, translations, permissions, large datasets, accessibility, and responsive stress.",
+      "useWhen": [
+        "after implementation",
+        "before calling product UI production-ready",
+        "testing product apps, dashboards, forms, editors, tables, maps, settings, modals, or mobile flows",
+        "UI looks good with perfect demo data but may break with real data"
+      ],
+      "doNotUseWhen": [
+        "Fast Direction Gate",
+        "early concept selection",
+        "pure visual mood exploration"
+      ],
+      "requiredInputs": [
+        "target screen/component",
+        "data model if available",
+        "known API states if available",
+        "supported breakpoints",
+        "supported locales",
+        "source/screenshot if available"
+      ],
+      "outputContract": [
+        "hardening audit table",
+        "edge-case test matrix",
+        "specific fixes",
+        "CSS/layout resilience checklist",
+        "error/empty/loading state checklist",
+        "i18n checklist",
+        "accessibility checklist",
+        "production-ready verdict"
+      ],
+      "routeKeywords": [
+        "production hardening",
+        "production-ready",
+        "long text",
+        "empty states",
+        "error states",
+        "loading states",
+        "i18n",
+        "accessibility resilience",
+        "responsive stress"
+      ]
+    },
+    {
+      "id": "reference-grammar-compiler",
+      "path": "skills/reference-grammar-compiler/SKILL.md",
+      "description": "Compile visual references into transferable design grammar across composition, density, typography, color, material, motion, interaction mechanics, responsive behavior, and anti-copy constraints.",
+      "useWhen": [
+        "references guide the design",
+        "Migi gives inspiration sites or screenshots",
+        "reference-locked build needs decomposition",
+        "avoid copying brand skin"
+      ],
+      "doNotUseWhen": [
+        "no reference exists",
+        "literal target copy is requested without translation"
+      ],
+      "requiredInputs": [
+        "reference paths or URLs",
+        "target product",
+        "approved/rejected memory"
+      ],
+      "outputContract": [
+        "reference-grammar.md",
+        "reference-grammar.json",
+        "must-not-copy list"
+      ],
+      "routeKeywords": [
+        "reference grammar",
+        "extract mechanics",
+        "deconstruct reference",
+        "transfer principles",
+        "do not copy"
+      ]
+    },
+    {
+      "id": "responsive-constraint-solver",
+      "path": "skills/responsive-constraint-solver/SKILL.md",
+      "description": "Define breakpoint contracts and responsive behavior before implementation for layouts, navigation, hero type, cards, stickers, overlays, charts, canvases, and media-heavy compositions.",
+      "useWhen": [
+        "responsive behavior is high-risk",
+        "custom nav or large type exists",
+        "stickers/cards/overlays exist",
+        "layout must survive multiple breakpoints"
+      ],
+      "doNotUseWhen": [
+        "static nonresponsive artifact",
+        "minor copy edit"
+      ],
+      "requiredInputs": [
+        "layout concept",
+        "critical objects",
+        "breakpoints",
+        "text/container risks"
+      ],
+      "outputContract": [
+        "responsive-constraint-contract.md",
+        "responsive-constraint-contract.json"
+      ],
+      "routeKeywords": [
+        "responsive contract",
+        "breakpoint contract",
+        "nav resize",
+        "layout constraints",
+        "text fit strategy"
+      ]
+    },
+    {
+      "id": "review-animations",
+      "path": "skills/review-animations/SKILL.md",
+      "description": "Review animation and motion code against strict motion standards, with approval earned by purpose, timing, easing, performance, and accessibility.",
+      "useWhen": [
+        "animation or motion code changed",
+        "motion implementation needs review",
+        "user asks to review animations"
+      ],
+      "doNotUseWhen": [
+        "planning motion before code exists",
+        "reviewing static layout only"
+      ],
+      "requiredInputs": [
+        "files or components with motion code",
+        "motion purpose",
+        "usage frequency",
+        "available screenshots or recordings if any"
+      ],
+      "outputContract": [
+        "findings table",
+        "file:line references where possible",
+        "score caps",
+        "verdict",
+        "required fixes"
+      ],
+      "routeKeywords": [
+        "review animations",
+        "animation review",
+        "motion code",
+        "easing",
+        "duration",
+        "prefers-reduced-motion",
+        "transition all"
+      ]
+    },
+    {
+      "id": "screenshot-scorecard-review",
+      "path": "skills/screenshot-scorecard-review/SKILL.md",
+      "description": "Evidence-based screenshot review for responsive quality, overlap, readability, scorecard blockers, and handoff readiness.",
+      "useWhen": [
+        "screenshots exist",
+        "UI can run",
+        "frontend QA or final verification",
+        "user asks to prove responsiveness or quality",
+        "Visual Swarm v1 reaches Visual QA Anti-Slop phase"
+      ],
+      "doNotUseWhen": [
+        "no UI surface exists",
+        "documentation-only task",
+        "backend-only task"
+      ],
+      "requiredInputs": [
+        "screenshots at 390, 768, and 1440 or runnable UI",
+        "route or screen under review",
+        "product type",
+        "Design Intent Record",
+        "approved rendered concept when relevant",
+        "Visual Concept Gate artifact when visual-heavy work applies"
+      ],
+      "outputContract": [
+        "screenshots inspected",
+        "390 result",
+        "768 result",
+        "1440 result",
+        "scorecard result",
+        "caps applied",
+        "blockers",
+        "patch pass completed",
+        "remaining verification gaps"
+      ],
+      "routeKeywords": [
+        "screenshot",
+        "screenshots",
+        "responsive",
+        "390",
+        "768",
+        "1440",
+        "scorecard",
+        "QA",
+        "verify",
+        "can run",
+        "viewport",
+        "done report",
+        "visual swarm"
+      ]
+    },
+    {
+      "id": "scroll-choreography-review",
+      "path": "skills/scroll-choreography-review/SKILL.md",
+      "description": "Post-build review for authored scroll choreography integrity, evidence, mobile fallback, reduced motion, and layout safety.",
+      "useWhen": [
+        "scroll-heavy site has been implemented",
+        "elite scroll choreography needs QA",
+        "pinned/sticky/horizontal/card-assembly/media-transform behavior must be reviewed"
+      ],
+      "doNotUseWhen": [
+        "no scroll choreography exists",
+        "Fast Direction Gate",
+        "pure backend task",
+        "static copy-only edit"
+      ],
+      "requiredInputs": [
+        "URL or screenshot sequence",
+        "selected scroll pattern",
+        "route map",
+        "chapter map",
+        "motion timeline",
+        "mobile fallback",
+        "reduced-motion fallback"
+      ],
+      "outputContract": [
+        "issue table",
+        "evidence",
+        "required fixes",
+        "severity",
+        "Block/Partial/Pass verdict"
+      ],
+      "routeKeywords": [
+        "scroll review",
+        "scroll choreography review",
+        "review scroll",
+        "pinned section review",
+        "horizontal scroll QA",
+        "scroll evidence",
+        "scroll QA"
+      ]
+    },
+    {
+      "id": "scroll-physics-smoothing-director",
+      "path": "skills/scroll-physics-smoothing-director/SKILL.md",
+      "description": "Plans and reviews scroll engine feel, smoothing, scrub, lerp, snap, settle, velocity, touch behavior, mobile fallback, reduced motion, and performance for scroll-heavy sites.",
+      "useWhen": [
+        "scroll-heavy site feels raw, jittery, linear, abrupt, laggy, or floaty",
+        "elite scroll choreography has been selected",
+        "pinned stages, horizontal routes, card assembly, or portal entry need physics"
+      ],
+      "doNotUseWhen": [
+        "normal document scroll is sufficient",
+        "forms/settings/dashboard utility flow",
+        "no scroll-linked motion"
+      ],
+      "requiredInputs": [
+        "selected scroll pattern",
+        "content chapters",
+        "target devices",
+        "performance constraints"
+      ],
+      "outputContract": [
+        "scroll engine decision",
+        "smoothing/scrub plan",
+        "snap/settle plan",
+        "velocity/touch behavior",
+        "mobile fallback",
+        "reduced-motion fallback",
+        "performance budget"
+      ],
+      "routeKeywords": [
+        "scroll physics",
+        "scroll smoothing",
+        "jittery scroll",
+        "lerp",
+        "scrub",
+        "snap",
+        "settle",
+        "lenis",
+        "scrolltrigger",
+        "raw scroll"
+      ]
+    },
+    {
+      "id": "selection-first-products",
+      "path": "skills/selection-first-products/SKILL.md",
+      "description": "Design and review products where the core loop is choosing, browsing, collecting, comparing, or opening one object from a set.",
+      "useWhen": [
+        "gallery",
+        "roster",
+        "marketplace",
+        "discovery interface",
+        "card deck",
+        "character selection",
+        "product/object browsing"
+      ],
+      "doNotUseWhen": [
+        "primary task is editing one object after selection",
+        "operational dashboard where urgency matters more than desire",
+        "minor bug fix or copy edit"
+      ],
+      "requiredInputs": [
+        "primary selectable object",
+        "desired post-selection action",
+        "object attributes that create desire",
+        "existing card/list/gallery patterns if any",
+        "rejected directions if any"
+      ],
+      "outputContract": [
+        "selection-first object",
+        "desire mechanism",
+        "first-screen choice moment",
+        "hidden until after selection",
+        "hover reward",
+        "selected reward",
+        "detail view model",
+        "screenshots/evidence",
+        "blockers"
+      ],
+      "routeKeywords": [
+        "selection-first",
+        "gallery",
+        "roster",
+        "marketplace",
+        "discovery",
+        "card deck",
+        "character selection",
+        "character-select",
+        "object browsing",
+        "choose",
+        "collect",
+        "robot"
+      ]
+    },
+    {
+      "id": "shape-quality-review",
+      "path": "skills/shape-quality-review/SKILL.md",
+      "description": "Review vector, SVG, shape-heavy, abstract-form, background-atmosphere, annotation, label, and illustration-heavy UI for roleless shapes, blobs, collision, weak hierarchy, and broken visual systems.",
+      "useWhen": [
+        "shape-heavy UI needs review",
+        "background blobs, glows, dot fields, or abstract forms are present",
+        "annotations, labels, or leader lines may collide"
+      ],
+      "doNotUseWhen": [
+        "no vector shapes or visual forms are present"
+      ],
+      "requiredInputs": [
+        "screenshot or rendered proof",
+        "shape inventory",
+        "label/annotation model"
+      ],
+      "outputContract": [
+        "shape inventory",
+        "failure table",
+        "remove/keep/change recommendations",
+        "score caps"
+      ],
+      "routeKeywords": [
+        "shape quality",
+        "background blob",
+        "generic glow",
+        "dot field",
+        "annotation collision",
+        "roleless shape"
+      ]
+    },
+    {
+      "id": "signature-interaction-director",
+      "path": "skills/signature-interaction-director/SKILL.md",
+      "description": "Plan, implement, and review one memorable signature interaction for artistic, landing, brand, portfolio, editorial, playful product, and image-led sites.",
+      "useWhen": [
+        "elite, award-level, original, or million-dollar website feel is requested",
+        "landing page feels generic",
+        "brand or portfolio site needs a memorable mechanic",
+        "references include portal stages, playful entry gates, scroll-assembled cards, mascot motion, horizontal scroll, cinematic work grids, or custom modal systems"
+      ],
+      "doNotUseWhen": [
+        "normal dashboard",
+        "utility admin panel",
+        "settings or form-heavy product where ceremony slows the task",
+        "accessibility-critical workflow where interaction ceremony blocks access"
+      ],
+      "requiredInputs": [
+        "project type",
+        "brand personality",
+        "references",
+        "desired user emotion",
+        "task criticality",
+        "fallback requirements"
+      ],
+      "outputContract": [
+        "selected signature mechanic",
+        "source inspiration",
+        "mechanics extracted",
+        "what must not be copied",
+        "interaction story",
+        "motion choreography",
+        "implementation strategy",
+        "accessibility fallback",
+        "reduced-motion fallback",
+        "success criteria"
+      ],
+      "routeKeywords": [
+        "signature interaction",
+        "million-dollar website",
+        "award-level website",
+        "original interaction",
+        "portal entry",
+        "playful gate",
+        "mascot motion",
+        "scroll route",
+        "scroll choreography",
+        "media constellation",
+        "review theater",
+        "editorial modal",
+        "Bucks Sauce",
+        "Wembi",
+        "Podium",
+        "Stiff",
+        "Don't Board Me"
+      ]
+    },
+    {
+      "id": "skill-orchestration-planner",
+      "path": "skills/skill-orchestration-planner/SKILL.md",
+      "description": "Select and sequence the smallest sufficient Design OS skill DAG for a task, with gates, dependencies, stop conditions, and evidence requirements.",
+      "useWhen": [
+        "many skills could apply",
+        "visual-heavy work is nontrivial",
+        "multi-phase task needs route planning",
+        "high-risk design work needs gates"
+      ],
+      "doNotUseWhen": [
+        "single narrow fix",
+        "user asks for direct answer only"
+      ],
+      "requiredInputs": [
+        "task mode",
+        "skill registry",
+        "creative session state",
+        "known risks"
+      ],
+      "outputContract": [
+        "skill-orchestration-plan.md",
+        "skill-orchestration-plan.json",
+        "skill DAG"
+      ],
+      "routeKeywords": [
+        "orchestration",
+        "skill plan",
+        "skill routing",
+        "DAG",
+        "execution plan",
+        "which skills"
+      ]
+    },
+    {
+      "id": "svg-illustration-system",
+      "path": "skills/svg-illustration-system/SKILL.md",
+      "description": "Plan, implement, and review high-quality SVG illustration systems with path discipline, accessibility, annotation safety, material-specific texture, and isolated illustration proof.",
+      "useWhen": [
+        "custom SVG illustration is planned",
+        "SVG labels, annotations, masks, or callouts are present",
+        "browser-native tooltips, label collisions, or primitive SVG art are risks"
+      ],
+      "doNotUseWhen": [
+        "no SVG or vector illustration is present",
+        "standard icons are enough"
+      ],
+      "requiredInputs": [
+        "SVG subject",
+        "reference grammar",
+        "accessibility meaning",
+        "annotation model"
+      ],
+      "outputContract": [
+        "SVG asset plan",
+        "accessibility plan",
+        "annotation protected zones",
+        "native tooltip check",
+        "isolated SVG proof"
+      ],
+      "routeKeywords": [
+        "svg illustration",
+        "native tooltip",
+        "annotation protected zone",
+        "leader line",
+        "callout label",
+        "SVG plate"
+      ]
+    },
+    {
+      "id": "tailwind-migration-zero-regression",
+      "path": "skills/tailwind-migration-zero-regression/SKILL.md",
+      "description": "Migration playbook for Tailwind or global CSS work where the goal is visual parity, not redesign.",
+      "useWhen": [
+        "migrating CSS to Tailwind",
+        "refactoring global CSS",
+        "replacing ad hoc styles with utility classes",
+        "consolidating styling primitives",
+        "cleaning Tailwind config or theme tokens"
+      ],
+      "doNotUseWhen": [
+        "user asks for a redesign",
+        "visual concept exploration",
+        "existing UI is intentionally changing",
+        "change unrelated to CSS or Tailwind"
+      ],
+      "requiredInputs": [
+        "current screenshots or visual baseline",
+        "files being migrated",
+        "existing styling ownership",
+        "Tailwind config and global CSS",
+        "acceptance criteria for parity"
+      ],
+      "outputContract": [
+        "migration scope",
+        "visual changes intended",
+        "baseline evidence",
+        "files changed",
+        "global CSS changes",
+        "local owner styling",
+        "semantic primitives added",
+        "parity result",
+        "remaining regression risk"
+      ],
+      "routeKeywords": [
+        "tailwind",
+        "global css",
+        "css migration",
+        "style migration",
+        "visual parity",
+        "zero regression",
+        "utility classes"
+      ]
+    },
+    {
+      "id": "text-clarity-review",
+      "path": "skills/text-clarity-review/SKILL.md",
+      "description": "Post-build UX writing review that finds unclear, vague, generic, confusing, inconsistent, or poorly written interface copy and rewrites it clearly.",
+      "useWhen": [
+        "after UI implementation",
+        "after screenshot review",
+        "before final polish for copy-heavy UI",
+        "copy feels unclear, generic, AI, confusing, or not production-ready",
+        "forms, errors, loading states, empty states, destructive actions, onboarding, CTAs, settings, dashboards, or product flows"
+      ],
+      "doNotUseWhen": [
+        "Fast Direction Gate",
+        "early visual direction generation",
+        "pure layout-only exploration unless copy is visibly harming the UI"
+      ],
+      "requiredInputs": [
+        "target screen/component",
+        "audience technical level",
+        "user mental state",
+        "current copy or screenshots/source files if available"
+      ],
+      "outputContract": [
+        "copy audit table",
+        "before/after rewrites",
+        "rationale",
+        "tone notes",
+        "terminology glossary if needed",
+        "strings that need product context from Migi",
+        "final copy checklist"
+      ],
+      "routeKeywords": [
+        "text clarity",
+        "copy review",
+        "UX writing",
+        "generic copy",
+        "unclear copy",
+        "CTA copy",
+        "error copy",
+        "empty state copy",
+        "loading copy"
+      ]
+    },
+    {
+      "id": "typographic-motion-art-director",
+      "path": "skills/typographic-motion-art-director/SKILL.md",
+      "description": "Direct optional dark-canvas, typography-led, motion-first product pages with huge editorial type, ghost-pill controls, semantic category colors, organic foreground motion objects, strict tokens, mobile safety, reduced-motion fallback, and anti-GSAP-clone guardrails.",
+      "useWhen": [
+        "animation-library, creative-tool, WebGL/shader demo, portfolio/specimen, experimental one-page, or playful premium product page needs typography-led motion art direction",
+        "a GSAP-style dark-canvas typographic motion reference is provided",
+        "massive display type, ghost-pill controls, category color taxonomy, organic motion objects, or dark-canvas editorial composition are being considered"
+      ],
+      "doNotUseWhen": [
+        "serious dashboard or dense admin product",
+        "medical, legal, financial, or data-clarity-first interface",
+        "project only wants a generic dark theme",
+        "the goal is Anime.js or WebGL implementation without art-direction decisions"
+      ],
+      "requiredInputs": [
+        "project type",
+        "visual thesis",
+        "source reference mechanics",
+        "mechanics not to copy",
+        "signature visual or motion object",
+        "mobile constraints",
+        "reduced-motion requirements"
+      ],
+      "outputContract": [
+        "typographic motion reference gate",
+        "transferred mechanics",
+        "anti-copy constraints",
+        "token mapping",
+        "typography scale",
+        "category taxonomy",
+        "signature object/motion plan",
+        "mobile and reduced-motion proof plan"
+      ],
+      "routeKeywords": [
+        "typographic motion",
+        "motion site",
+        "gsap style",
+        "gsap reference",
+        "dark canvas",
+        "huge type",
+        "massive typography",
+        "ghost pill",
+        "outlined pill",
+        "category colors",
+        "organic motion object",
+        "animation-library aesthetic",
+        "typography-led motion"
+      ]
+    },
+    {
+      "id": "truthful-state-product-naming",
+      "path": "skills/truthful-state-product-naming/SKILL.md",
+      "description": "Product-state and copy guardrail for auth, onboarding, login, mock data, error boundaries, production readiness, and claims.",
+      "useWhen": [
+        "auth, login, onboarding, signup, account, or access state is involved",
+        "mock data could look production-real",
+        "production states, error boundaries, loading states, or empty states are involved",
+        "route, page, or feature names may misrepresent reality",
+        "copy includes live, validated, safe, secure, optimized, accurate, real-time, or AI claims"
+      ],
+      "doNotUseWhen": [
+        "no user-facing state, naming, claim, or auth surface",
+        "visual-only task with no product truth implied",
+        "clearly labeled throwaway placeholder copy"
+      ],
+      "requiredInputs": [
+        "current route/page names",
+        "auth/onboarding state model",
+        "data source truth",
+        "error/loading/empty states",
+        "user-facing claims"
+      ],
+      "outputContract": [
+        "state surfaces reviewed",
+        "mock/sample data labels",
+        "auth/onboarding naming",
+        "controlled error flows",
+        "claims removed or qualified",
+        "empty/loading/error states",
+        "remaining truth risks"
+      ],
+      "routeKeywords": [
+        "auth",
+        "login",
+        "onboarding",
+        "signup",
+        "mock data",
+        "production state",
+        "error boundary",
+        "loading state",
+        "empty state",
+        "live",
+        "validated",
+        "safe",
+        "optimized",
+        "real-time"
+      ]
+    },
+    {
+      "id": "domain-realism-mock-data-director",
+      "path": "skills/domain-realism-mock-data-director/SKILL.md",
+      "description": "Plan and review domain-realistic app structure, business entities, real pages/routes, route jobs, mock data, metrics, statuses, and section labels before UI implementation.",
+      "useWhen": [
+        "new app, dashboard, product UI, mobile flow, or dogfood project is being created",
+        "mock data, sample records, metrics, tables, cards, charts, operational states, or route navigation are present",
+        "the app concept names a business domain such as hostel, restaurant, retail, clinic, logistics, marketplace, school, venue, SaaS, or dashboard",
+        "UI sections feel generic, random, abstract, or AI-generated",
+        "route/page labels may not map to real business tasks"
+      ],
+      "doNotUseWhen": [
+        "tiny static landing page with no product data, app routes, metrics, or mock records",
+        "narrow bug fix that does not touch content, page structure, or data",
+        "explicit throwaway wireframe with labeled placeholder content"
+      ],
+      "requiredInputs": [
+        "business type",
+        "primary users",
+        "core entities",
+        "route/page needs",
+        "mock data needs",
+        "metrics/statuses if present"
+      ],
+      "outputContract": [
+        "Domain Content Contract",
+        "entity inventory",
+        "route/page map",
+        "route jobs",
+        "mock data schema",
+        "sample records",
+        "metric definitions",
+        "units/ranges/statuses/source labels",
+        "banned generic terms and replacements"
+      ],
+      "routeKeywords": [
+        "domain realism",
+        "real mock data",
+        "mock data",
+        "sample data",
+        "real sections",
+        "real pages",
+        "business sections",
+        "domain entities",
+        "random values",
+        "mission control",
+        "topology",
+        "traces",
+        "fake data",
+        "route jobs",
+        "dashboard sections",
+        "restaurant app",
+        "hostel app"
+      ]
+    },
+    {
+      "id": "unsplash-asset-sourcing",
+      "path": "skills/unsplash-asset-sourcing/SKILL.md",
+      "description": "Plan, select, document, and verify Unsplash imagery for image-led frontend work with source metadata, crop strategy, alt text, and product-truth discipline.",
+      "useWhen": [
+        "real imagery is needed for landing, portfolio, editorial, creative, or image-first frontend work",
+        "Migi asks for Unsplash or real images",
+        "visual spec includes image roles but no source assets",
+        "stock imagery needs source truth and crop documentation"
+      ],
+      "doNotUseWhen": [
+        "Migi provides exact production assets",
+        "the product requires exact proprietary/company/product imagery",
+        "the selected direction is explicitly image-free",
+        "stock imagery would create misleading factual claims"
+      ],
+      "requiredInputs": [
+        "product concept",
+        "visual mode",
+        "selected direction",
+        "palette direction",
+        "section plan",
+        "image roles",
+        "product-truth constraints"
+      ],
+      "outputContract": [
+        "unsplash search plan",
+        "unsplash asset manifest",
+        "selected images with source metadata",
+        "alt text",
+        "crop strategy",
+        "text safe zones",
+        "product-truth notes"
+      ],
+      "routeKeywords": [
+        "unsplash",
+        "real images",
+        "real imagery",
+        "image sourcing",
+        "asset sourcing",
+        "photo sourcing",
+        "photography",
+        "stock image",
+        "stock imagery",
+        "source images",
+        "image assets",
+        "photographic atmosphere"
+      ]
+    },
+    {
+      "id": "userinterface-wiki",
+      "path": "skills/userinterface-wiki/SKILL.md",
+      "description": "Broad UI/UX craft review for typography, visual design, UX laws, pseudo-elements, audio feedback, predictive prefetching, animation principles, exit animations, and interaction quality.",
+      "useWhen": [
+        "broad UI/UX craft review is needed",
+        "typography, audio, pseudo-elements, predictive prefetching, UX laws, or visual design rules are relevant",
+        "interaction quality needs review beyond art direction"
+      ],
+      "doNotUseWhen": [
+        "specialist motion code review is enough",
+        "palette/contrast is the only issue",
+        "backend-only task"
+      ],
+      "requiredInputs": [
+        "screen or component under review",
+        "design intent",
+        "interaction model",
+        "available screenshots or code references"
+      ],
+      "outputContract": [
+        "UI Wiki Review",
+        "categories used",
+        "specialist routes triggered",
+        "anti-patterns found",
+        "required fixes",
+        "score caps"
+      ],
+      "routeKeywords": [
+        "user interface wiki",
+        "UI wiki",
+        "broad UI review",
+        "typography",
+        "pseudo-elements",
+        "audio feedback",
+        "predictive prefetching",
+        "UX laws",
+        "visual design rules",
+        "hit target",
+        "active feedback"
+      ]
+    },
+    {
+      "id": "vector-form-system-director",
+      "path": "skills/vector-form-system-director/SKILL.md",
+      "description": "Design, generate, and review SVG/vector/form systems, labels, annotations, masks, abstract forms, and illustration-heavy visual surfaces with role, layer, bounds, anchors, accessibility, and collision discipline.",
+      "useWhen": [
+        "SVG, vector, abstract form, mask, clipping, annotation, or shape-heavy UI is present",
+        "labels or callouts need protected zones",
+        "vector forms must be reviewed for role and layer discipline"
+      ],
+      "doNotUseWhen": [
+        "ordinary text-only layout",
+        "standard icon library is sufficient"
+      ],
+      "requiredInputs": [
+        "shape inventory",
+        "layer model",
+        "annotation model",
+        "accessibility model"
+      ],
+      "outputContract": [
+        "shape role map",
+        "layer stack",
+        "annotation protected zones",
+        "QA checklist"
+      ],
+      "routeKeywords": [
+        "vector form",
+        "svg",
+        "shape system",
+        "annotation protected zone",
+        "leader line",
+        "mask",
+        "clip path"
+      ]
+    },
+    {
+      "id": "visual-concept-gate",
+      "path": "skills/visual-concept-gate/SKILL.md",
+      "description": "No-Image Fast Direction Gate by default: create 3 buildable direction cards, layout maps, risk checks, and stop for Migi selection before visual-heavy frontend work.",
+      "useWhen": [
+        "new app",
+        "major screen",
+        "major redesign",
+        "visual-heavy interface",
+        "inspiration-image driven work",
+        "gallery, roster, character-select, product-discovery, or selection-first experience"
+      ],
+      "doNotUseWhen": [
+        "small bug fix",
+        "security patch",
+        "copy-only edit",
+        "pure technical refactor",
+        "Tailwind migration where visual parity is the goal"
+      ],
+      "requiredInputs": [
+        "product type",
+        "primary user",
+        "primary object",
+        "primary action",
+        "existing UI state if any",
+        "inspiration or references if any",
+        "inspiration manifest when references are used",
+        "known rejected directions if any"
+      ],
+      "outputContract": [
+        "Design Intent Record",
+        "obvious cliche to avoid",
+        "docs/design/direction-options.md",
+        "docs/design/direction-layout-maps.md",
+        "docs/design/direction-risk-check.md",
+        "selected direction path after Migi chooses",
+        "recommended direction",
+        "approval needed before implementation only during direction selection"
+      ],
+      "routeKeywords": [
+        "visual-heavy",
+        "new app",
+        "major redesign",
+        "redesign",
+        "inspiration",
+        "gallery",
+        "roster",
+        "character-select",
+        "character selection",
+        "product-discovery",
+        "selection-first",
+        "art direction",
+        "concept",
+        "direction gate",
+        "no-image direction gate",
+        "layout maps",
+        "rendered concepts"
+      ]
+    },
+    {
+      "id": "visual-spec-compiler",
+      "path": "skills/visual-spec-compiler/SKILL.md",
+      "description": "Compile a buildable visual specification from task mode, active dials, references, product brief, design-system rules, chart/color/style/landing intelligence, and Design OS constraints before visual-heavy coding.",
+      "useWhen": [
+        "visual-heavy work needs a buildable visual spec before implementation",
+        "new frontend app, redesign, dashboard, landing page, mobile flow, or reference-locked build",
+        "active design dials, visual thesis, layout skeleton, design-system tokens, and evidence plan need to be declared"
+      ],
+      "doNotUseWhen": [
+        "tiny bug fix",
+        "pure backend task",
+        "Literal Target Copy Mode where a target-copy report replaces visual spec"
+      ],
+      "requiredInputs": [
+        "task mode",
+        "product brief",
+        "reference anchors",
+        "active dials",
+        "design-system constraints"
+      ],
+      "outputContract": [
+        "docs/design/visual-spec.md",
+        "active dials",
+        "visual thesis",
+        "layout skeleton",
+        "design-system tokens",
+        "evidence plan"
+      ],
+      "routeKeywords": [
+        "visual spec",
+        "visual specification",
+        "design dials",
+        "active dials",
+        "before coding",
+        "buildable spec",
+        "visual-heavy"
+      ]
+    },
+    {
+      "id": "webgl-shader-primitives",
+      "path": "skills/webgl-shader-primitives/SKILL.md",
+      "description": "Plan, implement, and review experimental WebGL, ShaderGradient, React Three Fiber, Three.js, and Liquid Logo-style visual primitives with strict fallbacks, performance budgets, accessibility, and screenshot proof.",
+      "useWhen": [
+        "project proposes WebGL, shaders, Three.js, React Three Fiber, ShaderGradient, GLSL, liquid-metal logo, animated premium gradient, or shader-based visual identity",
+        "premium atmospheric hero background or object/scene preview is being considered",
+        "a visual primitive needs client-only Next.js implementation planning",
+        "a shader effect needs static and reduced-motion fallbacks"
+      ],
+      "doNotUseWhen": [
+        "normal product UI with no concept-driven need for WebGL",
+        "layout, typography, hierarchy, or content clarity is still weak",
+        "effect would be generic decoration",
+        "mobile or reduced-motion fallback cannot be provided"
+      ],
+      "requiredInputs": [
+        "project concept",
+        "exact section using the effect",
+        "React/Next version",
+        "motion intensity",
+        "fallback requirements",
+        "screenshot proof plan"
+      ],
+      "outputContract": [
+        "WebGL / Shader Primitive Gate",
+        "primitive choice",
+        "dependency plan",
+        "client-only boundary",
+        "static fallback",
+        "reduced-motion fallback",
+        "mobile behavior",
+        "performance budget",
+        "QA screenshot plan"
+      ],
+      "routeKeywords": [
+        "webgl",
+        "shader",
+        "shaders",
+        "glsl",
+        "three.js",
+        "react three fiber",
+        "r3f",
+        "shadergradient",
+        "liquid logo",
+        "liquid metal",
+        "animated gradient",
+        "premium gradient",
+        "canvas effect",
+        "webgl background"
+      ]
+    },
+    {
+      "id": "visual-style-selection",
+      "path": "skills/visual-style-selection/SKILL.md",
+      "description": "Style taxonomy skill for selecting a deliberate frontend visual style family, token plan, effect/motion limits, accessibility fit, performance fit, and product/reference alignment.",
+      "useWhen": [
+        "visual style family needs to be selected or constrained",
+        "tokens, palette, effects, motion, material, or style taxonomy should guide implementation",
+        "the design risks random aesthetic mixing or machine-generated palette"
+      ],
+      "doNotUseWhen": [
+        "tiny bug fix",
+        "existing design system must be preserved exactly",
+        "purely backend or data task"
+      ],
+      "requiredInputs": [
+        "product type",
+        "audience",
+        "reference folder mode",
+        "approved/rejected references",
+        "accessibility constraints",
+        "performance constraints"
+      ],
+      "outputContract": [
+        "visual-style selection report",
+        "primary style family",
+        "supporting treatment if any",
+        "rejected styles",
+        "token plan",
+        "effects/motion rules",
+        "accessibility/performance/mobile risks"
+      ],
+      "routeKeywords": [
+        "style",
+        "visual style",
+        "style taxonomy",
+        "tokens",
+        "palette",
+        "material",
+        "glass",
+        "minimalism",
+        "brutalism",
+        "dark mode",
+        "aurora",
+        "clay",
+        "neumorphism",
+        "visual direction",
+        "design style"
+      ]
+    },
+    {
+      "id": "visual-target-reconstruction",
+      "path": "skills/visual-target-reconstruction/SKILL.md",
+      "description": "Use a screenshot, Lovable prototype, Pinterest image, mockup, or strong visual reference as art-direction evidence.",
+      "useWhen": [
+        "screenshot, mockup, prototype, Pinterest image, Lovable output, inspiration image, or strong visual target is provided",
+        "design must be compared against a reference",
+        "current UI is far from the inspiration"
+      ],
+      "doNotUseWhen": [
+        "no visual reference exists",
+        "backend-only or copy-only task",
+        "reference is only a loose mood note"
+      ],
+      "requiredInputs": [
+        "reference image, screenshot, URL, or description",
+        "current product type",
+        "primary object and primary action",
+        "current UI screenshots if available",
+        "inspiration manifest when target/inspiration research is used",
+        "target-copy report for Literal Target Copy Mode",
+        "asset manifest for production image-led reconstruction",
+        "implementation constraints"
+      ],
+      "outputContract": [
+        "reference analyzed",
+        "composition",
+        "focal object",
+        "material and atmosphere",
+        "hidden information",
+        "absent elements",
+        "interaction model",
+        "copy/avoid/translate",
+        "visual shell comparison",
+        "screenshots",
+        "patch needed"
+      ],
+      "routeKeywords": [
+        "screenshot",
+        "lovable",
+        "pinterest",
+        "mockup",
+        "visual reference",
+        "visual target",
+        "exact visual target",
+        "inspiration image",
+        "reference image",
+        "copy this exact ui",
+        "100% this design",
+        "literally what you see",
+        "reconstruct",
+        "target copy",
+        "target-copy report",
+        "target",
+        "target screenshot",
+        "target screenshots",
+        "comparison report"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "name": "Dont Board Me Playful Entry Gate",
+  "source": "Don't Board Me",
+  "url": "https://dontboardme.com/",
+  "status": "approved-inspiration",
+  "createdAt": "2026-07-03T21:03:41.532Z",
+  "mechanics": [
+    "throw/click/bounce a ball to enter",
+    "beautiful slow-moving dog SVG",
+    "playful hero typography",
+    "menu and service flow feels like a ritual",
+    "nav opens pages right-to-left with new background colors",
+    "beautiful service selector interaction"
+  ],
+  "patterns": [
+    "Playful Entry Gate",
+    "Mascot Hero Interaction",
+    "Directional Page Transition",
+    "Service Ritual Selector"
+  ],
+  "screenshots": [
+    {
+      "originalAttachmentName": "codex-clipboard-4696f8f4-4a38-4e5a-b5ce-7b502f64212a.png",
+      "filename": "dont-board-me-01-ball-entry-gate.png",
+      "path": "screenshots/dont-board-me-01-ball-entry-gate.png"
+    },
+    {
+      "originalAttachmentName": "codex-clipboard-b465c89e-b29e-4381-9d74-cdf3da081341.png",
+      "filename": "dont-board-me-02-mascot-hero.png",
+      "path": "screenshots/dont-board-me-02-mascot-hero.png"
+    },
+    {
+      "originalAttachmentName": "codex-clipboard-739b8e88-5e4b-4ca2-8b09-0db9265801e5.png",
+      "filename": "dont-board-me-03-service-selector.png",
+      "path": "screenshots/dont-board-me-03-service-selector.png"
+    },
+    {
+      "originalAttachmentName": "codex-clipboard-aee8fd07-aec9-4503-975f-eda66dfb2d8d.png",
+      "filename": "dont-board-me-04-directional-section-service.png",
+      "path": "screenshots/dont-board-me-04-directional-section-service.png"
+    }
+  ],
+  "note": "Screenshots saved from Codex attachments.",
+  "doNotCopy": [
+    "brand identity",
+    "logos",
+    "mascots",
+    "exact colors",
+    "site copy",
+    "proprietary media"
+  ],
+  "transfer": [
+    "interaction mechanic",
+    "motion role",
+    "layout logic",
+    "fallback requirements"
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://miguel-design-os.local/schemas/object-swap-report.schema.json",
+  "title": "Miguel Design OS Object Swap Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "objectSetName",
+    "url",
+    "createdAt",
+    "objectsTested",
+    "screenshotPaths",
+    "stableFrame",
+    "crop",
+    "scale",
+    "objectPosition",
+    "horizontalOverflow",
+    "overlap",
+    "failures",
+    "finalStatus"
+  ],
+  "properties": {
+    "objectSetName": { "type": "string", "minLength": 1 },
+    "url": { "type": "string" },
+    "createdAt": { "type": "string", "minLength": 1 },
+    "objectsTested": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "screenshotPaths": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": { "type": "string" }
+      }
+    },
+    "stableFrame": { "$ref": "#/$defs/confirmation" },
+    "crop": { "$ref": "#/$defs/confirmation" },
+    "scale": { "$ref": "#/$defs/confirmation" },
+    "objectPosition": { "$ref": "#/$defs/confirmation" },
+    "horizontalOverflow": { "$ref": "#/$defs/confirmation" },
+    "overlap": { "$ref": "#/$defs/confirmation" },
+    "failures": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "finalStatus": {
+      "type": "string",
+      "enum": ["pass", "fail", "blocked", "manual-review"]
+    }
+  },
+  "$defs": {
+    "confirmation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["confirmed", "notes"],
+      "properties": {
+        "confirmed": {
+          "type": "string",
+          "enum": ["yes", "no", "manual", "not-applicable"]
+        },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

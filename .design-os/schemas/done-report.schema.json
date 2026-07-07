@@ -1,0 +1,719 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://miguel-design-os.local/schemas/done-report.schema.json",
+  "title": "Miguel Design OS Done Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "projectName",
+    "taskType",
+    "mode",
+    "isVisualWork",
+    "filesChanged",
+    "commandsRun",
+    "screenshots",
+    "screenshotReportPath",
+    "visualQa",
+    "finalUiIntegrityGateRun",
+    "finalUiIntegrityGateVersion",
+    "finalUiIntegrityVerdict",
+    "finalUiIntegrityBlockers",
+    "widthSweepTested",
+    "heightMatrixTested",
+    "viewportMatrixTested",
+    "scrollSamplesTested",
+    "interactionStatesTested",
+    "finalUiIntegrityBlockerCount",
+    "finalUiIntegrityScreenshotDir",
+    "failedViewportStates",
+    "passedViewportStates",
+    "clippedTextRemaining",
+    "textClipRemaining",
+    "overlapRemaining",
+    "floatingOverlapRemaining",
+    "viewportEdgeClippingRemaining",
+    "floatingObjectDriftRemaining",
+    "horizontalScrollPartialContentRemaining",
+    "blankScrollStateRemaining",
+    "mediaTextCollisionRemaining",
+    "navOverflowRemaining",
+    "fixedOverlayCollisionRemaining",
+    "accidentalWhitespaceRemaining",
+    "finalHandoffAllowed",
+    "screenshotEvidence",
+    "finalVerdict",
+    "interactionQa",
+    "assetQa",
+    "targetCopyQa",
+    "productQa",
+    "score",
+    "remainingWeaknesses",
+    "blockers",
+    "finalStatus"
+  ],
+  "properties": {
+    "projectName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "taskType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["visual-concept", "literal-target-copy", "visual-repair", "implementation", "review"]
+    },
+    "isVisualWork": {
+      "type": "boolean"
+    },
+    "filesChanged": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "commandsRun": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "screenshots": {
+      "$ref": "#/$defs/viewportScreenshots"
+    },
+    "screenshotReportPath": {
+      "type": "string"
+    },
+    "visualQa": {
+      "$ref": "#/$defs/visualQa"
+    },
+    "finalUiIntegrityGateRun": {
+      "type": "boolean"
+    },
+    "finalUiIntegrityGateVersion": {
+      "type": "string",
+      "enum": ["v3"]
+    },
+    "finalUiIntegrityVerdict": {
+      "type": "string",
+      "enum": ["passed", "partial", "failed", "blocked"]
+    },
+    "finalUiIntegrityBlockers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "viewportMatrixTested": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "widthSweepTested": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "heightMatrixTested": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "scrollSamplesTested": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "interactionStatesTested": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "finalUiIntegrityBlockerCount": {
+      "type": "number",
+      "minimum": 0
+    },
+    "finalUiIntegrityScreenshotDir": {
+      "type": "string",
+      "minLength": 1
+    },
+    "failedViewportStates": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "passedViewportStates": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "clippedTextRemaining": {
+      "type": "boolean"
+    },
+    "textClipRemaining": {
+      "type": "boolean"
+    },
+    "overlapRemaining": {
+      "type": "boolean"
+    },
+    "floatingOverlapRemaining": {
+      "type": "boolean"
+    },
+    "viewportEdgeClippingRemaining": {
+      "type": "boolean"
+    },
+    "floatingObjectDriftRemaining": {
+      "type": "boolean"
+    },
+    "horizontalScrollPartialContentRemaining": {
+      "type": "boolean"
+    },
+    "blankScrollStateRemaining": {
+      "type": "boolean"
+    },
+    "mediaTextCollisionRemaining": {
+      "type": "boolean"
+    },
+    "navOverflowRemaining": {
+      "type": "boolean"
+    },
+    "fixedOverlayCollisionRemaining": {
+      "type": "boolean"
+    },
+    "accidentalWhitespaceRemaining": {
+      "type": "boolean"
+    },
+    "finalHandoffAllowed": {
+      "type": "boolean"
+    },
+    "screenshotEvidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "finalVerdict": {
+      "type": "string",
+      "enum": ["passed", "partial", "failed", "blocked"]
+    },
+    "interactionQa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["deadButtons", "notes"],
+      "properties": {
+        "deadButtons": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "assetQa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "manifestPath", "validated", "notes"],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "manifestPath": {
+          "type": "string"
+        },
+        "validated": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "targetCopyQa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "reportPath", "validated", "notes"],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "reportPath": {
+          "type": "string"
+        },
+        "validated": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "productQa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["appPurpose", "designOsTestPurpose", "rulesUnderTest", "coreLoopQa", "persistenceQa", "dogfoodQa"],
+      "properties": {
+        "appPurpose": {
+          "type": "string"
+        },
+        "designOsTestPurpose": {
+          "type": "string"
+        },
+        "rulesUnderTest": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "coreLoopQa": {
+          "$ref": "#/$defs/coreLoopQa"
+        },
+        "persistenceQa": {
+          "$ref": "#/$defs/persistenceQa"
+        },
+        "dogfoodQa": {
+          "$ref": "#/$defs/dogfoodQa"
+        }
+      }
+    },
+    "score": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["current", "target"],
+      "properties": {
+        "current": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "target": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "remainingWeaknesses": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "finalStatus": {
+      "type": "string",
+      "enum": ["done", "blocked", "needs-work"]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "finalUiIntegrityVerdict": {
+            "not": {
+              "const": "passed"
+            }
+          }
+        },
+        "required": ["finalUiIntegrityVerdict"]
+      },
+      "then": {
+        "properties": {
+          "finalVerdict": {
+            "not": {
+              "const": "passed"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "clippedTextRemaining": {
+            "const": true
+          }
+        },
+        "required": ["clippedTextRemaining"]
+      },
+      "then": {
+        "properties": {
+          "finalVerdict": {
+            "enum": ["failed", "blocked"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "textClipRemaining": {
+            "const": true
+          }
+        },
+        "required": ["textClipRemaining"]
+      },
+      "then": {
+        "properties": {
+          "finalVerdict": {
+            "enum": ["failed", "blocked"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "overlapRemaining": {
+            "const": true
+          }
+        },
+        "required": ["overlapRemaining"]
+      },
+      "then": {
+        "properties": {
+          "finalVerdict": {
+            "enum": ["failed", "blocked"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "floatingOverlapRemaining": {
+            "const": true
+          }
+        },
+        "required": ["floatingOverlapRemaining"]
+      },
+      "then": {
+        "properties": {
+          "finalVerdict": {
+            "enum": ["failed", "blocked"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "viewportEdgeClippingRemaining": {
+            "const": true
+          }
+        },
+        "required": ["viewportEdgeClippingRemaining"]
+      },
+      "then": {
+        "properties": {
+          "finalVerdict": {
+            "enum": ["failed", "blocked"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "floatingObjectDriftRemaining": {
+            "const": true
+          }
+        },
+        "required": ["floatingObjectDriftRemaining"]
+      },
+      "then": {
+        "properties": {
+          "finalVerdict": {
+            "enum": ["failed", "blocked"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "horizontalScrollPartialContentRemaining": {
+            "const": true
+          }
+        },
+        "required": ["horizontalScrollPartialContentRemaining"]
+      },
+      "then": {
+        "properties": {
+          "finalVerdict": {
+            "enum": ["failed", "blocked"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "blankScrollStateRemaining": {
+            "const": true
+          }
+        },
+        "required": ["blankScrollStateRemaining"]
+      },
+      "then": {
+        "properties": {
+          "finalVerdict": {
+            "enum": ["failed", "blocked"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "mediaTextCollisionRemaining": {
+            "const": true
+          }
+        },
+        "required": ["mediaTextCollisionRemaining"]
+      },
+      "then": {
+        "properties": {
+          "finalVerdict": {
+            "enum": ["failed", "blocked"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "navOverflowRemaining": {
+            "const": true
+          }
+        },
+        "required": ["navOverflowRemaining"]
+      },
+      "then": {
+        "properties": {
+          "finalVerdict": {
+            "enum": ["failed", "blocked"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "fixedOverlayCollisionRemaining": {
+            "const": true
+          }
+        },
+        "required": ["fixedOverlayCollisionRemaining"]
+      },
+      "then": {
+        "properties": {
+          "finalVerdict": {
+            "enum": ["failed", "blocked"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "finalHandoffAllowed": {
+            "const": false
+          }
+        },
+        "required": ["finalHandoffAllowed"]
+      },
+      "then": {
+        "properties": {
+          "finalVerdict": {
+            "not": {
+              "const": "passed"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "finalUiIntegrityBlockerCount": {
+            "exclusiveMinimum": 0
+          }
+        },
+        "required": ["finalUiIntegrityBlockerCount"]
+      },
+      "then": {
+        "properties": {
+          "finalVerdict": {
+            "not": {
+              "const": "passed"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "failedViewportStates": {
+            "minItems": 1
+          }
+        },
+        "required": ["failedViewportStates"]
+      },
+      "then": {
+        "properties": {
+          "finalVerdict": {
+            "not": {
+              "const": "passed"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "viewportScreenshots": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["390", "768", "1440"],
+      "properties": {
+        "390": {
+          "type": "string"
+        },
+        "768": {
+          "type": "string"
+        },
+        "1440": {
+          "type": "string"
+        }
+      }
+    },
+    "visualQa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "captureMode",
+        "noOverlap",
+        "noTextOnButtons",
+        "noWatermark",
+        "noHorizontalOverflow",
+        "noCutHeroObject",
+        "noCutHeroObjectJustification",
+        "notes"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["passing", "needs-work", "blocked", "manual-review"]
+        },
+        "captureMode": {
+          "type": "string",
+          "enum": ["automated", "manual-import", "blocked"]
+        },
+        "noOverlap": {
+          "type": "boolean"
+        },
+        "noTextOnButtons": {
+          "type": "boolean"
+        },
+        "noWatermark": {
+          "type": "boolean"
+        },
+        "noHorizontalOverflow": {
+          "type": "boolean"
+        },
+        "noCutHeroObject": {
+          "type": "boolean"
+        },
+        "noCutHeroObjectJustification": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "coreLoopQa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "loop", "manuallyVerified", "verificationNotes"],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "loop": {
+          "type": "string"
+        },
+        "manuallyVerified": {
+          "type": "boolean"
+        },
+        "verificationNotes": {
+          "type": "string"
+        }
+      }
+    },
+    "persistenceQa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["userGeneratedData", "routeChanges", "refresh", "browserReopen", "uiDisclosure"],
+      "properties": {
+        "userGeneratedData": {
+          "type": "boolean"
+        },
+        "routeChanges": {
+          "type": "string"
+        },
+        "refresh": {
+          "type": "string"
+        },
+        "browserReopen": {
+          "type": "string"
+        },
+        "uiDisclosure": {
+          "type": "string"
+        }
+      }
+    },
+    "dogfoodQa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["isDogfoodTarget", "failuresBackPropagated", "learningNotes"],
+      "properties": {
+        "isDogfoodTarget": {
+          "type": "boolean"
+        },
+        "failuresBackPropagated": {
+          "type": "boolean"
+        },
+        "learningNotes": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

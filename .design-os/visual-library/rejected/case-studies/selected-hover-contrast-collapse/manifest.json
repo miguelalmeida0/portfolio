@@ -1,0 +1,33 @@
+{
+  "project": "Design OS Random UI",
+  "mode": "interactive navigation state contrast failure",
+  "status": "rejected",
+  "createdAt": "2026-07-03",
+  "globalRuleCandidate": true,
+  "screenshots": [
+    {
+      "originalAttachmentName": "Screenshot 2026-07-03 at 22.53.03.png",
+      "filename": "screenshots/selected-hover-text-disappears.png",
+      "failureTypes": [
+        "selected_hover_contrast_collapse",
+        "unreadable_interactive_text_state",
+        "navigation_readability_failure"
+      ],
+      "severity": "critical",
+      "description": "Selected navigation item becomes unreadable when hover styling combines with the active surface.",
+      "correction": "Create and verify a state contrast matrix for default, hover, focus-visible, active, selected, selected + hover, selected + focus, disabled, and pressed states.",
+      "relatedRules": [
+        "Stateful Text Contrast",
+        "Navigation Readability",
+        "P0 Layout Integrity",
+        "OKLCH/APCA Color Rule"
+      ],
+      "scorecardCaps": [
+        "selected + hover makes text disappear max 3",
+        "unreadable interactive text state max 4",
+        "missing state contrast matrix max 6"
+      ],
+      "globalRuleCandidate": true
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "app": "atlas",
+  "status": "Approved app reference",
+  "productionAsset": false,
+  "items": [
+    {
+      "filename": "screenshots/01-minimal-code-intelligence-input.png",
+      "noteFile": "screenshots/01-minimal-code-intelligence-input.md",
+      "title": "Minimal Code Intelligence Input",
+      "status": "Approved app reference",
+      "tags": ["minimal-ui", "input-first", "developer-tool", "code-intelligence", "light-ui", "single-action"],
+      "bestUseCases": ["code intelligence", "paste-to-analyze tool", "single-action app", "diagnostic input", "developer tool"],
+      "confidence": "high",
+      "visualLesson": "Center a single-action product around one dominant input.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/02-repair-queue-empty-state.png",
+      "noteFile": "screenshots/02-repair-queue-empty-state.md",
+      "title": "Repair Queue Empty State",
+      "status": "Approved app reference",
+      "tags": ["empty-state", "diagnostic", "developer-tool", "history", "current-input", "light-ui"],
+      "bestUseCases": ["empty state", "diagnostics", "code review", "analysis tool", "workflow history"],
+      "confidence": "high",
+      "visualLesson": "Explain empty states with what happened and what the user can do next.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/03-mobile-paste-input-layout.png",
+      "noteFile": "screenshots/03-mobile-paste-input-layout.md",
+      "title": "Mobile Paste Input Layout",
+      "status": "Approved app reference",
+      "tags": ["mobile", "input-first", "responsive", "developer-tool", "light-ui", "paste-flow"],
+      "bestUseCases": ["mobile input", "developer tool", "paste-to-analyze flow", "responsive single-action app"],
+      "confidence": "medium",
+      "visualLesson": "Preserve the same primary action across mobile and desktop.",
+      "productionAsset": false
+    }
+  ]
+}

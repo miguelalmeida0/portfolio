@@ -1,0 +1,62 @@
+{
+  "app": "ontime",
+  "status": "Approved app reference",
+  "productionAsset": false,
+  "items": [
+    {
+      "filename": "screenshots/01-tiny-invite-social-composer.png",
+      "noteFile": "screenshots/01-tiny-invite-social-composer.md",
+      "title": "Tiny Invite Social Composer",
+      "status": "Approved app reference",
+      "tags": ["social", "composer", "avatars", "warm-ui", "invite-flow", "status-rail", "bottom-nav"],
+      "bestUseCases": ["social coordination", "invite flow", "event planning", "friend availability", "lightweight composer"],
+      "confidence": "high",
+      "visualLesson": "Put people/status context before asking the user to act socially.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/02-live-plan-momentum-cards.png",
+      "noteFile": "screenshots/02-live-plan-momentum-cards.md",
+      "title": "Live Plan Momentum Cards",
+      "status": "Approved app reference",
+      "tags": ["social", "live-state", "plan-cards", "avatars", "momentum", "warm-ui", "group-coordination"],
+      "bestUseCases": ["social planning", "event status", "live rooms", "group coordination", "community app"],
+      "confidence": "high",
+      "visualLesson": "Show live participation state with concrete progress, not vague badges.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/03-plan-grid-filter-system.png",
+      "noteFile": "screenshots/03-plan-grid-filter-system.md",
+      "title": "Plan Grid Filter System",
+      "status": "Approved app reference",
+      "tags": ["social", "grid", "filters", "cards", "warm-ui", "status-counts", "plan-list"],
+      "bestUseCases": ["social planning", "event lists", "state-filtered grid", "community plans", "lightweight dashboard"],
+      "confidence": "high",
+      "visualLesson": "Use filters with counts when the product has meaningful states.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/04-tiny-invite-modal-flow.png",
+      "noteFile": "screenshots/04-tiny-invite-modal-flow.md",
+      "title": "Tiny Invite Modal Flow",
+      "status": "Approved app reference",
+      "tags": ["modal", "social", "invite-flow", "recipient-picker", "avatars", "warm-ui", "focused-action"],
+      "bestUseCases": ["invite modal", "recipient selection", "lightweight composer", "social action", "group messaging"],
+      "confidence": "high",
+      "visualLesson": "Keep modal flows focused on one decision.",
+      "productionAsset": false
+    },
+    {
+      "filename": "screenshots/05-friend-pull-selection-panel.png",
+      "noteFile": "screenshots/05-friend-pull-selection-panel.md",
+      "title": "Friend Pull Selection Panel",
+      "status": "Approved app reference",
+      "tags": ["selection-first", "social", "profile-card", "avatar-rail", "warm-ui", "invite-flow", "roster-detail"],
+      "bestUseCases": ["friend selection", "social invite", "profile-action flow", "roster-detail UI", "group coordination"],
+      "confidence": "high",
+      "visualLesson": "For selection-first social flows, make the selected person or object the hero.",
+      "productionAsset": false
+    }
+  ]
+}

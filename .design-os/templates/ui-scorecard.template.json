@@ -1,0 +1,177 @@
+{
+  "version": "p0-2026-07-01",
+  "totalPoints": 100,
+  "categories": [
+    {
+      "id": "product-fit-identity",
+      "name": "Product Fit And Identity",
+      "points": 15,
+      "checks": [
+        "visual identity fits current project type",
+        "strong themes avoid first genre cliche",
+        "palette and tokens are project-specific",
+        "density matches task complexity",
+        "source-project influence is evidence, not template"
+      ]
+    },
+    {
+      "id": "primary-object-action",
+      "name": "Primary Object And Action",
+      "points": 15,
+      "checks": [
+        "primary object visible in first viewport",
+        "primary action attached to object",
+        "secondary content supports object",
+        "page title does not replace object"
+      ]
+    },
+    {
+      "id": "interaction-grammar",
+      "name": "Interaction Grammar",
+      "points": 15,
+      "checks": [
+        "clickable and passive roles distinct",
+        "one primary action per zone",
+        "hover focus active selected states exist",
+        "disabled and loading states avoid layout shift",
+        "component choice matches role"
+      ]
+    },
+    {
+      "id": "layout-composition",
+      "name": "Layout And Composition",
+      "points": 15,
+      "checks": [
+        "no container soup",
+        "desktop uses width for useful context",
+        "spacing supports scanning",
+        "no text badge control or image collision",
+        "layout recipe matches archetype",
+        "hierarchy works without reading every label"
+      ]
+    },
+    {
+      "id": "responsive-evidence",
+      "name": "Responsive Evidence",
+      "points": 15,
+      "checks": [
+        "390 has no clipping or horizontal scroll",
+        "768 is not broken mobile or cramped desktop",
+        "1440 uses width appropriately",
+        "screenshots prove responsive claims"
+      ]
+    },
+    {
+      "id": "copy-data-truth",
+      "name": "Copy And Data Truth",
+      "points": 10,
+      "checks": [
+        "action labels use specific verbs",
+        "helper copy changes decision or explains state",
+        "claims include source recency scope or fallback",
+        "empty error loading copy exists",
+        "tone matches product type"
+      ]
+    },
+    {
+      "id": "component-completeness",
+      "name": "Component Completeness",
+      "points": 10,
+      "checks": [
+        "button variants and states complete",
+        "tags chips tabs have distinct roles",
+        "rows cards drawers match object model",
+        "async states preserve layout",
+        "focus visible and accessible names exist"
+      ]
+    },
+    {
+      "id": "asset-motion-use",
+      "name": "Asset And Motion Use",
+      "points": 5,
+      "checks": [
+        "assets identify subject or state",
+        "motion communicates state or feedback",
+        "no generic AI or SaaS decoration"
+      ]
+    }
+  ],
+  "blockers": {
+    "skippedVisualConceptGate": {
+      "maxScore": 60,
+      "description": "Visual-heavy work skipped the 3 rendered-concept Visual Concept Gate."
+    },
+    "textOnlyConcepts": {
+      "maxScore": 50,
+      "description": "Visual-heavy work produced text-only concepts instead of rendered previews."
+    },
+    "approvalWithoutVisualPreviews": {
+      "maxScore": 50,
+      "description": "Migi was asked to approve art direction without visual previews."
+    },
+    "missingConceptScreenshots": {
+      "maxScore": 60,
+      "description": "Concept screenshot paths are missing for the Visual Concept Gate."
+    },
+    "sameConceptLayout": {
+      "maxScore": 60,
+      "description": "All three concepts share basically the same layout."
+    },
+    "implementationBeforeConceptApproval": {
+      "maxScore": 60,
+      "description": "Implementation began before Migi approved one rendered visual concept."
+    },
+    "referenceFlattening": {
+      "maxScore": 60,
+      "description": "Reference was reduced to shallow traits such as dark, neon, cards, or glow."
+    },
+    "sameLayoutWithNewPaint": {
+      "maxScore": 60,
+      "description": "Rejected structure was kept while only styling changed."
+    },
+    "genericLayoutInsteadOfReference": {
+      "maxScore": 60,
+      "description": "A strong reference was replaced by generic app layout."
+    },
+    "primaryObjectReplacedByGrid": {
+      "maxScore": 60,
+      "description": "Primary object in the reference or concept was replaced by grid/cards/dashboard."
+    },
+    "overlapCollision": {
+      "maxScore": 60,
+      "description": "Visible UI elements overlap or collide unintentionally."
+    },
+    "decorativeMotionWithoutPurpose": {
+      "maxScore": 70,
+      "description": "Animation does not clarify state, interaction, hierarchy, or feedback."
+    },
+    "aiScaleInflation": {
+      "maxScore": 70,
+      "description": "Oversized AI-app typography or containers overwhelm the product."
+    },
+    "obviousThemeCliche": {
+      "maxScore": 70,
+      "description": "Design follows the obvious genre route without a fresh thesis."
+    },
+    "selectionFirstNoDesire": {
+      "maxScore": 70,
+      "description": "Selection-first product does not make objects desirable to click."
+    },
+    "badgeGlowStatsAsExcitement": {
+      "maxScore": 70,
+      "description": "Excitement is created mainly through badges, glows, or stats."
+    }
+  },
+  "requiredReportFields": [
+    "skillsUsed",
+    "approvedRenderedConcept",
+    "conceptScreenshotsUsed",
+    "totalScoreAfterCaps",
+    "categoryScores",
+    "screenshotsUsed",
+    "topFixes",
+    "blockers",
+    "verificationGaps",
+    "patchedAfterReview"
+  ]
+}

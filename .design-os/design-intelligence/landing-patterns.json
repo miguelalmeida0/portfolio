@@ -1,0 +1,36 @@
+{
+  "version": "2026-07-02",
+  "purpose": "Landing-page pattern recommendation engine. Use with skills/landing-page-pattern-director and image-first workflows.",
+  "patterns": [
+    {
+      "id": "poster-hero",
+      "bestFor": ["artistic", "cinematic", "brand", "image-led"],
+      "structure": ["dominant scene", "sparse copy", "1-2 actions", "visual rhythm beyond hero"],
+      "avoid": ["feature grid after hero", "Blogspot structure", "text-heavy proof blocks"]
+    },
+    {
+      "id": "product-demo",
+      "bestFor": ["SaaS", "tool", "workflow product"],
+      "structure": ["clear promise", "interactive/demo artifact", "use cases", "proof", "CTA"],
+      "avoid": ["static fake screenshots", "too much explanation before product proof"]
+    },
+    {
+      "id": "conversion-focused",
+      "bestFor": ["signup", "trial", "lead capture"],
+      "structure": ["single offer", "trust proof", "short form or CTA", "objection handling"],
+      "avoid": ["multiple competing CTAs", "long feature maze"]
+    },
+    {
+      "id": "storytelling",
+      "bestFor": ["mission", "portfolio", "premium service", "new category"],
+      "structure": ["scene", "tension", "turn", "proof", "invitation"],
+      "avoid": ["generic section stack", "story with no product action"]
+    },
+    {
+      "id": "trust-authority",
+      "bestFor": ["finance", "health", "legal", "enterprise"],
+      "structure": ["clear claim", "source/proof", "risk handling", "expertise", "action"],
+      "avoid": ["unsupported badges", "fake security/status theater"]
+    }
+  ]
+}

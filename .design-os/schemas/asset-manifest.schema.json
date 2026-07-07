@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://miguel-design-os.local/schemas/asset-manifest.schema.json",
+  "title": "Miguel Design OS Asset Hygiene Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["projectName", "assets"],
+  "properties": {
+    "projectName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "assets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "assetPath",
+          "role",
+          "mappedObject",
+          "source",
+          "sourceType",
+          "licenseNote",
+          "watermarkFree",
+          "browserChromeFree",
+          "editorUiFree",
+          "placeholder",
+          "repeatedAsset",
+          "cropFocalPoint",
+          "usageNotes",
+          "approvedForProduction"
+        ],
+        "properties": {
+          "assetPath": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
+            "type": "string",
+            "enum": ["production", "reference", "temporary", "source"]
+          },
+          "mappedObject": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "sourceType": {
+            "type": "string",
+            "enum": ["official", "press", "Wikimedia", "provided", "generated", "unknown"]
+          },
+          "licenseNote": {
+            "type": "string"
+          },
+          "watermarkFree": {
+            "type": "boolean"
+          },
+          "browserChromeFree": {
+            "type": "boolean"
+          },
+          "editorUiFree": {
+            "type": "boolean"
+          },
+          "placeholder": {
+            "type": "boolean"
+          },
+          "repeatedAsset": {
+            "type": "boolean"
+          },
+          "cropFocalPoint": {
+            "type": "string"
+          },
+          "usageNotes": {
+            "type": "string"
+          },
+          "approvedForProduction": {
+            "type": "boolean"
+          },
+          "generatedApprovalNote": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "project": "Midnight Scent Theater",
+  "mode": "fictional editorial perfume landing page",
+  "figmaWriteStatus": "local specs only; no writable Figma file key or URL provided",
+  "costSafety": {
+    "paidFigmaFeaturesUsed": false,
+    "figmaAIUsed": false,
+    "figmaMakeUsed": false,
+    "figmaWeaveUsed": false,
+    "imageGenerationUsed": false,
+    "allowedOperationsOnly": ["pages", "frames", "vectors", "shapes", "text", "variables-if-available", "styles", "components", "node-metadata", "storyboard-frames"]
+  },
+  "artifacts": {
+    "visualGrammarPlan": "docs/design/midnight-scent-theater/visual-grammar-plan.md",
+    "shapeTokens": "docs/design/midnight-scent-theater/shape-tokens.json",
+    "vectorExportManifest": "docs/design/midnight-scent-theater/vector-export-manifest.json",
+    "motionManifest": "docs/design/midnight-scent-theater/figma-motion-manifest.json",
+    "qaChecklist": "docs/design/midnight-scent-theater/qa-checklist.md",
+    "figmaPluginSnippet": "docs/design/midnight-scent-theater/figma-plugin-snippets/create-midnight-scent-theater-pages.js",
+    "readme": "docs/design/midnight-scent-theater/README.md",
+    "morphBoard": "docs/design/midnight-scent-theater/morph-board.md",
+    "motionStoryboard": "docs/design/midnight-scent-theater/motion-storyboard.md",
+    "reducedMotionFallback": "docs/design/midnight-scent-theater/reduced-motion-fallback.md",
+    "svgTemplates": "docs/design/midnight-scent-theater/svg-templates/midnight-scent-motifs.svg"
+  },
+  "runtimeTargets": {
+    "layout": "HTML/CSS or React/Vue/Svelte",
+    "shapeRendering": "SVG + CSS variables",
+    "basicMotion": "CSS transforms, clip-path, SVG attributes",
+    "advancedMorph": "SVG path interpolation only after normalized points; GSAP/Motion optional if already in project",
+    "fallback": "static open theater scene with reduced transition feedback"
+  },
+  "components": [
+    {
+      "name": "MoonLensMask",
+      "sourceMotif": "moon/lens",
+      "props": ["variant", "material", "isOpen", "ariaLabel"],
+      "accessibility": "Meaningful when framing a scene; otherwise aria-hidden."
+    },
+    {
+      "name": "ScentBottleSilhouette",
+      "sourceMotif": "scent bottle silhouette",
+      "props": ["material", "keyline", "chapterState"],
+      "accessibility": "title and desc required because it is the hero product object."
+    },
+    {
+      "name": "CurtainRevealMask",
+      "sourceMotif": "curtain reveal",
+      "props": ["side", "progress", "material"],
+      "accessibility": "aria-hidden unless it controls a real reveal state."
+    },
+    {
+      "name": "SmokeMark",
+      "sourceMotif": "smoke mark",
+      "props": ["density", "opacity", "tone"],
+      "accessibility": "decorative; aria-hidden."
+    },
+    {
+      "name": "CoutureLabelFrame",
+      "sourceMotif": "couture label",
+      "props": ["selected", "label", "tone"],
+      "accessibility": "Text remains live HTML where possible."
+    }
+  ],
+  "reducedMotionContract": {
+    "disable": ["path morphs", "curtain slide", "smoke draw-on", "large parallax", "lens wipe"],
+    "keep": ["static final composition", "focus rings", "100-160ms button state changes"],
+    "cssHook": "@media (prefers-reduced-motion: reduce)"
+  },
+  "handoffRisks": [
+    "Figma corner smoothing does not map directly to CSS.",
+    "Bottle silhouette morph requires normalized path point structure.",
+    "Complex masks need browser compatibility testing.",
+    "Smoke marks must stay decorative and never cover text.",
+    "Do not export live text as outlined SVG."
+  ]
+}

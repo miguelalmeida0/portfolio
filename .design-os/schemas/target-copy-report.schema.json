@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://miguel-design-os.local/schemas/target-copy-report.schema.json",
+  "title": "Miguel Design OS Target Copy Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "projectName",
+    "targetScreens",
+    "targetImagePaths",
+    "currentScreenshotPaths",
+    "comparisonReportPath",
+    "excludedArtifacts",
+    "visualShellStatus",
+    "compositionMatchNotes",
+    "focalObjectMatchNotes",
+    "layoutMatchNotes",
+    "typographyMatchNotes",
+    "interactionMinimums",
+    "exactDifferences",
+    "intentionalDifferences",
+    "remainingMismatches",
+    "approvalStatus"
+  ],
+  "properties": {
+    "projectName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "targetScreens": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "targetImagePaths": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "currentScreenshotPaths": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "comparisonReportPath": {
+      "type": "string"
+    },
+    "excludedArtifacts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "visualShellStatus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "staticShellBuilt",
+        "productFeaturesAddedBeforeShellParityApproval",
+        "shellParityApproved",
+        "notes"
+      ],
+      "properties": {
+        "staticShellBuilt": {
+          "type": "boolean"
+        },
+        "productFeaturesAddedBeforeShellParityApproval": {
+          "type": "boolean"
+        },
+        "shellParityApproved": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "compositionMatchNotes": {
+      "type": "string",
+      "minLength": 1
+    },
+    "focalObjectMatchNotes": {
+      "type": "string",
+      "minLength": 1
+    },
+    "layoutMatchNotes": {
+      "type": "string",
+      "minLength": 1
+    },
+    "typographyMatchNotes": {
+      "type": "string",
+      "minLength": 1
+    },
+    "interactionMinimums": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "exactDifferences": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "intentionalDifferences": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "remainingMismatches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["description", "blocking"],
+        "properties": {
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "blocking": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "approvalStatus": {
+      "type": "string",
+      "enum": ["pending", "approved", "rejected"]
+    }
+  }
+}

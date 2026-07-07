@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://miguel-design-os.local/schemas/visual-concepts.schema.json",
+  "title": "Miguel Design OS Visual Concepts v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "projectName",
+    "selectedConceptId",
+    "approvalStatus",
+    "approvedBy",
+    "approvalNotes",
+    "concepts"
+  ],
+  "properties": {
+    "projectName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "selectedConceptId": {
+      "type": "string"
+    },
+    "approvalStatus": {
+      "type": "string",
+      "enum": ["pending", "approved", "rejected"]
+    },
+    "approvedBy": {
+      "type": "string"
+    },
+    "approvalNotes": {
+      "type": "string"
+    },
+    "concepts": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "visualMetaphor",
+          "composition",
+          "focalObject",
+          "emotionalHook",
+          "hiddenInformation",
+          "absentElements",
+          "clicheAvoidance",
+          "desireMechanism",
+          "responsiveStrategy",
+          "failureMode",
+          "previewRoute",
+          "screenshots"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "visualMetaphor": {
+            "type": "string",
+            "minLength": 1
+          },
+          "composition": {
+            "type": "string",
+            "minLength": 1
+          },
+          "focalObject": {
+            "type": "string",
+            "minLength": 1
+          },
+          "emotionalHook": {
+            "type": "string",
+            "minLength": 1
+          },
+          "hiddenInformation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "absentElements": {
+            "type": "string",
+            "minLength": 1
+          },
+          "clicheAvoidance": {
+            "type": "string",
+            "minLength": 1
+          },
+          "desireMechanism": {
+            "type": "string",
+            "minLength": 1
+          },
+          "responsiveStrategy": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["1440", "768", "390"],
+            "properties": {
+              "1440": {
+                "type": "string",
+                "minLength": 1
+              },
+              "768": {
+                "type": "string",
+                "minLength": 1
+              },
+              "390": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "failureMode": {
+            "type": "string",
+            "minLength": 1
+          },
+          "previewRoute": {
+            "type": "string",
+            "minLength": 1
+          },
+          "screenshots": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["1440", "768", "390"],
+            "properties": {
+              "1440": {
+                "type": "string",
+                "minLength": 1
+              },
+              "768": {
+                "type": "string",
+                "minLength": 1
+              },
+              "390": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "name": "Bucks Floating Product Stage",
+  "source": "Bucks Sauce",
+  "url": "https://buckssauce.com/",
+  "status": "approved-inspiration",
+  "createdAt": "2026-07-03T21:03:41.510Z",
+  "mechanics": [
+    "floating bottle and ingredient motion",
+    "small ingredient illustration animation",
+    "scroll transforms scattered containers into organized containers",
+    "original reviews section",
+    "playful product-truth copy",
+    "physical label/card language"
+  ],
+  "patterns": [
+    "Floating Product Ingredient Stage",
+    "Scroll-to-Assemble Cards",
+    "Review Theater Cards"
+  ],
+  "screenshots": [
+    {
+      "originalAttachmentName": "codex-clipboard-da7e0e95-5dfc-4f79-9438-48acb1feda4a.png",
+      "filename": "bucks-03-review-theater-cards-footer.png",
+      "path": "screenshots/bucks-03-review-theater-cards-footer.png"
+    }
+  ],
+  "note": "Screenshots saved from Codex attachments.",
+  "doNotCopy": [
+    "brand identity",
+    "logos",
+    "mascots",
+    "exact colors",
+    "site copy",
+    "proprietary media"
+  ],
+  "transfer": [
+    "interaction mechanic",
+    "motion role",
+    "layout logic",
+    "fallback requirements"
+  ]
+}

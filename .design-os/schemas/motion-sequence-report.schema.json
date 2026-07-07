@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Motion Sequence Report",
+  "type": "object",
+  "required": [
+    "runName",
+    "url",
+    "createdAt",
+    "status",
+    "captureMode",
+    "viewport",
+    "positions",
+    "screenshots",
+    "blockers"
+  ],
+  "properties": {
+    "runName": { "type": "string" },
+    "url": { "type": "string" },
+    "createdAt": { "type": "string" },
+    "status": { "type": "string", "enum": ["captured", "blocked"] },
+    "captureMode": { "type": "string", "enum": ["playwright-scroll-sequence", "blocked"] },
+    "browser": { "type": "string" },
+    "viewport": {
+      "type": "object",
+      "required": ["width", "height"],
+      "properties": {
+        "width": { "type": "integer" },
+        "height": { "type": "integer" }
+      }
+    },
+    "positions": {
+      "type": "array",
+      "items": { "type": "number", "minimum": 0, "maximum": 1 }
+    },
+    "screenshots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["position", "path"],
+        "properties": {
+          "position": { "type": "number" },
+          "path": { "type": "string" }
+        }
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "notes": { "type": "string" }
+  }
+}
+

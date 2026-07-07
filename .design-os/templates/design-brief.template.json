@@ -1,0 +1,36 @@
+{
+  "projectName": "Untitled Miguel Design OS Project",
+  "projectType": "frontend-app",
+  "primaryUser": "Migi",
+  "primaryObject": "selectable product object",
+  "primaryAction": "choose the object",
+  "visualWeight": "high",
+  "taskType": "new-app",
+  "isVisualHeavy": true,
+  "inspirationSources": [
+    "Add inspiration source or note here before implementation."
+  ],
+  "visualReferences": [
+    "Add visual reference path, screenshot path, or URL here before implementation."
+  ],
+  "targetScreens": ["390", "768", "1440"],
+  "constraints": [
+    "local-only",
+    "no paid tools",
+    "do not copy old apps literally"
+  ],
+  "forbiddenDirections": [
+    "generic dashboard default",
+    "same layout with new paint",
+    "reference flattening into dark/neon/cards/glow"
+  ],
+  "requiredSkills": [
+    "visual-concept-gate",
+    "screenshot-scorecard-review"
+  ],
+  "approvalState": {
+    "status": "pending",
+    "approvedBy": "",
+    "approvalNotes": ""
+  }
+}

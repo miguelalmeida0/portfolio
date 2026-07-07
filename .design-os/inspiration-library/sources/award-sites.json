@@ -1,0 +1,103 @@
+{
+  "sources": [
+    {
+      "name": "Awwwards",
+      "type": "award",
+      "baseUrl": "https://www.awwwards.com",
+      "bestUse": "High-end interactive web composition, art direction, motion, and first-impression references.",
+      "trustLevel": "high",
+      "screenshotPolicy": "Capture local screenshots only when publicly accessible; keep attribution and do not commit copyrighted captures publicly without approval.",
+      "notes": "Strong for award-level web visual direction, not a direct app template."
+    },
+    {
+      "name": "FWA",
+      "type": "award",
+      "baseUrl": "https://thefwa.com",
+      "bestUse": "Immersive interactive experiences, cinematic web, and motion-led concepts.",
+      "trustLevel": "high",
+      "screenshotPolicy": "Local reference captures only; do not bypass access controls.",
+      "notes": "Best for bold interaction and immersive scene logic."
+    },
+    {
+      "name": "CSS Design Awards",
+      "type": "award",
+      "baseUrl": "https://www.cssdesignawards.com",
+      "bestUse": "Awarded web composition, visual craft, and responsive art direction.",
+      "trustLevel": "high",
+      "screenshotPolicy": "Local reference captures only when public.",
+      "notes": "Useful for layout and visual polish references."
+    },
+    {
+      "name": "Godly.website",
+      "type": "gallery",
+      "baseUrl": "https://godly.website",
+      "bestUse": "High-taste website references and contemporary landing-page composition.",
+      "trustLevel": "medium",
+      "screenshotPolicy": "Local reference captures only; keep source URLs.",
+      "notes": "Strong taste curation, not formal award proof."
+    },
+    {
+      "name": "Mobbin",
+      "type": "mobile-reference",
+      "baseUrl": "https://mobbin.com",
+      "bestUse": "Mobile app flows, UI patterns, and production interaction references.",
+      "trustLevel": "medium",
+      "screenshotPolicy": "Do not bypass login or paid access; use notes/links unless access is approved.",
+      "notes": "Useful for mobile patterns, not always accessible without account."
+    },
+    {
+      "name": "Lapa Ninja",
+      "type": "gallery",
+      "baseUrl": "https://www.lapa.ninja",
+      "bestUse": "Landing-page references and composition categories.",
+      "trustLevel": "medium",
+      "screenshotPolicy": "Local reference captures only when public.",
+      "notes": "Good for fast survey, not deep interaction."
+    },
+    {
+      "name": "Landingfolio",
+      "type": "gallery",
+      "baseUrl": "https://www.landingfolio.com",
+      "bestUse": "Landing page sections, SaaS composition, and marketing reference patterns.",
+      "trustLevel": "medium",
+      "screenshotPolicy": "Local reference captures only when public.",
+      "notes": "Use as pattern evidence, not palette/template source."
+    },
+    {
+      "name": "SiteInspire",
+      "type": "gallery",
+      "baseUrl": "https://www.siteinspire.com",
+      "bestUse": "Editorial, portfolio, and brand-site references.",
+      "trustLevel": "medium",
+      "screenshotPolicy": "Local reference captures only when public.",
+      "notes": "Good for taste and composition indexing."
+    },
+    {
+      "name": "Behance",
+      "type": "portfolio",
+      "baseUrl": "https://www.behance.net",
+      "bestUse": "Portfolio case studies, product UI concepts, art direction boards.",
+      "trustLevel": "medium",
+      "screenshotPolicy": "Respect creator rights; local notes/screenshots only unless approved.",
+      "notes": "Can include concept work; verify realism before treating as product evidence."
+    },
+    {
+      "name": "Dribbble",
+      "type": "portfolio",
+      "baseUrl": "https://dribbble.com",
+      "bestUse": "UI mood, component treatments, micro-compositions, and visual exploration.",
+      "trustLevel": "medium",
+      "screenshotPolicy": "Respect creator rights; local notes/screenshots only unless approved.",
+      "notes": "Often polished shots, not full product systems."
+    },
+    {
+      "name": "Pinterest",
+      "type": "moodboard",
+      "baseUrl": "https://www.pinterest.com",
+      "bestUse": "Moodboard discovery, visual clustering, and broad aesthetic search.",
+      "trustLevel": "moodboard-only",
+      "screenshotPolicy": "Do not treat as trusted award source; do not bypass login; keep links/notes and local-only screenshots.",
+      "notes": "Allowed for inspiration discovery, not production proof or asset sourcing."
+    }
+  ]
+}

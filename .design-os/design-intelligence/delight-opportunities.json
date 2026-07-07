@@ -1,0 +1,47 @@
+{
+  "version": "2026-07-02",
+  "opportunities": [
+    {
+      "type": "success",
+      "whenToUse": "After a meaningful completion or first successful core action.",
+      "whenToAvoid": "Routine high-frequency saves, destructive flows, or serious compliance states."
+    },
+    {
+      "type": "empty",
+      "whenToUse": "When the user needs encouragement and a clear first action.",
+      "whenToAvoid": "When missing data is an error or trust issue."
+    },
+    {
+      "type": "loading",
+      "whenToUse": "When perceived progress, skeleton shape, or anticipation helps.",
+      "whenToAvoid": "When loading is instant or animation would mask slowness."
+    },
+    {
+      "type": "milestone",
+      "whenToUse": "First import, first export, first publish, streak, or meaningful threshold.",
+      "whenToAvoid": "Arbitrary vanity counters or fake-perfect metrics."
+    },
+    {
+      "type": "interaction",
+      "whenToUse": "Press, drag, reorder, reveal, or selection feedback.",
+      "whenToAvoid": "Controls used constantly or keyboard shortcuts."
+    },
+    {
+      "type": "error",
+      "whenToUse": "Recoverable, low-stakes errors where calm personality reduces stress.",
+      "whenToAvoid": "High-stakes failure, data loss, payment, health, legal, or security."
+    },
+    {
+      "type": "easterEgg",
+      "whenToUse": "Rare contextual moments after the main task remains clear.",
+      "whenToAvoid": "Any moment where discoverability or speed matters."
+    }
+  ],
+  "principles": [
+    "delight amplifies, never blocks",
+    "personality must match domain seriousness",
+    "do not hide poor UX behind charm",
+    "respect reduced motion",
+    "one earned moment beats constant decoration"
+  ]
+}

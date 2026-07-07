@@ -1,0 +1,68 @@
+{
+  "projectName": "Untitled Miguel Design OS Project",
+  "runName": "visual-qa-run",
+  "url": "",
+  "createdAt": "",
+  "status": "needs-manual-review",
+  "finalStatus": "needs-human-review",
+  "captureMode": "blocked",
+  "browserRequested": "auto",
+  "browserUsed": "",
+  "browserAttempts": [],
+  "tempDirectory": "",
+  "tmpdirOverrideUsed": false,
+  "tmpdirOverride": "",
+  "inputDir": "",
+  "originalScreenshotPaths": {},
+  "screenshots": {
+    "390": "",
+    "768": "",
+    "1440": ""
+  },
+  "checks": {
+    "captured390": false,
+    "captured768": false,
+    "captured1440": false,
+    "noHorizontalOverflow": false,
+    "pageConsoleChecked": false,
+    "buttonInventoryCaptured": false,
+    "deadButtonInventoryCaptured": false
+  },
+  "manualChecklist": {
+    "noOverlap": {
+      "status": "manual",
+      "notes": "Inspect screenshots for collision or unreadable overlap."
+    },
+    "noTextOnButtons": {
+      "status": "manual",
+      "notes": "Confirm labels/icons fit inside controls."
+    },
+    "noWatermark": {
+      "status": "manual",
+      "notes": "Confirm no source-site watermark, browser chrome, editor UI, or tooling artifact appears in production UI."
+    },
+    "noHorizontalOverflow": {
+      "status": "manual",
+      "notes": "Confirm no accidental horizontal overflow appears at 390 / 768 / 1440."
+    },
+    "noCutHeroObject": {
+      "status": "manual",
+      "notes": "Confirm primary hero/object is not accidentally cropped."
+    },
+    "noDeadButtons": {
+      "status": "manual",
+      "notes": "Confirm visible controls either work locally, navigate, or are clearly disabled."
+    },
+    "objectSwapInvariance": {
+      "status": "manual",
+      "notes": "Run object-swap-check for roster, gallery, selection, or configurator products."
+    }
+  },
+  "buttonInventory": [],
+  "deadButtons": [],
+  "consoleErrors": [],
+  "blockers": [
+    "Manual visual QA is still required."
+  ],
+  "notes": "Build/lint is not visual QA."
+}

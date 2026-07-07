@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="mst-title mst-desc">
+  <title id="mst-title">Midnight Scent Theater motif templates</title>
+  <desc id="mst-desc">Vector motif templates for moon lens, scent bottle silhouette, curtain reveal, and smoke mark.</desc>
+
+  <defs>
+    <style>
+      .keyline { fill: none; stroke: currentColor; stroke-width: 2; vector-effect: non-scaling-stroke; }
+      .soft-fill { fill: currentColor; opacity: 0.12; }
+      .solid-fill { fill: currentColor; }
+      .decorative { opacity: 0.34; }
+    </style>
+  </defs>
+
+  <g id="mask-moon-lens" data-vector-object data-vector-role="mask" data-vector-layer="masks-and-clips">
+    <title>Moon lens mask</title>
+    <desc>A soft moon lens used as the hero portal and chapter reveal mask.</desc>
+    <ellipse class="soft-fill" cx="184" cy="156" rx="112" ry="76" />
+    <ellipse class="keyline" cx="184" cy="156" rx="112" ry="76" />
+  </g>
+
+  <g id="hero-scent-bottle" data-vector-object data-vector-role="hero-object" data-vector-layer="primary-object" transform="translate(380 68)">
+    <title>Scent bottle silhouette</title>
+    <desc>A fictional perfume bottle silhouette used as the main hero object.</desc>
+    <path class="solid-fill" d="M76 22h88v42c0 12 8 24 20 34 18 16 30 42 30 72v186c0 34-22 56-56 56H82c-34 0-56-22-56-56V170c0-30 12-56 30-72 12-10 20-22 20-34V22Z" />
+    <path class="keyline" d="M76 22h88v42c0 12 8 24 20 34 18 16 30 42 30 72v186c0 34-22 56-56 56H82c-34 0-56-22-56-56V170c0-30 12-56 30-72 12-10 20-22 20-34V22Z" />
+    <rect class="keyline" x="70" y="220" width="100" height="76" rx="10" />
+  </g>
+
+  <g id="mask-curtain-reveal" data-vector-object data-vector-role="mask" data-vector-layer="masks-and-clips" transform="translate(48 372)">
+    <title>Curtain reveal mask</title>
+    <desc>Two folded curtain planes used for an editorial chapter reveal.</desc>
+    <path class="soft-fill" d="M0 0h160c-24 34-24 82 0 116H0Z" />
+    <path class="soft-fill" d="M304 0h160v116H304c24-34 24-82 0-116Z" />
+    <path class="keyline" d="M160 0c-24 34-24 82 0 116M304 0c24 34 24 82 0 116" />
+  </g>
+
+  <g id="decorative-smoke-mark" data-vector-object data-vector-role="decorative" data-vector-layer="atmosphere" aria-hidden="true" transform="translate(708 128)">
+    <path class="keyline decorative" d="M18 82c38-38 102-18 108-62 4-28-38-34-52-10-12 20 16 34 36 24" />
+    <path class="keyline decorative" d="M0 122c54-36 132-10 150-70" />
+  </g>
+</svg>

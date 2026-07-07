@@ -1,0 +1,384 @@
+[
+  {
+    "file": "baseline-desktop-hero.png",
+    "width": 1440,
+    "height": 900,
+    "title": "Miguel Almeida — Software Engineer · Berlin",
+    "url": "/",
+    "scrollWidth": 1440,
+    "innerWidth": 1440,
+    "bodyTextLength": 1848,
+    "h1": "Miguel Almeida",
+    "headings": [
+      {
+        "tag": "H1",
+        "text": "Miguel Almeida"
+      },
+      {
+        "tag": "H2",
+        "text": "Projects"
+      },
+      {
+        "tag": "H2",
+        "text": "A short history."
+      },
+      {
+        "tag": "H3",
+        "text": "Software Engineer"
+      },
+      {
+        "tag": "H3",
+        "text": "Junior Software Engineer"
+      },
+      {
+        "tag": "H3",
+        "text": "Studies & studio work"
+      },
+      {
+        "tag": "H2",
+        "text": "What brought you here today?"
+      }
+    ],
+    "horizontalOverflow": false
+  },
+  {
+    "file": "baseline-desktop-work.png",
+    "width": 1440,
+    "height": 900,
+    "title": "Miguel Almeida — Software Engineer · Berlin",
+    "url": "/",
+    "scrollWidth": 1440,
+    "innerWidth": 1440,
+    "bodyTextLength": 1848,
+    "h1": "Miguel Almeida",
+    "headings": [
+      {
+        "tag": "H1",
+        "text": "Miguel Almeida"
+      },
+      {
+        "tag": "H2",
+        "text": "Projects"
+      },
+      {
+        "tag": "H2",
+        "text": "A short history."
+      },
+      {
+        "tag": "H3",
+        "text": "Software Engineer"
+      },
+      {
+        "tag": "H3",
+        "text": "Junior Software Engineer"
+      },
+      {
+        "tag": "H3",
+        "text": "Studies & studio work"
+      },
+      {
+        "tag": "H2",
+        "text": "What brought you here today?"
+      }
+    ],
+    "horizontalOverflow": false
+  },
+  {
+    "file": "baseline-desktop-contact.png",
+    "width": 1440,
+    "height": 900,
+    "title": "Miguel Almeida — Software Engineer · Berlin",
+    "url": "/",
+    "scrollWidth": 1440,
+    "innerWidth": 1440,
+    "bodyTextLength": 1848,
+    "h1": "Miguel Almeida",
+    "headings": [
+      {
+        "tag": "H1",
+        "text": "Miguel Almeida"
+      },
+      {
+        "tag": "H2",
+        "text": "Projects"
+      },
+      {
+        "tag": "H2",
+        "text": "A short history."
+      },
+      {
+        "tag": "H3",
+        "text": "Software Engineer"
+      },
+      {
+        "tag": "H3",
+        "text": "Junior Software Engineer"
+      },
+      {
+        "tag": "H3",
+        "text": "Studies & studio work"
+      },
+      {
+        "tag": "H2",
+        "text": "What brought you here today?"
+      }
+    ],
+    "horizontalOverflow": false
+  },
+  {
+    "file": "baseline-tablet-hero.png",
+    "width": 768,
+    "height": 1024,
+    "title": "Miguel Almeida — Software Engineer · Berlin",
+    "url": "/",
+    "scrollWidth": 768,
+    "innerWidth": 768,
+    "bodyTextLength": 1848,
+    "h1": "Miguel Almeida",
+    "headings": [
+      {
+        "tag": "H1",
+        "text": "Miguel Almeida"
+      },
+      {
+        "tag": "H2",
+        "text": "Projects"
+      },
+      {
+        "tag": "H2",
+        "text": "A short history."
+      },
+      {
+        "tag": "H3",
+        "text": "Software Engineer"
+      },
+      {
+        "tag": "H3",
+        "text": "Junior Software Engineer"
+      },
+      {
+        "tag": "H3",
+        "text": "Studies & studio work"
+      },
+      {
+        "tag": "H2",
+        "text": "What brought you here today?"
+      }
+    ],
+    "horizontalOverflow": false
+  },
+  {
+    "file": "baseline-mobile-hero.png",
+    "width": 390,
+    "height": 844,
+    "title": "Miguel Almeida — Software Engineer · Berlin",
+    "url": "/",
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "bodyTextLength": 1839,
+    "h1": "Miguel Almeida",
+    "headings": [
+      {
+        "tag": "H1",
+        "text": "Miguel Almeida"
+      },
+      {
+        "tag": "H2",
+        "text": "Projects"
+      },
+      {
+        "tag": "H2",
+        "text": "A short history."
+      },
+      {
+        "tag": "H3",
+        "text": "Software Engineer"
+      },
+      {
+        "tag": "H3",
+        "text": "Junior Software Engineer"
+      },
+      {
+        "tag": "H3",
+        "text": "Studies & studio work"
+      },
+      {
+        "tag": "H2",
+        "text": "What brought you here today?"
+      }
+    ],
+    "horizontalOverflow": false
+  },
+  {
+    "file": "baseline-mobile-contact.png",
+    "width": 390,
+    "height": 844,
+    "title": "Miguel Almeida — Software Engineer · Berlin",
+    "url": "/",
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "bodyTextLength": 1839,
+    "h1": "Miguel Almeida",
+    "headings": [
+      {
+        "tag": "H1",
+        "text": "Miguel Almeida"
+      },
+      {
+        "tag": "H2",
+        "text": "Projects"
+      },
+      {
+        "tag": "H2",
+        "text": "A short history."
+      },
+      {
+        "tag": "H3",
+        "text": "Software Engineer"
+      },
+      {
+        "tag": "H3",
+        "text": "Junior Software Engineer"
+      },
+      {
+        "tag": "H3",
+        "text": "Studies & studio work"
+      },
+      {
+        "tag": "H2",
+        "text": "What brought you here today?"
+      }
+    ],
+    "horizontalOverflow": false
+  },
+  {
+    "file": "baseline-desktop-cv.png",
+    "width": 1440,
+    "height": 900,
+    "title": "CV — Miguel Almeida · Frontend Engineer · Berlin",
+    "url": "/cv",
+    "scrollWidth": 1440,
+    "innerWidth": 1440,
+    "bodyTextLength": 1797,
+    "h1": "Miguel Almeida",
+    "headings": [
+      {
+        "tag": "H1",
+        "text": "Miguel Almeida"
+      },
+      {
+        "tag": "H2",
+        "text": "Miguel Almeida — The Sheet"
+      },
+      {
+        "tag": "H3",
+        "text": "Software Engineer, Mid-level @ F24"
+      },
+      {
+        "tag": "H3",
+        "text": "Frontend Engineer, Product Lead @ F24"
+      },
+      {
+        "tag": "H3",
+        "text": "Frontend Engineer @ F24"
+      },
+      {
+        "tag": "H3",
+        "text": "Freelance Developer @ Independent"
+      },
+      {
+        "tag": "H3",
+        "text": "Aviation @ Previous chapter"
+      }
+    ],
+    "horizontalOverflow": false
+  },
+  {
+    "file": "baseline-mobile-cv.png",
+    "width": 390,
+    "height": 844,
+    "title": "CV — Miguel Almeida · Frontend Engineer · Berlin",
+    "url": "/cv",
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "bodyTextLength": 1723,
+    "h1": "Miguel Almeida",
+    "headings": [
+      {
+        "tag": "H1",
+        "text": "Miguel Almeida"
+      },
+      {
+        "tag": "H2",
+        "text": "Miguel Almeida — The Sheet"
+      },
+      {
+        "tag": "H3",
+        "text": "Software Engineer, Mid-level @ F24"
+      },
+      {
+        "tag": "H3",
+        "text": "Frontend Engineer, Product Lead @ F24"
+      },
+      {
+        "tag": "H3",
+        "text": "Frontend Engineer @ F24"
+      },
+      {
+        "tag": "H3",
+        "text": "Freelance Developer @ Independent"
+      },
+      {
+        "tag": "H3",
+        "text": "Aviation @ Previous chapter"
+      }
+    ],
+    "horizontalOverflow": false
+  },
+  {
+    "file": "baseline-desktop-story.png",
+    "width": 1440,
+    "height": 900,
+    "title": "The Story — Miguel Almeida",
+    "url": "/story",
+    "scrollWidth": 1440,
+    "innerWidth": 1440,
+    "bodyTextLength": 2815,
+    "h1": "Dear reader,",
+    "headings": [
+      {
+        "tag": "H1",
+        "text": "Dear reader,"
+      },
+      {
+        "tag": "H2",
+        "text": "I spend years in aviation, learning what real stakes feel like."
+      },
+      {
+        "tag": "H2",
+        "text": "I graduate as a UX/UI designer from the UX Design Institute."
+      },
+      {
+        "tag": "H2",
+        "text": "I open a code editor, freelance my first projects."
+      },
+      {
+        "tag": "H2",
+        "text": "I join F24 and learn what shipping at scale means."
+      },
+      {
+        "tag": "H2",
+        "text": "I build a product from scratch, and watch it go to thousands of users."
+      },
+      {
+        "tag": "H2",
+        "text": "I'm promoted to mid-level software engineer. This is me saying hello."
+      },
+      {
+        "tag": "H2",
+        "text": "If you'd rather keep it practical."
+      }
+    ],
+    "horizontalOverflow": false
+  }
+]

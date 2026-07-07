@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://miguel-design-os.local/schemas/design-brief.schema.json",
+  "title": "Miguel Design OS Design Brief",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "projectName",
+    "projectType",
+    "primaryUser",
+    "primaryObject",
+    "primaryAction",
+    "visualWeight",
+    "taskType",
+    "isVisualHeavy",
+    "inspirationSources",
+    "visualReferences",
+    "targetScreens",
+    "constraints",
+    "forbiddenDirections",
+    "requiredSkills",
+    "approvalState"
+  ],
+  "properties": {
+    "projectName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "projectType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "primaryUser": {
+      "type": "string",
+      "minLength": 1
+    },
+    "primaryObject": {
+      "type": "string",
+      "minLength": 1
+    },
+    "primaryAction": {
+      "type": "string",
+      "minLength": 1
+    },
+    "visualWeight": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
+    "taskType": {
+      "type": "string",
+      "enum": [
+        "bug-fix",
+        "technical-refactor",
+        "copy-edit",
+        "frontend-qa",
+        "visual-heavy-ui",
+        "new-app",
+        "redesign",
+        "selection-first",
+        "gallery",
+        "roster",
+        "product-discovery",
+        "tailwind-migration",
+        "truthful-state"
+      ]
+    },
+    "isVisualHeavy": {
+      "type": "boolean"
+    },
+    "inspirationSources": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "visualReferences": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "targetScreens": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["390", "768", "1440"]
+      },
+      "uniqueItems": true
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "forbiddenDirections": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "requiredSkills": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "approvalState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "approvedBy", "approvalNotes"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["not-required", "pending", "approved", "rejected"]
+        },
+        "approvedBy": {
+          "type": "string"
+        },
+        "approvalNotes": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "isVisualHeavy": {
+            "const": true
+          }
+        },
+        "required": ["isVisualHeavy"]
+      },
+      "then": {
+        "properties": {
+          "targetScreens": {
+            "minItems": 1
+          }
+        },
+        "anyOf": [
+          {
+            "properties": {
+              "inspirationSources": {
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "properties": {
+              "visualReferences": {
+                "minItems": 1
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "version": "2026-07-02",
+  "rawDirectory": "research-input/ai-ui-builders/raw",
+  "items": [
+    {
+      "originalAttachmentName": "Pasted text (2).txt",
+      "newFilename": "raw/emergent-e1-fullstack-system-prompt.md",
+      "inferredSourcePlatform": "Emergent / E1",
+      "inferredContentType": "Full-stack agent system prompt and starter context",
+      "confidence": "high",
+      "sha256": "88dd67c462810e694703a72e473a3045b8c8cf3af7ee2105f161651ac99e8db7",
+      "summary": "React/FastAPI/Mongo agent workflow with frontend-first mock implementation, mock data discipline, contracts before backend, screenshot review, environment and tool constraints, component guidance, palette/gradient rules, image selection guidance, and concise handoff behavior.",
+      "whyItMattersForMiguelDesignOS": "Supplies mechanisms for frontend aha moments, truthful mock data, contracts before backend, tool discipline, image use, screenshot proof, and design-system/token discipline."
+    },
+    {
+      "originalAttachmentName": "No Data Type Keywords Best Chart Type Secondary Options... / pasted-text.txt",
+      "newFilename": "raw/chart-recommendation-matrix.tsv",
+      "inferredSourcePlatform": "Open-source chart recommendation matrix",
+      "inferredContentType": "Data visualization selection matrix",
+      "confidence": "high",
+      "sha256": "8e0fdd1cc6ced3debf842dd884b2cd8fe95577d6250b467a2033f2eb72369d57",
+      "summary": "Large tabular matrix mapping data types and keywords to best chart types, secondary options, when to use or avoid each chart, accessibility notes, color guidance, fallback representations, libraries, and interaction levels.",
+      "whyItMattersForMiguelDesignOS": "Becomes the basis for chart intelligence, dashboard graph-system skills, chart rationale requirements, accessibility fallbacks, and scorecard blockers against decorative chart wallpaper."
+    },
+    {
+      "originalAttachmentName": "No, Style Category, Type, Keywords... / pasted-text.txt",
+      "newFilename": "raw/style-taxonomy.csv",
+      "inferredSourcePlatform": "Open-source visual style taxonomy",
+      "inferredContentType": "Frontend style taxonomy and mobile style matrix",
+      "confidence": "high",
+      "sha256": "d56ab17c8241de75b8fd80e1f954d393cd5f7c98fafd89a3a0f83c264c332233",
+      "summary": "Large style matrix covering visual categories, keywords, primary and secondary colors, effects, animation, use cases, anti-use cases, accessibility, performance, mobile fit, framework compatibility, prompts, CSS variables, and implementation checklists.",
+      "whyItMattersForMiguelDesignOS": "Becomes a style-intelligence ingredient library for deliberate art direction, active design dials, palette/material decisions, mobile style fit, and avoiding one-note AI palettes."
+    },
+    {
+      "originalAttachmentName": "name image-to-code description... / pasted-text.txt",
+      "newFilename": "raw/image-to-code-skill.md",
+      "inferredSourcePlatform": "Open-source Codex image-to-code skill",
+      "inferredContentType": "Image-first website-to-code skill instructions",
+      "confidence": "high",
+      "sha256": "2d7a40705162d4ab634de3a990f8c13b687e2407744a4e54431d365b0f609a51",
+      "summary": "Image-first website workflow requiring generated or selected section references before coding, deep visual analysis, explicit design dials, enough images for extraction, implementation clarity, and anti-generic website defaults.",
+      "whyItMattersForMiguelDesignOS": "Informs Miguel-native image-first frontend skills, landing/image-led prompt templates, visual spec requirements, active dial defaults, and anti-drift rules for visual-heavy websites."
+    },
+    {
+      "originalAttachmentName": "signal-desk-action-brief.md",
+      "newFilename": "raw/signal-desk-brief-checkout-delay-baseline.md",
+      "inferredSourcePlatform": "Signal Desk / local app output",
+      "inferredContentType": "Product action brief export",
+      "confidence": "high",
+      "sha256": "efa2bbf3567e4a67f26a46109d57e7f0cf58cee5d155108482ffa5513b84fcb6",
+      "summary": "Brief prioritizing Night desk notes expose a checkout delay with evidence, conviction, urgency, uncertainty, next move, and decision rule.",
+      "whyItMattersForMiguelDesignOS": "Shows deterministic local export artifacts can prove product value and decision clarity without backend dependency."
+    },
+    {
+      "originalAttachmentName": "signal-desk-action-brief (1).md",
+      "newFilename": "raw/signal-desk-brief-operator-notes-trust-copy-01.md",
+      "inferredSourcePlatform": "Signal Desk / local app output",
+      "inferredContentType": "Product action brief export",
+      "confidence": "high",
+      "sha256": "0fef8f8efb4fd006efbd02d026060e74373683575ad601fc5c1082cfe18cd5ec",
+      "summary": "Brief prioritizing operator notes, compare-before-commit, and trust-copy signals.",
+      "whyItMattersForMiguelDesignOS": "Useful model for local mock product output that feels complete, portable, and decision-oriented.",
+      "duplicateGroup": "operator-notes-trust-copy"
+    },
+    {
+      "originalAttachmentName": "signal-desk-action-brief (2).md",
+      "newFilename": "raw/signal-desk-brief-operator-notes-checkout-delay.md",
+      "inferredSourcePlatform": "Signal Desk / local app output",
+      "inferredContentType": "Product action brief export",
+      "confidence": "high",
+      "sha256": "c9f872534611a61d856a6d10393d7443c91235544d70be60aa1665e3d73c25a0",
+      "summary": "Brief prioritizing operator notes and including a lower-confidence checkout-delay signal with missing evidence.",
+      "whyItMattersForMiguelDesignOS": "Reinforces truthful state: missing evidence and uncertainty should be visible, not hidden."
+    },
+    {
+      "originalAttachmentName": "signal-desk-action-brief (3).md",
+      "newFilename": "raw/signal-desk-brief-operator-notes-export-ritual.md",
+      "inferredSourcePlatform": "Signal Desk / local app output",
+      "inferredContentType": "Product action brief export",
+      "confidence": "high",
+      "sha256": "2ff27c87aeb32a3f1e3afdaa6a4b3faaf3407dabab8ff9da9e3f52ef5cb8c3a6",
+      "summary": "Brief prioritizing operator notes, compare-before-commit, and export as a commitment ritual.",
+      "whyItMattersForMiguelDesignOS": "Supports deterministic, editable, dependency-light export artifacts as part of a frontend aha moment."
+    },
+    {
+      "originalAttachmentName": "signal-desk-action-brief (4).md",
+      "newFilename": "raw/signal-desk-brief-operator-notes-trust-copy-02.md",
+      "inferredSourcePlatform": "Signal Desk / local app output",
+      "inferredContentType": "Duplicate product action brief export",
+      "confidence": "high",
+      "sha256": "0fef8f8efb4fd006efbd02d026060e74373683575ad601fc5c1082cfe18cd5ec",
+      "summary": "Exact duplicate of operator-notes/trust-copy action brief.",
+      "whyItMattersForMiguelDesignOS": "Preserved to verify deterministic export and duplicate handling.",
+      "duplicateGroup": "operator-notes-trust-copy"
+    },
+    {
+      "originalAttachmentName": "signal-desk-action-brief (5).md",
+      "newFilename": "raw/signal-desk-brief-operator-notes-trust-copy-03.md",
+      "inferredSourcePlatform": "Signal Desk / local app output",
+      "inferredContentType": "Duplicate product action brief export",
+      "confidence": "high",
+      "sha256": "0fef8f8efb4fd006efbd02d026060e74373683575ad601fc5c1082cfe18cd5ec",
+      "summary": "Exact duplicate of operator-notes/trust-copy action brief.",
+      "whyItMattersForMiguelDesignOS": "Preserved to verify deterministic export and duplicate handling.",
+      "duplicateGroup": "operator-notes-trust-copy"
+    },
+    {
+      "originalAttachmentName": "signal-desk-action-brief (6).md",
+      "newFilename": "raw/signal-desk-brief-operator-notes-trust-copy-04.md",
+      "inferredSourcePlatform": "Signal Desk / local app output",
+      "inferredContentType": "Duplicate product action brief export",
+      "confidence": "high",
+      "sha256": "0fef8f8efb4fd006efbd02d026060e74373683575ad601fc5c1082cfe18cd5ec",
+      "summary": "Exact duplicate of operator-notes/trust-copy action brief.",
+      "whyItMattersForMiguelDesignOS": "Preserved to verify deterministic export and duplicate handling.",
+      "duplicateGroup": "operator-notes-trust-copy"
+    },
+    {
+      "originalAttachmentName": "signal-desk-action-brief (7).md",
+      "newFilename": "raw/signal-desk-brief-operator-notes-trust-copy-05.md",
+      "inferredSourcePlatform": "Signal Desk / local app output",
+      "inferredContentType": "Duplicate product action brief export",
+      "confidence": "high",
+      "sha256": "0fef8f8efb4fd006efbd02d026060e74373683575ad601fc5c1082cfe18cd5ec",
+      "summary": "Exact duplicate of operator-notes/trust-copy action brief.",
+      "whyItMattersForMiguelDesignOS": "Preserved to verify deterministic export and duplicate handling.",
+      "duplicateGroup": "operator-notes-trust-copy"
+    },
+    {
+      "originalAttachmentName": "signal-desk-action-brief (8).md",
+      "newFilename": "raw/signal-desk-brief-operator-notes-trust-copy-06.md",
+      "inferredSourcePlatform": "Signal Desk / local app output",
+      "inferredContentType": "Duplicate product action brief export",
+      "confidence": "high",
+      "sha256": "0fef8f8efb4fd006efbd02d026060e74373683575ad601fc5c1082cfe18cd5ec",
+      "summary": "Exact duplicate of operator-notes/trust-copy action brief.",
+      "whyItMattersForMiguelDesignOS": "Preserved to verify deterministic export and duplicate handling.",
+      "duplicateGroup": "operator-notes-trust-copy"
+    }
+  ]
+}
