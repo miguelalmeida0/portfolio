@@ -1,19 +1,22 @@
 <script lang="ts">
   import heroPortrait from '$lib/assets/hero/portrait/miguel-hand-out.png';
+  import ResponsivePicture from '$lib/components/media/ResponsivePicture.svelte';
 </script>
 
 <figure class="hero-portrait" aria-label="Portrait of Miguel Almeida">
   <div class="portrait-frame" aria-hidden="true">
-    <img
-      src={heroPortrait}
+    <ResponsivePicture
+      fallbackSrc={heroPortrait}
       alt=""
-      class="portrait-image"
-      width="1451"
-      height="1086"
+      width={1451}
+      height={1086}
+      avifSrcset="/media/v1/hero/miguel-hand-out-480.avif 480w, /media/v1/hero/miguel-hand-out-800.avif 800w, /media/v1/hero/miguel-hand-out-1200.avif 1200w, /media/v1/hero/miguel-hand-out-1451.avif 1451w"
+      webpSrcset="/media/v1/hero/miguel-hand-out-480.webp 480w, /media/v1/hero/miguel-hand-out-800.webp 800w, /media/v1/hero/miguel-hand-out-1200.webp 1200w, /media/v1/hero/miguel-hand-out-1451.webp 1451w"
+      sizes="(max-width: 520px) 152vw, (max-width: 700px) 128vw, (max-width: 900px) 100vw, min(100vw, 90.7rem)"
       loading="eager"
-      decoding="async"
       fetchpriority="high"
-      draggable="false"
+      fit="contain"
+      draggable={false}
     />
   </div>
 </figure>
@@ -43,7 +46,8 @@
     transform: translateX(-50%);
   }
 
-  .portrait-image {
+  .portrait-frame :global(picture),
+  .portrait-frame :global(img) {
     position: absolute;
     inset: 0;
     display: block;

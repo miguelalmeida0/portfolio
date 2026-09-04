@@ -56,7 +56,8 @@
     '(max-width: 680px) calc(100vw - 2.5rem), (max-width: 900px) calc(50vw - 2rem), 32rem';
 
   const getResponsiveSources = (src: string, format: 'avif' | 'webp') => {
-    const base = src.replace(/\.[^/.]+$/, '');
+    const name = src.split('/').at(-1)?.replace(/\.[^/.]+$/, '') ?? '';
+    const base = `/media/v1/story/${name}`;
     return `${base}-640.${format} 640w, ${base}-1024.${format} 1024w`;
   };
 </script>

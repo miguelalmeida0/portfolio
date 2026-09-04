@@ -23,7 +23,9 @@ test.describe('portfolio overview', () => {
 
     const copyEmail = page.getByTestId('direct-email-copy');
     await copyEmail.click();
-    await expect(copyEmail.locator('[aria-live="polite"]')).toContainText('Email copied');
+    await expect(copyEmail.locator('[aria-live="polite"]')).toHaveText(
+      'Email copied. Looking forward to hearing from you.'
+    );
     expect(await getMockClipboardText(page)).toBe(site.email);
 
     await expectLinkTarget(page.getByRole('link', { name: /\/in\/miguelalmeida1/i }), {

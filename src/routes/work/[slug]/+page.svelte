@@ -4,6 +4,7 @@
   import ProjectLinks from '$lib/components/case-study/ProjectLinks.svelte';
   import MiguelLLMDrawer from '$lib/components/miguel-llm/MiguelLLMDrawer.svelte';
   import SiteHeader from '$lib/components/revamp/SiteHeader.svelte';
+  import ResponsivePicture from '$lib/components/media/ResponsivePicture.svelte';
   import { getApprovedMedia } from '$lib/content/project-media';
   import type { MiguelLLMMode } from '$lib/miguel-llm/types';
   import type { PageData } from './$types';
@@ -44,13 +45,18 @@
 
     {#if projectMedia}
       <figure class="case-media">
-        <img
-          src={projectMedia.src}
+        <ResponsivePicture
+          fallbackSrc={projectMedia.src}
           alt={projectMedia.alt}
-          width="1440"
-          height="900"
+          width={projectMedia.responsive?.width ?? 1440}
+          height={projectMedia.responsive?.height ?? 900}
+          avifSrcset={projectMedia.responsive?.avifSrcset}
+          webpSrcset={projectMedia.responsive?.webpSrcset}
+          sizes={projectMedia.responsive?.sizes ?? '100vw'}
+          loading="eager"
           fetchpriority="high"
-          decoding="async"
+          layout="intrinsic"
+          objectPosition="center top"
         />
         <figcaption>Current product surface · reliability story follows below</figcaption>
       </figure>
@@ -305,7 +311,7 @@
     content: '';
   }
 
-  .case-media img {
+  .case-media :global(img) {
     width: 100%;
     height: 100%;
     object-fit: contain;

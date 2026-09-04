@@ -12,7 +12,7 @@
   export let className = '';
   export let testId: string | undefined = undefined;
 
-  const successMessage = 'Email copied ✓ — feel free to reach out anytime.';
+  const successMessage = 'Email copied. Looking forward to hearing from you.';
   const failureMessage = 'Couldn’t copy automatically — please copy manually';
 
   let copyState: CopyState = 'idle';
@@ -59,7 +59,7 @@
     if (hideTimeout) clearTimeout(hideTimeout);
 
     copyState = state;
-    liveMessage = state === 'success' ? 'Email copied' : failureMessage;
+    liveMessage = state === 'success' ? successMessage : failureMessage;
     toastVisible = true;
 
     resetTimeout = setTimeout(() => {

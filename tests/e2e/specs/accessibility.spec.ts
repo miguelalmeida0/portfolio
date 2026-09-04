@@ -87,6 +87,26 @@ test.describe('accessibility and keyboard smoke checks', () => {
     }
   });
 
+  for (const viewport of [
+    { width: 768, height: 1024 },
+    { width: 1440, height: 900 }
+  ]) {
+    test(`home preserves layout and media ratios at ${viewport.width}px`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await gotoReady(page, routes.home);
+      await expectNoHorizontalOverflow(page);
+
+      const dimensions = await page
+        .locator('[data-project-tile="camera-harness"] [data-project-media]')
+        .evaluate((element) => {
+          const box = element.getBoundingClientRect();
+          return { width: box.width, height: box.height };
+        });
+      expect(dimensions.width).toBeGreaterThan(0);
+      expect(dimensions.height).toBeGreaterThan(0);
+    });
+  }
+
   test('external contact links communicate new-tab behavior', async ({ page }) => {
     await gotoReady(page, routes.home);
 

@@ -10,6 +10,35 @@ const expectNoHorizontalOverflow = async (page: import('@playwright/test').Page)
 };
 
 test.describe('media-first portfolio', () => {
+  test('initial unscrolled media stays under the two-megabyte budget', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    const mediaResponses: Array<Promise<{ url: string; bytes: number }>> = [];
+
+    page.on('response', (response) => {
+      const type = response.request().resourceType();
+      if (!['image', 'media'].includes(type)) return;
+      mediaResponses.push(
+        response
+          .body()
+          .then((body) => ({ url: response.url(), bytes: body.byteLength }))
+          .catch(() => ({
+            url: response.url(),
+            bytes: Number(response.headers()['content-length'] ?? 0)
+          }))
+      );
+    });
+
+    await page.goto('/');
+    await page.waitForTimeout(1_500);
+    const loadedMedia = await Promise.all([...mediaResponses]);
+    const totalBytes = loadedMedia.reduce((total, item) => total + item.bytes, 0);
+
+    expect(totalBytes).toBeGreaterThan(0);
+    expect(totalBytes).toBeLessThanOrEqual(2_000_000);
+    expect(loadedMedia.some(({ url }) => url.includes('ghostwriter-preview'))).toBe(false);
+    expect(loadedMedia.some(({ url }) => url.includes('mirror-ai-preview'))).toBe(false);
+  });
+
   test('hero prioritizes work and moves into the living project wall', async ({ page }) => {
     await page.setViewportSize({ width: 2560, height: 1440 });
     await page.goto('/');
@@ -22,7 +51,10 @@ test.describe('media-first portfolio', () => {
       })
     ).toBeVisible();
     await expect(portrait).toHaveCSS('object-fit', 'contain');
-    await expect(portrait).toHaveCSS('object-position', '50% 100%');
+    await expect(portrait).toHaveCSS('object-position', '50% 50%');
+    await expect(portrait).toHaveAttribute('width', '1451');
+    await expect(portrait).toHaveAttribute('height', '1086');
+    await expect(hero.locator('.portrait-frame picture')).toHaveCount(1);
     await expect(hero.getByRole('link', { name: 'Explore my work' })).toBeVisible();
     await expect(hero.getByRole('link', { name: 'View résumé' })).toBeVisible();
     await expect(hero.getByRole('button', { name: /Ask MiguelLLM/i })).toBeVisible();
@@ -54,18 +86,28 @@ test.describe('media-first portfolio', () => {
     await expect(camera.getByRole('link', { name: /Camera Harness/i })).toBeVisible();
     await expect(camera.getByText(/Experimental · hybrid local \/ hosted/i)).toBeVisible();
     await expect(camera.getByText(/latest-frame queue/i)).toBeVisible();
-    await expect(camera.locator('video')).not.toHaveAttribute('poster', /.+/);
-    await expect(camera.locator('video source')).toHaveAttribute(
-      'src',
-      '/projects/camera-harness/book-recognition-loop-1080.m4v'
+    await expect(camera.locator('[data-media-stage]')).toHaveAttribute(
+      'data-poster-visible',
+      /true|false/
     );
+    await expect(camera.locator('picture source[type="image/avif"]')).toHaveAttribute(
+      'srcset',
+      /camera-harness-poster-640\.avif/
+    );
+    await expect(camera.locator('video')).toHaveAttribute('preload', 'none');
     await expect(camera.locator('video')).toHaveAttribute('muted', '');
     await expect(ghostwriter.getByText(/Keep the meaning/i)).toBeVisible();
     await expect(ghostwriter.getByText(/inspect rewrite/i)).toBeVisible();
-    await expect(ghostwriter.locator('video')).not.toHaveAttribute('poster', /.+/);
+    await expect(ghostwriter.locator('[data-media-stage]')).toHaveAttribute(
+      'data-poster-visible',
+      /true|false/
+    );
     await expect(ghostwriter.locator('video')).toHaveAttribute('muted', '');
     await expect(ghostwriter.locator('video')).toHaveAttribute('playsinline', '');
     await expect(creature.getByRole('link', { name: /Creature App/i })).toBeVisible();
+    await expect(creature.locator('picture')).toHaveCount(1);
+    await expect(creature.locator('img')).toHaveAttribute('width', '1440');
+    await expect(creature.locator('img')).toHaveAttribute('height', '900');
     await expect(mirrorAi.getByRole('link', { name: /Mirror AI/i })).toBeVisible();
 
     const cameraBox = await camera.boundingBox();
@@ -83,37 +125,86 @@ test.describe('media-first portfolio', () => {
     expect(publicImages.join(' ')).not.toContain('movement-confirmation');
   });
 
-  test('all project films load, autoplay, and loop without hover', async ({ page }) => {
-    await page.goto('/#work');
+  test('project films attach only near the viewport, play when visible, and pause off-screen', async ({
+    page
+  }) => {
+    const videoRequests: string[] = [];
+    page.on('request', (request) => {
+      if (/\.(webm|mp4)(?:\?|$)/i.test(request.url())) videoRequests.push(request.url());
+    });
 
-    const ghostwriterVideo = page.locator('[data-project-tile="ghostwriter"] video');
-    const mirrorAiVideo = page.locator('[data-project-tile="mirror-ai"] video');
-    const cameraVideo = page.locator('[data-project-tile="camera-harness"] video');
+    await page.goto('/');
 
-    await expect(cameraVideo).toHaveAttribute('data-autoplay-visible', 'true');
-    await expect(ghostwriterVideo).toHaveAttribute('data-autoplay-visible', 'true');
-    await expect(mirrorAiVideo).toHaveAttribute('data-autoplay-visible', 'true');
+    const mirrorTile = page.locator('[data-project-tile="mirror-ai"]');
+    const mirrorVideo = mirrorTile.locator('video');
+    await expect(mirrorVideo.locator('source')).toHaveCount(0);
+    await expect(mirrorTile.locator('[data-media-stage]')).toHaveAttribute(
+      'data-poster-visible',
+      'true'
+    );
+    expect(videoRequests.some((url) => url.includes('mirror-ai-preview'))).toBe(false);
 
-    for (const video of [cameraVideo, ghostwriterVideo, mirrorAiVideo]) {
-      await expect(video).toHaveAttribute('autoplay', '');
-      await expect(video).toHaveAttribute('loop', '');
-      await expect(video.locator('source').first()).toBeAttached();
-      await expect
-        .poll(() => video.evaluate((element) => (element as HTMLVideoElement).paused))
-        .toBe(false);
+    await mirrorTile.scrollIntoViewIfNeeded();
+    await expect(mirrorVideo.locator('source').first()).toHaveAttribute(
+      'src',
+      '/media/v1/home/mirror-ai-preview.webm'
+    );
+    await expect(mirrorVideo).toHaveAttribute('loop', '');
+    await expect(mirrorVideo).toHaveAttribute('muted', '');
+    await expect(mirrorVideo).toHaveAttribute('playsinline', '');
+    await expect.poll(() => mirrorVideo.getAttribute('data-video-active')).toBe('true');
+
+    await page.locator('#top').scrollIntoViewIfNeeded();
+    await expect.poll(() => mirrorVideo.getAttribute('data-video-active')).toBe('false');
+    await expect(mirrorVideo.locator('source')).toHaveCount(2);
+  });
+
+  test('Save-Data keeps every project film on its static poster', async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, 'connection', {
+        configurable: true,
+        get: () => ({
+          saveData: true,
+          addEventListener() {},
+          removeEventListener() {}
+        })
+      });
+    });
+    const videoRequests: string[] = [];
+    page.on('request', (request) => {
+      if (/\.(webm|mp4)(?:\?|$)/i.test(request.url())) videoRequests.push(request.url());
+    });
+
+    await page.goto('/');
+    await page.locator('[data-project-tile="mirror-ai"]').scrollIntoViewIfNeeded();
+
+    for (const video of await page.locator('[data-video-loop]').all()) {
+      await expect(video).toHaveAttribute('data-save-data', 'true');
+      await expect(video.locator('source')).toHaveCount(0);
     }
+    expect(videoRequests).toEqual([]);
+  });
 
-    await page.getByRole('heading', { name: 'Selected work' }).hover();
-    await expect
-      .poll(() =>
-        page
-          .locator('[data-project-tile] video')
-          .evaluateAll(
-            (videos) =>
-              videos.filter((video) => !(video as HTMLVideoElement).paused).length
-          )
-      )
-      .toBe(3);
+  test('a missing Network Information API and rejected play promise stay error-free', async ({
+    page
+  }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, 'connection', {
+        configurable: true,
+        get: () => undefined
+      });
+      HTMLMediaElement.prototype.play = () => Promise.reject(new Error('autoplay denied'));
+    });
+    const pageErrors: Error[] = [];
+    page.on('pageerror', (error) => pageErrors.push(error));
+
+    await page.goto('/');
+    const mirrorVideo = page.locator('[data-project-tile="mirror-ai"] video');
+    await page.locator('[data-project-tile="mirror-ai"]').scrollIntoViewIfNeeded();
+    await expect(mirrorVideo.locator('source')).toHaveCount(2);
+    await expect(mirrorVideo).toHaveAttribute('data-save-data', 'false');
+    await expect(mirrorVideo).toHaveAttribute('data-play-rejected', 'true');
+    expect(pageErrors).toEqual([]);
   });
 
   test('mobile homepage keeps work and navigation readable without overflow', async ({ page }) => {
@@ -146,11 +237,12 @@ test.describe('media-first portfolio', () => {
     await expect(camera.locator('.tile-meta span').nth(1)).toBeHidden();
     const ghostwriter = page.locator('[data-project-tile="ghostwriter"]');
     await expect(ghostwriter).toBeVisible();
-    await expect(ghostwriter.locator('video')).toHaveAttribute('data-mobile-poster', 'false');
-    await expect(ghostwriter.locator('video source').first()).toBeAttached();
+    await expect(ghostwriter.locator('[data-media-stage] .poster picture')).toHaveCount(1);
+    const cameraVideo = camera.locator('video');
+    await expect(cameraVideo.locator('source').first()).toBeAttached();
     await expect
       .poll(() =>
-        ghostwriter.locator('video').evaluate((video) => (video as HTMLVideoElement).paused)
+        cameraVideo.evaluate((video) => (video as HTMLVideoElement).paused)
       )
       .toBe(false);
     await expectNoHorizontalOverflow(page);
@@ -292,11 +384,11 @@ test.describe('media-first portfolio', () => {
     const firstStoryPicture = page.locator('.hackathon-grid picture').first();
     await expect(firstStoryPicture.locator('source[type="image/avif"]')).toHaveAttribute(
       'srcset',
-      /presentation-room-640\.avif 640w, .*presentation-room-1024\.avif 1024w/
+      /\/media\/v1\/story\/presentation-room-640\.avif 640w, .*presentation-room-1024\.avif 1024w/
     );
     await expect(firstStoryPicture.locator('source[type="image/webp"]')).toHaveAttribute(
       'srcset',
-      /presentation-room-640\.webp 640w, .*presentation-room-1024\.webp 1024w/
+      /\/media\/v1\/story\/presentation-room-640\.webp 640w, .*presentation-room-1024\.webp 1024w/
     );
     await expect(firstStoryPicture.locator('img')).toHaveAttribute('loading', 'eager');
     await expect(page.locator('.hackathon-grid img').nth(1)).toHaveAttribute('loading', 'lazy');
@@ -319,7 +411,7 @@ test.describe('media-first portfolio', () => {
     await expect(page.getByRole('heading', { name: /work moved closer to cameras/i })).toBeVisible();
   });
 
-  test('reduced motion keeps a featured video frame visible without autoplay', async ({ page }) => {
+  test('reduced motion keeps optimized posters visible without loading video', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     const videoRequests: string[] = [];
     page.on('request', (request) => {
@@ -328,20 +420,21 @@ test.describe('media-first portfolio', () => {
 
     await page.goto('/');
     await page.locator('#work').scrollIntoViewIfNeeded();
-    await page.locator('[data-project-tile="camera-harness"]').hover();
+    await page.locator('[data-project-tile="mirror-ai"]').scrollIntoViewIfNeeded();
 
     const cameraVideo = page.locator('[data-project-tile="camera-harness"] video');
     const ghostwriterVideo = page.locator('[data-project-tile="ghostwriter"] video');
-    await expect(cameraVideo).toBeVisible();
-    await expect(cameraVideo.locator('source')).toHaveAttribute(
-      'src',
-      '/projects/camera-harness/book-recognition-loop-1080.m4v'
-    );
+    await expect(cameraVideo).toBeAttached();
+    await expect(cameraVideo.locator('source')).toHaveCount(0);
+    await expect(cameraVideo).toHaveAttribute('data-reduced-motion', 'true');
     await expect(cameraVideo).toHaveAttribute('data-video-active', 'false');
-    await expect(ghostwriterVideo).toBeVisible();
-    await expect(ghostwriterVideo.locator('source').first()).toBeAttached();
+    await expect(ghostwriterVideo).toBeAttached();
+    await expect(ghostwriterVideo.locator('source')).toHaveCount(0);
     await expect(ghostwriterVideo).toHaveAttribute('data-video-active', 'false');
-    expect(videoRequests.some((url) => url.endsWith('book-recognition-loop-1080.m4v'))).toBe(true);
+    await expect(
+      page.locator('[data-project-tile="camera-harness"] [data-media-stage]')
+    ).toHaveAttribute('data-poster-visible', 'true');
+    expect(videoRequests).toEqual([]);
 
     const transform = await cameraVideo.evaluate((video) => getComputedStyle(video).transform);
     expect(transform).toBe('none');

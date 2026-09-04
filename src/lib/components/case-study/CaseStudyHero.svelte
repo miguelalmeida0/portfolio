@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { CaseStudy } from '$lib/content/case-studies';
   import { getApprovedMedia } from '$lib/content/project-media';
+  import ResponsivePicture from '$lib/components/media/ResponsivePicture.svelte';
   import ProjectLinks from './ProjectLinks.svelte';
 
   export let study: CaseStudy;
@@ -24,13 +25,18 @@
 
   {#if heroMedia}
     <figure class="hero-visual">
-      <img
-        src={heroMedia.src}
+      <ResponsivePicture
+        fallbackSrc={heroMedia.src}
         alt={heroMedia.alt}
-        width="2108"
-        height="902"
+        width={heroMedia.responsive?.width ?? 2108}
+        height={heroMedia.responsive?.height ?? 902}
+        avifSrcset={heroMedia.responsive?.avifSrcset}
+        webpSrcset={heroMedia.responsive?.webpSrcset}
+        sizes={heroMedia.responsive?.sizes ?? '100vw'}
+        loading="eager"
         fetchpriority="high"
-        decoding="async"
+        layout="intrinsic"
+        objectPosition="center top"
       />
       <figcaption>
         <div>
@@ -140,7 +146,7 @@
     background: #0a0a0a;
   }
 
-  .hero-visual img {
+  .hero-visual :global(img) {
     display: block;
     width: 100%;
     height: auto;

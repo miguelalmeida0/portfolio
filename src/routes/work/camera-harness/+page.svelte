@@ -11,6 +11,7 @@
   import SystemComparison from '$lib/components/case-study/SystemComparison.svelte';
   import TestInterpretationTable from '$lib/components/case-study/TestInterpretationTable.svelte';
   import SiteHeader from '$lib/components/revamp/SiteHeader.svelte';
+  import ResponsivePicture from '$lib/components/media/ResponsivePicture.svelte';
   import { getCaseStudy } from '$lib/content/case-studies';
   import { getApprovedMedia } from '$lib/content/project-media';
 
@@ -409,13 +410,17 @@
         {#if item.media}
           <figure>
             <div class="recorded-state-frame">
-              <img
-                src={item.media.src}
+              <ResponsivePicture
+                fallbackSrc={item.media.src}
                 alt={item.media.alt}
-                width="2100"
-                height="910"
+                width={item.media.responsive?.width ?? 2100}
+                height={item.media.responsive?.height ?? 910}
+                avifSrcset={item.media.responsive?.avifSrcset}
+                webpSrcset={item.media.responsive?.webpSrcset}
+                sizes={item.media.responsive?.sizes ?? '100vw'}
                 loading="lazy"
-                decoding="async"
+                fetchpriority="auto"
+                objectPosition="center top"
               />
             </div>
             <figcaption>{item.caption}</figcaption>
@@ -907,7 +912,7 @@
     background: #090909;
   }
 
-  .recorded-state-grid img {
+  .recorded-state-grid :global(img) {
     display: block;
     max-width: 100%;
     width: 100%;
