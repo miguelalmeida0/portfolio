@@ -18,6 +18,8 @@
     "e2e:ui": "mkdir -p .cache/tmp && TMPDIR=$PWD/.cache/tmp playwright test --ui",
     "preview": "npm run build && npm run start",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:performance": "node scripts/check-performance-budget.mjs",
+    "media:generate": "node scripts/generate-media-variants.mjs",
     "start": "wrangler pages dev .svelte-kit/cloudflare --ip 127.0.0.1 --port 4173 --log-level error --show-interactive-dev-session=false"
   },
   "devDependencies": {

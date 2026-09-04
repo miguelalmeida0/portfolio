@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ResponsivePicture from '$lib/components/media/ResponsivePicture.svelte';
   import type { ProjectMedia as ProjectMediaType } from '$lib/content/project-media';
   import VideoLoop from './VideoLoop.svelte';
 
@@ -18,19 +19,24 @@
   {#if media.webm || media.mp4}
     <VideoLoop
       alt={media.alt}
+      poster={media.poster}
+      posterSources={media.posterSources}
       webm={media.webm}
       mp4={media.mp4}
       {featured}
     />
   {:else}
-    <img
-      src={media.poster}
+    <ResponsivePicture
+      fallbackSrc={media.poster}
       alt={media.alt}
-      width="1440"
-      height="900"
+      width={media.posterSources?.width ?? 1440}
+      height={media.posterSources?.height ?? 900}
+      avifSrcset={media.posterSources?.avifSrcset}
+      webpSrcset={media.posterSources?.webpSrcset}
+      sizes={media.posterSources?.sizes ?? '100vw'}
       loading={featured ? 'eager' : 'lazy'}
       fetchpriority={featured ? 'high' : 'auto'}
-      decoding="async"
+      fit="contain"
     />
   {/if}
 </div>
@@ -45,20 +51,16 @@
     background: #0b0b0b;
   }
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: var(--focal-x) var(--focal-y);
+  :global(.project-media > picture img) {
     transition: filter 220ms ease;
   }
 
-  .active img {
+  .active :global(picture img) {
     filter: brightness(0.94);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    img {
+    :global(.project-media > picture img) {
       transition: none;
     }
   }

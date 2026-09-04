@@ -1,4 +1,11 @@
 <script lang="ts">
+  import ResponsivePicture from '$lib/components/media/ResponsivePicture.svelte';
+
+  const responsiveSources = (name: string) => ({
+    avifSrcset: `/media/v1/case-study/${name}-640.avif 640w, /media/v1/case-study/${name}-1024.avif 1024w, /media/v1/case-study/${name}-1440.avif 1440w`,
+    webpSrcset: `/media/v1/case-study/${name}-640.webp 640w, /media/v1/case-study/${name}-1024.webp 1024w, /media/v1/case-study/${name}-1440.webp 1440w`
+  });
+
   const captures = [
     {
       id: 'current-camera-off',
@@ -10,7 +17,8 @@
       width: 1440,
       height: 900,
       objectPosition: 'center top',
-      alt: 'Current Camera Harness interface with the camera off and readiness controls visible.'
+      alt: 'Current Camera Harness interface with the camera off and readiness controls visible.',
+      ...responsiveSources('camera-harness-current')
     },
     {
       id: 'historical-sensefield',
@@ -22,7 +30,8 @@
       width: 1440,
       height: 900,
       objectPosition: 'center top',
-      alt: 'Historical Sensefield interface with the camera off and no raw media stored label visible.'
+      alt: 'Historical Sensefield interface with the camera off and no raw media stored label visible.',
+      ...responsiveSources('camera-harness-historical')
     }
   ];
 
@@ -50,14 +59,17 @@
 
   <div class="capture-stage">
     {#key activeCapture.id}
-      <img
-        src={activeCapture.src}
+      <ResponsivePicture
+        fallbackSrc={activeCapture.src}
         alt={activeCapture.alt}
         width={activeCapture.width}
         height={activeCapture.height}
-        style={`object-position: ${activeCapture.objectPosition}`}
+        avifSrcset={activeCapture.avifSrcset}
+        webpSrcset={activeCapture.webpSrcset}
+        sizes="(max-width: 760px) calc(100vw - 2.5rem), 52rem"
         loading="lazy"
-        decoding="async"
+        fetchpriority="auto"
+        objectPosition={activeCapture.objectPosition}
       />
     {/key}
   </div>
@@ -153,7 +165,7 @@
     background: #0a0a0a;
   }
 
-  .capture-stage img {
+  .capture-stage :global(img) {
     display: block;
     width: 100%;
     height: 100%;
@@ -225,7 +237,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .capture-stage img {
+    .capture-stage :global(img) {
       animation: none;
     }
   }
