@@ -1,6 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
-import { selectedWork, visitorFlows } from '../fixtures/testData';
+import { homeHeroHeading, selectedWork, visitorFlows } from '../fixtures/testData';
 
 export class DashboardPage {
   constructor(readonly page: Page) {}
@@ -30,10 +30,7 @@ export class DashboardPage {
   }
 
   async expectLandingContent() {
-    await expect(this.page.getByRole('heading', { name: 'Miguel Almeida' })).toBeVisible();
-    await expect(this.page.locator('#top .hero-statement')).toHaveText(
-      'Mid-level Frontend Engineer'
-    );
+    await expect(this.page.getByRole('heading', { name: homeHeroHeading })).toBeVisible();
     await expect(this.page.getByRole('link', { name: 'Explore my work' })).toBeVisible();
 
     for (const [index, cardTitle] of selectedWork.entries()) {

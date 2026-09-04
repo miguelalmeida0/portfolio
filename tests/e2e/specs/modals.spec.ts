@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { routes } from '../fixtures/testData';
+import { homeHeroHeading, routes } from '../fixtures/testData';
 import { expectFocusable } from '../utils/assertions';
 import { gotoReady } from '../utils/waitForAppReady';
 
@@ -31,7 +31,7 @@ test.describe('MiguelLLM dialog behavior', () => {
 
   test('contact presets open the same dialog without navigating away', async ({ page }) => {
     await gotoReady(page, routes.home);
-    await page.getByRole('button', { name: 'Interview questions' }).click();
+    await page.getByRole('button', { name: 'Interview prep' }).click();
 
     await expect(page).toHaveURL(/\/$/);
     await expect(page.getByRole('dialog', { name: 'MiguelLLM' })).toBeVisible();
@@ -42,7 +42,7 @@ test.describe('MiguelLLM dialog behavior', () => {
     await gotoReady(page, routes.home);
 
     await expect(page.getByTestId('intro-overlay')).toHaveCount(0);
-    await expect(page.getByRole('heading', { name: 'Miguel Almeida' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: homeHeroHeading })).toBeVisible();
     await expect(page.locator('[data-project-tile="camera-harness"]')).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.style.overflow)).toBe('');
   });

@@ -59,7 +59,11 @@ test.describe('portfolio overview', () => {
 
     test('mobile header contact control reaches the contact section', async ({ page }) => {
       await gotoReady(page, routes.home);
-      await page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'Contact' }).click();
+      await page.getByRole('button', { name: 'Open navigation menu' }).click();
+      await page
+        .getByRole('navigation', { name: 'Mobile primary' })
+        .getByRole('link', { name: 'Contact' })
+        .click();
       await expect(page).toHaveURL(/\/#contact$/);
       await expectSectionNearTop(page, '#contact');
       await expect(page.getByRole('heading', { name: 'Want the practical version?' })).toBeVisible();
