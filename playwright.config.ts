@@ -36,7 +36,7 @@ export default defineConfig({
   },
   webServer: shouldStartWebServer
     ? {
-        command: `npm run build && HOST=127.0.0.1 PORT=${PORT} node build`,
+        command: `npm run build && wrangler pages dev .svelte-kit/cloudflare --ip 127.0.0.1 --port ${PORT} --log-level error --show-interactive-dev-session=false`,
         url: BASE_URL,
         reuseExistingServer: !isCi,
         timeout: 120_000,

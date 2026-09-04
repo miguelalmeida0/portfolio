@@ -19,8 +19,7 @@ export const tokens = {
       'pointer-events-none absolute -left-28 top-0 h-[34rem] w-[34rem] rounded-full bg-[radial-gradient(circle,rgba(161,195,218,0.28)_0,transparent_66%)] blur-3xl',
     curtainRight:
       'pointer-events-none absolute right-[-7rem] top-20 h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(circle,rgba(49,118,154,0.22)_0,transparent_65%)] blur-3xl',
-    photoWash:
-      "pointer-events-none absolute inset-0 bg-[url('/ui-water-texture.jpg')] bg-cover bg-center opacity-[0.42] mix-blend-screen saturate-[0.94] [mask-image:linear-gradient(180deg,rgba(0,0,0,0.18)_0%,rgba(0,0,0,0.44)_8%,#000_22%,#000_100%)]",
+    photoWash: 'pointer-events-none absolute inset-0',
     photoVeil:
       'pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(13,23,33,0.16)_0%,rgba(14,26,36,0.08)_36%,rgba(9,18,26,0.05)_100%)]',
     paperGlow:

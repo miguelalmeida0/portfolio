@@ -26,6 +26,8 @@ export interface ExperienceTeaserItem {
   years: string;
   role: string;
   company: string;
+  responsibility?: string;
+  proof?: string[];
 }
 
 export interface ConversationCta extends MetaLink {

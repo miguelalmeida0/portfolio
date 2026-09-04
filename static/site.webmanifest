@@ -1,0 +1,17 @@
+{
+  "name": "Miguel Almeida / Frontend Engineer",
+  "short_name": "Miguel Almeida",
+  "description": "Frontend engineer building product UI, browser architecture, reliability, and evidence-driven multimodal interfaces.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#23211f",
+  "theme_color": "#23211f",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

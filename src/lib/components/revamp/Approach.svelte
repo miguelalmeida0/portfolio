@@ -4,21 +4,27 @@
   const steps = [
     {
       n: '1',
-      title: 'Build',
-      body: 'Turn product intent into precise, accessible UI that holds up in real workflows.',
+      title: 'Reusable UI',
+      body: 'I extract patterns after the product proves them, then turn repeated states into predictable components.',
       tone: 'card'
     },
     {
       n: '2',
-      title: 'Scale',
-      body: 'Shape patterns, naming and reuse so a team can move faster without making the interface noisier.',
+      title: 'Production care',
+      body: 'I check responsive behavior, empty paths, focus states, loading states, and layout edge cases before calling UI done.',
       tone: 'ink'
     },
     {
       n: '3',
-      title: 'Collaborate',
-      body: 'Work close to design and product, share early, and keep the important details visible.',
+      title: 'Design collaboration',
+      body: 'I translate design intent into components without flattening the taste, and I keep implementation tradeoffs visible early.',
       tone: 'accent'
+    },
+    {
+      n: '4',
+      title: 'Calm systems',
+      body: 'I prefer clear state, predictable interactions, and boring reliability for products people need to trust.',
+      tone: 'card'
     }
   ] as const;
 </script>
@@ -29,11 +35,11 @@
       <RevealHeading
         className="font-display text-[clamp(2rem,7vw,5rem)] leading-[0.95] tracking-tight"
       >
-        How I <em class="not-italic text-accent">work.</em>
+        How I <em class="not-italic text-accent">build.</em>
       </RevealHeading>
     </div>
 
-    <div class="grid gap-2.5 md:grid-cols-3 md:gap-3">
+    <div class="grid gap-2.5 md:grid-cols-2 md:gap-3 xl:grid-cols-4">
       {#each steps as step}
         <div
           class={`flex min-h-0 flex-col rounded-[1.35rem] p-5 sm:p-6 md:min-h-[230px] md:justify-between md:rounded-2xl md:p-7 lg:min-h-[250px] lg:p-8 ${

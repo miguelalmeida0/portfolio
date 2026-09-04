@@ -31,14 +31,16 @@
 
   .portrait-frame {
     position: absolute;
-    inset-inline: 0;
+    left: 50%;
+    right: auto;
     top: clamp(4.35rem, 5.4svh, 5.6rem);
     width: min(100vw, 90.7rem);
     aspect-ratio: 1451 / 1086;
-    margin-inline: auto;
+    margin-inline: 0;
     overflow: hidden;
     contain: layout paint;
     background: #000;
+    transform: translateX(-50%);
   }
 
   .portrait-image {
@@ -64,7 +66,7 @@
     .portrait-frame {
       top: clamp(12.1rem, 20svh, 13.2rem);
       width: 128vw;
-      transform: translateX(-1vw);
+      transform: translateX(-50%);
     }
   }
 
@@ -72,7 +74,7 @@
     .portrait-frame {
       top: clamp(12.4rem, 24svh, 13.35rem);
       width: 152vw;
-      transform: translateX(-1.5vw);
+      transform: translateX(-50%);
     }
   }
 </style>

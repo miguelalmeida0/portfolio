@@ -8,27 +8,31 @@
   },
   "scripts": {
     "dev": "vite dev --host 127.0.0.1 --port 3010 --strictPort",
+    "prepare": "svelte-kit sync",
     "build": "vite build",
+    "lint": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "e2e": "mkdir -p .cache/tmp .cache/ms-playwright && TMPDIR=$PWD/.cache/tmp PLAYWRIGHT_BROWSERS_PATH=$PWD/.cache/ms-playwright playwright test",
     "e2e:against-server": "mkdir -p .cache/tmp .cache/ms-playwright && TMPDIR=$PWD/.cache/tmp PLAYWRIGHT_BROWSERS_PATH=$PWD/.cache/ms-playwright PLAYWRIGHT_SKIP_WEB_SERVER=1 playwright test",
     "e2e:install": "mkdir -p .cache/tmp .cache/ms-playwright && TMPDIR=$PWD/.cache/tmp PLAYWRIGHT_BROWSERS_PATH=$PWD/.cache/ms-playwright playwright install chromium",
     "e2e:report": "playwright show-report",
     "e2e:ui": "mkdir -p .cache/tmp && TMPDIR=$PWD/.cache/tmp playwright test --ui",
-    "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.json",
-    "start": "node build"
+    "preview": "npm run build && npm run start",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "start": "wrangler pages dev .svelte-kit/cloudflare --ip 127.0.0.1 --port 4173 --log-level error --show-interactive-dev-session=false"
   },
   "devDependencies": {
+    "@lucide/svelte": "^1.28.0",
     "@playwright/test": "^1.61.1",
-    "@sveltejs/adapter-node": "^5.2.12",
-    "@sveltejs/kit": "^2.37.1",
-    "@sveltejs/vite-plugin-svelte": "^6.2.1",
+    "@sveltejs/adapter-cloudflare": "^7.2.9",
+    "@sveltejs/kit": "^2.70.3",
+    "@sveltejs/vite-plugin-svelte": "^7.3.0",
     "@tailwindcss/vite": "^4.1.13",
     "@types/node": "^24.3.1",
-    "svelte": "^5.38.7",
-    "svelte-check": "^4.3.1",
+    "svelte": "^5.57.0",
+    "svelte-check": "^4.7.6",
     "tailwindcss": "^4.1.13",
     "typescript": "^5.8.3",
-    "vite": "^7.1.4"
+    "vite": "^8.2.2",
+    "wrangler": "^4.129.0"
   }
 }

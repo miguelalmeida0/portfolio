@@ -22,7 +22,7 @@ export class DashboardPage {
   }
 
   selectedWorkCard(index: number): Locator {
-    return this.page.getByTestId(`selected-work-card-${index}`);
+    return this.page.locator('[data-project-tile]').nth(index);
   }
 
   visitorOption(option: keyof typeof visitorFlows): Locator {
@@ -30,10 +30,11 @@ export class DashboardPage {
   }
 
   async expectLandingContent() {
-    await expect(this.page.getByText('Berlin-based Frontend Engineer')).toBeVisible();
-    await expect(this.page.getByAltText('Miguel Almeida in red studio light against a black background')).toBeVisible();
-    await expect(this.page.getByText('3+')).toBeVisible();
-    await expect(this.page.getByText('1000s')).toBeVisible();
+    await expect(this.page.getByRole('heading', { name: 'Miguel Almeida' })).toBeVisible();
+    await expect(this.page.locator('#top .hero-statement')).toHaveText(
+      'Mid-level Frontend Engineer'
+    );
+    await expect(this.page.getByRole('link', { name: 'Explore my work' })).toBeVisible();
 
     for (const [index, cardTitle] of selectedWork.entries()) {
       await expect(this.selectedWorkCard(index)).toContainText(cardTitle);

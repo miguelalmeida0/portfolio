@@ -2,52 +2,48 @@ import { expect, test } from '@playwright/test';
 
 import { routes } from '../fixtures/testData';
 import { expectFocusable } from '../utils/assertions';
-import { waitForAppReady } from '../utils/waitForAppReady';
+import { gotoReady } from '../utils/waitForAppReady';
 
-test.describe('intro overlay modal behavior', () => {
-  test('first-visit intro locks scroll and can be dismissed with a pointer', async ({ page }) => {
-    await page.goto(routes.home);
+test.describe('MiguelLLM dialog behavior', () => {
+  test('hero trigger opens the dialog and Escape restores focus', async ({ page }) => {
+    await gotoReady(page, routes.home);
+    const trigger = page.getByRole('button', { name: /Ask MiguelLLM/i }).first();
 
-    const intro = page.getByTestId('intro-overlay');
-    await expect(intro).toBeVisible();
-    expect(await page.evaluate(() => document.documentElement.style.overflow)).toBe('hidden');
-
-    await intro.click();
-    await expect(intro).toBeHidden();
-    expect(await page.evaluate(() => window.sessionStorage.getItem('intro-seen-2026'))).toBe('1');
-    expect(await page.evaluate(() => document.cookie)).toContain('intro-seen-2026=1');
-    expect(await page.evaluate(() => document.documentElement.style.overflow)).toBe('');
+    await trigger.click();
+    const dialog = page.getByRole('dialog', { name: 'MiguelLLM' });
+    await expect(dialog).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(dialog).toBeHidden();
+    await expect(trigger).toBeFocused();
   });
 
-  test('intro overlay is keyboard dismissible', async ({ page }) => {
-    await page.goto(routes.story);
+  test('dialog is keyboard reachable and preset questions return evidence links', async ({ page }) => {
+    await gotoReady(page, routes.home);
+    const trigger = page.getByRole('button', { name: /Ask MiguelLLM/i }).first();
+    await expectFocusable(trigger);
+    await page.keyboard.press('Enter');
 
-    const intro = page.getByTestId('intro-overlay');
-    await expect(intro).toBeVisible();
-    await expectFocusable(intro);
-    await intro.press('Enter');
-    await expect(intro).toBeHidden();
+    const dialog = page.getByRole('dialog', { name: 'MiguelLLM' });
+    await dialog.getByRole('button', { name: /strongest technical project/i }).click();
+    await expect(dialog.getByText(/Camera Harness/i).last()).toBeVisible();
+    await expect(dialog.getByRole('link').first()).toBeVisible();
   });
 
-  test('reduced-motion visitors bypass the intro and land directly on content', async ({ page }) => {
+  test('contact presets open the same dialog without navigating away', async ({ page }) => {
+    await gotoReady(page, routes.home);
+    await page.getByRole('button', { name: 'Interview questions' }).click();
+
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.getByRole('dialog', { name: 'MiguelLLM' })).toBeVisible();
+  });
+
+  test('reduced-motion visitors land directly on complete content', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
+    await gotoReady(page, routes.home);
 
-    await page.goto(routes.home);
-    await waitForAppReady(page);
-
-    await expect(page.getByTestId('intro-overlay')).toBeHidden();
-    await expect(page.getByRole('heading', { name: /Frontend Engineer/i })).toBeVisible();
-    expect(await page.evaluate(() => window.sessionStorage.getItem('intro-seen-2026'))).toBe('1');
-  });
-
-  test('dismissed intro does not trap focus away from the live page', async ({ page }) => {
-    await page.goto(routes.home);
-
-    const intro = page.getByTestId('intro-overlay');
-    await expect(intro).toBeVisible();
-    await intro.click();
-    await expect(intro).toBeHidden();
-
-    await expectFocusable(page.getByTestId('theme-toggle'));
+    await expect(page.getByTestId('intro-overlay')).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: 'Miguel Almeida' })).toBeVisible();
+    await expect(page.locator('[data-project-tile="camera-harness"]')).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.style.overflow)).toBe('');
   });
 });
