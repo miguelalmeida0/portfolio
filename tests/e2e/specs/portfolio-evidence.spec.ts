@@ -287,6 +287,26 @@ test.describe('media-first portfolio', () => {
       4
     );
     await expect(page.locator('.hackathon-grid img')).toHaveCount(6);
+    await expect(page.locator('.hackathon-grid picture')).toHaveCount(6);
+
+    const firstStoryPicture = page.locator('.hackathon-grid picture').first();
+    await expect(firstStoryPicture.locator('source[type="image/avif"]')).toHaveAttribute(
+      'srcset',
+      /presentation-room-640\.avif 640w, .*presentation-room-1024\.avif 1024w/
+    );
+    await expect(firstStoryPicture.locator('source[type="image/webp"]')).toHaveAttribute(
+      'srcset',
+      /presentation-room-640\.webp 640w, .*presentation-room-1024\.webp 1024w/
+    );
+    await expect(firstStoryPicture.locator('img')).toHaveAttribute('loading', 'eager');
+    await expect(page.locator('.hackathon-grid img').nth(1)).toHaveAttribute('loading', 'lazy');
+    await expect
+      .poll(() =>
+        firstStoryPicture
+          .locator('img')
+          .evaluate((image) => (image as HTMLImageElement).currentSrc)
+      )
+      .toMatch(/presentation-room-(640|1024)\.(avif|webp)$/);
 
     await page.setViewportSize({ width: 390, height: 844 });
     await page.reload();
