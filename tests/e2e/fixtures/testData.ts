@@ -6,6 +6,9 @@ export const site = {
   cal: 'https://cal.com/miguel-almeida'
 } as const;
 
+export const homeHeroHeading =
+  'I’m Miguel, a frontend engineer building multimodal and computer-vision systems.';
+
 export const routes = {
   home: '/',
   story: '/story',

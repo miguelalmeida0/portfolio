@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { routes, site } from '../fixtures/testData';
+import { homeHeroHeading, routes, site } from '../fixtures/testData';
 import { expectHtmlSecurityHeaders, expectLinkTarget } from '../utils/assertions';
 import { blockPopups, getWindowOpenCalls, mockClipboard } from '../utils/mockApi';
 import { gotoReady } from '../utils/waitForAppReady';
@@ -16,7 +16,7 @@ test.describe('error and fallback states', () => {
 
     await page.getByRole('link', { name: 'Return home' }).click();
     await expect(page).toHaveURL(/\/$/);
-    await expect(page.getByRole('heading', { name: 'Miguel Almeida' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: homeHeroHeading })).toBeVisible();
   });
 
   test('copy-email failure exposes retry and manual-copy guidance', async ({ page }) => {

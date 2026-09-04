@@ -1,6 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 
-import { primaryNavigation } from '../fixtures/testData';
+import { homeHeroHeading, primaryNavigation } from '../fixtures/testData';
 import { expectIntroHidden, gotoReady } from '../utils/waitForAppReady';
 
 export class AppPage {
@@ -28,7 +28,7 @@ export class AppPage {
 
   async expectHomeReady() {
     await expect(this.page).toHaveTitle(/Miguel Almeida/);
-    await expect(this.page.getByRole('heading', { name: 'Miguel Almeida' })).toBeVisible();
+    await expect(this.page.getByRole('heading', { name: homeHeroHeading })).toBeVisible();
     await expect(this.header).toBeVisible();
     await expectIntroHidden(this.page);
   }
