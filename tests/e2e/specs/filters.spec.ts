@@ -1,56 +1,54 @@
 import { expect, test } from '@playwright/test';
 
-import { routes, selectedWork, visitorFlows, visitorInputError } from '../fixtures/testData';
+import { routes, selectedWork } from '../fixtures/testData';
 import { gotoReady } from '../utils/waitForAppReady';
-import { DashboardPage } from '../pages/DashboardPage';
 
-test.describe('filters and selectable states', () => {
-  test('work catalogue has no hidden filter controls and shows every work card by default', async ({ page }) => {
+test.describe('selectable evidence states', () => {
+  test('homepage has no hidden catalogue filters and shows the complete curated wall', async ({
+    page
+  }) => {
     await gotoReady(page, routes.home);
-
-    const dashboard = new DashboardPage(page);
 
     await expect(page.getByRole('combobox')).toHaveCount(0);
     await expect(page.getByRole('checkbox')).toHaveCount(0);
     await expect(page.getByRole('radio')).toHaveCount(0);
-    await expect(page.getByRole('tab')).toHaveCount(0);
-    await expect(page.getByRole('switch')).toHaveCount(0);
-
-    for (const [index, title] of selectedWork.entries()) {
-      await expect(dashboard.selectedWorkCard(index)).toContainText(title);
-    }
+    await expect(page.locator('[data-project-tile]')).toHaveCount(selectedWork.length);
   });
 
-  test('visitor option selection behaves as an audience filter while preserving all choices', async ({ page }) => {
-    await gotoReady(page, routes.home);
+  test('architecture state tabs preserve explicit status boundaries', async ({ page }) => {
+    await page.goto('/work/camera-harness#runtime-architecture');
+    const architecture = page.locator(
+      '[aria-label="Camera Harness architecture states"]'
+    );
 
-    const dashboard = new DashboardPage(page);
-    await dashboard.chooseVisitor('lost');
-    await dashboard.expectVisitorFlow('lost');
+    await architecture.getByRole('tab', { name: 'Historical' }).click();
+    await expect(architecture).toHaveAttribute('data-architecture-mode', 'historical');
+    await expect(architecture.getByText(/not active in the current product/i)).toBeVisible();
 
-    for (const key of Object.keys(visitorFlows) as Array<keyof typeof visitorFlows>) {
-      await expect(dashboard.visitorOption(key)).toBeVisible();
-    }
-
-    await dashboard.resetVisitorFlowButton.click();
-    await expect(dashboard.visitorFlow).toBeHidden();
+    await architecture.getByRole('tab', { name: 'Proposed' }).click();
+    await expect(architecture).toHaveAttribute('data-architecture-mode', 'proposed');
+    await expect(architecture.getByText(/not currently implemented/i)).toBeVisible();
   });
 
-  test('visitor text filter normalizes punctuation and maps aliases correctly', async ({ page }) => {
-    await gotoReady(page, routes.home);
+  test('Ask comparison switches between visible implication and actual evidence flow', async ({
+    page
+  }) => {
+    await page.goto('/work/camera-harness#ask-provenance');
+    const comparison = page.locator(
+      '.system-comparison[aria-label="Ask evidence continuity comparison"]'
+    );
 
-    const dashboard = new DashboardPage(page);
-    await dashboard.submitVisitorInput('  hiring!!! ');
-    await dashboard.expectVisitorFlow('recruiter');
+    await comparison.getByRole('tab', { name: /What currently happens/i }).click();
+    await expect(comparison).toHaveAttribute('data-comparison-active', 'actual');
+    await expect(comparison.getByText(/No shared immutable evidence ID/i)).toBeVisible();
   });
 
-  test('empty filter input returns a validation state instead of selecting a flow', async ({ page }) => {
-    await gotoReady(page, routes.home);
+  test('test-evidence tabs expose what a result does and does not establish', async ({ page }) => {
+    await page.goto('/work/camera-harness#testing');
+    const evidence = page.getByRole('region', { name: 'Evidence interpretation explorer' });
 
-    const dashboard = new DashboardPage(page);
-    await dashboard.visitorInput.press('Enter');
-
-    await expect(dashboard.visitorHelp).toHaveText(visitorInputError);
-    await expect(dashboard.visitorFlow).toBeHidden();
+    await evidence.getByRole('tab', { name: /Visual snapshot/i }).click();
+    await expect(evidence.getByText('One deterministic UI state')).toBeVisible();
+    await expect(evidence.getByText('Current live behavior')).toBeVisible();
   });
 });

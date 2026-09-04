@@ -1,295 +1,320 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+
+  import MiguelLLMDrawer from '$lib/components/miguel-llm/MiguelLLMDrawer.svelte';
+  import type { MiguelLLMMode } from '$lib/miguel-llm/types';
   import HeroPortrait from './HeroPortrait.svelte';
+
+  let drawerOpen = false;
+  let drawerMode: MiguelLLMMode = 'recruiter';
+
+  const openMiguelLLM = () => {
+    drawerMode = 'recruiter';
+    drawerOpen = true;
+  };
+
+  onMount(() => {
+    const handleOpen = (event: Event) => {
+      const detail = (event as CustomEvent<{ mode?: MiguelLLMMode }>).detail;
+      drawerMode = detail?.mode ?? 'recruiter';
+      drawerOpen = true;
+    };
+
+    window.addEventListener('miguel-llm:open', handleOpen as EventListener);
+    return () => window.removeEventListener('miguel-llm:open', handleOpen as EventListener);
+  });
 </script>
 
-<section id="top" class="hero-section" aria-labelledby="hero-title">
-  <div class="hero-stage">
+<section id="top" class="portrait-hero" aria-labelledby="hero-title">
+  <div class="portrait-stage">
     <HeroPortrait />
 
-    <div class="hero-context" aria-label="Portfolio summary">
-      <p class="hero-kicker">Berlin / Remote</p>
-      <p class="hero-positioning">
-        Product UI. Reusable systems.
-      </p>
-      <p class="hero-proof">
-        <span>TypeScript</span>
-        <span>Svelte</span>
-        <span>React</span>
-        <span>Design Systems</span>
-        <span>F24</span>
-      </p>
-      <div class="hero-actions" aria-label="Primary action">
-        <a href="#work" class="hero-action hero-action-primary">View work</a>
+    <div class="hero-content">
+      <h1 id="hero-title">
+        I’m Miguel, a frontend engineer building multimodal and computer-vision systems.
+      </h1>
+      <div class="hero-actions" aria-label="Primary portfolio actions">
+        <a class="primary" href="#work">Explore my work</a>
+        <a href="/cv">View résumé</a>
+        <button type="button" on:click={openMiguelLLM}>
+          <span aria-hidden="true">✦</span>
+          Ask MiguelLLM
+        </button>
       </div>
     </div>
 
-    <div class="hero-title-lockup">
-      <h1 id="hero-title" aria-label="Miguel Almeida">
-        <span class="title-row title-first" aria-hidden="true">Miguel</span>
-        <span class="title-row title-last" aria-hidden="true">
-          Almeida
-        </span>
-      </h1>
-
-      <p class="hero-role">Mid-level frontend engineer</p>
+    <div class="work-tease" aria-label="Featured work begins below">
+      <a href="/work/camera-harness"><span>01</span>Camera Harness</a>
+      <a href="/work/atlas"><span>02</span>Atlas</a>
+      <a href="/work/ghostwriter"><span>03</span>Ghostwriter</a>
     </div>
   </div>
 </section>
 
+<MiguelLLMDrawer bind:open={drawerOpen} bind:mode={drawerMode} />
+
 <style>
-  .hero-section {
-    --hero-bg: #000;
-    --hero-cream: #f4eadc;
-    --hero-red: #e91f2d;
-
+  .portrait-hero,
+  .portrait-stage {
     position: relative;
-    min-height: 100svh;
-    overflow: hidden;
-    background: var(--hero-bg);
-    color: var(--hero-cream);
-    isolation: isolate;
+    min-height: clamp(44rem, 100svh, 56rem);
+    overflow: clip;
+    background: #000;
+    color: #f4eadc;
   }
 
-  .hero-stage {
-    position: relative;
-    display: grid;
-    place-items: center;
-    min-height: 100svh;
-    background: var(--hero-bg);
+  .portrait-stage :global(.hero-portrait) {
+    z-index: 1;
   }
 
-  .hero-context {
+  .portrait-stage :global(.portrait-frame) {
+    top: clamp(3.5rem, 5.5svh, 4.75rem);
+    width: min(84vw, 78rem);
+  }
+
+  @media (min-width: 981px) {
+    .portrait-stage {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(28rem, 1.1fr);
+      grid-template-rows: minmax(0, 1fr) auto;
+    }
+
+    .portrait-stage :global(.hero-portrait) {
+      position: relative;
+      inset: auto;
+      grid-column: 2;
+      grid-row: 1;
+      min-width: 0;
+    }
+
+    .portrait-stage :global(.portrait-frame) {
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      transform: none;
+    }
+
+    .portrait-stage :global(.portrait-image) {
+      object-fit: cover;
+      object-position: center bottom;
+    }
+
+    .portrait-stage > .hero-content {
+      position: relative;
+      top: auto;
+      left: auto;
+      grid-column: 1;
+      grid-row: 1;
+      align-self: center;
+      width: auto;
+      min-width: 0;
+      margin: clamp(3rem, 8svh, 5.5rem) max(1.5rem, 2.5vw) 0 max(1.5rem, 4vw);
+    }
+
+    .portrait-stage > .work-tease {
+      position: relative;
+      inset: auto;
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+  }
+
+  .hero-content {
     position: absolute;
-    left: clamp(1.25rem, 4vw, 4.5rem);
-    top: clamp(7.4rem, 17svh, 10.5rem);
-    z-index: 4;
+    top: clamp(5.25rem, 10svh, 7.75rem);
+    left: max(clamp(1.25rem, 4vw, 4rem), env(safe-area-inset-left));
+    z-index: 8;
     display: grid;
-    gap: clamp(0.9rem, 1.6vw, 1.2rem);
-    max-width: min(35rem, 42vw);
-    color: var(--hero-cream);
+    width: min(35rem, calc(100vw - 2.5rem));
+    gap: 0.7rem;
   }
 
-  .hero-kicker,
-  .hero-proof {
+  h1 {
     margin: 0;
-    font-family: var(--font-mono);
-    font-size: clamp(0.64rem, 0.72vw, 0.78rem);
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    line-height: 1.4;
-    text-transform: uppercase;
   }
 
-  .hero-kicker {
-    color: rgb(244 234 220 / 0.74);
-  }
-
-  .hero-positioning {
-    margin: 0;
-    max-width: 33rem;
-    color: var(--hero-cream);
-    font-family: var(--font-mori);
-    font-size: clamp(1.08rem, 1.8vw, 1.65rem);
-    font-weight: 700;
-    line-height: 1.16;
-  }
-
-  .hero-proof {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.44rem 0.72rem;
-    color: rgb(244 234 220 / 0.68);
-    letter-spacing: 0.12em;
-  }
-
-  .hero-proof span {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.72rem;
-  }
-
-  .hero-proof span:not(:last-child)::after {
-    content: '/';
-    color: rgb(244 234 220 / 0.28);
+  h1 {
+    max-width: 34rem;
+    font-family: var(--font-serif);
+    font-size: clamp(2.2rem, 2.75vw, 2.9rem);
+    font-weight: 430;
+    letter-spacing: -0.02em;
+    line-height: 1.02;
   }
 
   .hero-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.7rem;
-    pointer-events: auto;
+    gap: 0.55rem;
+    margin-top: 0.4rem;
   }
 
-  .hero-action {
+  .hero-actions a,
+  .hero-actions button {
     display: inline-flex;
-    min-height: 2.75rem;
+    min-height: 2.5rem;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgb(244 234 220 / 0.32);
+    gap: 0.4rem;
+    border: 1px solid rgb(244 234 220 / 0.28);
     border-radius: 999px;
-    background: rgb(0 0 0 / 0.48);
-    padding: 0 1rem;
-    color: var(--hero-cream);
+    background: rgb(0 0 0 / 0.4);
+    padding: 0.52rem 0.86rem;
+    color: #f4eadc;
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 850;
+    line-height: 1;
+  }
+
+  .hero-actions .primary {
+    background: #f4eadc;
+    color: #050505;
+  }
+
+  .hero-actions a:hover,
+  .hero-actions a:focus-visible,
+  .hero-actions button:hover,
+  .hero-actions button:focus-visible {
+    border-color: var(--accent);
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  .work-tease {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    min-height: 3.65rem;
+    align-items: stretch;
+    border-block: 1px solid rgb(244 234 220 / 0.18);
+    background: rgb(0 0 0 / 0.74);
+    backdrop-filter: blur(12px);
+  }
+
+  .work-tease a {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    border-right: 1px solid rgb(244 234 220 / 0.15);
+    padding: 0.72rem clamp(0.72rem, 1.8vw, 1.4rem);
+    color: rgb(244 234 220 / 0.76);
+    font-size: clamp(0.7rem, 0.86vw, 0.82rem);
+    font-weight: 760;
+  }
+
+  .work-tease a:hover,
+  .work-tease a:focus-visible {
+    background: rgb(244 234 220 / 0.08);
+    color: var(--foreground);
+    outline: none;
+  }
+
+  .work-tease a:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--ring);
+  }
+
+  .work-tease span {
+    color: var(--accent);
     font-family: var(--font-mono);
     font-size: 0.68rem;
-    font-weight: 800;
-    letter-spacing: 0.14em;
-    line-height: 1;
-    text-transform: uppercase;
-    transition:
-      background-color 180ms var(--interaction-ease),
-      border-color 180ms var(--interaction-ease),
-      color 180ms var(--interaction-ease),
-      transform 180ms var(--interaction-ease);
   }
 
-  .hero-action:hover,
-  .hero-action:focus-visible {
-    border-color: var(--hero-cream);
-    background: var(--hero-cream);
-    color: var(--hero-bg);
-    outline: none;
-    transform: translate3d(0, -1px, 0);
-  }
+  @media (max-width: 980px) {
+    .portrait-hero,
+    .portrait-stage {
+      min-height: max(48rem, 100svh);
+    }
 
-  .hero-action:focus-visible {
-    box-shadow:
-      0 0 0 2px var(--hero-bg),
-      0 0 0 4px rgb(244 234 220 / 0.7);
-  }
+    .portrait-stage {
+      display: grid;
+      grid-template-rows: auto minmax(24rem, 1fr) auto;
+    }
 
-  .hero-action-primary {
-    border-color: var(--hero-cream);
-    background: var(--hero-cream);
-    color: var(--hero-bg);
-  }
+    .portrait-stage :global(.hero-portrait) {
+      position: relative;
+      inset: auto;
+      grid-row: 2;
+      min-height: 24rem;
+    }
 
-  .hero-title-lockup {
-    position: absolute;
-    left: 50%;
-    bottom: clamp(1.35rem, 4svh, 3rem);
-    z-index: 3;
-    display: grid;
-    justify-items: center;
-    gap: clamp(0.5rem, 1svh, 0.8rem);
-    width: min(92vw, 72rem);
-    text-align: center;
-    transform: translateX(-50%);
-    pointer-events: none;
-  }
+    .hero-content {
+      position: relative;
+      top: auto;
+      left: auto;
+      grid-row: 1;
+      width: min(35rem, calc(100vw - 2rem));
+      margin: 4.75rem 1rem 1rem;
+    }
 
-  h1 {
-    margin: 0;
-    display: grid;
-    gap: clamp(0.06em, 0.9svh, 0.12em);
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', var(--font-mori), sans-serif;
-    font-size: clamp(4.75rem, min(10.5vw, 18svh), 11rem);
-    font-weight: 900;
-    line-height: 0.66;
-    letter-spacing: 0;
-    text-transform: uppercase;
-  }
-
-  .title-row {
-    display: block;
-    white-space: nowrap;
-  }
-
-  .title-first {
-    color: var(--hero-cream);
-  }
-
-  .title-last {
-    color: var(--hero-red);
-  }
-
-  .hero-role {
-    margin: 0;
-    padding: 0.62rem clamp(1rem, 1.6vw, 1.45rem);
-    border: 1px solid rgb(244 234 220 / 0.34);
-    border-radius: 100px;
-    background: rgb(0 0 0 / 0.42);
-    color: var(--hero-cream);
-    font-family: var(--font-mori);
-    font-size: clamp(0.72rem, min(0.8vw, 1.65svh), 0.92rem);
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    backdrop-filter: blur(10px);
-  }
-
-  @media (max-width: 900px) {
-    .hero-context {
-      left: 50%;
-      top: clamp(5.8rem, 9.4svh, 7.2rem);
-      justify-items: center;
-      width: min(90vw, 36rem);
+    .portrait-stage :global(.portrait-frame) {
+      top: 0;
+      width: auto;
+      height: 100%;
       max-width: none;
-      text-align: center;
-      transform: translateX(-50%);
     }
 
-    .hero-positioning {
-      max-width: 34rem;
-      font-size: clamp(1rem, 3.1vw, 1.35rem);
+    .work-tease {
+      position: relative;
+      inset: auto;
+      grid-row: 3;
     }
+  }
 
-    .hero-proof,
-    .hero-actions {
-      justify-content: center;
-    }
-
-    .hero-title-lockup {
-      bottom: clamp(1.45rem, 4.2svh, 2.6rem);
-      width: min(92vw, 36rem);
+  @media (max-width: 760px) {
+    .hero-content {
+      gap: 0.5rem;
     }
 
     h1 {
-      font-size: clamp(3.35rem, min(14vw, 13svh), 5.7rem);
-      gap: 0.06em;
-      line-height: 0.8;
+      font-size: clamp(2rem, 7.2vw, 2.35rem);
+      line-height: 1.02;
     }
 
-    .hero-role {
-      padding: 0.6rem 0.95rem;
-      font-size: clamp(0.68rem, 2.6vw, 0.82rem);
-      letter-spacing: 0.12em;
-    }
-  }
-
-  @media (max-width: 420px) {
-    .hero-context {
-      top: clamp(5.95rem, 9svh, 6.45rem);
-      gap: 0.58rem;
-      width: min(92vw, 23rem);
+    .hero-actions {
+      gap: 0.42rem;
     }
 
-    .hero-kicker {
-      font-size: 0.58rem;
-      letter-spacing: 0.13em;
+    .hero-actions a,
+    .hero-actions button {
+      min-height: 2.45rem;
+      padding-inline: 0.68rem;
+      font-size: 0.74rem;
     }
 
-    .hero-positioning {
-      font-size: 0.94rem;
-      line-height: 1.22;
+    .work-tease {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      min-height: 3.25rem;
     }
 
-    .hero-proof {
+    .work-tease a {
+      justify-content: center;
+      padding: 0.58rem 0.25rem;
+      font-size: 0.64rem;
+    }
+
+    .work-tease span {
       display: none;
     }
+  }
 
-    .hero-action {
-      min-height: 2.42rem;
-      padding-inline: 0.78rem;
-      font-size: 0.58rem;
-      letter-spacing: 0.1em;
+  @media (max-width: 390px) {
+    .hero-content {
+      margin-top: 4.4rem;
     }
 
     h1 {
-      font-size: clamp(2.95rem, 15vw, 4rem);
-      gap: 0.04em;
-      line-height: 0.84;
+      font-size: clamp(1.75rem, 7.5vw, 2rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .work-tease {
+      backdrop-filter: none;
     }
   }
 </style>

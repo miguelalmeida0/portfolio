@@ -1,21 +1,26 @@
 import { expect, test } from '@playwright/test';
 
 import { routes, site } from '../fixtures/testData';
-import { expectFocusable, expectLinkTarget, expectNoHorizontalOverflow } from '../utils/assertions';
+import {
+  expectFocusable,
+  expectLinkTarget,
+  expectNoHorizontalOverflow
+} from '../utils/assertions';
 import { gotoReady } from '../utils/waitForAppReady';
-import { AppPage } from '../pages/AppPage';
-import { DashboardPage } from '../pages/DashboardPage';
 
 test.describe('accessibility and keyboard smoke checks', () => {
-  test('home page exposes clear landmarks, navigation labels, and accessible controls', async ({ page }) => {
+  test('home exposes clear landmarks, navigation, and accessible controls', async ({ page }) => {
     await gotoReady(page, routes.home);
 
     await expect(page.getByRole('main')).toHaveCount(1);
     await expect(page.getByRole('banner')).toBeVisible();
     await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Switch to light mode' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Copy email address to clipboard' }).first()).toBeVisible();
-    await expect(page.getByAltText('Miguel Almeida in red studio light against a black background')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Explore my work' })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Ask MiguelLLM/i })).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: 'Copy email address to clipboard' }).first()
+    ).toBeVisible();
+    await expect(page.getByLabel('Portrait of Miguel Almeida')).toBeVisible();
   });
 
   for (const route of [routes.home, routes.story, routes.cv, routes.missing]) {
@@ -30,14 +35,9 @@ test.describe('accessibility and keyboard smoke checks', () => {
               element.getAttribute('title') ??
               element.textContent ??
               '';
-
             return name.trim()
               ? null
-              : {
-                  index,
-                  tag: element.tagName.toLowerCase(),
-                  html: element.outerHTML.slice(0, 140)
-                };
+              : { index, tag: element.tagName.toLowerCase(), html: element.outerHTML.slice(0, 140) };
           })
           .filter(Boolean)
       );
@@ -46,24 +46,34 @@ test.describe('accessibility and keyboard smoke checks', () => {
     });
   }
 
-  test('keyboard can operate the theme toggle, visitor input, and reset control', async ({ page }) => {
+  test('keyboard reaches the hero, project wall, and architecture explorer', async ({ page }) => {
     await gotoReady(page, routes.home);
 
-    const app = new AppPage(page);
-    const dashboard = new DashboardPage(page);
-
-    await expectFocusable(app.themeToggle);
+    const workCta = page.getByRole('link', { name: 'Explore my work' });
+    await expectFocusable(workCta);
     await page.keyboard.press('Enter');
-    await expect(app.themeToggle).toHaveAccessibleName('Switch to dark mode');
+    await expect(page).toHaveURL(/#work$/);
 
-    await expectFocusable(dashboard.visitorInput);
-    await dashboard.visitorInput.fill('lost');
-    await page.keyboard.press('Enter');
-    await dashboard.expectVisitorFlow('lost');
+    const camera = page
+      .locator('[data-project-tile="camera-harness"]')
+      .getByRole('link', { name: /Camera Harness/i });
+    await expectFocusable(camera);
 
-    await expectFocusable(dashboard.resetVisitorFlowButton);
-    await page.keyboard.press('Enter');
-    await expect(dashboard.visitorFlow).toBeHidden();
+    await page.goto('/work/camera-harness#runtime-architecture');
+    const architecture = page.locator(
+      '[aria-label="Camera Harness architecture states"]'
+    );
+    const current = architecture.getByRole('tab', { name: 'Current' });
+    await expectFocusable(current);
+    await page.keyboard.press('ArrowRight');
+    await expect(current).toBeFocused();
+
+    const firstNode = architecture.getByRole('button', { name: /Camera browser/i });
+    await expectFocusable(firstNode);
+    await page.keyboard.press('ArrowRight');
+    await expect(
+      architecture.getByRole('heading', { name: 'Browser lifecycle' })
+    ).toBeVisible();
   });
 
   test.describe('mobile accessibility layout', () => {
@@ -77,18 +87,15 @@ test.describe('accessibility and keyboard smoke checks', () => {
     }
   });
 
-  test('external links communicate new-tab behavior with target and rel', async ({ page }) => {
+  test('external contact links communicate new-tab behavior', async ({ page }) => {
     await gotoReady(page, routes.home);
-
-    await page.getByTestId('visitor-option-recruiter').click();
-    await expectLinkTarget(page.getByRole('link', { name: 'Book 15 min' }), {
-      href: site.cal,
-      target: '_blank',
-      relIncludes: 'noopener'
-    });
 
     await expectLinkTarget(page.getByRole('link', { name: /\/in\/miguelalmeida1/i }), {
       href: site.linkedin,
+      target: '_blank',
+      relIncludes: 'noopener'
+    });
+    await expectLinkTarget(page.getByRole('link', { name: /\/miguelalmeida0/i }), {
       target: '_blank',
       relIncludes: 'noopener'
     });

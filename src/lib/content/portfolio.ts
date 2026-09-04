@@ -23,8 +23,8 @@ export const portfolio: PortfolioContent = {
     location: 'Berlin, Germany',
     availability: '2022 to Present',
     journalMark: "est. 2026",
-    portraitSrc: '/miguel-almeida-neon.jpg',
-    portraitAlt: 'Portrait of Miguel Almeida standing beneath red neon lights.',
+    portraitSrc: '/miguel-almeida-portrait.png',
+    portraitAlt: 'Portrait of Miguel Almeida.',
     linkedinHref: 'https://www.linkedin.com/in/miguelalmeida1/',
     primaryCta: {
       label: 'View the work',

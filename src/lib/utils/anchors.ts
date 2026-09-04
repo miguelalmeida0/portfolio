@@ -55,5 +55,4 @@ export const scrollToHash = (hash: string, offset = 96, duration = 180): void =>
 
   const y = target.getBoundingClientRect().top + window.scrollY - offset;
   smoothScrollTo(y, duration);
-  history.replaceState(null, '', hash);
 };

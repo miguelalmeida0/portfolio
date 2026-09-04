@@ -28,7 +28,7 @@ export class AppPage {
 
   async expectHomeReady() {
     await expect(this.page).toHaveTitle(/Miguel Almeida/);
-    await expect(this.page.getByRole('heading', { name: /Frontend Engineer/i })).toBeVisible();
+    await expect(this.page.getByRole('heading', { name: 'Miguel Almeida' })).toBeVisible();
     await expect(this.header).toBeVisible();
     await expectIntroHidden(this.page);
   }

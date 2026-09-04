@@ -16,6 +16,7 @@ export const site = {
   email: 'miguelalmeida1592@gmail.com',
   phone: '+351 918 500 305',
   linkedin: 'https://www.linkedin.com/in/miguelalmeida1/',
+  github: 'https://github.com/miguelalmeida0',
   cal: 'https://cal.com/miguel-almeida',
   temperatureC: 12,
   tagline: 'Made by hand, in Berlin.'
@@ -29,12 +30,11 @@ export const navigation: MetaLink[] = [
 ];
 
 export const hero: HeroContent = {
-  subtitle: 'SOFTWARE ENGINEER · FRONTEND · BERLIN',
-  intro:
-    'Aviation, then UX, then code. I build calm interfaces for products people actually depend on — currently at F24, where I have helped grow a frontend surface from empty files into something teams can trust.',
+  subtitle: 'MID-LEVEL FRONTEND ENGINEER',
+  intro: 'Mid-level Frontend Engineer',
   primaryCta: {
-    label: 'See selected work',
-    href: '#work'
+    label: 'Read Camera Harness',
+    href: '/work/camera-harness'
   },
   secondaryCta: {
     label: 'Read the resume',
@@ -103,24 +103,32 @@ export const approach: ApproachItem[] = [
 
 export const experienceTeaser: ExperienceTeaserItem[] = [
   {
-    years: '2026 — now',
-    role: 'Software Engineer (Mid-level)',
-    company: 'F24'
+    years: '2020–2021',
+    role: 'UX Design Institute',
+    company: '',
+    responsibility: '',
+    proof: []
   },
   {
-    years: '2023 — 2025',
-    role: 'Frontend Engineer · Product Lead Frontend',
-    company: 'F24'
+    years: '2021',
+    role: 'Freelance Frontend Engineer',
+    company: '',
+    responsibility: '',
+    proof: []
   },
   {
-    years: '2022 — 2023',
-    role: 'Frontend Engineer',
-    company: 'F24'
+    years: '2022',
+    role: 'Junior Frontend Engineer',
+    company: '',
+    responsibility: '',
+    proof: []
   },
   {
-    years: '2021 — 2022',
-    role: 'Freelance Frontend Developer',
-    company: 'Independent'
+    years: '2026',
+    role: 'Mid-level Frontend Engineer',
+    company: '',
+    responsibility: '',
+    proof: []
   }
 ];
 
@@ -199,7 +207,7 @@ export const conversationFlows: ConversationFlow[] = [
 ];
 
 export const cvBio =
-  'Frontend engineer building interfaces that feel composed, reliable, and easy to trust. I pair product thinking with design-system care, and I like shipping hard things with a steady hand.';
+  'Frontend engineer working across product UI, design systems, browser architecture, reliability, and experimental multimodal interfaces. I pair visual judgment with explicit state, lifecycle, and evidence boundaries.';
 
 export const cvContactPills: MetaLink[] = [
   {
@@ -238,22 +246,25 @@ export const cvHighlights = [
 export const cvExperience: CvExperienceEntry[] = [
   {
     years: '2026 — now',
-    role: 'Software Engineer (Mid-level)',
+    role: 'Software Engineer',
     company: 'F24',
     location: 'Berlin',
     bullets: [
       'Owning more of the design-system layer and shared frontend architecture.',
-      'Shipping new product features with a stronger eye on reliability and UI consistency.'
+      'Shipping product workflows with explicit loading, error, responsive, and recovery states.',
+      'Working across product, design, backend, and QA without exposing confidential implementation details.'
     ]
   },
   {
     years: '2023 — 2025',
-    role: 'Frontend Engineer · Product Lead Frontend',
+    role: 'Frontend Engineer · Frontend delivery lead',
     company: 'F24',
     location: 'Berlin',
     bullets: [
-      'Helped lead the frontend of a product from an empty file to active use across global teams.',
-      'Worked closely with design and product to turn wireframes into durable product UI.'
+      'Led frontend delivery for a product area from early wireframes through production implementation.',
+      'Coordinated product-UI work across design, product, backend, and QA.',
+      'Helped implement the company’s first AI product during an internal F24 hackathon.',
+      'Established reusable patterns for repeated operational workflows.'
     ]
   },
   {
@@ -301,14 +312,14 @@ export const cvStack = [
 
 export const cvEducation: CvEducationEntry[] = [
   {
+    year: '2020 — 2021',
+    title: 'Professional Diploma in UX Design',
+    place: 'UX Design Institute · awarded 30 Aug 2021'
+  },
+  {
     year: '2021',
     title: 'Full-Stack Web Development',
     place: 'CareerFoundry'
-  },
-  {
-    year: '2020',
-    title: 'Professional Diploma — UX Design',
-    place: 'UX Design Institute'
   }
 ];
 
@@ -319,7 +330,7 @@ export const cvLanguages = [
 ];
 
 export const cvCta =
-  'Mid-level frontend/product UI engineer for hard products where craft and reliability matter.';
+  'Frontend engineer for hard products where product judgment, reliability, and interface craft matter.';
 
 export const storyChapters: StoryChapter[] = [
   {

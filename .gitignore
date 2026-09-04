@@ -3,5 +3,11 @@ node_modules
 build
 .DS_Store
 .cache
+.tmp
+.wrangler
 playwright-report
 test-results
+docs/private-media-review/
+.env
+.env.*
+!.env.example

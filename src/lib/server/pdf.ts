@@ -1,4 +1,5 @@
-import { portfolio } from '$lib/content/portfolio';
+import { caseStudies } from '$lib/content/case-studies';
+import { cvBio, cvEducation, cvExperience, cvLanguages, cvStack, site } from '$lib/content/folio';
 
 interface PdfLine {
   text: string;
@@ -72,108 +73,84 @@ const buildPageOne = (): string => {
     drawText({
       text: 'Miguel Almeida',
       x: 56,
-      y: 688,
+      y: 708,
       size: 31,
       font: 'F2'
     }),
     drawText({
-      text: 'Frontend Journal',
+      text: 'Frontend Engineer - Product UI & Design Systems',
       x: 56,
-      y: 657,
-      size: 18,
+      y: 678,
+      size: 15,
       font: 'F3',
       color: [0.898, 0.822, 0.661]
     })
   );
 
-  let summaryY = 618;
-  for (const line of wrapText(portfolio.site.summary, 74)) {
-    commands.push(drawText({ text: line, x: 56, y: summaryY, size: 13 }));
+  let summaryY = 642;
+  for (const line of wrapText(cvBio, 82)) {
+    commands.push(drawText({ text: line, x: 56, y: summaryY, size: 11.5 }));
     summaryY -= 18;
   }
 
   commands.push(
     drawText({
-      text: `${portfolio.site.location}  |  ${portfolio.site.availability}`,
+      text: `Berlin, Germany  |  ${site.email}  |  github.com/miguelalmeida0`,
       x: 56,
-      y: 565,
-      size: 11,
+      y: 590,
+      size: 9.5,
       color: [0.859, 0.788, 0.675]
     }),
     drawText({
-      text: 'Selected Work',
+      text: 'Professional Diploma in UX Design | UX Design Institute | 2020-2021',
       x: 56,
-      y: 520,
+      y: 570,
+      size: 9.5,
+      font: 'F2',
+      color: [0.898, 0.822, 0.661]
+    }),
+    drawText({
+      text: 'Professional Experience',
+      x: 56,
+      y: 536,
       size: 17,
       font: 'F2'
     })
   );
 
-  let projectY = 490;
-  for (const project of portfolio.featuredProjects) {
+  let roleY = 504;
+  for (const item of cvExperience.slice(0, 4)) {
     commands.push(
       drawText({
-        text: `${project.number}  ${project.title} ${project.titleItalic}`,
+        text: `${item.years}  ${item.role}`,
         x: 56,
-        y: projectY,
-        size: 13,
+        y: roleY,
+        size: 12,
         font: 'F2'
       }),
       drawText({
-        text: project.period,
-        x: 420,
-        y: projectY,
-        size: 10,
+        text: `${item.company} · ${item.location}`,
+        x: 56,
+        y: roleY - 16,
+        size: 9.5,
         color: [0.859, 0.788, 0.675]
       })
     );
 
-    projectY -= 18;
+    roleY -= 34;
 
-    for (const line of wrapText(project.summary, 78)) {
-      commands.push(drawText({ text: line, x: 56, y: projectY, size: 11.5 }));
-      projectY -= 16;
+    for (const bullet of item.bullets.slice(0, 3)) {
+      for (const line of wrapText(`• ${bullet}`, 83)) {
+        commands.push(drawText({ text: line, x: 66, y: roleY, size: 10.25 }));
+        roleY -= 14;
+      }
     }
-
-    commands.push(
-      drawText({
-        text: project.tags.join('  ·  '),
-        x: 56,
-        y: projectY,
-        size: 10,
-        color: [0.847, 0.756, 0.620]
-      })
-    );
-
-    projectY -= 34;
+    roleY -= 18;
   }
 
   commands.push(
     drawText({
-      text: 'At a Glance',
-      x: 56,
-      y: 254,
-      size: 17,
-      font: 'F2'
-    })
-  );
-
-  let statY = 224;
-  for (const stat of portfolio.site.stats) {
-    commands.push(
-      drawText({
-        text: `${stat.value}  ${stat.label} — ${stat.note}`,
-        x: 56,
-        y: statY,
-        size: 12
-      })
-    );
-    statY -= 20;
-  }
-
-  commands.push(
-    drawText({
-      text: 'Generated from the live portfolio on request.',
+      text: 'Generated from the same content source as the web resume.',
       x: 56,
       y: 72,
       size: 10,
@@ -189,7 +166,7 @@ const buildPageTwo = (): string => {
 
   commands.push(
     drawText({
-      text: 'How I Work',
+      text: 'Selected Engineering Work',
       x: 56,
       y: 688,
       size: 22,
@@ -197,94 +174,89 @@ const buildPageTwo = (): string => {
     })
   );
 
-  let indexY = 652;
-  for (const entry of portfolio.indexEntries) {
+  let projectY = 648;
+  for (const project of caseStudies) {
     commands.push(
       drawText({
-        text: `${entry.numeral}. ${entry.title}`,
+        text: project.title,
         x: 56,
-        y: indexY,
+        y: projectY,
         size: 13,
         font: 'F2'
       })
     );
-    indexY -= 18;
+    projectY -= 18;
 
-    for (const line of wrapText(entry.body, 78)) {
-      commands.push(drawText({ text: line, x: 56, y: indexY, size: 11.5 }));
-      indexY -= 16;
+    for (const line of wrapText(project.thesis, 78)) {
+      commands.push(drawText({ text: line, x: 56, y: projectY, size: 11.25 }));
+      projectY -= 15;
     }
 
     commands.push(
       drawText({
-        text: entry.chips.join('  ·  '),
+        text: project.technicalSignal,
         x: 56,
-        y: indexY,
-        size: 10,
+        y: projectY,
+        size: 9.25,
         color: [0.847, 0.756, 0.620]
       })
     );
-    indexY -= 28;
+    projectY -= 34;
   }
 
   commands.push(
     drawText({
-      text: 'Chronicle',
+      text: 'Technical Focus',
       x: 56,
-      y: 402,
-      size: 22,
+      y: 364,
+      size: 18,
+      font: 'F2'
+    }),
+      drawText({
+        text: [...cvStack, 'Browser media APIs', 'Async lifecycle ownership', 'Applied AI interfaces'].join('  ·  '),
+        x: 56,
+        y: 334,
+        size: 9.5,
+        color: [0.859, 0.788, 0.675]
+      })
+  );
+
+  commands.push(
+    drawText({
+      text: 'Education',
+      x: 56,
+      y: 282,
+      size: 18,
       font: 'F2'
     })
   );
 
-  let roleY = 366;
-  for (const item of portfolio.experience) {
+  let educationY = 252;
+  for (const item of cvEducation) {
     commands.push(
       drawText({
-        text: `${item.year}  ${item.title}`,
+        text: `${item.year}  ${item.title} · ${item.place}`,
         x: 56,
-        y: roleY,
-        size: 13,
-        font: 'F2'
-      }),
-      drawText({
-        text: `${item.company} · ${item.place}`,
-        x: 56,
-        y: roleY - 18,
-        size: 10.5,
-        color: [0.859, 0.788, 0.675]
+        y: educationY,
+        size: 10.5
       })
     );
-    roleY -= 40;
-
-    for (const line of wrapText(item.body, 78)) {
-      commands.push(drawText({ text: line, x: 56, y: roleY, size: 11.5 }));
-      roleY -= 16;
-    }
-
-    roleY -= 18;
+    educationY -= 20;
   }
 
   commands.push(
     drawText({
-      text: 'Contact',
+      text: `Languages  ·  ${cvLanguages.join('  ·  ')}`,
       x: 56,
-      y: 174,
-      size: 22,
-      font: 'F2'
-    }),
-    drawText({
-      text: portfolio.contact.summary,
-      x: 56,
-      y: 142,
-      size: 11.5
-    }),
-    drawText({
-      text: `${portfolio.contact.location} · Email miguelalmeida1592@gmail.com`,
-      x: 56,
-      y: 106,
+      y: 170,
       size: 10.5,
       color: [0.859, 0.788, 0.675]
+    }),
+    drawText({
+      text: `Contact  ·  ${site.email}  ·  ${site.linkedin}`,
+      x: 56,
+      y: 126,
+      size: 9.5
     })
   );
 

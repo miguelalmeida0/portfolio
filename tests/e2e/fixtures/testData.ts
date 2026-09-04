@@ -17,16 +17,16 @@ export const routes = {
 
 export const primaryNavigation = [
   { label: 'Work', href: '#work' },
-  { label: 'Approach', href: '#approach' },
   { label: 'Story', href: '/story' },
   { label: 'CV', href: '/cv' },
   { label: 'Contact', href: '#contact' }
 ] as const;
 
 export const selectedWork = [
-  'Tiny Invite',
-  'Toikien',
-  'Tickerbase'
+  'Camera Harness',
+  'Ghostwriter',
+  'Creature App',
+  'Mirror AI'
 ] as const;
 
 export const visitorFlows = {
@@ -59,6 +59,12 @@ export const visitorFlows = {
 
 export const visitorInputError = 'Try recruiter, collaborator, curious, lost, or 1-4.';
 
-export const cvSections = ['Profile', 'Contact', 'Status', 'Languages', 'Experience', 'Stack', 'Education', 'Figures'] as const;
+export const cvSections = [
+  'Experience',
+  'Selected engineering work',
+  'Technical focus',
+  'Education',
+  'Languages'
+] as const;
 
-export const storyChapters = ['Before', '2020', '2021', '2022', '2023 — 2025', '2026'] as const;
+export const storyChapters = ['Aviation', 'UX + code', 'Designer', 'Builder'] as const;
