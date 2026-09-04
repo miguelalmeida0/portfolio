@@ -11,14 +11,18 @@ const expectNoHorizontalOverflow = async (page: import('@playwright/test').Page)
 
 test.describe('media-first portfolio', () => {
   test('hero prioritizes work and moves into the living project wall', async ({ page }) => {
+    await page.setViewportSize({ width: 2560, height: 1440 });
     await page.goto('/');
 
     const hero = page.locator('#top');
+    const portrait = hero.getByLabel('Portrait of Miguel Almeida').locator('img');
     await expect(
       hero.getByRole('heading', {
         name: 'I’m Miguel, a frontend engineer building multimodal and computer-vision systems.'
       })
     ).toBeVisible();
+    await expect(portrait).toHaveCSS('object-fit', 'contain');
+    await expect(portrait).toHaveCSS('object-position', '50% 100%');
     await expect(hero.getByRole('link', { name: 'Explore my work' })).toBeVisible();
     await expect(hero.getByRole('link', { name: 'View résumé' })).toBeVisible();
     await expect(hero.getByRole('button', { name: /Ask MiguelLLM/i })).toBeVisible();

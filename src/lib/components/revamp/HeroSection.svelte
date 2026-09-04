@@ -97,7 +97,7 @@
     }
 
     .portrait-stage :global(.portrait-image) {
-      object-fit: cover;
+      object-fit: contain;
       object-position: center bottom;
     }
 
