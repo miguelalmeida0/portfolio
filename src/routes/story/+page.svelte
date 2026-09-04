@@ -51,6 +51,14 @@
   ]
     .map(([mediaId, caption]) => ({ media: getApprovedMedia(mediaId), caption }))
     .filter((item) => item.media);
+
+  const hackathonImageSizes =
+    '(max-width: 680px) calc(100vw - 2.5rem), (max-width: 900px) calc(50vw - 2rem), 32rem';
+
+  const getResponsiveSources = (src: string, format: 'avif' | 'webp') => {
+    const base = src.replace(/\.[^/.]+$/, '');
+    return `${base}-640.${format} 640w, ${base}-1024.${format} 1024w`;
+  };
 </script>
 
 <svelte:head>
@@ -75,15 +83,28 @@
         {#if item.media}
           <figure>
             <div class="image-frame">
-              <img
-                src={item.media.src}
-                alt={item.media.alt}
-                width="1600"
-                height="1000"
-                loading={index < 3 ? 'eager' : 'lazy'}
-                fetchpriority={index === 0 ? 'high' : 'auto'}
-                decoding="async"
-              />
+              <picture>
+                <source
+                  type="image/avif"
+                  srcset={getResponsiveSources(item.media.src, 'avif')}
+                  sizes={hackathonImageSizes}
+                />
+                <source
+                  type="image/webp"
+                  srcset={getResponsiveSources(item.media.src, 'webp')}
+                  sizes={hackathonImageSizes}
+                />
+                <img
+                  src={item.media.src}
+                  alt={item.media.alt}
+                  width="1600"
+                  height="1000"
+                  sizes={hackathonImageSizes}
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  fetchpriority={index === 0 ? 'high' : 'auto'}
+                  decoding="async"
+                />
+              </picture>
             </div>
             <figcaption>{item.caption}</figcaption>
           </figure>
@@ -195,11 +216,15 @@
     background: #090909;
   }
 
+  picture,
   img {
     display: block;
-    max-width: 100%;
     width: 100%;
     height: 100%;
+  }
+
+  img {
+    max-width: 100%;
     object-fit: contain;
     object-position: center;
   }
