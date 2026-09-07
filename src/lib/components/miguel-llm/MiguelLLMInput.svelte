@@ -15,7 +15,7 @@
     if (!loading && !disabled) onSubmit(value);
   }}
 >
-  <label for="miguel-llm-question">Ask MiguelLLM</label>
+  <label for="miguel-llm-question">Ask the portfolio guide</label>
   <div class="input-row">
     <input
       id="miguel-llm-question"
@@ -80,7 +80,7 @@
   }
 
   input:focus-visible {
-    box-shadow: none;
+    box-shadow: 0 0 0 2px var(--llm-ink, #f5eee8);
   }
 
   button {

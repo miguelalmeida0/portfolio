@@ -1,4 +1,5 @@
 import { miguelKnowledgeBase } from '../../data/miguel-llm';
+import { publicSource, publicSources } from './publicSources';
 import type { MiguelLLMChunk, MiguelLLMMode } from './types';
 
 const modeBoosts: Record<MiguelLLMMode, string[]> = {
@@ -116,7 +117,8 @@ function tokenize(value: string) {
 export function retrieveMiguelContext(
   question: string,
   mode: MiguelLLMMode = 'recruiter',
-  limit = 7
+  limit = 7,
+  projectSlug?: string
 ): MiguelLLMChunk[] {
   const normalizedQuestion = normalizeQuery(question);
   const tokens = tokenize(question);
@@ -128,6 +130,7 @@ export function retrieveMiguelContext(
     );
 
     let score = 0;
+    if (projectSlug && chunk.id.includes(`project-${projectSlug}`)) score += 30;
 
     for (const token of tokens) {
       if (haystack.includes(token)) score += token.length > 5 ? 3 : 2;
@@ -335,9 +338,9 @@ export function retrieveMiguelContext(
     .filter((item) => item.score > 0)
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
-    .map((item) => item.chunk);
+    .map((item) => ({ ...item.chunk, source: publicSource(item.chunk.source) }));
 }
 
 export function sourceLabels(chunks: MiguelLLMChunk[]) {
-  return Array.from(new Set(chunks.map((chunk) => chunk.source))).slice(0, 5);
+  return publicSources(chunks.map((chunk) => chunk.source));
 }

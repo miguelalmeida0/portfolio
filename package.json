@@ -16,11 +16,12 @@
     "e2e:install": "mkdir -p .cache/tmp .cache/ms-playwright && TMPDIR=$PWD/.cache/tmp PLAYWRIGHT_BROWSERS_PATH=$PWD/.cache/ms-playwright playwright install chromium",
     "e2e:report": "playwright show-report",
     "e2e:ui": "mkdir -p .cache/tmp && TMPDIR=$PWD/.cache/tmp playwright test --ui",
+    "qa:capture-revamp": "PLAYWRIGHT_BROWSERS_PATH=$PWD/.cache/ms-playwright node scripts/capture-content-revamp-qa.mjs",
     "preview": "npm run build && npm run start",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "start": "wrangler pages dev .svelte-kit/cloudflare --ip 127.0.0.1 --port 4173 --log-level error --show-interactive-dev-session=false",
     "check:performance": "node scripts/check-performance-budget.mjs",
-    "media:generate": "node scripts/generate-media-variants.mjs",
-    "start": "wrangler pages dev .svelte-kit/cloudflare --ip 127.0.0.1 --port 4173 --log-level error --show-interactive-dev-session=false"
+    "media:generate": "node scripts/generate-media-variants.mjs"
   },
   "devDependencies": {
     "@lucide/svelte": "^1.28.0",
@@ -30,6 +31,7 @@
     "@sveltejs/vite-plugin-svelte": "^7.3.0",
     "@tailwindcss/vite": "^4.1.13",
     "@types/node": "^24.3.1",
+    "sharp": "^0.35.4",
     "svelte": "^5.57.0",
     "svelte-check": "^4.7.6",
     "tailwindcss": "^4.1.13",

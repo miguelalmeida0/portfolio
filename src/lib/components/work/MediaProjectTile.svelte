@@ -19,54 +19,50 @@
     if (!event.currentTarget.contains(event.relatedTarget as Node | null)) active = false;
   }}
 >
-  <a href={project.href} aria-label={`${project.title}. ${project.shortDescription}`}>
-    <div class="tile-surface">
-      {#if project.media?.publicSafe}
-        <ProjectMedia media={project.media} {active} featured={Boolean(project.featured)} />
-      {:else if project.sequence}
-        <ol class="evidence-sequence" aria-label={project.sequenceLabel}>
-          {#each project.sequence as step, index}
-            <li class:active-step={active && index === 1}>
-              <span>{String(index + 1).padStart(2, '0')}</span>
-              <strong>{step}</strong>
-            </li>
-          {/each}
-        </ol>
-      {/if}
-    </div>
+  <div class="tile-surface">
+    {#if project.media?.publicSafe}
+      <ProjectMedia media={project.media} {active} featured={Boolean(project.featured)} />
+    {:else if project.sequence}
+      <ol class="evidence-sequence" aria-label={project.sequenceLabel}>
+        {#each project.sequence as step, index}
+          <li class:active-step={active && index === 1}>
+            <span>{String(index + 1).padStart(2, '0')}</span>
+            <strong>{step}</strong>
+          </li>
+        {/each}
+      </ol>
+    {/if}
+    <a class="surface-link" href={project.href} aria-label={`Open ${project.title}`}>
+      <span class="sr-only">Open {project.title}</span>
+    </a>
+  </div>
 
-    <div class="tile-copy">
-      <div class="tile-meta">
-        <span>{project.category}</span>
-        {#if project.status}<span>{project.status}</span>{/if}
-      </div>
-      <div class="tile-title-row">
-        <h3>{project.title}</h3>
-        <span aria-hidden="true">↗</span>
-      </div>
-      <p>{project.shortDescription}</p>
-      {#if project.technicalTension}
-        <small>{project.technicalTension}</small>
-      {/if}
+  <div class="tile-copy">
+    <div class="tile-meta">
+      <span>{project.category}</span>
+      {#if project.status}<span>{project.status}</span>{/if}
     </div>
-  </a>
+    <a class="title-link" href={project.href} aria-label={`${project.title}. ${project.shortDescription}`}>
+      <h3>{project.title}</h3>
+      <span aria-hidden="true">↗</span>
+    </a>
+    <p>{project.shortDescription}</p>
+    {#if project.valueLine}
+      <small>{project.valueLine}</small>
+    {/if}
+  </div>
 </article>
 
 <style>
   .media-tile {
+    display: grid;
     min-width: 0;
+    gap: 1rem;
     background: transparent;
   }
 
-  a {
-    display: grid;
-    gap: 1rem;
-    color: inherit;
-  }
-
-  a:focus-visible {
-    outline: 2px solid var(--ring);
-    outline-offset: 5px;
+  .featured {
+    grid-column: 1 / -1;
   }
 
   .tile-surface {
@@ -76,9 +72,25 @@
     background: #0a0a0a;
   }
 
+  .featured .tile-surface {
+    aspect-ratio: 21 / 9;
+  }
+
+  .surface-link {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
+
+  .surface-link:focus-visible,
+  .title-link:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: -3px;
+  }
+
   .tile-copy {
     display: grid;
-    gap: 0.45rem;
+    gap: 0.55rem;
     padding-right: clamp(0.5rem, 2vw, 2rem);
   }
 
@@ -87,13 +99,12 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem 0.8rem;
-    color: rgb(244 234 220 / 0.62);
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    font-weight: 760;
-    letter-spacing: 0.1em;
-    line-height: 1.45;
-    text-transform: uppercase;
+    color: rgb(244 234 220 / 0.7);
+    font-family: var(--font-sans);
+    font-size: var(--text-label);
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.5;
   }
 
   .tile-meta span + span::before {
@@ -102,11 +113,12 @@
     content: '·';
   }
 
-  .tile-title-row {
+  .title-link {
     display: flex;
     align-items: end;
     justify-content: space-between;
     gap: 1rem;
+    color: inherit;
   }
 
   h3,
@@ -116,39 +128,44 @@
 
   h3 {
     color: var(--foreground);
-    font-size: clamp(1.3rem, 1.8vw, 1.85rem);
+    font-size: var(--text-card);
     font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.08;
+    letter-spacing: -0.025em;
+    line-height: 1.06;
   }
 
-  .tile-title-row > span {
+  .featured h3 {
+    font-size: clamp(1.8rem, 2.7vw, 2.85rem);
+  }
+
+  .title-link > span {
     color: var(--accent);
     font-size: 1.45rem;
-    transition: transform 220ms ease;
+    transition: transform var(--interaction-duration) var(--interaction-ease);
   }
 
-  a:hover .tile-title-row > span,
-  a:focus-visible .tile-title-row > span {
+  .title-link:hover > span,
+  .title-link:focus-visible > span {
     transform: translate(0.15rem, -0.15rem);
   }
 
   p {
-    max-width: 42rem;
-    color: rgb(244 234 220 / 0.68);
-    font-size: clamp(0.82rem, 0.95vw, 0.92rem);
-    font-weight: 520;
-    line-height: 1.48;
+    max-width: 46rem;
+    color: rgb(244 234 220 / 0.77);
+    font-size: var(--text-body);
+    font-weight: 400;
+    line-height: 1.58;
   }
 
   small {
     max-width: 48rem;
-    color: rgb(244 234 220 / 0.48);
+    color: rgb(244 234 220 / 0.74);
+    font-weight: 500;
   }
 
   .evidence-sequence {
     display: grid;
-    align-content: start;
+    align-content: center;
     gap: 1px;
     min-height: 100%;
     margin: 0;
@@ -164,10 +181,8 @@
     align-items: center;
     min-height: 3.5rem;
     border-top: 1px solid rgb(244 234 220 / 0.15);
-    color: rgb(244 234 220 / 0.64);
-    transition:
-      color 260ms ease,
-      transform 260ms ease;
+    color: rgb(244 234 220 / 0.68);
+    transition: color 260ms ease, transform 260ms ease;
   }
 
   .evidence-sequence li:last-child {
@@ -190,64 +205,68 @@
     transform: translateX(0.4rem);
   }
 
-  @media (max-width: 720px) {
-    a {
-      gap: 0.72rem;
+  @media (max-width: 980px) {
+    .featured {
+      grid-column: auto;
     }
 
-    .tile-surface {
+    .featured .tile-surface {
       aspect-ratio: 16 / 10;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .media-tile {
+      gap: 0.78rem;
     }
 
     .tile-copy {
-      gap: 0.3rem;
+      gap: 0.38rem;
       padding-right: 0.2rem;
     }
 
-    h3 {
-      font-size: clamp(1.1rem, 5vw, 1.35rem);
-      line-height: 1.05;
+    h3,
+    .featured h3 {
+      font-size: clamp(1.35rem, 6vw, 1.72rem);
     }
 
-    .tile-meta {
-      max-width: 22rem;
-      font-size: 0.56rem;
-      letter-spacing: 0.08em;
-    }
-
-    .tile-meta span:nth-child(2),
+    .tile-meta,
     small {
+      font-size: var(--text-label);
+      letter-spacing: 0;
+    }
+
+    .tile-meta span:nth-child(2) {
       display: none;
     }
 
-    .tile-title-row {
+    .title-link {
       align-items: center;
       gap: 0.65rem;
     }
 
-    .tile-title-row > span {
-      font-size: 1.05rem;
+    .title-link > span {
+      font-size: 1.1rem;
     }
 
     p {
-      display: -webkit-box;
-      overflow: hidden;
-      font-size: 0.76rem;
-      line-height: 1.4;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    small {
+      color: rgb(244 234 220 / 0.74);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .tile-title-row > span,
+    .title-link > span,
     .evidence-sequence li {
       transition: none;
     }
 
-    a:hover .tile-title-row > span,
-    a:focus-visible .tile-title-row > span,
+    .title-link:hover > span,
+    .title-link:focus-visible > span,
     .evidence-sequence .active-step {
       transform: none;
     }

@@ -1,5 +1,6 @@
 <script lang="ts">
   export let sources: string[] = [];
+  export let onNavigate: () => void = () => {};
 </script>
 
 {#if sources.length}
@@ -8,7 +9,7 @@
       {@const [label, href] = source.split('|')}
       <li>
         {#if href}
-          <a href={href}>{label} →</a>
+          <a href={href} on:click={onNavigate}>{label} →</a>
         {:else}
           <span>{label}</span>
         {/if}

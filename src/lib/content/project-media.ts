@@ -12,24 +12,15 @@ export type PortfolioMediaAsset = {
   containsPrivateEnvironment: boolean;
   capturedAt?: string;
   note?: string;
-  responsive?: ResponsiveImageSources;
-};
-
-export type ResponsiveImageSources = {
-  avifSrcset: string;
-  webpSrcset: string;
-  sizes: string;
-  width: number;
-  height: number;
 };
 
 export type ProjectMedia = {
   poster: string;
-  posterSources?: ResponsiveImageSources;
   webm?: string;
   mp4?: string;
   alt: string;
   aspectRatio?: string;
+  videoFit?: 'contain' | 'cover';
   focalPoint?: {
     x: number;
     y: number;
@@ -44,7 +35,7 @@ export type ProjectTile = {
   category: string;
   status?: string;
   shortDescription: string;
-  technicalTension?: string;
+  valueLine?: string;
   href: string;
   media?: ProjectMedia;
   size: 'hero' | 'wide' | 'portrait' | 'standard' | 'small';
@@ -53,32 +44,12 @@ export type ProjectTile = {
   sequenceLabel?: string;
 };
 
-const responsiveCaseStudyImage = (
-  name: string,
-  widths: number[],
-  width: number,
-  height: number,
-  sizes: string
-): ResponsiveImageSources => ({
-  avifSrcset: widths
-    .map((candidate) => `/media/v1/case-study/${name}-${candidate}.avif ${candidate}w`)
-    .join(', '),
-  webpSrcset: widths
-    .map((candidate) => `/media/v1/case-study/${name}-${candidate}.webp ${candidate}w`)
-    .join(', '),
-  sizes,
-  width,
-  height
-});
-
 export const portfolioMediaAssets: PortfolioMediaAsset[] = [
   {
     id: 'camera-harness-book-recognition-loop',
     projectId: 'camera-harness',
     kind: 'video',
-    src: '/media/v1/home/camera-harness-preview.webm',
-    fallbackSrc: '/media/v1/home/camera-harness-preview.mp4',
-    poster: '/media/v1/home/camera-harness-poster-1024.webp',
+    src: '/projects/camera-harness/book-recognition-loop-1080.m4v',
     alt:
       'Short Camera Harness recording identifying a JavaScript book while the live camera interface is active.',
     status: 'current',
@@ -93,7 +64,7 @@ export const portfolioMediaAssets: PortfolioMediaAsset[] = [
     id: 'camera-harness-microscope-live',
     projectId: 'camera-harness',
     kind: 'photo',
-    src: '/projects/camera-harness/microscope-live-result.png',
+    src: '/projects/camera-harness/recognition-poster-1600.webp',
     alt:
       'Camera Harness live Microscope interface identifying visible objects while the camera remains active.',
     status: 'current',
@@ -117,14 +88,7 @@ export const portfolioMediaAssets: PortfolioMediaAsset[] = [
     containsPrivateEnvironment: false,
     capturedAt: '2026-07',
     note:
-      'Camera-off current surface. It demonstrates product structure, not live recognition or model accuracy.',
-    responsive: responsiveCaseStudyImage(
-      'camera-harness-current',
-      [640, 1024, 1440],
-      1440,
-      900,
-      '(max-width: 760px) calc(100vw - 2.5rem), 52rem'
-    )
+      'Camera-off current surface. It demonstrates product structure, not live recognition or model accuracy.'
   },
   {
     id: 'camera-harness-historical-sensefield',
@@ -138,14 +102,7 @@ export const portfolioMediaAssets: PortfolioMediaAsset[] = [
     containsPerson: false,
     containsPrivateEnvironment: false,
     capturedAt: '2026-07',
-    note: 'Historical interface. Sensefield is not mounted in the current product.',
-    responsive: responsiveCaseStudyImage(
-      'camera-harness-historical',
-      [640, 1024, 1440],
-      1440,
-      900,
-      '(max-width: 760px) calc(100vw - 2.5rem), 52rem'
-    )
+    note: 'Historical interface. Sensefield is not mounted in the current product.'
   },
   {
     id: 'camera-harness-hero-phone',
@@ -160,20 +117,13 @@ export const portfolioMediaAssets: PortfolioMediaAsset[] = [
     containsPrivateEnvironment: true,
     capturedAt: '2026-07',
     note:
-      'Camera Harness hero image. Published at the user’s explicit direction on 2026-07-29; it does not establish general recognition accuracy.',
-    responsive: responsiveCaseStudyImage(
-      'camera-harness-hero',
-      [768, 1280, 1920],
-      2108,
-      902,
-      '(max-width: 1120px) calc(100vw - 2.5rem), 52rem'
-    )
+      'Camera Harness hero image. Published at the user’s explicit direction on 2026-07-29; it does not establish general recognition accuracy.'
   },
   {
     id: 'camera-harness-peace-sign-result',
     projectId: 'camera-harness',
     kind: 'photo',
-    src: '/projects/camera-harness/camera-peace-sign-result-crop.png',
+    src: '/projects/camera-harness/gesture-1600.webp',
     alt:
       'Camera Harness product interface showing a live camera preview, a raised peace sign, and a movement result awaiting confirmation.',
     status: 'current',
@@ -182,20 +132,13 @@ export const portfolioMediaAssets: PortfolioMediaAsset[] = [
     containsPrivateEnvironment: true,
     capturedAt: '2026-07',
     note:
-      'Single recorded product state. Published at the user’s explicit direction on 2026-07-29; it does not establish general recognition accuracy.',
-    responsive: responsiveCaseStudyImage(
-      'camera-harness-peace',
-      [768, 1280, 1920],
-      2100,
-      910,
-      '(max-width: 760px) calc(100vw - 2.5rem), 46rem'
-    )
+      'Single recorded product state. Published at the user’s explicit direction on 2026-07-29; it does not establish general recognition accuracy.'
   },
   {
     id: 'camera-harness-mug-result',
     projectId: 'camera-harness',
     kind: 'photo',
-    src: '/projects/camera-harness/camera-mug-result-crop.png',
+    src: '/projects/camera-harness/movement-1600.webp',
     alt:
       'Camera Harness product interface showing a live camera preview with a mug and a movement result awaiting confirmation.',
     status: 'current',
@@ -204,14 +147,7 @@ export const portfolioMediaAssets: PortfolioMediaAsset[] = [
     containsPrivateEnvironment: true,
     capturedAt: '2026-07',
     note:
-      'Single recorded product state. Published at the user’s explicit direction on 2026-07-29; it does not establish general recognition accuracy.',
-    responsive: responsiveCaseStudyImage(
-      'camera-harness-mug',
-      [768, 1280, 1920],
-      2100,
-      910,
-      '(max-width: 760px) calc(100vw - 2.5rem), 46rem'
-    )
+      'Single recorded product state. Published at the user’s explicit direction on 2026-07-29; it does not establish general recognition accuracy.'
   },
   {
     id: 'creature-mirror-tracking',
@@ -226,6 +162,17 @@ export const portfolioMediaAssets: PortfolioMediaAsset[] = [
     containsPrivateEnvironment: true,
     capturedAt: '2026-07',
     note: 'Published at the user’s explicit direction on 2026-07-29.'
+  },
+  {
+    id: 'mirror-ai-home',
+    projectId: 'mirror-ai',
+    kind: 'poster',
+    src: '/projects/mirror-ai/interface-1600.webp',
+    alt: 'Mirror AI home interface with image upload, text input, a question field, and Eval Lab navigation.',
+    status: 'current',
+    publicStatus: 'approved',
+    containsPerson: false,
+    containsPrivateEnvironment: false
   },
   {
     id: 'mirror-ai-aquarium-selection',
@@ -245,9 +192,9 @@ export const portfolioMediaAssets: PortfolioMediaAsset[] = [
     id: 'mirror-ai-active-image-demo',
     projectId: 'mirror-ai',
     kind: 'video',
-    src: '/media/v1/home/mirror-ai-preview.webm',
-    fallbackSrc: '/media/v1/home/mirror-ai-preview.mp4',
-    poster: '/media/v1/home/mirror-ai-poster-1024.webp',
+    src: '/projects/mirror-ai/active-image-demo.webm',
+    fallbackSrc: '/projects/mirror-ai/active-image-demo.mp4',
+    poster: '/projects/mirror-ai/active-image-demo-poster.jpg',
     alt:
       'A 9.8 second Active Image product film selecting a giraffe and then an ostrich, preserving each contour in the source image before the ostrich inspector pushes smoothly into focus.',
     status: 'current',
@@ -262,7 +209,7 @@ export const portfolioMediaAssets: PortfolioMediaAsset[] = [
     id: 'f24-hackathon-presentation-room',
     projectId: 'f24-ai-hackathon',
     kind: 'photo',
-    src: '/projects/f24-ai-hackathon/presentation-room.png',
+    src: '/projects/f24-ai-hackathon/presentation-room-1024.webp',
     alt: 'F24 colleagues gathered in a workshop room for an internal AI hackathon presentation.',
     status: 'historical',
     publicStatus: 'approved',
@@ -340,29 +287,22 @@ export const portfolioMediaAssets: PortfolioMediaAsset[] = [
     id: 'ghostwriter-home',
     projectId: 'ghostwriter',
     kind: 'poster',
-    src: '/projects/toikien.png',
+    src: '/projects/ghostwriter/interface-1600.webp',
     alt:
       'Ghostwriter editorial interface with an author selector, mood control, and an illustrated writer at a typewriter.',
     status: 'current',
     publicStatus: 'approved',
     containsPerson: false,
     containsPrivateEnvironment: false,
-    capturedAt: '2026-07',
-    responsive: responsiveCaseStudyImage(
-      'ghostwriter',
-      [768, 1280, 1440],
-      1440,
-      900,
-      '(max-width: 960px) calc(100vw - 2.5rem), 52rem'
-    )
+    capturedAt: '2026-07'
   },
   {
     id: 'ghostwriter-portfolio-film',
     projectId: 'ghostwriter',
     kind: 'video',
-    src: '/media/v1/home/ghostwriter-preview.webm',
-    fallbackSrc: '/media/v1/home/ghostwriter-preview.mp4',
-    poster: '/media/v1/home/ghostwriter-poster-1024.webp',
+    src: '/projects/ghostwriter/ghostwriter-demo.webm',
+    fallbackSrc: '/projects/ghostwriter/ghostwriter-demo.mp4',
+    poster: '/projects/ghostwriter/ghostwriter-demo-poster.webp',
     alt:
       'A 9.4 second Ghostwriter product film selecting a harbor passage, choosing Tolkien, showing the mythic rewrite word by word, and copying the finished revision.',
     status: 'current',
@@ -410,69 +350,70 @@ export function getApprovedMedia(id: string) {
 }
 
 const cameraResultPoster = getApprovedMedia('camera-harness-microscope-live');
+const f24Poster = getApprovedMedia('f24-hackathon-presentation-room');
 const ghostwriterPoster = getApprovedMedia('ghostwriter-home');
 const ghostwriterFilm = getApprovedMedia('ghostwriter-portfolio-film');
-const creaturePoster = getApprovedMedia('creature-mirror-tracking');
 const mirrorAiPoster = getApprovedMedia('mirror-ai-aquarium-selection');
 const mirrorAiFilm = getApprovedMedia('mirror-ai-active-image-demo');
-
-const homepageCardSizes =
-  '(max-width: 680px) calc(100vw - 2.5rem), (max-width: 1100px) calc(50vw - 2rem), 46rem';
-
-const responsiveProjectPoster = (
-  name: string,
-  width: number,
-  height: number,
-  sizes = homepageCardSizes
-): ResponsiveImageSources => ({
-  avifSrcset: `/media/v1/home/${name}-640.avif 640w, /media/v1/home/${name}-1024.avif 1024w, /media/v1/home/${name}-1440.avif 1440w`,
-  webpSrcset: `/media/v1/home/${name}-640.webp 640w, /media/v1/home/${name}-1024.webp 1024w, /media/v1/home/${name}-1440.webp 1440w`,
-  sizes,
-  width,
-  height
-});
 
 export const homepageProjectTiles: ProjectTile[] = [
   {
     id: 'camera-harness',
     title: 'Camera Harness',
-    category: 'Live visual interfaces',
-    status: 'Experimental · hybrid local / hosted',
+    category: 'Independent research prototype',
+    status: 'Browser media · applied AI',
     shortDescription:
-      'Keeping frames, tracks, labels, and answers attached to the same evidence.',
-    technicalTension: 'Generation ownership · latest-frame queue · bounded image memory',
+      'I built the camera lifecycle and async controls that keep late model responses from overwriting a newer interaction.',
+    valueLine: 'Every answer should stay connected to the moment that produced it.',
     href: '/work/camera-harness',
     media: cameraResultPoster
       ? {
-          poster: '/media/v1/home/camera-harness-poster-1024.webp',
-          posterSources: responsiveProjectPoster('camera-harness-poster', 1440, 900),
-          webm: '/media/v1/home/camera-harness-preview.webm',
-          mp4: '/media/v1/home/camera-harness-preview.mp4',
+          poster: cameraResultPoster.src,
+          mp4: '/projects/camera-harness/book-recognition-720.mp4',
           alt: cameraResultPoster.alt,
           aspectRatio: '16 / 10',
+          videoFit: 'cover',
           focalPoint: { x: 50, y: 36 },
           duration: 6.7,
           publicSafe: true
         }
       : undefined,
-    size: 'hero',
-    featured: true
+    size: 'standard'
+  },
+  {
+    id: 'f24-experience',
+    title: 'Production frontend at F24',
+    category: 'Professional experience',
+    status: '2022 — now · Berlin',
+    shortDescription:
+      'I built a business application’s frontend from scratch and later migrated it to React. Hundreds of companies now use the application.',
+    valueLine: 'Frontend lead for the company’s first shared AI service during an internal hackathon.',
+    href: '/story#at-work',
+    media: f24Poster
+      ? {
+          poster: f24Poster.src,
+          alt: f24Poster.alt,
+          aspectRatio: '16 / 10',
+          focalPoint: { x: 50, y: 50 },
+          publicSafe: true
+        }
+      : undefined,
+    size: 'standard'
   },
   {
     id: 'ghostwriter',
     title: 'Ghostwriter',
-    category: 'Literary rewrite',
-    status: 'Tolkien mode · deterministic film',
+    category: 'Editorial product',
+    status: 'Interaction + reliability',
     shortDescription:
-      'Keep the meaning. Change the atmosphere. Watch a plain passage become a story, then decide what leaves the draft.',
-    technicalTension: 'Select passage → choose Tolkien → inspect rewrite → confirm',
+      'I built an expressive rewriting interface with budget reservation and explicit handling of uncertain AI requests.',
+    valueLine: 'Visible edits, deliberate sharing, and controlled generation.',
     href: '/work/ghostwriter',
     media: ghostwriterFilm
       ? {
           poster: ghostwriterFilm.poster ?? ghostwriterPoster?.src ?? ghostwriterFilm.src,
-          posterSources: responsiveProjectPoster('ghostwriter-poster', 1440, 900),
-          webm: '/media/v1/home/ghostwriter-preview.webm',
-          mp4: '/media/v1/home/ghostwriter-preview.mp4',
+          webm: ghostwriterFilm.src,
+          mp4: ghostwriterFilm.fallbackSrc,
           alt: ghostwriterFilm.alt,
           aspectRatio: '16 / 10',
           focalPoint: { x: 50, y: 50 },
@@ -493,39 +434,18 @@ export const homepageProjectTiles: ProjectTile[] = [
     sequenceLabel: 'Ghostwriter editorial control sequence'
   },
   {
-    id: 'creature-mirror',
-    title: 'Creature App',
-    category: 'Movement correspondence',
-    status: 'Prototype',
-    shortDescription: 'Mapping live body movement onto a tracked 3D character.',
-    href: '/story#builder',
-    media: creaturePoster
-      ? {
-          poster: '/media/v1/home/creature-app-1024.webp',
-          posterSources: responsiveProjectPoster('creature-app', 1440, 900),
-          alt: creaturePoster.alt,
-          aspectRatio: '16 / 10',
-          focalPoint: { x: 45, y: 42 },
-          publicSafe: true
-        }
-      : undefined,
-    size: 'standard'
-  },
-  {
     id: 'mirror-ai',
     title: 'Mirror AI',
     category: 'Visual selection interface',
-    status: 'Prototype',
     shortDescription:
-      'Images should be explorable. Select a subject to reveal its contour, identity, and visible evidence.',
-    technicalTension: 'Point → local segmentation → item semantics → anchored inspector',
-    href: '/story#builder',
+      'I built an image-selection flow that keeps the chosen object visible while its contour and explanation open.',
+    valueLine: 'The selected subject stays visible while its details open.',
+    href: '/work/mirror-ai',
     media: mirrorAiFilm
       ? {
           poster: mirrorAiFilm.poster ?? mirrorAiPoster?.src ?? mirrorAiFilm.src,
-          posterSources: responsiveProjectPoster('mirror-ai-poster', 1440, 900),
-          webm: '/media/v1/home/mirror-ai-preview.webm',
-          mp4: '/media/v1/home/mirror-ai-preview.mp4',
+          webm: mirrorAiFilm.src,
+          mp4: mirrorAiFilm.fallbackSrc,
           alt: mirrorAiFilm.alt,
           aspectRatio: '16 / 10',
           focalPoint: { x: 50, y: 50 },

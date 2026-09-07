@@ -1,5 +1,10 @@
 <script lang="ts">
-  import { onMount, tick } from 'svelte';
+  import { onDestroy, onMount, tick } from 'svelte';
+  import ArrowUpRight from '@lucide/svelte/icons/arrow-up-right';
+  import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
+  import X from '@lucide/svelte/icons/x';
+  import { projectQuestions, projectTitles, resolveProject } from '$lib/miguel-llm/projectContext';
+  import { recruiterBriefs } from '$lib/content/recruiter-briefs';
 
   import { MIGUEL_LLM_MAX_QUESTION_LENGTH } from '$lib/miguel-llm/guardrails';
   import type { MiguelLLMAnswer as MiguelAnswer, MiguelLLMMode } from '$lib/miguel-llm/types';
@@ -9,6 +14,7 @@
 
   export let open = false;
   export let mode: MiguelLLMMode = 'recruiter';
+  export let projectSlug: string | undefined = undefined;
 
   const MAX_SESSION_QUESTIONS = 5;
   const SESSION_USAGE_KEY = 'miguel-llm-question-count';
@@ -19,16 +25,15 @@
 
   const questionsByMode: Record<MiguelLLMMode, string[]> = {
     recruiter: [
-      'What is Miguel’s strongest technical project?',
-      'What did Miguel build in Camera Harness?',
-      'What reliability work has Miguel done?',
-      'What role is Miguel best suited for?'
+      'Which project should I start with?',
+      'What did Miguel personally build?',
+      'What production frontend experience does he have?'
     ],
     engineer: [
       'What is Camera Harness’s biggest architectural lesson?',
       'How does Ask choose visual evidence?',
       'What does Microscope actually do?',
-      'What architecture did Miguel build in Atlas?'
+      'How does Ghostwriter handle failure?'
     ],
     design: [
       'How does Miguel combine design and engineering?',
@@ -53,12 +58,18 @@
   let answer: MiguelAnswer | null = null;
   let messages: MiguelLLMMessage[] = [];
   let questionCount = 0;
+  let requestController: AbortController | undefined;
+  let requestVersion = 0;
+  let lastQuestion = '';
+  let chatScroll: HTMLElement;
+  let activeProject: string | undefined = projectSlug;
+  let savedBodyOverflow: string | undefined;
 
-  $: suggestedQuestions = questionsByMode[mode];
+  $: suggestedQuestions = projectQuestions(activeProject).length ? projectQuestions(activeProject) : questionsByMode[mode];
   $: questionsRemaining = Math.max(0, MAX_SESSION_QUESTIONS - questionCount);
   $: questionLimitReached = questionsRemaining <= 0;
   $: usageError = questionLimitReached
-    ? `MiguelLLM is limited to ${MAX_SESSION_QUESTIONS} questions per browser session.`
+    ? `The portfolio guide is limited to ${MAX_SESSION_QUESTIONS} questions per browser session.`
     : error;
   $: runtimeStatus = answer ? formatRuntimeStatus(answer) : '';
 
@@ -66,12 +77,18 @@
     questionCount = readQuestionCount();
   });
 
+  function cancelRequest() { requestVersion += 1; requestController?.abort(); loading = false; }
+  function restoreScroll() { if (typeof document !== 'undefined' && savedBodyOverflow !== undefined) { document.body.style.overflow = savedBodyOverflow; savedBodyOverflow = undefined; } }
+  onDestroy(() => { cancelRequest(); restoreScroll(); });
+
+  $: if (chatScroll && (messages.length || loading)) { tick().then(() => chatScroll?.scrollTo({ top: chatScroll.scrollHeight, behavior: 'auto' })); }
+
   function readQuestionCount() {
     if (typeof sessionStorage === 'undefined') return 0;
 
-    const storedCounts = [SESSION_USAGE_KEY, ...PREVIOUS_SESSION_USAGE_KEYS].map((key) =>
-      Number(sessionStorage.getItem(key))
-    );
+    let storedCounts: number[];
+    try { storedCounts = [SESSION_USAGE_KEY, ...PREVIOUS_SESSION_USAGE_KEYS].map((key) => Number(sessionStorage.getItem(key))); }
+    catch { return questionCount; }
     const highestCount = Math.max(0, ...storedCounts.filter((count) => Number.isFinite(count)));
 
     return Math.min(Math.max(highestCount, 0), MAX_SESSION_QUESTIONS);
@@ -81,7 +98,7 @@
     questionCount = Math.min(readQuestionCount() + 1, MAX_SESSION_QUESTIONS);
 
     if (typeof sessionStorage !== 'undefined') {
-      sessionStorage.setItem(SESSION_USAGE_KEY, String(questionCount));
+      try { sessionStorage.setItem(SESSION_USAGE_KEY, String(questionCount)); } catch { /* The guide also works with storage disabled. */ }
     }
   }
 
@@ -89,13 +106,18 @@
     lastOpenState = true;
     if (typeof document !== 'undefined') {
       previousActiveElement = document.activeElement as HTMLElement;
+      savedBodyOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
     }
+    activeProject = projectSlug;
     question = '';
     tick().then(() => dialogElement?.focus());
   }
 
   $: if (!open && lastOpenState) {
     lastOpenState = false;
+    cancelRequest();
+    restoreScroll();
     previousActiveElement?.focus?.();
   }
 
@@ -104,6 +126,7 @@
   };
 
   const resetConversation = () => {
+    cancelRequest();
     answer = null;
     messages = [];
     error = '';
@@ -111,6 +134,7 @@
   };
 
   const ask = async (nextQuestion: string) => {
+    if (loading) return;
     const trimmedQuestion = nextQuestion.trim();
 
     if (trimmedQuestion.length < 4) {
@@ -124,11 +148,15 @@
     }
 
     if (questionLimitReached) {
-      error = `MiguelLLM is limited to ${MAX_SESSION_QUESTIONS} questions per browser session.`;
+      error = `The portfolio guide is limited to ${MAX_SESSION_QUESTIONS} questions per browser session.`;
       return;
     }
 
-    recordQuestionUse();
+    activeProject = resolveProject(trimmedQuestion, activeProject);
+    lastQuestion = trimmedQuestion;
+    const version = ++requestVersion;
+    requestController = new AbortController();
+    const timeout = setTimeout(() => requestController?.abort(), 18000);
     loading = true;
     error = '';
     messages = [...messages, { role: 'user', text: trimmedQuestion }];
@@ -147,7 +175,8 @@
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ question: trimmedQuestion, mode, recentAnswers })
+        body: JSON.stringify({ question: trimmedQuestion, mode, recentAnswers, projectSlug: activeProject }),
+        signal: requestController.signal
       });
 
       const payload = (await response.json()) as Partial<MiguelAnswer> & {
@@ -160,16 +189,32 @@
           ? payload.answer
           : null;
 
+      if (version !== requestVersion) return;
+      if (response.status === 400) { error = payload.error || 'Please rephrase that portfolio question.'; question = trimmedQuestion; return; }
+      if (!response.ok) throw new Error(payload.error || 'The live guide is unavailable.');
       if (payload.error) error = payload.error;
       if (nextAnswer) {
+        recordQuestionUse();
         answer = nextAnswer;
         messages = [...messages, { role: 'assistant', answer: nextAnswer }];
       }
-      if (!nextAnswer && !payload.error) error = 'MiguelLLM could not answer that yet.';
+      if (!nextAnswer) throw new Error('No readable answer returned.');
     } catch {
-      error = 'MiguelLLM could not reach the local portfolio route.';
+      if (version !== requestVersion) return;
+      const brief = activeProject ? recruiterBriefs[activeProject] : undefined;
+      const offlineAnswer: MiguelAnswer = {
+        runtime: 'local-fallback', provider: 'local-fallback', model: 'saved-portfolio-notes', questionMode: mode,
+        shortAnswer: brief ? `Saved project overview: ${brief.problem}` : 'The live guide is unavailable. You can still read Miguel’s work, résumé, and contact details directly.',
+        bullets: brief ? [brief.ownership] : [],
+        sources: activeProject ? [`${projectTitles[activeProject]}|/work/${activeProject}`, 'Résumé|/cv'] : ['Selected work|/#work', 'Résumé|/cv', 'Contact Miguel|/#contact'],
+        suggestedNextQuestions: [], confidence: 'medium'
+      };
+      answer = offlineAnswer;
+      messages = [...messages, { role: 'assistant', answer: offlineAnswer }];
+      error = 'Showing saved notes. This attempt did not use a question.';
     } finally {
-      loading = false;
+      clearTimeout(timeout);
+      if (version === requestVersion) loading = false;
     }
   };
 
@@ -195,7 +240,7 @@
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
 
-    if (event.shiftKey && document.activeElement === first) {
+    if (event.shiftKey && (document.activeElement === first || document.activeElement === dialogElement)) {
       event.preventDefault();
       last.focus();
     } else if (!event.shiftKey && document.activeElement === last) {
@@ -223,11 +268,10 @@
 
   function formatRuntimeStatus(value: MiguelAnswer) {
     if (value.runtime === 'local-fallback' || value.provider === 'local-fallback') {
-      return 'Local notes mode';
+      return 'From portfolio notes';
     }
 
-    const provider = value.provider === 'cerebras' ? 'Cerebras mode' : 'OpenAI mode';
-    return `${provider} · ${value.model}`;
+    return 'Portfolio notes · AI-assisted';
   }
 </script>
 
@@ -235,7 +279,7 @@
 
 {#if open}
   <div class="drawer-shell" role="presentation">
-    <button class="drawer-backdrop" type="button" aria-label="Close MiguelLLM" on:click={closeDrawer}></button>
+    <button class="drawer-backdrop" type="button" aria-label="Close portfolio guide" on:click={closeDrawer}></button>
 
     <div
       bind:this={dialogElement}
@@ -247,37 +291,32 @@
     >
       <div class="drawer-header">
         <div class="drawer-brand">
-          <span class="drawer-brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 2.7c.9 4.7 3.6 7.4 8.3 8.3-4.7.9-7.4 3.6-8.3 8.3-.9-4.7-3.6-7.4-8.3-8.3 4.7-.9 7.4-3.6 8.3-8.3Z" />
-              <path d="M18.7 3.7c.34 1.8 1.38 2.84 3.18 3.18-1.8.34-2.84 1.38-3.18 3.18-.34-1.8-1.38-2.84-3.18-3.18 1.8-.34 2.84-1.38 3.18-3.18Z" />
-            </svg>
-          </span>
           <div>
-            <h2 id="miguel-llm-drawer-title">MiguelLLM</h2>
+            <h2 id="miguel-llm-drawer-title">Portfolio guide</h2>
             {#if runtimeStatus}
               <p class="runtime-status">{runtimeStatus}</p>
             {/if}
           </div>
         </div>
         <div class="drawer-actions">
-          <button class="icon-button" type="button" aria-label="Reset MiguelLLM conversation" on:click={resetConversation}>
-            ↻
+          <button class="icon-button" type="button" aria-label="Reset portfolio guide conversation" on:click={resetConversation}>
+            <RotateCcw size={18} aria-hidden="true" />
           </button>
-          <button class="icon-button" type="button" aria-label="Close MiguelLLM" on:click={closeDrawer}>
-            ×
+          <button class="icon-button" type="button" aria-label="Close portfolio guide" on:click={closeDrawer}>
+            <X size={20} aria-hidden="true" />
           </button>
         </div>
       </div>
 
-      <div class:has-conversation={messages.length || loading} class="chat-scroll">
+      <div bind:this={chatScroll} class:has-conversation={messages.length || loading} class="chat-scroll">
         {#if !messages.length && !loading}
           <div class="starter">
             <h3>What would you like to know?</h3>
-            <div class="starter-questions" aria-label="Suggested MiguelLLM questions">
+            {#if activeProject}<p class="project-context">Exploring {projectTitles[activeProject]}</p>{/if}
+            <div class="starter-questions" aria-label="Suggested portfolio questions">
               {#each suggestedQuestions.slice(0, 3) as suggestedQuestion}
                 <button type="button" disabled={questionLimitReached} on:click={() => ask(suggestedQuestion)}>
-                  <span aria-hidden="true">↳</span>
+                  <ArrowUpRight size={15} aria-hidden="true" />
                   {suggestedQuestion}
                 </button>
               {/each}
@@ -291,14 +330,19 @@
                   <p class="user-message">{message.text}</p>
                 </div>
               {:else}
-                <MiguelLLMAnswer answer={message.answer} />
+                <MiguelLLMAnswer answer={message.answer} onNavigate={closeDrawer} />
               {/if}
             {/each}
             {#if loading}
-              <div class="typing-dots" aria-label="MiguelLLM is typing">
+              <div class="typing-dots" aria-label="Portfolio guide is typing">
                 <span></span>
                 <span></span>
                 <span></span>
+              </div>
+            {/if}
+            {#if answer && !loading && !error && !questionLimitReached}
+              <div class="followup-questions" aria-label="Follow-up questions">
+                {#each answer.suggestedNextQuestions.slice(0, 2) as followup}<button type="button" on:click={() => ask(followup)}>{followup}</button>{/each}
               </div>
             {/if}
           </div>
@@ -314,12 +358,21 @@
           onSubmit={ask}
         />
         <MiguelLLMStatus error={usageError} />
+        {#if error && lastQuestion && !questionLimitReached}<button type="button" class="retry-question" disabled={loading} on:click={() => ask(lastQuestion)}>Try the live guide again</button>{/if}
+        {#if questionLimitReached}<nav class="guide-exit" aria-label="Continue without the guide"><a href="/cv" on:click={closeDrawer}>Read résumé</a><a href="/#contact" on:click={closeDrawer}>Contact Miguel</a></nav>{/if}
       </div>
     </div>
   </div>
 {/if}
 
 <style>
+  .project-context { font-size: 13px; color: #aaa29b; margin: 12px 0 0; }
+  .followup-questions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .followup-questions button, .retry-question { padding: 10px 12px; border: 1px solid #474039; border-radius: 8px; background: transparent; color: #e9dfd5; text-align: left; cursor: pointer; font-size: 12px; line-height: 1.5; }
+  .retry-question { margin-top: 8px; }
+  .guide-exit { display: flex; gap: 20px; font-size: 13px; padding-top: 12px; }
+  .guide-exit a { text-decoration: underline; text-underline-offset: 4px; }
+  .followup-questions button:focus-visible, .retry-question:focus-visible, .guide-exit a:focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
   .drawer-shell {
     position: fixed;
     inset: 0;
@@ -396,43 +449,23 @@
     gap: 0.86rem;
   }
 
-  .drawer-brand-mark {
-    display: grid;
-    width: 1.5rem;
-    height: 1.5rem;
-    flex: 0 0 auto;
-    place-items: center;
-    border: 0;
-    border-radius: 999px;
-    background: var(--llm-surface-raised);
-    color: var(--llm-accent);
-  }
-
-  .drawer-brand-mark svg {
-    width: 0.92rem;
-    height: 0.92rem;
-    fill: currentColor;
-  }
-
   h2 {
     margin: 0;
     color: var(--llm-ink);
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-    font-weight: 860;
-    letter-spacing: 0.22em;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0;
     line-height: 1.1;
-    text-transform: uppercase;
   }
 
   .drawer-brand .runtime-status {
     margin: 0.26rem 0 0;
     color: var(--llm-muted-soft);
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    font-weight: 760;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0;
   }
 
   .drawer-actions {
@@ -535,7 +568,7 @@
     outline: none;
   }
 
-  .starter-questions button span {
+  .starter-questions button :global(svg) {
     color: #716a64;
     min-width: 1rem;
   }
@@ -599,7 +632,7 @@
 
     .drawer-panel {
       width: 100%;
-      height: 100svh;
+      height: 100dvh;
       margin: 0;
       border-radius: 0;
       border-inline: 0;
@@ -610,6 +643,9 @@
     .chat-composer {
       padding-inline: 1.2rem;
     }
+
+    .chat-composer { padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+    .drawer-header { padding-top: max(12px, env(safe-area-inset-top)); }
   }
 
   @media (prefers-reduced-motion: no-preference) {

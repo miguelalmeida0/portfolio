@@ -1,14 +1,17 @@
 <script lang="ts">
+  import Copy from '@lucide/svelte/icons/copy';
+  import Check from '@lucide/svelte/icons/check';
   import { onDestroy } from 'svelte';
 
   import { copyText } from '$lib/utils/clipboard';
 
-  type Variant = 'tile' | 'line' | 'compact';
+  type Variant = 'tile' | 'line' | 'compact' | 'button';
   type CopyState = 'idle' | 'success' | 'error';
 
   export let email: string;
   export let label = 'Email';
   export let variant: Variant = 'tile';
+  export let responsiveIcon = false;
   export let className = '';
   export let testId: string | undefined = undefined;
 
@@ -28,10 +31,20 @@
   $: feedbackMessage = isSuccess ? successMessage : isError ? failureMessage : '';
   $: actionLabel = isSuccess ? 'Copied' : isError ? 'Retry' : 'Copy';
   $: buttonClass = `${baseClass} ${
-    variant === 'line' ? lineClass : variant === 'compact' ? compactClass : tileClass
+    variant === 'line'
+      ? lineClass
+      : variant === 'compact'
+        ? compactClass
+        : variant === 'button'
+          ? buttonOnlyClass
+          : tileClass
   } ${className}`;
   $: toastClass = `${toastBaseClass} ${
-    variant === 'line' ? lineToastClass : variant === 'compact' ? compactToastClass : tileToastClass
+    variant === 'line'
+      ? lineToastClass
+      : variant === 'compact' || variant === 'button'
+        ? compactToastClass
+        : tileToastClass
   } ${toastVisible ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0'}`;
 
   const baseClass =
@@ -42,8 +55,10 @@
     'interactive-row block w-full border-b border-border/60 py-5 hover:bg-card/20 focus-visible:bg-card/20';
   const compactClass =
     'interactive-row -mx-2 flex min-h-11 w-[calc(100%+1rem)] items-center justify-between gap-4 rounded-lg px-2 py-2 break-all hover:bg-card/45 focus-visible:bg-card/45';
+  const buttonOnlyClass =
+    'interactive-button inline-flex min-h-11 items-center justify-center rounded-full border border-border/80 bg-card/45 px-4 py-2 font-sans text-[12px] font-semibold text-foreground hover:bg-card/70 hover:text-accent';
   const toastBaseClass =
-    'pointer-events-none absolute z-20 max-w-[min(23rem,calc(100%-2rem))] rounded-full border border-border/70 bg-background/92 px-3.5 py-2 font-mono text-[10px] leading-snug tracking-[0.02em] text-foreground shadow-[0_18px_48px_-28px_oklch(0_0_0_/_0.55)] backdrop-blur-xl transition-all duration-200 ease-out';
+    'pointer-events-none absolute z-20 max-w-[min(23rem,calc(100%-2rem))] rounded-full border border-border/70 bg-background/92 px-3.5 py-2 font-sans text-[12px] leading-snug text-foreground shadow-[0_18px_48px_-28px_oklch(0_0_0_/_0.55)] backdrop-blur-xl transition-all duration-[var(--interaction-duration)] ease-out';
   const tileToastClass = 'right-5 top-5 sm:right-8';
   const lineToastClass = 'right-0 top-[calc(100%+0.5rem)]';
   const compactToastClass = 'right-0 top-[calc(100%+0.35rem)]';
@@ -95,13 +110,15 @@
 <button
   type="button"
   data-testid={testId}
-  aria-label="Copy email address to clipboard"
+  aria-label={isSuccess ? 'Email copied' : 'Copy email address to clipboard'}
+  title={isSuccess ? 'Email copied' : isError ? 'Retry copying email' : 'Copy email'}
   on:click={copyEmail}
   on:keydown={handleKeydown}
   class={buttonClass}
+  class:responsive-copy={responsiveIcon && variant === 'button'}
 >
   {#if variant === 'tile'}
-    <span class="font-mono text-[10px] uppercase tracking-[0.28em] text-accent">
+    <span class="font-sans text-[12px] font-semibold text-accent">
       {label}
     </span>
     <span class="grid gap-4">
@@ -111,7 +128,7 @@
         {email}
       </span>
       <span
-        class="inline-flex w-fit shrink-0 items-center gap-2 rounded-full border border-border/70 bg-background/45 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground transition-all duration-[var(--interaction-duration)] group-hover/copy-email:border-accent/45 group-hover/copy-email:text-accent group-focus-visible/copy-email:border-accent/45 group-focus-visible/copy-email:text-accent"
+        class="inline-flex w-fit shrink-0 items-center gap-2 rounded-full border border-border/70 bg-background/45 px-3 py-2 font-sans text-[12px] font-semibold text-muted-foreground transition-all duration-[var(--interaction-duration)] group-hover/copy-email:text-accent group-focus-visible/copy-email:text-accent"
         aria-hidden="true"
       >
         <span>{actionLabel}</span>
@@ -126,7 +143,7 @@
     </span>
   {:else if variant === 'line'}
     <span class="grid gap-2 sm:grid-cols-[88px_minmax(0,1fr)_auto] sm:items-start sm:gap-6">
-      <span class="font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+      <span class="font-sans text-[12px] font-semibold text-muted-foreground">
         {label}
       </span>
       <span
@@ -135,27 +152,47 @@
         {email}
       </span>
       <span
-        class="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground transition-colors group-hover/copy-email:text-accent group-focus-visible/copy-email:text-accent"
+        class="font-sans text-[12px] font-semibold text-muted-foreground transition-colors group-hover/copy-email:text-accent group-focus-visible/copy-email:text-accent"
         aria-hidden="true"
       >
         {actionLabel}
       </span>
     </span>
-  {:else}
+  {:else if variant === 'compact'}
     <span class="min-w-0 break-all">{email}</span>
     <span
-      class="shrink-0 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground transition-colors group-hover/copy-email:text-accent group-focus-visible/copy-email:text-accent"
+      class="shrink-0 font-sans text-[12px] font-semibold text-muted-foreground transition-colors group-hover/copy-email:text-accent group-focus-visible/copy-email:text-accent"
       aria-hidden="true"
     >
       {actionLabel}
     </span>
+  {:else}
+    {#if responsiveIcon}<span class="copy-icon" aria-hidden="true">{#if isSuccess}<Check size={18} />{:else}<Copy size={18} />{/if}</span>{/if}
+    <span class="copy-label">{actionLabel} email</span>
   {/if}
 
   {#if feedbackMessage}
-    <span class={toastClass} aria-hidden="true">
+    <span class={toastClass} class:responsive-feedback={responsiveIcon} aria-hidden="true">
       {feedbackMessage}
     </span>
   {/if}
 
   <span class="sr-only" aria-live="polite" aria-atomic="true">{liveMessage}</span>
 </button>
+
+<style>
+  .copy-icon { display: none; }
+  .responsive-feedback { width: min(18rem, calc(100vw - 2rem)); max-width: none; }
+  .responsive-copy {
+    width: 44px; min-width: 44px; height: 44px; padding: 0;
+    border: 1px solid transparent; border-radius: 8px;
+    background: transparent; color: var(--muted-foreground);
+  }
+  .responsive-copy:hover, .responsive-copy:focus-visible {
+    background: rgb(244 234 220 / 0.07);
+    border-color: rgb(244 234 220 / 0.18); color: var(--foreground);
+    transform: none;
+  }
+  .responsive-copy .copy-icon { display: inline-flex; }
+  .responsive-copy .copy-label { display: none; }
+</style>

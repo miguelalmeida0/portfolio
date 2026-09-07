@@ -1,16 +1,24 @@
 <script lang="ts">
   import { onDestroy, onMount } from 'svelte';
-  import { goto } from '$app/navigation';
+  import { afterNavigate, goto } from '$app/navigation';
   import { page } from '$app/stores';
   import { quintOut } from 'svelte/easing';
   import { fade, fly } from 'svelte/transition';
-  import { ArrowUpRight, Menu, X } from '@lucide/svelte';
+  import ArrowUpRight from '@lucide/svelte/icons/arrow-up-right';
+  import Menu from '@lucide/svelte/icons/menu';
+  import X from '@lucide/svelte/icons/x';
 
   import { navigation } from '$lib/content/folio';
   import { scrollToHash } from '$lib/utils/anchors';
 
   let activeTarget = '';
   let menuOpen = false;
+  let headerElement: HTMLElement;
+
+  afterNavigate(() => {
+    activeTarget = $page.url.pathname === '/' ? ($page.url.hash || '/') : $page.url.pathname;
+    menuOpen = false;
+  });
 
   onMount(() => {
     const syncLocation = () => {
@@ -20,7 +28,23 @@
     };
 
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') menuOpen = false;
+      if (!menuOpen) return;
+      const toggle = headerElement.querySelector<HTMLButtonElement>('.menu-toggle');
+      if (event.key === 'Escape') {
+        menuOpen = false;
+        toggle?.focus();
+      }
+      if (event.key === 'Tab') {
+        const links = Array.from(headerElement.querySelectorAll<HTMLElement>('.menu-toggle, .mobile-panel a'));
+        const first = links[0];
+        const last = links.at(-1);
+        if (!first || !last) return;
+        if (event.shiftKey && (document.activeElement === first || !links.includes(document.activeElement as HTMLElement))) {
+          event.preventDefault(); last.focus();
+        } else if (!event.shiftKey && (document.activeElement === last || !links.includes(document.activeElement as HTMLElement))) {
+          event.preventDefault(); first.focus();
+        }
+      }
     };
 
     const closeOnDesktop = () => {
@@ -56,6 +80,7 @@
   });
 
   const navigate = async (event: MouseEvent, href: string) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     menuOpen = false;
     if (!href.startsWith('#')) return;
 
@@ -74,7 +99,7 @@
   };
 </script>
 
-<header class="site-header" data-testid="site-header">
+<header bind:this={headerElement} class="site-header" data-testid="site-header">
   <nav class="top-nav" data-testid="primary-navigation" aria-label="Primary">
     {#each navigation as item}
       <a
@@ -166,7 +191,7 @@
     z-index: 50;
     display: flex;
     justify-content: center;
-    padding: clamp(0.72rem, 1.6svh, 1.2rem) clamp(0.85rem, 3vw, 3rem) 0;
+    padding: max(28px, env(safe-area-inset-top)) 20px 0;
     border: 0;
     background: transparent;
     color: var(--nav-cream);
@@ -208,25 +233,24 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: clamp(4.85rem, 6.7vw, 6.7rem);
-    min-height: clamp(1.72rem, 2vw, 2rem);
+    min-width: 102px;
+    min-height: 30px;
     border: 0;
     border-radius: 999px;
     background: transparent;
     padding: 0 0.9rem;
     font-family: var(--font-display);
-    font-size: clamp(0.75rem, 0.78vw, 0.84rem);
-    font-weight: 900;
+    font-size: 11px; text-transform: uppercase;
+    font-weight: 700;
     line-height: 1;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    letter-spacing: 0;
     color: rgb(244 234 220 / 0.82);
     outline: none;
     box-shadow: none;
     transition:
-      background-color 180ms var(--interaction-ease),
-      color 180ms var(--interaction-ease),
-      transform 180ms var(--interaction-ease);
+      background-color var(--interaction-duration) var(--interaction-ease),
+      color var(--interaction-duration) var(--interaction-ease),
+      transform var(--interaction-duration) var(--interaction-ease);
   }
 
   .top-nav a:hover,
@@ -276,13 +300,12 @@
 
     .mobile-wordmark {
       color: rgb(244 234 220 / 0.72);
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      font-weight: 460;
-      letter-spacing: 0.08em;
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0;
       line-height: 1;
-      text-transform: uppercase;
-      transition: color 180ms ease;
+      transition: color var(--interaction-duration) var(--interaction-ease);
     }
 
     .mobile-wordmark:hover,

@@ -1,210 +1,199 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
-  import { observeMediaViewport } from '$lib/actions/observe-media-viewport';
-  import ResponsivePicture from '$lib/components/media/ResponsivePicture.svelte';
-  import type { ResponsiveImageSources } from '$lib/content/project-media';
-  import { getMediaPolicy } from '$lib/media/media-policy';
+  import Pause from '@lucide/svelte/icons/pause';
+  import Play from '@lucide/svelte/icons/play';
 
   export let alt: string;
   export let poster: string;
-  export let posterSources: ResponsiveImageSources | undefined = undefined;
   export let webm: string | undefined = undefined;
   export let mp4: string | undefined = undefined;
   export let featured = false;
 
   let video: HTMLVideoElement;
-  let mounted = false;
   let playing = false;
-  let ready = false;
-  let failed = false;
-  let playRejected = false;
-  let sourcesAttached = false;
-  let sourcesReady = false;
-  let nearViewport = false;
-  let visibleRatio = 0;
+  let inViewport = false;
+  let sourcesMounted = false;
   let reducedMotion = false;
-  let saveData = false;
-  let documentHidden = false;
+  let userPaused = false;
+  let disposed = false;
 
-  $: policy = getMediaPolicy({
-    nearViewport,
-    visibleRatio,
-    reducedMotion,
-    saveData,
-    documentHidden,
-    failed
-  });
+  const pause = () => video?.pause();
 
-  $: if (mounted && policy.shouldLoad && !sourcesAttached) {
-    attachSources();
-  }
-
-  $: if (mounted && video && sourcesReady) {
-    syncPlayback(policy.shouldPlay);
-  }
-
-  const updateViewport = (state: { nearViewport: boolean; visibleRatio: number }) => {
-    nearViewport = state.nearViewport;
-    visibleRatio = state.visibleRatio;
+  const playWhenReady = async () => {
+    if (disposed || reducedMotion || document.hidden || !inViewport || userPaused) return;
+    if (!sourcesMounted) {
+      sourcesMounted = true;
+      await tick();
+      if (disposed) return;
+      video.load();
+    }
+    if (disposed || reducedMotion || document.hidden || !inViewport || userPaused) return;
+    video.play().catch(() => {
+      // The poster remains visible if muted autoplay is blocked.
+    });
   };
 
-  const attachSources = async () => {
-    sourcesAttached = true;
-    await tick();
-    sourcesReady = true;
-    video?.load();
-    syncPlayback(policy.shouldPlay);
-  };
-
-  const syncPlayback = (shouldPlay: boolean) => {
-    if (!video) return;
-    if (!shouldPlay) {
-      video.pause();
+  const togglePlayback = async () => {
+    if (playing) {
+      userPaused = true;
+      pause();
       return;
     }
 
-    const result = video.play();
-    if (result) {
-      result.catch(() => {
-        playRejected = true;
-        playing = false;
-      });
+    userPaused = false;
+    if (!sourcesMounted) {
+      sourcesMounted = true;
+      await tick();
+      if (disposed) return;
+      video.load();
     }
-  };
-
-  const handleMediaError = () => {
-    failed = true;
-    ready = false;
-    playing = false;
-    video?.pause();
+    video.play().catch(() => undefined);
   };
 
   onMount(() => {
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const connection = (
-      navigator as Navigator & {
-        connection?: EventTarget & { saveData?: boolean };
-      }
-    ).connection;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        inViewport = entry.isIntersecting && entry.intersectionRatio >= 0.25;
+        if (inViewport) void playWhenReady();
+        else pause();
+      },
+      { rootMargin: '0px', threshold: 0.25 }
+    );
 
-    const syncPreferences = () => {
+    const syncMotionPreference = () => {
       reducedMotion = motionQuery.matches;
-      saveData = connection?.saveData === true;
-      documentHidden = document.hidden;
+      if (reducedMotion) pause();
+      else void playWhenReady();
     };
 
-    syncPreferences();
-    mounted = true;
-    motionQuery.addEventListener('change', syncPreferences);
-    connection?.addEventListener?.('change', syncPreferences);
-    document.addEventListener('visibilitychange', syncPreferences);
+    const syncPageVisibility = () => {
+      if (document.hidden) pause();
+      else void playWhenReady();
+    };
+
+    syncMotionPreference();
+    observer.observe(video);
+    motionQuery.addEventListener('change', syncMotionPreference);
+    document.addEventListener('visibilitychange', syncPageVisibility);
 
     return () => {
-      mounted = false;
-      video?.pause();
-      motionQuery.removeEventListener('change', syncPreferences);
-      connection?.removeEventListener?.('change', syncPreferences);
-      document.removeEventListener('visibilitychange', syncPreferences);
+      disposed = true;
+      pause();
+      observer.disconnect();
+      motionQuery.removeEventListener('change', syncMotionPreference);
+      document.removeEventListener('visibilitychange', syncPageVisibility);
     };
   });
 </script>
 
-<div
-  class="video-stage"
-  class:ready
-  class:failed
-  class:featured
-  use:observeMediaViewport={{ onChange: updateViewport }}
-  data-media-stage
-  data-poster-visible={!ready || !playing || failed}
->
-  <div class="poster" aria-hidden="true">
-    <ResponsivePicture
-      fallbackSrc={poster}
-      alt=""
-      width={posterSources?.width ?? 1440}
-      height={posterSources?.height ?? 900}
-      avifSrcset={posterSources?.avifSrcset}
-      webpSrcset={posterSources?.webpSrcset}
-      sizes={posterSources?.sizes ?? '100vw'}
-      loading="lazy"
-      fetchpriority="auto"
-      fit={featured ? 'cover' : 'contain'}
-      draggable={false}
-    />
-  </div>
-
+<div class="video-shell">
   <video
     bind:this={video}
-    on:loadeddata={() => (ready = true)}
-    on:playing={() => (playing = true)}
+    on:canplay={playWhenReady}
+    on:play={() => (playing = true)}
     on:pause={() => (playing = false)}
-    on:error={handleMediaError}
     aria-label={alt}
+    {poster}
     muted
     playsinline
     loop
     preload="none"
     data-video-loop
-    data-video-loaded={sourcesAttached}
-    data-video-ready={ready}
     data-video-active={playing}
-    data-video-near-viewport={nearViewport}
-    data-video-visible-ratio={visibleRatio.toFixed(2)}
-    data-media-policy={policy.reason}
-    data-reduced-motion={reducedMotion}
-    data-save-data={saveData}
-    data-play-rejected={playRejected}
+    data-video-sources-mounted={sourcesMounted}
+    data-autoplay-visible="true"
     data-featured={featured}
   >
-    {#if sourcesAttached}
+    {#if sourcesMounted}
       {#if webm}<source src={webm} type="video/webm" />{/if}
       {#if mp4}<source src={mp4} type="video/mp4" />{/if}
     {/if}
   </video>
+
+  <button
+    type="button"
+    class="playback-control"
+    aria-label={playing ? 'Pause project film' : 'Play project film'}
+    on:click={togglePlayback}
+  >
+    {#if playing}
+      <Pause size={15} strokeWidth={2} aria-hidden="true" />
+      <span>Pause</span>
+    {:else}
+      <Play size={15} strokeWidth={2} aria-hidden="true" />
+      <span>Play</span>
+    {/if}
+  </button>
 </div>
 
 <style>
-  .video-stage,
-  .poster,
+  .video-shell,
   video {
-    position: absolute;
-    inset: 0;
     width: 100%;
     height: 100%;
   }
 
-  .poster {
-    z-index: 1;
-    opacity: 1;
+  .video-shell {
+    position: relative;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: #0a0a0a;
   }
 
   video {
-    z-index: 0;
+    position: absolute;
+    inset: 0;
     display: block;
-    object-fit: contain;
+    object-fit: var(--video-fit, contain);
     object-position: var(--focal-x, 50%) var(--focal-y, 50%);
   }
 
-  .video-stage.ready video {
-    z-index: 2;
+  .playback-control {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    z-index: 4;
+    display: inline-flex;
+    min-height: 2.55rem;
+    align-items: center;
+    gap: 0.42rem;
+    border: 1px solid rgb(244 234 220 / 0.3);
+    border-radius: 999px;
+    background: rgb(5 5 5 / 0.82);
+    padding: 0.55rem 0.78rem;
+    color: #f4eadc;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    backdrop-filter: blur(10px);
+    transition:
+      transform var(--interaction-duration) var(--interaction-ease),
+      background-color var(--interaction-duration) var(--interaction-ease),
+      box-shadow var(--interaction-duration) var(--interaction-ease);
   }
 
-  .video-stage.ready .poster {
-    opacity: 0;
+  .playback-control:hover {
+    background: #050505;
+    transform: translateY(-1px);
+    box-shadow: 0 14px 30px -22px rgb(0 0 0 / 0.8);
   }
 
-  .video-stage.failed video,
-  .video-stage:not(.ready) video {
-    visibility: hidden;
+  .playback-control:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
   }
 
-  .video-stage.failed .poster {
-    z-index: 3;
-    opacity: 1;
-  }
-
-  .video-stage.featured video {
-    object-fit: cover;
+  @media (max-width: 600px) {
+    .playback-control {
+      right: 0.55rem;
+      bottom: 0.55rem;
+      min-height: 2.4rem;
+      padding: 0.48rem 0.68rem;
+      font-size: 0.74rem;
+    }
   }
 </style>

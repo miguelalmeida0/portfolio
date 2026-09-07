@@ -1,0 +1,249 @@
+{
+  "scope": "Built server and files; no browser paint, hydration, or viewport measurements",
+  "pages": [
+    {
+      "route": "/",
+      "coldMs": 54.3,
+      "warmMs": [
+        1.3,
+        1,
+        1.5
+      ],
+      "htmlGzipBytes": 5354
+    },
+    {
+      "route": "/cv",
+      "coldMs": 4.5,
+      "warmMs": [
+        3,
+        1.3,
+        1.2
+      ],
+      "htmlGzipBytes": 5218
+    },
+    {
+      "route": "/story",
+      "coldMs": 3.1,
+      "warmMs": [
+        0.9,
+        1,
+        0.4
+      ],
+      "htmlGzipBytes": 3413
+    },
+    {
+      "route": "/work/camera-harness",
+      "coldMs": 5.6,
+      "warmMs": [
+        0.7,
+        0.8,
+        0.8
+      ],
+      "htmlGzipBytes": 6203
+    },
+    {
+      "route": "/work/ghostwriter",
+      "coldMs": 0.7,
+      "warmMs": [
+        0.4,
+        0.4,
+        0.4
+      ],
+      "htmlGzipBytes": 5101
+    },
+    {
+      "route": "/work/mirror-ai",
+      "coldMs": 0.6,
+      "warmMs": [
+        0.4,
+        0.3,
+        0.3
+      ],
+      "htmlGzipBytes": 5160
+    },
+    {
+      "route": "/work/atlas",
+      "coldMs": 0.7,
+      "warmMs": [
+        0.3,
+        0.3,
+        0.3
+      ],
+      "htmlGzipBytes": 4043
+    },
+    {
+      "route": "/work/creature-app",
+      "coldMs": 0.7,
+      "warmMs": [
+        0.5,
+        0.4,
+        0.3
+      ],
+      "htmlGzipBytes": 4026
+    },
+    {
+      "route": "/out/linkedin",
+      "coldMs": 2.7,
+      "warmMs": [
+        0.2,
+        0.3,
+        0.2
+      ],
+      "htmlGzipBytes": 1822
+    }
+  ],
+  "assets": [
+    {
+      "path": "/projects/f24-ai-hackathon/working-session-wide.png",
+      "bytes": 3554650
+    },
+    {
+      "path": "/projects/creature-mirror/tracking-correspondence.png",
+      "bytes": 2307177
+    },
+    {
+      "path": "/projects/mirror-ai/active-image-demo-poster.jpg",
+      "bytes": 175154
+    },
+    {
+      "path": "/projects/f24-ai-hackathon/presentation-room-1024.webp",
+      "bytes": 93344
+    },
+    {
+      "path": "/projects/ghostwriter/ghostwriter-demo-poster.webp",
+      "bytes": 65780
+    },
+    {
+      "path": "/projects/f24-ai-hackathon/team-demo-1024.webp",
+      "bytes": 61530
+    },
+    {
+      "path": "/projects/f24-ai-hackathon/working-session-wide-1024.webp",
+      "bytes": 61236
+    },
+    {
+      "path": "/projects/camera-harness/gesture-1600.webp",
+      "bytes": 56638
+    },
+    {
+      "path": "/projects/camera-harness/movement-1600.webp",
+      "bytes": 54606
+    },
+    {
+      "path": "/projects/ghostwriter/interface-1600.webp",
+      "bytes": 53354
+    },
+    {
+      "path": "/projects/camera-harness/recognition-poster-1600.webp",
+      "bytes": 53096
+    },
+    {
+      "path": "/projects/f24-ai-hackathon/presentation-room-1024.avif",
+      "bytes": 52620
+    },
+    {
+      "path": "/images/avatar-180.png",
+      "bytes": 45832
+    },
+    {
+      "path": "/projects/f24-ai-hackathon/presentation-room-640.webp",
+      "bytes": 44942
+    },
+    {
+      "path": "/projects/f24-ai-hackathon/working-session-wide-1024.avif",
+      "bytes": 34817
+    },
+    {
+      "path": "/projects/mirror-ai/interface-1600.webp",
+      "bytes": 32266
+    },
+    {
+      "path": "/projects/f24-ai-hackathon/team-demo-640.webp",
+      "bytes": 30856
+    },
+    {
+      "path": "/projects/f24-ai-hackathon/working-session-wide-640.webp",
+      "bytes": 30178
+    },
+    {
+      "path": "/projects/f24-ai-hackathon/presentation-room-640.avif",
+      "bytes": 25018
+    },
+    {
+      "path": "/projects/camera-harness/gesture-720.webp",
+      "bytes": 22076
+    },
+    {
+      "path": "/projects/camera-harness/movement-720.webp",
+      "bytes": 21782
+    },
+    {
+      "path": "/projects/ghostwriter/interface-720.webp",
+      "bytes": 17932
+    },
+    {
+      "path": "/projects/f24-ai-hackathon/working-session-wide-640.avif",
+      "bytes": 17328
+    },
+    {
+      "path": "/images/miguel-hero-1451.webp",
+      "bytes": 16828
+    },
+    {
+      "path": "/projects/mirror-ai/interface-720.webp",
+      "bytes": 12402
+    },
+    {
+      "path": "/images/avatar.webp",
+      "bytes": 11328
+    },
+    {
+      "path": "/images/miguel-hero-720.webp",
+      "bytes": 6912
+    },
+    {
+      "path": "/images/avatar-32.png",
+      "bytes": 2328
+    },
+    {
+      "path": "/images/github.svg",
+      "bytes": 822
+    },
+    {
+      "path": "/images/linkedin.svg",
+      "bytes": 610
+    },
+    {
+      "path": "/site.webmanifest",
+      "bytes": 583
+    }
+  ],
+  "errors": [],
+  "videoAssets": [
+    {
+      "path": "/projects/camera-harness/book-recognition-720.mp4",
+      "bytes": 562515,
+      "loading": "Sources mounted on intersection; not in initial HTML"
+    },
+    {
+      "path": "/projects/ghostwriter/ghostwriter-demo.mp4",
+      "bytes": 1375005,
+      "loading": "Sources mounted on intersection; not in initial HTML"
+    },
+    {
+      "path": "/projects/ghostwriter/ghostwriter-demo.webm",
+      "bytes": 1641796,
+      "loading": "Sources mounted on intersection; not in initial HTML"
+    },
+    {
+      "path": "/projects/mirror-ai/active-image-demo.mp4",
+      "bytes": 1797641,
+      "loading": "Sources mounted on intersection; not in initial HTML"
+    },
+    {
+      "path": "/projects/mirror-ai/active-image-demo.webm",
+      "bytes": 1160154,
+      "loading": "Sources mounted on intersection; not in initial HTML"
+    }
+  ]
+}

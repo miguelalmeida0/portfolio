@@ -30,16 +30,10 @@
   <button
     type="button"
     class="llm-trigger"
-    aria-label="Open MiguelLLM"
+    aria-label="Open portfolio guide"
     on:click={() => openDrawer()}
   >
-    <span class="llm-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" role="img">
-        <path d="M12 2.7c.9 4.7 3.6 7.4 8.3 8.3-4.7.9-7.4 3.6-8.3 8.3-.9-4.7-3.6-7.4-8.3-8.3 4.7-.9 7.4-3.6 8.3-8.3Z" />
-        <path d="M18.7 3.7c.34 1.8 1.38 2.84 3.18 3.18-1.8.34-2.84 1.38-3.18 3.18-.34-1.8-1.38-2.84-3.18-3.18 1.8-.34 2.84-1.38 3.18-3.18Z" />
-      </svg>
-    </span>
-    <span id="miguel-llm-title">MiguelLLM</span>
+    <span id="miguel-llm-title">Portfolio guide</span>
   </button>
 </div>
 
@@ -71,36 +65,20 @@
     box-shadow: 0 14px 48px rgb(0 0 0 / 0.22);
     backdrop-filter: blur(14px);
     transition:
-      transform 180ms var(--interaction-ease),
-      border-color 180ms var(--interaction-ease),
-      background-color 180ms var(--interaction-ease),
-      box-shadow 180ms var(--interaction-ease);
+      transform var(--interaction-duration) var(--interaction-ease),
+      background-color var(--interaction-duration) var(--interaction-ease),
+      box-shadow var(--interaction-duration) var(--interaction-ease);
   }
 
-  .llm-icon {
-    display: grid;
-    width: 1.72rem;
-    height: 1.72rem;
-    place-items: center;
-    border-radius: 999px;
-    background: #c2dae9;
-    color: #17384b;
-  }
-
-  .llm-icon svg {
-    width: 1rem;
-    height: 1rem;
-    fill: currentColor;
-  }
-
-  .llm-trigger:hover,
-  .llm-trigger:focus-visible {
-    border-color: rgb(194 218 233 / 0.42);
+  .llm-trigger:hover {
     background:
       linear-gradient(180deg, rgb(23 52 71 / 0.94), rgb(11 23 33 / 0.86)),
       #122a39;
     transform: translateY(-1px);
     box-shadow: 0 18px 40px rgb(0 0 0 / 0.24);
+  }
+
+  .llm-trigger:focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;
   }

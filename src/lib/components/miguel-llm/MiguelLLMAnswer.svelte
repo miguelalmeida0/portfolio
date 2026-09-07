@@ -3,6 +3,7 @@
   import MiguelLLMSourceChips from './MiguelLLMSourceChips.svelte';
 
   export let answer: MiguelAnswer | null = null;
+  export let onNavigate: () => void = () => {};
 </script>
 
 {#if answer}
@@ -13,7 +14,7 @@
         {#each answer.bullets as bullet}<li>{bullet}</li>{/each}
       </ul>
     {/if}
-    <MiguelLLMSourceChips sources={answer.sources} />
+    <MiguelLLMSourceChips sources={answer.sources} {onNavigate} />
   </article>
 {/if}
 

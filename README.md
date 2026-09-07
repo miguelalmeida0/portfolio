@@ -1,8 +1,8 @@
 # Miguel Almeida Portfolio
 
-An evidence-led portfolio for Miguel Almeida, a frontend and product engineer working across product UI, design systems, browser architecture, reliability, and experimental multimodal interfaces.
+An evidence-led portfolio for Miguel Almeida, a frontend engineer working across product UI, design systems, browser architecture, reliability, and experimental multimodal interfaces.
 
-The site is intentionally editorial rather than a generic project grid. Camera Harness is the flagship engineering case study; Atlas and Ghostwriter provide supporting architecture and reliability stories.
+The site is intentionally editorial rather than a generic project grid. Camera Harness is the flagship engineering case study; Ghostwriter, Atlas, Creature App, and Mirror AI provide supporting reliability, architecture, interaction, and evidence stories. F24 appears as factual professional context rather than a fabricated company case study.
 
 ## Stack
 
@@ -36,7 +36,10 @@ npm run lint
 npm run build
 npm run e2e
 npm run preview
+npm run qa:capture-revamp
 ```
+
+`qa:capture-revamp` expects the production preview on port `4173` and writes the revamp screenshots and before/after comparisons under `docs/qa/screenshots/portfolio-content-revamp-2026-09-05/`.
 
 ## Project Structure
 
@@ -44,8 +47,8 @@ npm run preview
 src/lib/content/folio.ts              profile, navigation, experience, and resume content
 src/lib/content/case-studies.ts       typed project and evidence records
 src/lib/components/case-study/        reusable case-study presentation components
-src/routes/work/camera-harness/       flagship architecture case study
-src/routes/work/[slug]/               supporting case studies
+src/routes/work/[slug]/               all five project case studies
+src/lib/content/project-media.ts      approved project media and homepage order
 src/data/miguel-llm/                  approved retrieval knowledge
 src/lib/miguel-llm/                   retrieval, fallback, guardrails, and response types
 src/routes/api/miguel-llm/            provider-agnostic server route
@@ -107,7 +110,7 @@ These are implementation goals, not a claim of complete WCAG conformance. Record
 
 ## Production
 
-The canonical public URL is `https://miguelalmeida.is-a.dev`. Production builds use Node.js 22, `npm run build`, and the `.svelte-kit/cloudflare` output directory; Cloudflare Pages serves that artifact, while GitHub Actions validates the `portfolio` branch. Provider-generated hostnames are infrastructure only and are not the portfolio's public identity.
+The canonical public URL is `https://miguelalmeida.is-a.dev`. Production builds use Node.js 22, `npm run build`, and the `.svelte-kit/cloudflare` output directory; Cloudflare Pages serves that artifact, while GitHub Actions validates release branches. Provider-generated hostnames are infrastructure only and are not the portfolio's public identity.
 
 ## Public Claim Rules
 

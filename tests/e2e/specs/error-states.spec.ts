@@ -44,7 +44,7 @@ test.describe('error and fallback states', () => {
 
     await page.getByRole('link', { name: 'Back to CV' }).click();
     await expect(page).toHaveURL(/\/cv$/);
-    await expect(page.getByRole('heading', { name: 'Miguel Almeida' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Mid-level Frontend Engineer' })).toBeVisible();
   });
 
   test('private Camera Harness captures are not publicly served', async ({ request }) => {

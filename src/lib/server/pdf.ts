@@ -1,17 +1,42 @@
-import { caseStudies } from '$lib/content/case-studies';
-import { cvBio, cvEducation, cvExperience, cvLanguages, cvStack, site } from '$lib/content/folio';
+import {
+  cvBio,
+  cvEducation,
+  cvExperience,
+  cvLanguages,
+  cvStack,
+  selectedWork,
+  professionalRecommendation,
+  site
+} from '$lib/content/folio';
+import { SITE_ORIGIN } from '$lib/config/site';
+
+type PdfFont = 'F1' | 'F2' | 'F3';
+type PdfColor = [number, number, number];
 
 interface PdfLine {
   text: string;
   x: number;
   y: number;
   size?: number;
-  font?: 'F1' | 'F2' | 'F3';
-  color?: [number, number, number];
+  font?: PdfFont;
+  color?: PdfColor;
 }
+
+const PAGE_WIDTH = 595.28;
+const PAGE_HEIGHT = 841.89;
+const INK: PdfColor = [0.094, 0.102, 0.11];
+const MUTED: PdfColor = [0.31, 0.329, 0.349];
+const SOFT: PdfColor = [0.545, 0.557, 0.565];
+const ACCENT: PdfColor = [0.682, 0.337, 0.157];
+const PAPER: PdfColor = [0.986, 0.98, 0.965];
+const RULE: PdfColor = [0.835, 0.824, 0.796];
 
 const escapePdfText = (value: string): string =>
   value
+    .replace(/[–—]/g, '-')
+    .replace(/·/g, '|')
+    .replace(/[“”]/g, '"')
+    .replace(/’/g, "'")
     .replace(/\\/g, '\\\\')
     .replace(/\(/g, '\\(')
     .replace(/\)/g, '\\)')
@@ -24,23 +49,16 @@ const wrapText = (text: string, maxChars: number): string[] => {
 
   for (const word of words) {
     const next = current ? `${current} ${word}` : word;
-
     if (next.length <= maxChars) {
       current = next;
       continue;
     }
 
-    if (current) {
-      lines.push(current);
-    }
-
+    if (current) lines.push(current);
     current = word;
   }
 
-  if (current) {
-    lines.push(current);
-  }
-
+  if (current) lines.push(current);
   return lines;
 };
 
@@ -48,238 +66,227 @@ const drawText = ({
   text,
   x,
   y,
-  size = 12,
+  size = 10,
   font = 'F1',
-  color = [0.95, 0.91, 0.84]
+  color = INK
 }: PdfLine): string => {
   const [r, g, b] = color;
-
-  return `BT /${font} ${size} Tf ${r.toFixed(3)} ${g.toFixed(3)} ${b.toFixed(3)} rg 1 0 0 1 ${x} ${y} Tm (${escapePdfText(
-    text
-  )}) Tj ET`;
+  return `BT /${font} ${size} Tf ${r.toFixed(3)} ${g.toFixed(3)} ${b.toFixed(3)} rg 1 0 0 1 ${x} ${y} Tm (${escapePdfText(text)}) Tj ET`;
 };
 
-const drawBackground = (): string =>
-  [
-    '0.196 0.255 0.184 rg 0 0 612 792 re f',
-    '0.282 0.202 0.149 rg 56 742 128 2 re f',
-    '0.949 0.909 0.839 RG 56 708 500 0 re S'
-  ].join('\n');
+const drawRect = (
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  color: PdfColor
+): string => {
+  const [r, g, b] = color;
+  return `${r.toFixed(3)} ${g.toFixed(3)} ${b.toFixed(3)} rg ${x} ${y} ${width} ${height} re f`;
+};
 
-const buildPageOne = (): string => {
-  const commands: string[] = [drawBackground()];
+const drawRule = (x: number, y: number, width: number, color = RULE): string => {
+  const [r, g, b] = color;
+  return `${r.toFixed(3)} ${g.toFixed(3)} ${b.toFixed(3)} RG 0.55 w ${x} ${y} m ${x + width} ${y} l S`;
+};
 
-  commands.push(
-    drawText({
-      text: 'Miguel Almeida',
-      x: 56,
-      y: 708,
-      size: 31,
-      font: 'F2'
-    }),
-    drawText({
-      text: 'Frontend Engineer - Product UI & Design Systems',
-      x: 56,
-      y: 678,
-      size: 15,
-      font: 'F3',
-      color: [0.898, 0.822, 0.661]
-    })
-  );
+const drawSectionLabel = (text: string, x: number, y: number): string[] => [
+  drawRect(x, y - 1, 3, 10, ACCENT),
+  drawText({ text: text.toUpperCase(), x: x + 11, y, size: 8, font: 'F2', color: ACCENT })
+];
 
-  let summaryY = 642;
-  for (const line of wrapText(cvBio, 82)) {
-    commands.push(drawText({ text: line, x: 56, y: summaryY, size: 11.5 }));
-    summaryY -= 18;
+const drawWrapped = (
+  commands: string[],
+  text: string,
+  x: number,
+  y: number,
+  maxChars: number,
+  size: number,
+  leading: number,
+  options: { font?: PdfFont; color?: PdfColor } = {}
+): number => {
+  let cursor = y;
+  for (const line of wrapText(text, maxChars)) {
+    commands.push(
+      drawText({
+        text: line,
+        x,
+        y: cursor,
+        size,
+        font: options.font,
+        color: options.color
+      })
+    );
+    cursor -= leading;
   }
+  return cursor;
+};
+
+const drawBullet = (
+  commands: string[],
+  text: string,
+  y: number,
+  maxChars = 72
+): number => {
+  commands.push(drawRect(44, y + 3.2, 2.4, 2.4, ACCENT));
+  return drawWrapped(commands, text, 54, y, maxChars, 8.45, 11.4, { color: MUTED }) - 4;
+};
+
+const buildPage = (): string => {
+  const commands: string[] = [drawRect(0, 0, PAGE_WIDTH, PAGE_HEIGHT, PAPER)];
 
   commands.push(
+    drawRect(42, 764, 3.5, 42, ACCENT),
+    drawText({ text: site.name, x: 54, y: 789, size: 25, font: 'F2' }),
     drawText({
-      text: `Berlin, Germany  |  ${site.email}  |  github.com/miguelalmeida0`,
-      x: 56,
-      y: 590,
-      size: 9.5,
-      color: [0.859, 0.788, 0.675]
-    }),
-    drawText({
-      text: 'Professional Diploma in UX Design | UX Design Institute | 2020-2021',
-      x: 56,
-      y: 570,
-      size: 9.5,
+      text: 'FRONTEND ENGINEER | PRODUCT UI & DESIGN SYSTEMS',
+      x: 54,
+      y: 768,
+      size: 8.7,
       font: 'F2',
-      color: [0.898, 0.822, 0.661]
+      color: MUTED
     }),
+    drawText({ text: 'Berlin, Germany', x: 365, y: 802, size: 8.2, color: SOFT }),
+    drawText({ text: site.email, x: 365, y: 787, size: 8.2, color: INK }),
+    drawText({ text: 'linkedin.com/in/miguelalmeida1', x: 365, y: 772, size: 8.2, color: INK }),
+    drawText({ text: 'github.com/miguelalmeida0', x: 365, y: 757, size: 8.2, color: INK }),
+    drawRule(42, 738, 511)
+  );
+
+  commands.push(...drawSectionLabel('Profile', 42, 715));
+  drawWrapped(commands, cvBio, 42, 692, 104, 9.15, 13, { color: MUTED });
+  commands.push(drawRule(42, 655, 511));
+
+  commands.push(...drawSectionLabel('Experience', 42, 630));
+  const f24 = cvExperience[0];
+  commands.push(
+    drawText({ text: f24.role, x: 42, y: 602, size: 11.4, font: 'F2' }),
     drawText({
-      text: 'Professional Experience',
-      x: 56,
-      y: 536,
-      size: 17,
-      font: 'F2'
+      text: `${f24.company} | ${f24.location} | ${f24.years}`,
+      x: 42,
+      y: 586,
+      size: 8.3,
+      font: 'F2',
+      color: SOFT
     })
   );
 
-  let roleY = 504;
-  for (const item of cvExperience.slice(0, 4)) {
-    commands.push(
-      drawText({
-        text: `${item.years}  ${item.role}`,
-        x: 56,
-        y: roleY,
-        size: 12,
-        font: 'F2'
-      }),
-      drawText({
-        text: `${item.company} · ${item.location}`,
-        x: 56,
-        y: roleY - 16,
-        size: 9.5,
-        color: [0.859, 0.788, 0.675]
-      })
-    );
+  let cursorY = 563;
+  for (const bullet of f24.bullets) cursorY = drawBullet(commands, bullet, cursorY, 70);
 
-    roleY -= 34;
+  const freelance = cvExperience[1];
+  cursorY -= 3;
+  commands.push(
+    drawText({ text: freelance.role, x: 42, y: cursorY, size: 10.4, font: 'F2' }),
+    drawText({
+      text: `${freelance.company} | ${freelance.location} | ${freelance.years}`,
+      x: 42,
+      y: cursorY - 15,
+      size: 8.1,
+      font: 'F2',
+      color: SOFT
+    })
+  );
+  cursorY -= 37;
+  for (const bullet of freelance.bullets) cursorY = drawBullet(commands, bullet, cursorY, 70);
 
-    for (const bullet of item.bullets.slice(0, 3)) {
-      for (const line of wrapText(`• ${bullet}`, 83)) {
-        commands.push(drawText({ text: line, x: 66, y: roleY, size: 10.25 }));
-        roleY -= 14;
-      }
-    }
-    roleY -= 18;
+  const projectHeadingY = cursorY - 26;
+  commands.push(drawRule(42, projectHeadingY + 24, 348));
+  commands.push(...drawSectionLabel('Selected work', 42, projectHeadingY));
+
+  let projectY = projectHeadingY - 28;
+  for (const project of selectedWork) {
+    commands.push(drawText({ text: project.title, x: 42, y: projectY, size: 9.6, font: 'F2' }));
+    projectY = drawWrapped(commands, project.tagline, 42, projectY - 14, 72, 8.2, 10.5, {
+      color: MUTED
+    });
+    projectY -= 10;
   }
 
-  commands.push(
-    drawText({
-      text: 'Generated from the same content source as the web resume.',
-      x: 56,
-      y: 72,
-      size: 10,
-      color: [0.780, 0.714, 0.604]
-    })
-  );
+  const recommendationY = projectY - 18;
+  commands.push(...drawSectionLabel('Recommendation', 42, recommendationY));
+  const quoteEnd = drawWrapped(commands, `"${professionalRecommendation.quote}"`, 42, recommendationY - 23, 73, 8.3, 11.4, { color: MUTED, font: 'F3' });
+  commands.push(drawText({ text: `${professionalRecommendation.name} | ${professionalRecommendation.role}`, x: 42, y: quoteEnd - 7, size: 8, font: 'F2', color: INK }));
 
-  return commands.join('\n');
-};
+  commands.push(drawRule(412, 655, 0.1, RULE));
+  commands.push(drawRect(411.5, 203, 0.7, 452, RULE));
 
-const buildPageTwo = (): string => {
-  const commands: string[] = [drawBackground()];
-
-  commands.push(
-    drawText({
-      text: 'Selected Engineering Work',
-      x: 56,
-      y: 688,
-      size: 22,
-      font: 'F2'
-    })
-  );
-
-  let projectY = 648;
-  for (const project of caseStudies) {
-    commands.push(
-      drawText({
-        text: project.title,
-        x: 56,
-        y: projectY,
-        size: 13,
-        font: 'F2'
-      })
-    );
-    projectY -= 18;
-
-    for (const line of wrapText(project.thesis, 78)) {
-      commands.push(drawText({ text: line, x: 56, y: projectY, size: 11.25 }));
-      projectY -= 15;
-    }
-
-    commands.push(
-      drawText({
-        text: project.technicalSignal,
-        x: 56,
-        y: projectY,
-        size: 9.25,
-        color: [0.847, 0.756, 0.620]
-      })
-    );
-    projectY -= 34;
+  commands.push(...drawSectionLabel('Core expertise', 432, 630));
+  const expertise = [
+    'Product UI',
+    'Frontend architecture',
+    'Design systems',
+    'Accessible interfaces',
+    'State and recovery',
+    'Applied AI interfaces'
+  ];
+  let asideY = 603;
+  for (const item of expertise) {
+    commands.push(drawText({ text: item, x: 432, y: asideY, size: 8.7, color: MUTED }));
+    asideY -= 17;
   }
 
-  commands.push(
-    drawText({
-      text: 'Technical Focus',
-      x: 56,
-      y: 364,
-      size: 18,
-      font: 'F2'
-    }),
-      drawText({
-        text: [...cvStack, 'Browser media APIs', 'Async lifecycle ownership', 'Applied AI interfaces'].join('  ·  '),
-        x: 56,
-        y: 334,
-        size: 9.5,
-        color: [0.859, 0.788, 0.675]
-      })
-  );
+  commands.push(...drawSectionLabel('Tools', 432, 478));
+  asideY = 450;
+  for (const item of cvStack) {
+    commands.push(drawText({ text: item, x: 432, y: asideY, size: 8.5, color: MUTED }));
+    asideY -= 16;
+  }
 
-  commands.push(
-    drawText({
-      text: 'Education',
-      x: 56,
-      y: 282,
-      size: 18,
-      font: 'F2'
-    })
-  );
-
-  let educationY = 252;
+  commands.push(...drawSectionLabel('Education', 432, 305));
+  asideY = 277;
   for (const item of cvEducation) {
     commands.push(
-      drawText({
-        text: `${item.year}  ${item.title} · ${item.place}`,
-        x: 56,
-        y: educationY,
-        size: 10.5
-      })
+      drawText({ text: item.year, x: 432, y: asideY, size: 7.7, font: 'F2', color: ACCENT })
     );
-    educationY -= 20;
+    asideY = drawWrapped(commands, item.title, 432, asideY - 13, 27, 8.25, 10.5, {
+      font: 'F2',
+      color: INK
+    });
+    asideY = drawWrapped(commands, item.place, 432, asideY - 1, 29, 7.65, 10, { color: SOFT });
+    asideY -= 10;
+  }
+
+  commands.push(...drawSectionLabel('Languages', 432, 166));
+  asideY = 139;
+  for (const language of cvLanguages) {
+    commands.push(drawText({ text: language, x: 432, y: asideY, size: 8.3, color: MUTED }));
+    asideY -= 16;
   }
 
   commands.push(
+    drawRule(42, 56, 511),
     drawText({
-      text: `Languages  ·  ${cvLanguages.join('  ·  ')}`,
-      x: 56,
-      y: 170,
-      size: 10.5,
-      color: [0.859, 0.788, 0.675]
-    }),
-    drawText({
-      text: `Contact  ·  ${site.email}  ·  ${site.linkedin}`,
-      x: 56,
-      y: 126,
-      size: 9.5
+      text: 'miguelalmeida.is-a.dev | Selected projects, engineering evidence, and contact',
+      x: 42,
+      y: 37,
+      size: 7.7,
+      font: 'F3',
+      color: SOFT
     })
   );
 
   return commands.join('\n');
 };
 
-const buildPdf = (pages: string[]): Uint8Array => {
-  const objects: string[] = [];
-  const fontRegularId = 7;
-  const fontBoldId = 8;
-  const fontItalicId = 9;
+const createLinkAnnotation = (rect: [number, number, number, number], url: string): string =>
+  `<< /Type /Annot /Subtype /Link /Rect [${rect.join(' ')}] /Border [0 0 0] /A << /S /URI /URI (${escapePdfText(url)}) >> >>`;
 
-  objects[0] = '<< /Type /Catalog /Pages 2 0 R >>';
-  objects[1] = '<< /Type /Pages /Kids [3 0 R 4 0 R] /Count 2 >>';
-  objects[2] =
-    '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 7 0 R /F2 8 0 R /F3 9 0 R >> >> /Contents 5 0 R >>';
-  objects[3] =
-    '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 7 0 R /F2 8 0 R /F3 9 0 R >> >> /Contents 6 0 R >>';
-  objects[4] = `<< /Length ${Buffer.byteLength(pages[0], 'utf8')} >>\nstream\n${pages[0]}\nendstream`;
-  objects[5] = `<< /Length ${Buffer.byteLength(pages[1], 'utf8')} >>\nstream\n${pages[1]}\nendstream`;
-  objects[fontRegularId - 1] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>';
-  objects[fontBoldId - 1] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>';
-  objects[fontItalicId - 1] = '<< /Type /Font /Subtype /Type1 /BaseFont /Times-Italic >>';
+const buildPdf = (page: string): Uint8Array => {
+  const objects: string[] = [
+    '<< /Type /Catalog /Pages 2 0 R >>',
+    '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+    `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PAGE_WIDTH} ${PAGE_HEIGHT}] /Resources << /Font << /F1 5 0 R /F2 6 0 R /F3 7 0 R >> >> /Contents 4 0 R /Annots [8 0 R 9 0 R 10 0 R 11 0 R] >>`,
+    `<< /Length ${Buffer.byteLength(page, 'utf8')} >>\nstream\n${page}\nendstream`,
+    '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
+    '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>',
+    '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique /Encoding /WinAnsiEncoding >>',
+    createLinkAnnotation([362, 782, 553, 795], `mailto:${site.email}`),
+    createLinkAnnotation([362, 767, 553, 780], site.linkedin),
+    createLinkAnnotation([362, 752, 553, 765], site.github),
+    createLinkAnnotation([42, 30, 553, 49], SITE_ORIGIN),
+    `<< /Title (Miguel Almeida - Frontend Engineer CV) /Author (${site.name}) /Subject (Frontend engineering, product UI, and design systems) /Creator (Miguel Almeida portfolio) >>`
+  ];
 
   const parts: string[] = [];
   const offsets: number[] = [0];
@@ -291,7 +298,6 @@ const buildPdf = (pages: string[]): Uint8Array => {
   };
 
   push('%PDF-1.4\n');
-
   objects.forEach((object, index) => {
     offsets[index + 1] = offset;
     push(`${index + 1} 0 obj\n${object}\nendobj\n`);
@@ -300,16 +306,15 @@ const buildPdf = (pages: string[]): Uint8Array => {
   const startXref = offset;
   push(`xref\n0 ${objects.length + 1}\n`);
   push('0000000000 65535 f \n');
-
   for (let index = 1; index <= objects.length; index += 1) {
     push(`${String(offsets[index]).padStart(10, '0')} 00000 n \n`);
   }
 
   push(
-    `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${startXref}\n%%EOF`
+    `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R /Info 12 0 R >>\nstartxref\n${startXref}\n%%EOF`
   );
 
   return new TextEncoder().encode(parts.join(''));
 };
 
-export const createPortfolioPdf = (): Uint8Array => buildPdf([buildPageOne(), buildPageTwo()]);
+export const createPortfolioPdf = (): Uint8Array => buildPdf(buildPage());

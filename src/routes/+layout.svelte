@@ -20,7 +20,7 @@
       addressLocality: 'Berlin',
       addressCountry: 'DE'
     },
-    sameAs: ['https://github.com/miguelalmeida0', 'https://www.linkedin.com/in/miguelalmeida0/']
+    sameAs: ['https://github.com/miguelalmeida0', 'https://www.linkedin.com/in/miguelalmeida1/']
   });
 
   $: canonicalUrl = `${SITE_ORIGIN}${$page.url.pathname}`;

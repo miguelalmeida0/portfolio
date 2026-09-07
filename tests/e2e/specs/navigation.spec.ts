@@ -28,7 +28,9 @@ test.describe('navigation and route coverage', () => {
 
     await page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'Story' }).click();
     await expect(page).toHaveURL(/\/story$/);
-    await expect(page.getByRole('heading', { name: /first AI product/i })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: /Frontend engineering. From zero to production./i })
+    ).toBeVisible();
 
     await page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'CV' }).click();
     await expect(page).toHaveURL(/\/cv$/);
@@ -37,20 +39,15 @@ test.describe('navigation and route coverage', () => {
     ).toBeVisible();
   });
 
-  test('project wall and story chapter anchors navigate to their targets', async ({ page }) => {
+  test('project wall links the F24 project to its About section', async ({ page }) => {
     await gotoReady(page, routes.home);
     await page
-      .getByRole('navigation', { name: 'Primary' })
-      .getByRole('link', { name: 'Story' })
+      .locator('[data-project-tile="f24-experience"]')
+      .getByRole('link', { name: /Production frontend at F24/i })
+      .first()
       .click();
-
-    await expect(page).toHaveURL(/\/story$/);
-    const builder = page
-      .getByRole('navigation', { name: 'Story chapters' })
-      .getByRole('link', { name: /Builder/i });
-    await builder.click();
-    await expect(page).toHaveURL(/\/story#builder$/);
-    await expect(page.locator('#builder')).toBeVisible();
+    await expect(page).toHaveURL(/\/story#at-work$/);
+    await expect(page.locator('#at-work')).toBeVisible();
   });
 
   test('CV PDF and external contact links are wired correctly', async ({ page }) => {
@@ -67,7 +64,7 @@ test.describe('navigation and route coverage', () => {
     expect(pdfResponse.headers()['content-type']).toContain('application/pdf');
     expect((await pdfResponse.body()).subarray(0, 4).toString()).toBe('%PDF');
 
-    await expectLinkTarget(page.getByRole('link', { name: 'LinkedIn ↗' }), {
+    await expectLinkTarget(page.getByRole('link', { name: 'LinkedIn' }), {
       href: site.linkedin,
       target: '_blank',
       relIncludes: 'noopener'
@@ -80,7 +77,7 @@ test.describe('navigation and route coverage', () => {
     expect(response.status()).toBe(200);
     expect(response.headers()['content-type']).toContain('application/pdf');
     expect(response.headers()['content-disposition']).toContain('inline');
-    expect(response.headers()['cache-control']).toContain('max-age=3600');
+    expect(response.headers()['cache-control']).toBe('no-cache');
     expect((await response.body()).subarray(0, 4).toString()).toBe('%PDF');
   });
 });
