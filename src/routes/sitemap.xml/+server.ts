@@ -1,7 +1,7 @@
-import { caseStudies } from '$lib/content/case-studies';
+import { recruiterCaseStudies } from '$lib/content/case-studies';
 import { SITE_ORIGIN } from '$lib/config/site';
 
-const paths = ['/', '/cv', '/story', ...caseStudies.map(({ slug }) => `/work/${slug}`)];
+const paths = ['/', '/cv', '/story', ...recruiterCaseStudies.map(({ slug }) => `/work/${slug}`)];
 
 export const GET = () => {
   const urls = paths

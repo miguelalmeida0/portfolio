@@ -8,8 +8,8 @@ export const GET = async () => {
   return new Response(body, {
     headers: {
       'content-type': 'application/pdf',
-      'content-disposition': 'inline; filename="miguel-almeida-portfolio.pdf"',
-      'cache-control': 'public, max-age=3600'
+      'content-disposition': 'inline; filename="miguel-almeida-cv.pdf"',
+      'cache-control': 'no-cache'
     }
   });
 };

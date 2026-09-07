@@ -32,7 +32,7 @@ test.describe('display preferences', () => {
     await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'dark' });
 
     await gotoReady(page, routes.story);
-    await expect(page.getByRole('heading', { name: /first AI product/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Frontend engineering. From zero to production./i })).toBeVisible();
     await expect(page.locator('html')).toHaveCSS('color-scheme', /dark/);
 
     await gotoReady(page, routes.cv);

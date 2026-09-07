@@ -7,15 +7,15 @@
 </script>
 
 <svelte:head>
-  <title>Miguel Almeida / Frontend Engineer / Product UI & Multimodal Systems</title>
+  <title>Miguel Almeida — Frontend Engineer</title>
   <meta
     name="description"
-    content="Miguel Almeida is a frontend engineer in Berlin building high-stakes product interfaces, browser systems, and experimental multimodal interfaces."
+    content="Frontend engineer in Berlin with production experience at F24 and projects exploring clear, dependable camera and AI interfaces."
   />
-  <meta property="og:title" content="Miguel Almeida / Frontend Engineer" />
+  <meta property="og:title" content="Miguel Almeida — Frontend Engineer" />
   <meta
     property="og:description"
-    content="Frontend engineer building product UI, browser architecture, reliability, and evidence-driven multimodal interfaces."
+    content="Frontend engineer in Berlin with production experience at F24 and projects exploring clear, dependable camera and AI interfaces."
   />
 </svelte:head>
 

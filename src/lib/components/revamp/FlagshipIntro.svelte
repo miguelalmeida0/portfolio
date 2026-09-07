@@ -1,5 +1,4 @@
 <script lang="ts">
-  import ProjectLinks from '$lib/components/case-study/ProjectLinks.svelte';
   import { flagshipStudy } from '$lib/content/case-studies';
   import CameraEvidencePreview from './CameraEvidencePreview.svelte';
 </script>
@@ -32,7 +31,6 @@
     </ol>
 
     <footer>
-      <ProjectLinks links={flagshipStudy.links} />
       <p>Research prototype · Local object runtime · Public case study available</p>
     </footer>
   </div>

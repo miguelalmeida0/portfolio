@@ -6,6 +6,7 @@ import { buildFallbackAnswer, suggestedQuestionsForMode } from '$lib/miguel-llm/
 import { sanitizeMode, sanitizeRecentAnswers, validateQuestion } from '$lib/miguel-llm/guardrails';
 import { retrieveMiguelContext, sourceLabels } from '$lib/miguel-llm/retrieve';
 import { buildMiguelSystemPrompt } from '$lib/miguel-llm/systemPrompt';
+import { resolveProject } from '$lib/miguel-llm/projectContext';
 import type { MiguelLLMAnswer, MiguelLLMMode, MiguelLLMProvider, MiguelLLMRequest } from '$lib/miguel-llm/types';
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
@@ -14,7 +15,6 @@ const MAX_CONTEXT_CHUNKS = 5;
 const MAX_OUTPUT_TOKENS = 420;
 const MAX_SHORT_ANSWER_CHARS = 360;
 const MAX_BULLET_CHARS = 220;
-const MAX_SOURCE_CHARS = 90;
 const MAX_SUGGESTION_CHARS = 100;
 const DEFAULT_CEREBRAS_MODEL = 'gpt-oss-120b';
 const DEFAULT_OPENAI_MODEL = 'gpt-4o-mini';
@@ -46,13 +46,7 @@ function coerceApiAnswer(
   mode: MiguelLLMMode
 ): MiguelLLMAnswer {
   if (!value || typeof value !== 'object') {
-    return {
-      ...fallback,
-      runtime: 'api',
-      provider,
-      model,
-      questionMode: mode
-    };
+    return fallback;
   }
 
   const candidate = value as Partial<MiguelLLMAnswer>;
@@ -63,8 +57,7 @@ function coerceApiAnswer(
           (item): item is string =>
             typeof item === 'string' && approvedSources.has(item)
         )
-        .slice(0, 5)
-        .map((item) => clampText(item, MAX_SOURCE_CHARS))
+        .slice(0, 4)
     : [];
   const candidateShortAnswer =
     typeof candidate.shortAnswer === 'string' && candidate.shortAnswer.trim()
@@ -283,6 +276,7 @@ export const POST: RequestHandler = async ({ request, getClientAddress }) => {
 
   try {
     body = (await request.json()) as MiguelLLMRequest;
+    if (!body || typeof body !== 'object' || Array.isArray(body)) throw new Error('Invalid body');
   } catch {
     return json(
       {
@@ -296,6 +290,7 @@ export const POST: RequestHandler = async ({ request, getClientAddress }) => {
   const mode = sanitizeMode(body.questionMode ?? body.mode);
   const recentAnswers = sanitizeRecentAnswers(body.recentAnswers);
   const validation = validateQuestion(body.question);
+  const projectSlug = resolveProject(validation.question, typeof body.projectSlug === 'string' ? body.projectSlug : undefined);
 
   if (!validation.ok) {
     return json(
@@ -318,16 +313,17 @@ export const POST: RequestHandler = async ({ request, getClientAddress }) => {
     );
   }
 
-  const chunks = retrieveMiguelContext(validation.question, mode, MAX_CONTEXT_CHUNKS);
+  const chunks = retrieveMiguelContext(validation.question, mode, MAX_CONTEXT_CHUNKS, projectSlug);
   const sources = sourceLabels(chunks);
-  const fallback = buildFallbackAnswer(validation.question, mode, recentAnswers);
+  const fallback = buildFallbackAnswer(validation.question, mode, recentAnswers, projectSlug);
   const provider = selectedProvider();
   const model = resolvedModel(provider);
 
-  if (provider === 'local-fallback') {
+  // Project facts and evidence retain their exact qualifications and source links.
+  // The provider can phrase general interview/working-style answers, not rewrite measurements.
+  if (provider === 'local-fallback' || projectSlug || fallback.confidence === 'low' || /connectivity|richard|recommendation|aviation|\bf24\b|production experience|work authorization|notice period|salary/i.test(validation.question)) {
     return json({
       ...fallback,
-      model,
       sources: fallback.sources.length ? fallback.sources : sources
     });
   }

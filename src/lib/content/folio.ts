@@ -14,10 +14,8 @@ export const site = {
   name: 'Miguel Almeida',
   location: 'Berlin',
   email: 'miguelalmeida1592@gmail.com',
-  phone: '+351 918 500 305',
   linkedin: 'https://www.linkedin.com/in/miguelalmeida1/',
   github: 'https://github.com/miguelalmeida0',
-  cal: 'https://cal.com/miguel-almeida',
   temperatureC: 12,
   tagline: 'Made by hand, in Berlin.'
 };
@@ -52,12 +50,12 @@ export const marqueeValues = [
 
 export const heroStats = [
   {
-    value: '0 → 1000s',
-    label: 'users on a product built from scratch'
+    value: 'F24',
+    label: 'production frontend since 2022'
   },
   {
-    value: '4 yrs',
-    label: 'shipping production frontend at F24'
+    value: 'Product UI',
+    label: 'design systems and dependable workflows'
   },
   {
     value: 'Mid-level',
@@ -67,22 +65,22 @@ export const heroStats = [
 
 export const selectedWork: SelectedWorkItem[] = [
   {
-    title: 'Resilience Platform',
-    tagline: 'Mission-critical product UI for teams coordinating under pressure.',
-    meta: '2024 — F24 · Frontend lead',
-    href: '/story#building-from-zero'
+    title: 'Camera Harness',
+    tagline: 'Browser lifecycle controls that reject late camera responses after a session ends.',
+    meta: '2026 — Independent research prototype',
+    href: '/work/camera-harness'
   },
   {
-    title: 'Design System Layer',
-    tagline: 'A calmer component foundation for product teams shipping every week.',
-    meta: '2026 — F24 · Mid-level frontend',
-    href: '/cv'
+    title: 'Ghostwriter',
+    tagline: 'An expressive rewriting interface with budget reservation, explicit request state, and deliberate sharing.',
+    meta: '2026 — Independent product',
+    href: '/work/ghostwriter'
   },
   {
-    title: 'Editorial Portfolio',
-    tagline: 'A portfolio that treats interface details like page composition.',
-    meta: '2026 — Independent · Built by hand',
-    href: '#contact'
+    title: 'Mirror AI',
+    tagline: 'An image-selection flow that keeps the chosen object visible while its details open.',
+    meta: '2026 — Independent prototype',
+    href: '/work/mirror-ai'
   }
 ];
 
@@ -104,28 +102,21 @@ export const approach: ApproachItem[] = [
 export const experienceTeaser: ExperienceTeaserItem[] = [
   {
     years: '2020–2021',
-    role: 'UX Design Institute',
+    role: 'UX Design Institute · UX diploma',
     company: '',
     responsibility: '',
     proof: []
   },
   {
-    years: '2021',
-    role: 'Freelance Frontend Engineer',
+    years: '2021–2022',
+    role: 'Frontend development · independent client delivery',
     company: '',
     responsibility: '',
     proof: []
   },
   {
-    years: '2022',
-    role: 'Junior Frontend Engineer',
-    company: '',
-    responsibility: '',
-    proof: []
-  },
-  {
-    years: '2026',
-    role: 'Mid-level Frontend Engineer',
+    years: '2022–now',
+    role: 'Software engineering · Business application build & React migration',
     company: '',
     responsibility: '',
     proof: []
@@ -142,18 +133,13 @@ export const conversationFlows: ConversationFlow[] = [
     teaser: "I'm hiring",
     greeting: 'Welcome. Let me save you scrolling.',
     body:
-      '4 yrs frontend · React/TS · design systems · Berlin (EU work auth). Mid-level product UI engineer. Reply window: under 24h.',
+      'Mid-level frontend engineer in Berlin working across product UI, design systems, browser architecture, and clear AI interfaces.',
     meta: 'TL;DR · for hiring teams',
     ctas: [
       {
         label: 'Write directly',
         href: 'mailto:miguelalmeida1592@gmail.com?subject=Role%20opportunity',
         tone: 'primary'
-      },
-      {
-        label: 'Book 15 min',
-        href: 'https://cal.com/miguel-almeida',
-        tone: 'ghost'
       },
       {
         label: 'Read the resume',
@@ -207,7 +193,14 @@ export const conversationFlows: ConversationFlow[] = [
 ];
 
 export const cvBio =
-  'Frontend engineer working across product UI, design systems, browser architecture, reliability, and experimental multimodal interfaces. I pair visual judgment with explicit state, lifecycle, and evidence boundaries.';
+  'Frontend engineer with a product-design background. Built a business application’s frontend from initial mockups through production. The application is now used by hundreds of companies. Later led its migration to React. I work across product design, TypeScript, reusable UI, and AI interfaces.';
+
+export const professionalRecommendation = {
+  name: 'Richard Nespithal',
+  role: 'Previous team lead',
+  quote: 'Miguel takes full ownership of his tickets from start to finish and completes tasks without supervision. He manages his workload independently and reliably.',
+  additionalQuote: 'Miguel is highly motivated and delivers quality work consistently. He feels the frustration when work is not properly planned or blocked, which is a sign that he cares about doing good work and making progress.'
+};
 
 export const cvContactPills: MetaLink[] = [
   {
@@ -221,21 +214,17 @@ export const cvContactPills: MetaLink[] = [
   {
     label: 'LinkedIn',
     href: 'https://www.linkedin.com/in/miguelalmeida1/'
-  },
-  {
-    label: 'EU work auth · open',
-    href: '#'
   }
 ];
 
 export const cvHighlights = [
   {
-    value: '1000s',
-    label: 'users on a product built from scratch'
+    value: '2022 — now',
+    label: 'production frontend at F24'
   },
   {
-    value: '4 yrs',
-    label: 'shipping production frontend at F24'
+    value: 'React + TS',
+    label: 'product UI and shared frontend patterns'
   },
   {
     value: 'Mid-level',
@@ -245,36 +234,15 @@ export const cvHighlights = [
 
 export const cvExperience: CvExperienceEntry[] = [
   {
-    years: '2026 — now',
-    role: 'Software Engineer',
+    years: '2022 — now',
+    role: 'Software Engineer · Frontend delivery lead',
     company: 'F24',
     location: 'Berlin',
     bullets: [
-      'Owning more of the design-system layer and shared frontend architecture.',
-      'Shipping product workflows with explicit loading, error, responsive, and recovery states.',
-      'Working across product, design, backend, and QA without exposing confidential implementation details.'
-    ]
-  },
-  {
-    years: '2023 — 2025',
-    role: 'Frontend Engineer · Frontend delivery lead',
-    company: 'F24',
-    location: 'Berlin',
-    bullets: [
-      'Led frontend delivery for a product area from early wireframes through production implementation.',
-      'Coordinated product-UI work across design, product, backend, and QA.',
-      'Helped implement the company’s first AI product during an internal F24 hackathon.',
-      'Established reusable patterns for repeated operational workflows.'
-    ]
-  },
-  {
-    years: '2022 — 2023',
-    role: 'Frontend Engineer',
-    company: 'F24',
-    location: 'Berlin',
-    bullets: [
-      'Built and maintained reusable UI in React and TypeScript.',
-      'Established steadier patterns for components, forms, and layout behavior.'
+      'Built a business application’s frontend from scratch, taking initial mockups and product design through to production. The application is now used by hundreds of companies.',
+      'Migrated the application to React, taking ownership of the frontend transition and shared UI architecture.',
+      'Grew into frontend delivery leadership, coordinating design, product, backend, and QA from early concepts through release.',
+      'Led the frontend for F24’s first shared AI service during an internal hackathon, connecting the service to its first end-to-end interface.'
     ]
   },
   {
@@ -283,18 +251,8 @@ export const cvExperience: CvExperienceEntry[] = [
     company: 'Independent',
     location: 'Berlin',
     bullets: [
-      'Delivered small websites and product UI explorations for clients.',
-      'Used freelance work to deepen frontend fundamentals and design fluency.'
-    ]
-  },
-  {
-    years: 'Before 2020',
-    role: 'Aviation',
-    company: 'Previous career',
-    location: 'Europe',
-    bullets: [
-      'Learned the value of calm voices, checklists, and boring reliable systems.',
-      'That respect for precision still shapes how I build product interfaces now.'
+      'Delivered responsive websites and product UI for clients, working directly from problem definition through implementation.',
+      'Built the frontend and visual-design fundamentals that now shape my production work.'
     ]
   }
 ];
@@ -326,7 +284,7 @@ export const cvEducation: CvEducationEntry[] = [
 export const cvLanguages = [
   'Portuguese · Native',
   'English · Fluent',
-  'German · Working'
+  'Spanish · Fluent'
 ];
 
 export const cvCta =
@@ -368,7 +326,7 @@ export const storyChapters: StoryChapter[] = [
     id: 'building-from-zero',
     year: '2023–2025',
     kicker: '✦ Story · Building from zero',
-    title: 'A product that grew from an empty file to thousands of users.',
+    title: 'Production work made reliability a daily frontend concern.',
     body: [
       'Those years were about accumulation. Components, flows, bug fixes, rewrites, architecture decisions — the quiet work that slowly makes a product feel dependable.',
       'I spent that time close to design and product, shaping interfaces that had to stay calm even as the surface area grew.'
@@ -381,19 +339,8 @@ export const storyChapters: StoryChapter[] = [
     kicker: '✦ Story · Mid-level',
     title: 'More ownership, especially where the design system meets the product.',
     body: [
-      'The promotion to mid-level felt less like a jump and more like recognition of work that had already been happening: helping define shared UI, keeping patterns coherent, and making harder calls with more confidence.',
+      'Moving into a mid-level role reflected work that had already been happening: helping define shared UI, keeping patterns coherent, and making harder calls with more confidence.',
       'It also sharpened what I want next: product teams that care about craft, reliability, and the long-term quality of the interface.'
     ]
-  },
-  {
-    id: 'before',
-    year: 'Chapter 00',
-    kicker: '✦ Story · Before',
-    title: 'Aviation, checklists, calm voices.',
-    body: [
-      'Before tech, there was aviation. A different world, but one with familiar lessons: composure matters, communication matters, and systems should behave predictably when people need them most.',
-      'That earlier career still lives under the work. It is probably why I trust boring reliable systems more than flashy ones.'
-    ],
-    footnote: true
   }
 ];

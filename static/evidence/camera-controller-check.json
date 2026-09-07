@@ -1,0 +1,10 @@
+{
+  "project": "Camera Harness",
+  "status": "reproduced synthetic controller fixture",
+  "date": "2026-09-07",
+  "result": { "cycles": 100, "lateResponsesRejected": 100, "staleAssistantTextAfterModeChange": 0 },
+  "environment": { "runtime": "Node v26.0.0", "input": "Identical synthetic input repeated 100 times; in-memory controller" },
+  "source": { "path": "packages/perception/browser-local-capture/prototype/emergency-runtime-controller.js", "sha256": "744ffeb62c5206b11fbb13fd5a8feb0c1fe68f6e15e4afc38fafda9e4582d997", "headAtInspection": "5beec367ffc0d7c96095b32b5b8f104cdc6f31ea", "revisionNote": "Working-tree source; HEAD alone does not identify the tested contents. Use source hash." },
+  "method": "Create controller; beginStart and activate conversation; queue transcript; take task; beginEnd and finishEnd; assert setCurrentResponse and finishInference return false; select observing; assert assistantText empty. Repeat 100 times.",
+  "limits": ["No real camera, network, browser, or provider", "No randomized scheduling", "Not a statistical reliability estimate", "Not a model-accuracy or end-to-end benchmark"]
+}

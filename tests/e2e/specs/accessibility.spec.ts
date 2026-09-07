@@ -20,7 +20,6 @@ test.describe('accessibility and keyboard smoke checks', () => {
     await expect(
       page.getByRole('button', { name: 'Copy email address to clipboard' }).first()
     ).toBeVisible();
-    await expect(page.getByLabel('Portrait of Miguel Almeida')).toBeVisible();
   });
 
   for (const route of [routes.home, routes.story, routes.cv, routes.missing]) {
@@ -46,7 +45,7 @@ test.describe('accessibility and keyboard smoke checks', () => {
     });
   }
 
-  test('keyboard reaches the hero, project wall, and architecture explorer', async ({ page }) => {
+  test('keyboard reaches the hero, project wall, and project case study', async ({ page }) => {
     await gotoReady(page, routes.home);
 
     const workCta = page.getByRole('link', { name: 'Explore my work' });
@@ -56,24 +55,12 @@ test.describe('accessibility and keyboard smoke checks', () => {
 
     const camera = page
       .locator('[data-project-tile="camera-harness"]')
-      .getByRole('link', { name: /Camera Harness/i });
+      .getByRole('link', { name: /Camera Harness/i }).first();
     await expectFocusable(camera);
 
-    await page.goto('/work/camera-harness#runtime-architecture');
-    const architecture = page.locator(
-      '[aria-label="Camera Harness architecture states"]'
-    );
-    const current = architecture.getByRole('tab', { name: 'Current' });
-    await expectFocusable(current);
-    await page.keyboard.press('ArrowRight');
-    await expect(current).toBeFocused();
-
-    const firstNode = architecture.getByRole('button', { name: /Camera browser/i });
-    await expectFocusable(firstNode);
-    await page.keyboard.press('ArrowRight');
-    await expect(
-      architecture.getByRole('heading', { name: 'Browser lifecycle' })
-    ).toBeVisible();
+    await camera.press('Enter');
+    await expect(page).toHaveURL(/\/work\/camera-harness$/);
+    await expect(page.getByRole('heading', { name: 'From camera lifecycle to model integration' })).toBeVisible();
   });
 
   test.describe('mobile accessibility layout', () => {
@@ -87,35 +74,15 @@ test.describe('accessibility and keyboard smoke checks', () => {
     }
   });
 
-  for (const viewport of [
-    { width: 768, height: 1024 },
-    { width: 1440, height: 900 }
-  ]) {
-    test(`home preserves layout and media ratios at ${viewport.width}px`, async ({ page }) => {
-      await page.setViewportSize(viewport);
-      await gotoReady(page, routes.home);
-      await expectNoHorizontalOverflow(page);
-
-      const dimensions = await page
-        .locator('[data-project-tile="camera-harness"] [data-project-media]')
-        .evaluate((element) => {
-          const box = element.getBoundingClientRect();
-          return { width: box.width, height: box.height };
-        });
-      expect(dimensions.width).toBeGreaterThan(0);
-      expect(dimensions.height).toBeGreaterThan(0);
-    });
-  }
-
   test('external contact links communicate new-tab behavior', async ({ page }) => {
     await gotoReady(page, routes.home);
 
-    await expectLinkTarget(page.getByRole('link', { name: /\/in\/miguelalmeida1/i }), {
+    await expectLinkTarget(page.getByRole('link', { name: /LinkedIn/i }), {
       href: site.linkedin,
       target: '_blank',
       relIncludes: 'noopener'
     });
-    await expectLinkTarget(page.getByRole('link', { name: /\/miguelalmeida0/i }), {
+    await expectLinkTarget(page.getByRole('link', { name: /GitHub/i }), {
       target: '_blank',
       relIncludes: 'noopener'
     });

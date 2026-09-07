@@ -1,0 +1,9 @@
+{
+  "project": "Mirror AI",
+  "status": "historical stored browser report; not rerun",
+  "reviewedOn": "2026-09-07",
+  "result": { "samples": 630, "popupGaps": 0, "duplicatePopups": 0, "hoverLabelOverflow": 0, "collectedBrowserErrors": 0 },
+  "environment": { "browser": "headless Chrome", "viewport": "1440x900", "route": "/demo/active-image?autoplay=0", "durationMs": 10050, "samplingIntervalMs": 16, "popupGapAssertionIntervalMs": [2450, 7900], "input": "Deterministic saved-scene replay" },
+  "source": { "path": "staging/run-full-app/active-image-film/report.json", "runner": "staging/run-full-app/active-image-film-regression.mjs", "sha256": "f1baf362ef10ddd28bfdf01b6a6547e270be20cee28a40547be9069747ce35b7", "testedRevision": "not pinned in original report" },
+  "limits": ["Historical result", "Saved-scene playback, not fresh model output", "Not segmentation accuracy", "Not full accessibility or usability verification"]
+}

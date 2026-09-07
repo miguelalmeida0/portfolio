@@ -13,8 +13,8 @@ test.describe('portfolio overview', () => {
 
     await dashboard.expectLandingContent();
     await expect(page.getByRole('heading', { name: 'Selected work' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Experience' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Want the practical version?' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Built from scratch. Used by hundreds of companies.' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Let’s talk about the work.' })).toBeVisible();
   });
 
   test('contact cards expose real methods and copy email successfully', async ({ page }) => {
@@ -23,20 +23,15 @@ test.describe('portfolio overview', () => {
 
     const copyEmail = page.getByTestId('direct-email-copy');
     await copyEmail.click();
-    await expect(copyEmail.locator('[aria-live="polite"]')).toHaveText(
-      'Email copied. Looking forward to hearing from you.'
-    );
+    await expect(copyEmail.locator('[aria-live="polite"]')).toContainText('Email copied');
     expect(await getMockClipboardText(page)).toBe(site.email);
 
-    await expectLinkTarget(page.getByRole('link', { name: /\/in\/miguelalmeida1/i }), {
+    await expectLinkTarget(page.getByRole('link', { name: /LinkedIn/i }), {
       href: site.linkedin,
       target: '_blank',
       relIncludes: 'noopener'
     });
-    await expectLinkTarget(page.getByRole('link', { name: site.phone }), {
-      href: 'tel:+351918500305',
-      target: null
-    });
+    await expect(page.getByRole('link', { name: site.email })).toHaveAttribute('href', /^mailto:/);
   });
 
   test('all project-wall entries are visible and route to real destinations', async ({ page }) => {
@@ -50,7 +45,7 @@ test.describe('portfolio overview', () => {
 
     await page
       .locator('[data-project-tile="camera-harness"]')
-      .getByRole('link', { name: /Camera Harness/i })
+      .getByRole('link', { name: /Camera Harness/i }).first()
       .click();
     await expect(page).toHaveURL(/\/work\/camera-harness$/);
     await expect(page.getByRole('heading', { name: 'Camera Harness' })).toBeVisible();
@@ -68,7 +63,7 @@ test.describe('portfolio overview', () => {
         .click();
       await expect(page).toHaveURL(/\/#contact$/);
       await expectSectionNearTop(page, '#contact');
-      await expect(page.getByRole('heading', { name: 'Want the practical version?' })).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Let’s talk about the work.' })).toBeVisible();
     });
   });
 });

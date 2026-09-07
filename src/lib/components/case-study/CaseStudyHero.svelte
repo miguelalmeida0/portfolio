@@ -1,8 +1,6 @@
 <script lang="ts">
   import type { CaseStudy } from '$lib/content/case-studies';
   import { getApprovedMedia } from '$lib/content/project-media';
-  import ResponsivePicture from '$lib/components/media/ResponsivePicture.svelte';
-  import ProjectLinks from './ProjectLinks.svelte';
 
   export let study: CaseStudy;
   export let headline: string;
@@ -20,23 +18,17 @@
       <slot name="opening" />
     </p>
     <p class="status">{study.status}</p>
-    <ProjectLinks links={study.links} />
   </div>
 
   {#if heroMedia}
     <figure class="hero-visual">
-      <ResponsivePicture
-        fallbackSrc={heroMedia.src}
+      <img
+        src={heroMedia.src}
         alt={heroMedia.alt}
-        width={heroMedia.responsive?.width ?? 2108}
-        height={heroMedia.responsive?.height ?? 902}
-        avifSrcset={heroMedia.responsive?.avifSrcset}
-        webpSrcset={heroMedia.responsive?.webpSrcset}
-        sizes={heroMedia.responsive?.sizes ?? '100vw'}
-        loading="eager"
+        width="2108"
+        height="902"
         fetchpriority="high"
-        layout="intrinsic"
-        objectPosition="center top"
+        decoding="async"
       />
       <figcaption>
         <div>
@@ -146,7 +138,7 @@
     background: #0a0a0a;
   }
 
-  .hero-visual :global(img) {
+  .hero-visual img {
     display: block;
     width: 100%;
     height: auto;

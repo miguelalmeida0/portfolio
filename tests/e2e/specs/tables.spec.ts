@@ -11,7 +11,7 @@ test.describe('structured CV and story data', () => {
       await expect(page.getByRole('heading', { name: section, exact: true }).first()).toBeVisible();
     }
 
-    await expect(page.getByText(/2023 — 2025/).first()).toBeVisible();
+    await expect(page.getByText(/2022 — now/).first()).toBeVisible();
     await expect(page.getByText(/Software Engineer/i).first()).toBeVisible();
     await expect(page.getByText(/English/i).first()).toBeVisible();
     await expect(page.getByText(/Portuguese/i).first()).toBeVisible();
@@ -23,19 +23,18 @@ test.describe('structured CV and story data', () => {
 
     await expect(page.getByRole('button', { name: /next|previous|sort|filter|page/i })).toHaveCount(0);
     await expect(page.getByRole('link', { name: /next|previous|sort|filter|page/i })).toHaveCount(0);
-    await expect(page.getByRole('heading', { name: 'Experience' })).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Experience' })).toBeVisible();
   });
 
-  test('Story exposes every chapter and anchors to the selected one', async ({ page }) => {
+  test('Story exposes every chapter as a concise section', async ({ page }) => {
     await gotoReady(page, routes.story);
-    const navigation = page.getByRole('navigation', { name: 'Story chapters' });
 
     for (const chapter of storyChapters) {
-      await expect(navigation.getByRole('link', { name: chapter })).toBeVisible();
+      await expect(page.getByText(chapter, { exact: true })).toBeVisible();
     }
 
-    await navigation.getByRole('link', { name: /Builder/i }).click();
-    await expect(page).toHaveURL(/\/story#builder$/);
-    await expect(page.locator('#builder')).toBeVisible();
+    await expect(page.locator('#at-work')).toBeVisible();
+    await expect(page.locator('#hackathon')).toBeVisible();
+    await expect(page.locator('#side-projects')).toBeVisible();
   });
 });

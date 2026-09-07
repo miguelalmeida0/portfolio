@@ -1,9 +1,7 @@
 export const site = {
   name: 'Miguel Almeida',
   email: 'miguelalmeida1592@gmail.com',
-  phone: '+351 918 500 305',
   linkedin: 'https://www.linkedin.com/in/miguelalmeida1/',
-  cal: 'https://cal.com/miguel-almeida'
 } as const;
 
 export const homeHeroHeading =
@@ -27,8 +25,8 @@ export const primaryNavigation = [
 
 export const selectedWork = [
   'Camera Harness',
+  'Production frontend at F24',
   'Ghostwriter',
-  'Creature App',
   'Mirror AI'
 ] as const;
 
@@ -63,11 +61,9 @@ export const visitorFlows = {
 export const visitorInputError = 'Try recruiter, collaborator, curious, lost, or 1-4.';
 
 export const cvSections = [
-  'Experience',
-  'Selected engineering work',
   'Technical focus',
   'Education',
   'Languages'
 ] as const;
 
-export const storyChapters = ['Aviation', 'UX + code', 'Designer', 'Builder'] as const;
+export const storyChapters = ['Production engineering', 'AI service integration', 'Independent engineering'] as const;

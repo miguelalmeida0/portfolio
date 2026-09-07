@@ -15,11 +15,11 @@ test.describe('direct action workflows', () => {
     await expect(page.locator('[data-project-tile="camera-harness"]')).toBeVisible();
   });
 
-  test('contact shortcut opens MiguelLLM with a blank prompt', async ({ page }) => {
+  test('hero shortcut opens the portfolio guide with a blank prompt', async ({ page }) => {
     await gotoReady(page, routes.home);
-    await page.getByRole('button', { name: 'Design systems fit' }).click();
+    await page.getByRole('button', { name: /Ask MiguelLLM/i }).click();
 
-    const dialog = page.getByRole('dialog', { name: 'MiguelLLM' });
+    const dialog = page.getByRole('dialog', { name: 'Portfolio guide' });
     await expect(dialog).toBeVisible();
     await expect(dialog.getByRole('textbox')).toHaveValue('');
     await expect(dialog.getByRole('textbox')).toHaveAttribute(
@@ -27,7 +27,7 @@ test.describe('direct action workflows', () => {
       'Ask anything about Miguel...'
     );
     await page.keyboard.press('Escape');
-    await expect(page.getByRole('button', { name: 'Design systems fit' })).toBeFocused();
+    await expect(page.getByRole('button', { name: /Ask MiguelLLM/i })).toBeFocused();
   });
 
   test('copy-email action writes the public contact address', async ({ page }) => {
@@ -41,12 +41,10 @@ test.describe('direct action workflows', () => {
   test('CV download and contact destinations are explicit', async ({ page }) => {
     await gotoReady(page, routes.home);
 
-    await expectLinkTarget(page.getByRole('link', { name: /Download PDF/i }), {
+    await expectLinkTarget(page.getByRole('link', { name: /Download résumé/i }), {
       href: '/portfolio.pdf',
       download: 'miguel-almeida-cv.pdf'
     });
-    await expectLinkTarget(page.getByRole('link', { name: site.phone }), {
-      href: 'tel:+351918500305'
-    });
+    await expect(page.getByRole('link', { name: site.email })).toHaveAttribute('href', /^mailto:/);
   });
 });

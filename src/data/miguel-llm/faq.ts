@@ -5,12 +5,12 @@ export const faqKnowledge = [
     source: 'Portfolio positioning',
     tags: ['faq', 'summary', 'recruiter'],
     content:
-      'Miguel is a frontend and product engineer in Berlin with strong visual judgment. His portfolio evidence spans production product UI, design systems, real-time browser media, reliability, and experimental evidence-driven AI interfaces.'
+      'Miguel is a frontend engineer in Berlin with strong visual judgment. His portfolio evidence spans production product UI, design systems, real-time browser media, reliability, and experimental evidence-driven AI interfaces.'
   },
   {
     id: 'faq-strongest-project',
     title: 'Strongest project to inspect',
-    source: 'Camera Harness overview|/work/camera-harness#what-it-is',
+    source: 'Camera Harness overview|/work/camera-harness',
     tags: ['faq', 'strongest project', 'case study', 'camera harness', 'architecture'],
     content:
       'Camera Harness is the strongest technical case study. It shows explicit media lifecycle ownership, bounded asynchronous work, local tracking, stale-result protection, transient image-memory control, and the missing immutable evidence contract between Ask and Microscope.'

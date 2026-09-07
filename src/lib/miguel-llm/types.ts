@@ -31,6 +31,7 @@ export interface MiguelLLMRequest {
   mode?: MiguelLLMMode;
   questionMode?: MiguelLLMMode;
   recentAnswers?: string[];
+  projectSlug?: string;
 }
 
 export interface MiguelLLMValidationResult {

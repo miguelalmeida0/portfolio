@@ -5,7 +5,7 @@ export const careerKnowledge = [
     source: 'CV / Experience timeline',
     tags: ['career', 'f24', 'mid-level', 'software engineer', 'frontend'],
     content:
-      'From 2026 to now, Miguel is listed as Software Engineer (Mid-level) at F24. The CV says he is owning more of the design-system layer and shared frontend architecture while shipping product features with stronger attention to reliability and UI consistency.'
+      'From 2026 to now, Miguel is listed as Software Engineer (Mid-level) at F24. The CV says he is taking increasing ownership of the design-system layer and shared frontend architecture while shipping product features with stronger attention to reliability and UI consistency.'
   },
   {
     id: 'career-f24-lead-frontend',
@@ -13,7 +13,7 @@ export const careerKnowledge = [
     source: 'CV / Experience timeline',
     tags: ['career', 'f24', 'frontend', 'product lead', 'shipping'],
     content:
-      'From 2023 to 2025, Miguel is listed as Frontend Engineer / Product Lead Frontend at F24. The CV says he helped lead the frontend of a product from an empty file to active use across global teams and worked closely with design and product to turn wireframes into durable product UI.'
+      'From 2023 to 2025, Miguel is listed as Frontend Engineer / Frontend Delivery Lead at F24. The public CV says he helped lead frontend delivery for a product area from early wireframes through production implementation and worked closely with design and product to turn requirements into durable product UI.'
   },
   {
     id: 'career-f24-frontend',

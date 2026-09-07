@@ -4,13 +4,13 @@ import { homeHeroHeading, routes } from '../fixtures/testData';
 import { expectFocusable } from '../utils/assertions';
 import { gotoReady } from '../utils/waitForAppReady';
 
-test.describe('MiguelLLM dialog behavior', () => {
+test.describe('portfolio guide dialog behavior', () => {
   test('hero trigger opens the dialog and Escape restores focus', async ({ page }) => {
     await gotoReady(page, routes.home);
     const trigger = page.getByRole('button', { name: /Ask MiguelLLM/i }).first();
 
     await trigger.click();
-    const dialog = page.getByRole('dialog', { name: 'MiguelLLM' });
+    const dialog = page.getByRole('dialog', { name: 'Portfolio guide' });
     await expect(dialog).toBeVisible();
     await page.keyboard.press('Escape');
     await expect(dialog).toBeHidden();
@@ -23,18 +23,18 @@ test.describe('MiguelLLM dialog behavior', () => {
     await expectFocusable(trigger);
     await page.keyboard.press('Enter');
 
-    const dialog = page.getByRole('dialog', { name: 'MiguelLLM' });
-    await dialog.getByRole('button', { name: /strongest technical project/i }).click();
+    const dialog = page.getByRole('dialog', { name: 'Portfolio guide' });
+    await dialog.getByRole('button', { name: /Which project should I start with/i }).click();
     await expect(dialog.getByText(/Camera Harness/i).last()).toBeVisible();
     await expect(dialog.getByRole('link').first()).toBeVisible();
   });
 
-  test('contact presets open the same dialog without navigating away', async ({ page }) => {
+  test('case-study shortcut opens the same dialog without navigating away', async ({ page }) => {
     await gotoReady(page, routes.home);
-    await page.getByRole('button', { name: 'Interview prep' }).click();
+    await page.getByRole('button', { name: /Ask MiguelLLM/i }).click();
 
     await expect(page).toHaveURL(/\/$/);
-    await expect(page.getByRole('dialog', { name: 'MiguelLLM' })).toBeVisible();
+    await expect(page.getByRole('dialog', { name: 'Portfolio guide' })).toBeVisible();
   });
 
   test('reduced-motion visitors land directly on complete content', async ({ page }) => {

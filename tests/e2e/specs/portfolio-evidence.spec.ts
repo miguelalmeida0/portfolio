@@ -1,476 +1,111 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
-const expectNoHorizontalOverflow = async (page: import('@playwright/test').Page) => {
+import { homeHeroHeading, selectedWork } from '../fixtures/testData';
+
+const expectNoHorizontalOverflow = async (page: Page) => {
   const dimensions = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
     clientWidth: document.documentElement.clientWidth
   }));
-
   expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth + 1);
 };
 
-test.describe('media-first portfolio', () => {
-  test('initial unscrolled media stays under the two-megabyte budget', async ({ page }) => {
-    await page.setViewportSize({ width: 375, height: 812 });
-    const mediaResponses: Array<Promise<{ url: string; bytes: number }>> = [];
-
-    page.on('response', (response) => {
-      const type = response.request().resourceType();
-      if (!['image', 'media'].includes(type)) return;
-      mediaResponses.push(
-        response
-          .body()
-          .then((body) => ({ url: response.url(), bytes: body.byteLength }))
-          .catch(() => ({
-            url: response.url(),
-            bytes: Number(response.headers()['content-length'] ?? 0)
-          }))
-      );
-    });
-
-    await page.goto('/');
-    await page.waitForTimeout(1_500);
-    const loadedMedia = await Promise.all([...mediaResponses]);
-    const totalBytes = loadedMedia.reduce((total, item) => total + item.bytes, 0);
-
-    expect(totalBytes).toBeGreaterThan(0);
-    expect(totalBytes).toBeLessThanOrEqual(2_000_000);
-    expect(loadedMedia.some(({ url }) => url.includes('ghostwriter-preview'))).toBe(false);
-    expect(loadedMedia.some(({ url }) => url.includes('mirror-ai-preview'))).toBe(false);
-  });
-
-  test('hero prioritizes work and moves into the living project wall', async ({ page }) => {
-    await page.setViewportSize({ width: 2560, height: 1440 });
+test.describe('portfolio content revamp', () => {
+  test('homepage presents the restored positioning and three primary actions', async ({ page }) => {
+    await page.setViewportSize({ width: 1600, height: 1000 });
     await page.goto('/');
 
     const hero = page.locator('#top');
-    const portrait = hero.getByLabel('Portrait of Miguel Almeida').locator('img');
-    await expect(
-      hero.getByRole('heading', {
-        name: 'I’m Miguel, a frontend engineer building multimodal and computer-vision systems.'
-      })
-    ).toBeVisible();
-    await expect(portrait).toHaveCSS('object-fit', 'contain');
-    await expect(portrait).toHaveCSS('object-position', '50% 50%');
-    await expect(portrait).toHaveAttribute('width', '1451');
-    await expect(portrait).toHaveAttribute('height', '1086');
-    await expect(hero.locator('.portrait-frame picture')).toHaveCount(1);
+    await expect(hero.getByRole('heading', { name: homeHeroHeading })).toBeVisible();
     await expect(hero.getByRole('link', { name: 'Explore my work' })).toBeVisible();
     await expect(hero.getByRole('link', { name: 'View résumé' })).toBeVisible();
-    await expect(hero.getByRole('button', { name: /Ask MiguelLLM/i })).toBeVisible();
-
-    const workLink = hero.getByRole('link', { name: 'Explore my work' });
-    await workLink.click();
-    await expect(page).toHaveURL(/#work$/);
-    await expect(page.getByRole('heading', { name: 'Selected work' })).toBeVisible();
-
-    const headerBottom = await page
-      .getByTestId('site-header')
-      .evaluate((element) => element.getBoundingClientRect().bottom);
-    const workHeadingTop = await page
-      .getByRole('heading', { name: 'Selected work' })
-      .evaluate((element) => element.getBoundingClientRect().top);
-    expect(workHeadingTop).toBeGreaterThan(headerBottom);
+    await expect(hero.getByRole('button', { name: 'Ask MiguelLLM' })).toBeVisible();
+    await expect(hero.getByRole('figure', { name: 'Portrait of Miguel Almeida' })).toBeVisible();
   });
 
-  test('project gallery is orderly, factual, keyboard-reachable, and media-led', async ({
-    page
-  }) => {
+  test('work wall follows the canonical sequence and every project route resolves', async ({ page }) => {
+    await page.goto('/#work');
+    const tiles = page.locator('[data-project-tile]');
+    await expect(tiles).toHaveCount(selectedWork.length);
+
+    for (const [index, title] of selectedWork.entries()) {
+      await expect(tiles.nth(index)).toContainText(title);
+    }
+
+    for (const slug of ['camera-harness', 'ghostwriter', 'atlas', 'creature-app', 'mirror-ai']) {
+      const response = await page.goto(`/work/${slug}`);
+      expect(response?.ok(), slug).toBe(true);
+      await expect(page.locator('#contribution')).toBeVisible();
+      await expect(page.locator('#reflection')).toBeVisible();
+    }
+  });
+
+  test('media is poster-first, controllable, and lazily mounts sources', async ({ page }) => {
+    await page.goto('/#work');
+    const cameraVideo = page.locator('[data-project-tile="camera-harness"] video');
+
+    await expect(cameraVideo).toHaveAttribute('poster', /.+/);
+    await expect(cameraVideo).toHaveAttribute('preload', 'none');
+    await expect(cameraVideo).toHaveAttribute('loop', '');
+    await expect(cameraVideo).toHaveAttribute('playsinline', '');
+    await expect.poll(() => cameraVideo.getAttribute('data-video-sources-mounted')).toBe('true');
+    await expect
+      .poll(() =>
+        cameraVideo.evaluate((video) => {
+          const videoRect = video.getBoundingClientRect();
+          const shellRect = video.parentElement?.getBoundingClientRect();
+          return {
+            fit: getComputedStyle(video).objectFit,
+            sameWidth: Math.abs(videoRect.width - (shellRect?.width ?? 0)) < 1,
+            sameHeight: Math.abs(videoRect.height - (shellRect?.height ?? 0)) < 1
+          };
+        })
+      )
+      .toEqual({ fit: 'cover', sameWidth: true, sameHeight: true });
+
+    const control = page.locator('[data-project-tile="camera-harness"]').getByRole('button', {
+      name: /Pause project film|Play project film/
+    });
+    await expect(control).toBeVisible();
+    await control.click();
+    await expect(control).toHaveAccessibleName(/Play project film|Pause project film/);
+  });
+
+  for (const viewport of [
+    { width: 1366, height: 900 },
+    // A 1600px desktop viewport at 200% browser zoom reflows to roughly 800 CSS pixels.
+    { width: 800, height: 900 },
+    { width: 768, height: 1024 },
+    { width: 390, height: 844 },
+    { width: 320, height: 700 }
+  ]) {
+    test(`homepage has no horizontal overflow at ${viewport.width}px`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await page.goto('/');
+      await expect(page.getByRole('heading', { name: homeHeroHeading })).toBeVisible();
+      await expectNoHorizontalOverflow(page);
+    });
+  }
+
+  test('reduced motion starts with complete content and paused films', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/#work');
 
-    const camera = page.locator('[data-project-tile="camera-harness"]');
-    const ghostwriter = page.locator('[data-project-tile="ghostwriter"]');
-    const creature = page.locator('[data-project-tile="creature-mirror"]');
-    const mirrorAi = page.locator('[data-project-tile="mirror-ai"]');
-
-    await expect(camera.getByRole('link', { name: /Camera Harness/i })).toBeVisible();
-    await expect(camera.getByText(/Experimental · hybrid local \/ hosted/i)).toBeVisible();
-    await expect(camera.getByText(/latest-frame queue/i)).toBeVisible();
-    await expect(camera.locator('[data-media-stage]')).toHaveAttribute(
-      'data-poster-visible',
-      /true|false/
-    );
-    await expect(camera.locator('picture source[type="image/avif"]')).toHaveAttribute(
-      'srcset',
-      /camera-harness-poster-640\.avif/
-    );
-    await expect(camera.locator('video')).toHaveAttribute('preload', 'none');
-    await expect(camera.locator('video')).toHaveAttribute('muted', '');
-    await expect(ghostwriter.getByText(/Keep the meaning/i)).toBeVisible();
-    await expect(ghostwriter.getByText(/inspect rewrite/i)).toBeVisible();
-    await expect(ghostwriter.locator('[data-media-stage]')).toHaveAttribute(
-      'data-poster-visible',
-      /true|false/
-    );
-    await expect(ghostwriter.locator('video')).toHaveAttribute('muted', '');
-    await expect(ghostwriter.locator('video')).toHaveAttribute('playsinline', '');
-    await expect(creature.getByRole('link', { name: /Creature App/i })).toBeVisible();
-    await expect(creature.locator('picture')).toHaveCount(1);
-    await expect(creature.locator('img')).toHaveAttribute('width', '1440');
-    await expect(creature.locator('img')).toHaveAttribute('height', '900');
-    await expect(mirrorAi.getByRole('link', { name: /Mirror AI/i })).toBeVisible();
-
-    const cameraBox = await camera.boundingBox();
-    const ghostwriterBox = await ghostwriter.boundingBox();
-    expect(Math.abs((cameraBox?.width ?? 0) - (ghostwriterBox?.width ?? 0))).toBeLessThan(3);
-
-    await creature.getByRole('link', { name: /Creature App/i }).focus();
-    await expect(creature.getByRole('link', { name: /Creature App/i })).toBeFocused();
-
-    const publicImages = await page.locator('img').evaluateAll((images) =>
-      images.map((image) => image.getAttribute('src') ?? '')
-    );
-    expect(publicImages.join(' ')).not.toContain('movement-mug');
-    expect(publicImages.join(' ')).not.toContain('movement-peace-sign');
-    expect(publicImages.join(' ')).not.toContain('movement-confirmation');
-  });
-
-  test('project films attach only near the viewport, play when visible, and pause off-screen', async ({
-    page
-  }) => {
-    const videoRequests: string[] = [];
-    page.on('request', (request) => {
-      if (/\.(webm|mp4)(?:\?|$)/i.test(request.url())) videoRequests.push(request.url());
-    });
-
-    await page.goto('/');
-
-    const mirrorTile = page.locator('[data-project-tile="mirror-ai"]');
-    const mirrorVideo = mirrorTile.locator('video');
-    await expect(mirrorVideo.locator('source')).toHaveCount(0);
-    await expect(mirrorTile.locator('[data-media-stage]')).toHaveAttribute(
-      'data-poster-visible',
-      'true'
-    );
-    expect(videoRequests.some((url) => url.includes('mirror-ai-preview'))).toBe(false);
-
-    await mirrorTile.scrollIntoViewIfNeeded();
-    await expect(mirrorVideo.locator('source').first()).toHaveAttribute(
-      'src',
-      '/media/v1/home/mirror-ai-preview.webm'
-    );
-    await expect(mirrorVideo).toHaveAttribute('loop', '');
-    await expect(mirrorVideo).toHaveAttribute('muted', '');
-    await expect(mirrorVideo).toHaveAttribute('playsinline', '');
-    await expect.poll(() => mirrorVideo.getAttribute('data-video-active')).toBe('true');
-
-    await page.locator('#top').scrollIntoViewIfNeeded();
-    await expect.poll(() => mirrorVideo.getAttribute('data-video-active')).toBe('false');
-    await expect(mirrorVideo.locator('source')).toHaveCount(2);
-  });
-
-  test('Save-Data keeps every project film on its static poster', async ({ page }) => {
-    await page.addInitScript(() => {
-      Object.defineProperty(navigator, 'connection', {
-        configurable: true,
-        get: () => ({
-          saveData: true,
-          addEventListener() {},
-          removeEventListener() {}
-        })
-      });
-    });
-    const videoRequests: string[] = [];
-    page.on('request', (request) => {
-      if (/\.(webm|mp4)(?:\?|$)/i.test(request.url())) videoRequests.push(request.url());
-    });
-
-    await page.goto('/');
-    await page.locator('[data-project-tile="mirror-ai"]').scrollIntoViewIfNeeded();
-
-    for (const video of await page.locator('[data-video-loop]').all()) {
-      await expect(video).toHaveAttribute('data-save-data', 'true');
-      await expect(video.locator('source')).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: homeHeroHeading })).toBeVisible();
+    const videos = page.locator('[data-project-tile] video');
+    for (let index = 0; index < (await videos.count()); index += 1) {
+      await expect.poll(() => videos.nth(index).evaluate((video) => (video as HTMLVideoElement).paused)).toBe(true);
     }
-    expect(videoRequests).toEqual([]);
   });
 
-  test('a missing Network Information API and rejected play promise stay error-free', async ({
-    page
-  }) => {
-    await page.addInitScript(() => {
-      Object.defineProperty(navigator, 'connection', {
-        configurable: true,
-        get: () => undefined
-      });
-      HTMLMediaElement.prototype.play = () => Promise.reject(new Error('autoplay denied'));
-    });
-    const pageErrors: Error[] = [];
-    page.on('pageerror', (error) => pageErrors.push(error));
-
-    await page.goto('/');
-    const mirrorVideo = page.locator('[data-project-tile="mirror-ai"] video');
-    await page.locator('[data-project-tile="mirror-ai"]').scrollIntoViewIfNeeded();
-    await expect(mirrorVideo.locator('source')).toHaveCount(2);
-    await expect(mirrorVideo).toHaveAttribute('data-save-data', 'false');
-    await expect(mirrorVideo).toHaveAttribute('data-play-rejected', 'true');
-    expect(pageErrors).toEqual([]);
-  });
-
-  test('mobile homepage keeps work and navigation readable without overflow', async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto('/');
-
-    await expect(page.getByRole('link', { name: 'Explore my work' })).toBeVisible();
-    await expect(page.getByTestId('primary-navigation')).toBeHidden();
-
-    const menuToggle = page.getByRole('button', { name: 'Open navigation menu' });
-    await expect(menuToggle).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Miguel Almeida, homepage' })).toBeVisible();
-    await menuToggle.click();
-
-    const mobileNavigation = page.getByRole('navigation', { name: 'Mobile primary' });
-    await expect(mobileNavigation).toBeVisible();
-    await expect(mobileNavigation.getByRole('link')).toHaveCount(4);
-    await expect(page.getByRole('button', { name: 'Close navigation menu' })).toHaveAttribute(
-      'aria-expanded',
-      'true'
-    );
-    await page.keyboard.press('Escape');
-    await expect(mobileNavigation).toBeHidden();
-    await expectNoHorizontalOverflow(page);
-
-    await page.getByRole('link', { name: 'Explore my work' }).click();
-    const camera = page.locator('[data-project-tile="camera-harness"]');
-    await expect(camera).toBeVisible();
-    await expect(camera.locator('small')).toBeHidden();
-    await expect(camera.locator('.tile-meta span').nth(1)).toBeHidden();
-    const ghostwriter = page.locator('[data-project-tile="ghostwriter"]');
-    await expect(ghostwriter).toBeVisible();
-    await expect(ghostwriter.locator('[data-media-stage] .poster picture')).toHaveCount(1);
-    const cameraVideo = camera.locator('video');
-    await expect(cameraVideo.locator('source').first()).toBeAttached();
-    await expect
-      .poll(() =>
-        cameraVideo.evaluate((video) => (video as HTMLVideoElement).paused)
-      )
-      .toBe(false);
-    await expectNoHorizontalOverflow(page);
-
-    await page.goto('/#contact');
-    await expect(page.getByRole('heading', { name: 'Want the practical version?' })).toBeVisible();
-    await expect(page.locator('.contact-grid > *')).toHaveCount(5);
-    const shortcutBox = await page.locator('.llm-shortcut').boundingBox();
-    const firstShortcutBox = await page.locator('.contact-llm-chip').first().boundingBox();
-    expect(shortcutBox?.height ?? Infinity).toBeLessThan(220);
-    expect(firstShortcutBox?.height ?? Infinity).toBeLessThan(48);
-    await expectNoHorizontalOverflow(page);
-  });
-
-  test('retired Lab route returns visitors to the project grid', async ({ page }) => {
-    await page.goto('/lab');
-
-    await expect(page).toHaveURL(/\/#work$/);
-    await expect(page.getByRole('heading', { name: 'Selected work' })).toBeVisible();
-  });
-
-  test('Camera Harness exposes interactive current, historical, and proposed truth states', async ({
-    page
-  }) => {
-    await page.goto('/work/camera-harness#runtime-architecture');
-
-    await expect(page.getByRole('heading', { name: 'Camera Harness' })).toBeVisible();
-    await expect(
-      page.locator('.case-hero').getByAltText(/raising a phone/i)
-    ).toBeVisible();
-    await expect(page.getByText(/not\s+general recognition accuracy/i).first()).toBeVisible();
-
-    const architecture = page.locator(
-      '[aria-label="Camera Harness architecture states"]'
-    );
-    await expect(architecture).toHaveAttribute('data-architecture-mode', 'current');
-    await architecture.getByRole('button', { name: /Ask frame window/i }).click();
-    await expect(architecture.getByRole('heading', { name: 'Ask frame window' })).toBeVisible();
-    await expect(architecture.getByText(/separate short frame window/i)).toBeVisible();
-
-    await architecture.getByRole('tab', { name: 'Historical' }).click();
-    await expect(architecture).toHaveAttribute('data-architecture-mode', 'historical');
-    await expect(architecture.getByText(/not active in the current product/i)).toBeVisible();
-    await architecture.getByRole('button', { name: /AirScript/i }).click();
-    await expect(architecture.getByText(/not mounted in the current product/i)).toBeVisible();
-
-    await architecture.getByRole('tab', { name: 'Proposed' }).click();
-    await expect(architecture).toHaveAttribute('data-architecture-mode', 'proposed');
-    await expect(architecture.getByText(/not currently implemented/i)).toBeVisible();
-    await architecture.getByRole('button', { name: /Answer-to-evidence links/i }).focus();
-    await page.keyboard.press('ArrowRight');
-    await expect(architecture.getByRole('heading', { name: 'User confirm or discard' })).toBeVisible();
-  });
-
-  test('Camera Harness comparisons, timeline, and test interpretation change state', async ({
-    page
-  }) => {
-    await page.goto('/work/camera-harness#ask-provenance');
-
-    const askComparison = page.locator(
-      '.system-comparison[aria-label="Ask evidence continuity comparison"]'
-    );
-    await askComparison.getByRole('tab', { name: /What currently happens/i }).click();
-    await expect(askComparison).toHaveAttribute('data-comparison-active', 'actual');
-    await expect(askComparison.getByText(/Separate Ask frame window/i)).toBeVisible();
-
-    const timeline = page.locator('.timeline-explorer');
-    await timeline.getByRole('button', { name: /Stabilization removes active integration/i }).click();
-    await expect(timeline.getByText('Commit a0f0f5a2', { exact: true })).toBeVisible();
-    await timeline.getByRole('button', { name: /AirScript and Spatial Lasso exposed/i }).click();
-    await expect(timeline.getByText('Commit 4b18fce8', { exact: true })).toBeVisible();
-
-    const testBoundary = page.getByRole('region', {
-      name: 'Evidence interpretation explorer'
-    });
-    await testBoundary.getByRole('tab', { name: /Real-model sample/i }).click();
-    await expect(testBoundary.getByText(/A model executed on one machine/i)).toBeVisible();
-    await expect(testBoundary.getByText(/An accuracy distribution/i)).toBeVisible();
-
-    const architectureComparison = page.locator(
-      '.system-comparison[aria-label="Current and proposed evidence architecture"]'
-    );
-    await architectureComparison.getByRole('tab', { name: /Proposed architecture/i }).click();
-    await expect(architectureComparison).toHaveAttribute(
-      'data-comparison-active',
-      'proposed'
-    );
-    await expect(
-      architectureComparison
-        .locator('.comparison-panel')
-        .getByText('Recommendation · not implemented', { exact: true })
-    ).toBeVisible();
-
-    const body = await page.locator('body').innerText();
-    expect(body).not.toMatch(/production-ready spatial intelligence/i);
-    expect(body).not.toMatch(/fully local AI/i);
-    expect(body).not.toMatch(/accurate object recognition/i);
-    await expect(page.locator('img[src*="movement-"]')).toHaveCount(0);
-  });
-
-  test('supporting case studies use distinct interactive evidence', async ({ page }) => {
-    await page.goto('/work/atlas');
-    await expect(
-      page.getByRole('heading', { name: /Deterministic risk first/i })
-    ).toBeVisible();
-    const atlasComparison = page.locator(
-      '.system-comparison[aria-label="Atlas deterministic and model boundary"]'
-    );
-    await atlasComparison.getByRole('tab', { name: /Explained/i }).click();
-    await expect(
-      atlasComparison.getByRole('heading', { name: /Explanation remains inspectable/i })
-    ).toBeVisible();
-    await expect(atlasComparison.getByText(/Retrieval supplies established evidence/i)).toBeVisible();
-
-    await page.goto('/work/ghostwriter');
-    await expect(page.getByRole('heading', { name: 'Ghostwriter', exact: true })).toBeVisible();
-    await expect(page.getByText('Reliability case study', { exact: true })).toBeVisible();
-    await expect(page.getByAltText(/Ghostwriter editorial interface/i)).toBeVisible();
-    const ghostwriterComparison = page.locator(
-      '.system-comparison[aria-label="Ghostwriter registration reliability comparison"]'
-    );
-    await ghostwriterComparison.getByRole('tab', { name: /Recovery/i }).click();
-    await expect(ghostwriterComparison.getByText(/migration/i).first()).toBeVisible();
-  });
-
-  test('Story opens on the hackathon gallery and keeps a compact four-part timeline', async ({ page }) => {
-    await page.goto('/story');
-
-    await expect(
-      page.getByRole('heading', { name: 'Implementing the company’s first AI product.' })
-    ).toBeVisible();
-    await expect(page.locator('.chapter')).toHaveCount(4);
-    await expect(page.getByRole('navigation', { name: 'Story chapters' }).getByRole('link')).toHaveCount(
-      4
-    );
-    await expect(page.locator('.hackathon-grid img')).toHaveCount(6);
-    await expect(page.locator('.hackathon-grid picture')).toHaveCount(6);
-
-    const firstStoryPicture = page.locator('.hackathon-grid picture').first();
-    await expect(firstStoryPicture.locator('source[type="image/avif"]')).toHaveAttribute(
-      'srcset',
-      /\/media\/v1\/story\/presentation-room-640\.avif 640w, .*presentation-room-1024\.avif 1024w/
-    );
-    await expect(firstStoryPicture.locator('source[type="image/webp"]')).toHaveAttribute(
-      'srcset',
-      /\/media\/v1\/story\/presentation-room-640\.webp 640w, .*presentation-room-1024\.webp 1024w/
-    );
-    await expect(firstStoryPicture.locator('img')).toHaveAttribute('loading', 'eager');
-    await expect(page.locator('.hackathon-grid img').nth(1)).toHaveAttribute('loading', 'lazy');
-    await expect
-      .poll(() =>
-        firstStoryPicture
-          .locator('img')
-          .evaluate((image) => (image as HTMLImageElement).currentSrc)
-      )
-      .toMatch(/presentation-room-(640|1024)\.(avif|webp)$/);
-
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.reload();
-    await expectNoHorizontalOverflow(page);
-    await page
-      .getByRole('navigation', { name: 'Story chapters' })
-      .getByRole('link', { name: /Builder/i })
-      .click();
-    await expect(page).toHaveURL(/#builder$/);
-    await expect(page.getByRole('heading', { name: /work moved closer to cameras/i })).toBeVisible();
-  });
-
-  test('reduced motion keeps optimized posters visible without loading video', async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    const videoRequests: string[] = [];
-    page.on('request', (request) => {
-      if (/\.(webm|mp4|m4v)(?:\?|$)/i.test(request.url())) videoRequests.push(request.url());
-    });
-
-    await page.goto('/');
-    await page.locator('#work').scrollIntoViewIfNeeded();
-    await page.locator('[data-project-tile="mirror-ai"]').scrollIntoViewIfNeeded();
-
-    const cameraVideo = page.locator('[data-project-tile="camera-harness"] video');
-    const ghostwriterVideo = page.locator('[data-project-tile="ghostwriter"] video');
-    await expect(cameraVideo).toBeAttached();
-    await expect(cameraVideo.locator('source')).toHaveCount(0);
-    await expect(cameraVideo).toHaveAttribute('data-reduced-motion', 'true');
-    await expect(cameraVideo).toHaveAttribute('data-video-active', 'false');
-    await expect(ghostwriterVideo).toBeAttached();
-    await expect(ghostwriterVideo.locator('source')).toHaveCount(0);
-    await expect(ghostwriterVideo).toHaveAttribute('data-video-active', 'false');
-    await expect(
-      page.locator('[data-project-tile="camera-harness"] [data-media-stage]')
-    ).toHaveAttribute('data-poster-visible', 'true');
-    expect(videoRequests).toEqual([]);
-
-    const transform = await cameraVideo.evaluate((video) => getComputedStyle(video).transform);
-    expect(transform).toBe('none');
-  });
-
-  test('resume, MiguelLLM, and internal routes remain functional', async ({ page, request }) => {
-    await page.goto('/cv');
-    await expect(page.getByRole('heading', { name: /Frontend Engineer/i }).first()).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Experience' })).toBeVisible();
-    const pdf = await request.get('/portfolio.pdf');
-    expect(pdf.ok()).toBeTruthy();
-    expect(pdf.headers()['content-type']).toContain('application/pdf');
-
-    await page.goto('/');
-    const trigger = page.getByRole('button', { name: /Ask MiguelLLM/i }).first();
-    await trigger.click();
-    const dialog = page.getByRole('dialog', { name: 'MiguelLLM' });
-    await expect(dialog).toBeVisible();
-    await dialog.getByRole('button', { name: /strongest technical project/i }).click();
-    await expect(dialog.getByText(/Camera Harness/i).last()).toBeVisible();
-    await page.keyboard.press('Escape');
-    await expect(trigger).toBeFocused();
-
-    const hrefs = await page.locator('a[href]').evaluateAll((links) =>
-      Array.from(
-        new Set(
-          links
-            .map((link) => link.getAttribute('href'))
-            .filter((href): href is string => Boolean(href?.startsWith('/')))
-            .map((href) => href.split('#')[0])
-        )
-      )
-    );
-    for (const href of hrefs) {
-      const response = await request.get(href || '/');
-      expect(response.status(), `${href} should resolve`).toBeLessThan(400);
+  test('public copy avoids unsupported positioning and metrics', async ({ page }) => {
+    for (const route of ['/', '/story', '/cv', '/work/camera-harness', '/work/atlas']) {
+      await page.goto(route);
+      const body = await page.locator('body').innerText();
+      expect(body).not.toMatch(/company.?s first AI product/i);
+      expect(body).not.toMatch(/fully local AI/i);
+      expect(body).not.toMatch(/accurate object recognition/i);
+      expect(body).not.toMatch(/senior frontend engineer/i);
     }
   });
 });

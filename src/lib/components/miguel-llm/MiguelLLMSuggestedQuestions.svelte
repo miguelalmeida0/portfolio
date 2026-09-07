@@ -5,7 +5,7 @@
 </script>
 
 {#if questions.length}
-  <div class:compact class="suggested-questions" aria-label="Suggested MiguelLLM questions">
+  <div class:compact class="suggested-questions" aria-label="Suggested portfolio questions">
     {#each questions as question}
       <button type="button" on:click={() => onAsk(question)}>{question}</button>
     {/each}

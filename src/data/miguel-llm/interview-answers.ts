@@ -337,7 +337,7 @@ export const miguelInterviewAnswers: MiguelInterviewAnswer[] = [
   {
     id: 'interview-biggest-achievement',
     title: 'Biggest professional achievement',
-    tags: ['recruiter', 'achievement', 'f24', 'frontend', 'global teams'],
+    tags: ['recruiter', 'achievement', 'f24', 'frontend', 'delivery'],
     patterns: [
       /\bbiggest (?:professional )?achievement\b/,
       /\bmost significant achievement\b/,
@@ -345,7 +345,7 @@ export const miguelInterviewAnswers: MiguelInterviewAnswer[] = [
       /\bcareer highlight\b/
     ],
     shortAnswer:
-      'A meaningful career highlight was helping take frontend work at F24 from empty files into active use across global teams. I am proud of the product delivery, but also of the reusable patterns and stronger frontend judgment that grew around it.',
+      'A meaningful career highlight was helping lead frontend delivery for a product area at F24 from early wireframes through production implementation. I am proud of the features shipped with the team, and of the reusable patterns and stronger frontend judgment that grew around that work.',
     sources: ['CV / Experience timeline'],
     suggestedNextQuestions: ['What did you learn at F24?', 'How do you approach ownership?']
   },

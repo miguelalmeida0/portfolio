@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';
+const base = 'http://127.0.0.1:3010';
+async function get(path) {
+  const start = performance.now();
+  const response = await fetch(base + path, { signal: AbortSignal.timeout(15000) });
+  assert.equal(response.status, 200, path);
+  const body = await response.text();
+  console.log(`${path}: 200, ${Math.round(performance.now() - start)} ms`);
+  return body;
+}
+const home = await get('/');
+assert.match(home, /avatar-32.png/);
+assert.match(home, /images\/avatar.webp/);
+assert.match(home, /miguel-hero-720.webp/);
+const camera = await get('/work/camera-harness');
+assert.match(camera, /gesture-1600.webp/);
+assert.match(camera, /movement-1600.webp/);
+assert.doesNotMatch(camera, /microscope-live-result|recognition-poster|Read conditions &amp; source record/);
+const ghost = await get('/work/ghostwriter');
+assert.match(ghost, /interface-1600.webp/);
+assert.doesNotMatch(ghost, /<video|Historical incident account|registration reported|Registration reported/);
+assert.match(ghost, /Reserve before the rewrite/);
+for (const path of ['/story', '/images/avatar-32.png', '/images/avatar.webp', '/images/github.svg', '/images/linkedin.svg', '/images/miguel-hero-720.webp', '/images/miguel-hero-1451.webp', '/projects/ghostwriter/interface-720.webp', '/projects/ghostwriter/interface-1600.webp', '/projects/camera-harness/gesture-720.webp', '/projects/camera-harness/movement-720.webp', '/projects/camera-harness/book-recognition-720.mp4', '/projects/f24-ai-hackathon/presentation-room-640.avif']) await get(path);
+const mirror = await get('/work/mirror-ai');
+assert.match(mirror, /mirror-ai\/interface-1600.webp/);
+assert.doesNotMatch(mirror, /<video/);
+assert.doesNotMatch(mirror, /Replay samples|Read conditions|mirror-replay-check.json/);
+assert.match(mirror, /Point to what you want to understand/);
+assert.match(mirror, /A wrong answer becomes a test/);
+assert.match(mirror, /49 passing unit/);
+console.log('Served-page and asset assertions passed. HTTP checks do not verify browser rendering or playback.');

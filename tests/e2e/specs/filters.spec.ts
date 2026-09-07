@@ -3,10 +3,8 @@ import { expect, test } from '@playwright/test';
 import { routes, selectedWork } from '../fixtures/testData';
 import { gotoReady } from '../utils/waitForAppReady';
 
-test.describe('selectable evidence states', () => {
-  test('homepage has no hidden catalogue filters and shows the complete curated wall', async ({
-    page
-  }) => {
+test.describe('curated work and explicit evidence boundaries', () => {
+  test('homepage shows the complete curated set without catalogue controls', async ({ page }) => {
     await gotoReady(page, routes.home);
 
     await expect(page.getByRole('combobox')).toHaveCount(0);
@@ -15,40 +13,20 @@ test.describe('selectable evidence states', () => {
     await expect(page.locator('[data-project-tile]')).toHaveCount(selectedWork.length);
   });
 
-  test('architecture state tabs preserve explicit status boundaries', async ({ page }) => {
-    await page.goto('/work/camera-harness#runtime-architecture');
-    const architecture = page.locator(
-      '[aria-label="Camera Harness architecture states"]'
-    );
+  test('Camera Harness exposes failure, alternatives, behavior, and limits', async ({ page }) => {
+    await gotoReady(page, '/work/camera-harness');
 
-    await architecture.getByRole('tab', { name: 'Historical' }).click();
-    await expect(architecture).toHaveAttribute('data-architecture-mode', 'historical');
-    await expect(architecture.getByText(/not active in the current product/i)).toBeVisible();
-
-    await architecture.getByRole('tab', { name: 'Proposed' }).click();
-    await expect(architecture).toHaveAttribute('data-architecture-mode', 'proposed');
-    await expect(architecture.getByText(/not currently implemented/i)).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'I made mode changes invalidate obsolete AI work.' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Two ways to handle work that arrives late' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'What happens when the interaction changes' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Conditions and limits' })).toBeVisible();
   });
 
-  test('Ask comparison switches between visible implication and actual evidence flow', async ({
-    page
-  }) => {
-    await page.goto('/work/camera-harness#ask-provenance');
-    const comparison = page.locator(
-      '.system-comparison[aria-label="Ask evidence continuity comparison"]'
-    );
+  test('Atlas keeps deterministic findings separate from model explanation', async ({ page }) => {
+    await gotoReady(page, '/work/atlas');
 
-    await comparison.getByRole('tab', { name: /What currently happens/i }).click();
-    await expect(comparison).toHaveAttribute('data-comparison-active', 'actual');
-    await expect(comparison.getByText(/No shared immutable evidence ID/i)).toBeVisible();
-  });
-
-  test('test-evidence tabs expose what a result does and does not establish', async ({ page }) => {
-    await page.goto('/work/camera-harness#testing');
-    const evidence = page.getByRole('region', { name: 'Evidence interpretation explorer' });
-
-    await evidence.getByRole('tab', { name: /Visual snapshot/i }).click();
-    await expect(evidence.getByText('One deterministic UI state')).toBeVisible();
-    await expect(evidence.getByText('Current live behavior')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Atlas' })).toBeVisible();
+    await expect(page.getByText(/cannot create the finding or change the repository/i)).toBeVisible();
+    await expect(page.getByText(/no simulated product UI/i)).toBeVisible();
   });
 });

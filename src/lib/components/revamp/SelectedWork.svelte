@@ -1,7 +1,9 @@
 <script lang="ts">
   import { caseStudies } from '$lib/content/case-studies';
 
-  const [cameraHarness, atlas, ghostwriter] = caseStudies;
+  const cameraHarness = caseStudies.find((project) => project.slug === 'camera-harness')!;
+  const atlas = caseStudies.find((project) => project.slug === 'atlas')!;
+  const ghostwriter = caseStudies.find((project) => project.slug === 'ghostwriter')!;
 </script>
 
 <section id="work" class="selected-work page-gutter" aria-labelledby="selected-work-title">
@@ -45,21 +47,14 @@
                 class="project-visual"
                 aria-hidden="true"
               >
-                {#if project.image}
-                  <img
-                    src={project.image}
-                    alt=""
-                    loading="lazy"
-                    width="1600"
-                    height="900"
-                    style:object-position={project.objectPosition}
-                  />
-                {:else}
-                  <span class="scope">workspace</span>
-                  <span class="scope">repository</span>
-                  <span class="scope">ingestion run</span>
-                  <strong>risk → evidence → explanation</strong>
-                {/if}
+                <span class="scope">{project.slug === 'atlas' ? 'finding' : 'account'}</span>
+                <span class="scope">{project.slug === 'atlas' ? 'evidence' : 'session'}</span>
+                <span class="scope">{project.slug === 'atlas' ? 'explanation' : 'database'}</span>
+                <strong>
+                  {project.slug === 'atlas'
+                    ? 'deterministic signal → bounded explanation'
+                    : 'visible success → verified state'}
+                </strong>
               </div>
               <div class="project-copy">
                 <div class="project-index">{String(index + 2).padStart(2, '0')} · {project.type}</div>
@@ -341,13 +336,6 @@
     color: var(--foreground);
     font-size: clamp(1.35rem, 2.6vw, 2.5rem);
     line-height: 1.04;
-  }
-
-  .ghostwriter-visual img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: saturate(0.75) brightness(0.75);
   }
 
   @media (max-width: 980px) {

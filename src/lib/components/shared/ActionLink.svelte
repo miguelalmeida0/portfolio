@@ -15,11 +15,11 @@
 
   $: variantClass =
     variant === 'ghost'
-      ? 'interactive-button border border-border/70 bg-transparent text-foreground hover:border-accent/40 hover:bg-card/70'
+      ? 'interactive-button border border-border/70 bg-transparent text-foreground hover:bg-card/70'
       : variant === 'nav'
         ? 'interactive-button text-muted-foreground hover:text-foreground'
         : variant === 'pill'
-          ? 'interactive-button border border-border/60 bg-card/65 text-foreground hover:border-accent/40 hover:bg-card'
+          ? 'interactive-button border border-border/60 bg-card/65 text-foreground hover:bg-card'
           : 'interactive-button button-solid hover:opacity-96';
 
   const handleClick = (event: MouseEvent) => {
@@ -35,7 +35,7 @@
   {rel}
   {download}
   on:click={handleClick}
-  class={`inline-flex items-center gap-2 rounded-full px-5 py-3 font-mono text-[10px] uppercase tracking-[0.22em] ${variantClass} ${className}`}
+  class={`inline-flex items-center gap-2 rounded-full px-5 py-3 font-sans text-[12px] font-semibold ${variantClass} ${className}`}
 >
   <slot />
 </a>

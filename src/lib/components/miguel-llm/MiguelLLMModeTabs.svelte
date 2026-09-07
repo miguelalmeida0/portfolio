@@ -11,7 +11,7 @@
   ];
 </script>
 
-<div class="mode-tabs" role="tablist" aria-label="MiguelLLM answer mode">
+<div class="mode-tabs" role="tablist" aria-label="Portfolio guide answer mode">
   {#each modes as mode}
     <button
       type="button"

@@ -50,14 +50,14 @@
         href={site.linkedin}
         target="_blank"
         rel="noopener noreferrer"
-        class="interactive-button button-solid inline-flex items-center gap-2 rounded-full px-5 py-3 font-mono text-[10px] uppercase tracking-[0.22em] focus-visible:ring-2 focus-visible:ring-ring/45"
+        class="interactive-button button-solid inline-flex items-center gap-2 rounded-full px-5 py-3 font-sans text-[12px] font-semibold focus-visible:ring-2 focus-visible:ring-ring/45"
       >
         Open LinkedIn
       </a>
 
       <a
         href="/cv"
-        class="interactive-button inline-flex items-center gap-2 rounded-full border border-border/60 px-5 py-3 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground focus-visible:ring-2 focus-visible:ring-ring/45 hover:border-accent/40 hover:bg-card/60"
+        class="interactive-button inline-flex items-center gap-2 rounded-full border border-border/60 px-5 py-3 font-sans text-[12px] font-semibold text-foreground focus-visible:ring-2 focus-visible:ring-ring/45 hover:bg-card/60"
       >
         Back to CV
       </a>
