@@ -1,10 +1,10 @@
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 
-import { getCaseStudy } from '$lib/content/case-studies';
+import { getReleaseCaseStudy } from '$lib/content/release-case-studies';
 
 export const load: PageLoad = ({ params }) => {
-  const study = getCaseStudy(params.slug);
+  const study = getReleaseCaseStudy(params.slug);
 
   if (!study) {
     error(404, 'Case study not found');
