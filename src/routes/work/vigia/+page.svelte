@@ -1,20 +1,21 @@
 <script lang="ts">
   import SiteHeader from '$lib/components/revamp/SiteHeader.svelte';
 
-  const demoUrl = 'https://vigia-public-demo.onrender.com';
+  const liveUrl = 'https://vigia-live.onrender.com';
+  const mediaUrl = 'https://vigia-public-demo.onrender.com';
   const shots = [
     {
-      src: `${demoUrl}/portfolio-media/intelligence.png`,
+      src: `${mediaUrl}/portfolio-media/intelligence.png`,
       alt: 'VIGIA Intelligence interface showing the product’s operational intelligence workspace.',
       label: 'Intelligence'
     },
     {
-      src: `${demoUrl}/portfolio-media/operations.png`,
+      src: `${mediaUrl}/portfolio-media/operations.png`,
       alt: 'VIGIA Operations interface showing the operational workflow and action surface.',
       label: 'Operations'
     },
     {
-      src: `${demoUrl}/portfolio-media/command-overview.png`,
+      src: `${mediaUrl}/portfolio-media/command-overview.png`,
       alt: 'VIGIA Command Overview showing the main crisis-intelligence operating picture.',
       label: 'Command overview'
     }
@@ -43,8 +44,8 @@
         restrictions and operational consequences into one usable picture.
       </p>
       <div class="actions">
-        <a class="primary" href={demoUrl} target="_blank" rel="noopener noreferrer">Open live synthetic demo ↗</a>
-        <span>Public portfolio scenario · no operational services connected</span>
+        <a class="primary" href={liveUrl} target="_blank" rel="noopener noreferrer">Open live backend-powered system ↗</a>
+        <span>Public read-only evaluation · real XIII API + managed PostGIS</span>
       </div>
     </div>
 
@@ -65,7 +66,7 @@
     </div>
     <div>
       <span>Public boundary</span>
-      <strong>Synthetic scenario · read-only · no auth, database, model or dispatch dependency</strong>
+      <strong>Real XIII backend · managed PostGIS · signed read-only gateway · mutations blocked</strong>
     </div>
   </section>
 
@@ -80,11 +81,13 @@
       </p>
     </div>
     <div class="story-copy">
-      <p class="eyebrow">THE DECISION</p>
-      <h2>Keep real product logic. Remove operational risk.</h2>
+      <p class="eyebrow">THE DEPLOYMENT DECISION</p>
+      <h2>Keep the real backend. Remove public operational risk.</h2>
       <p>
-        The public portfolio build preserves the real console structure and consequence/planning logic,
-        but replaces operational transport with a fail-closed boundary and feeds it a deterministic synthetic scenario.
+        The public deployment runs the real XIII Node API against managed PostGIS and serves the real
+        operator console through a same-origin gateway. Browser traffic receives signed read access only;
+        write methods are rejected before they reach the API. Local-only operational proof data stays out of
+        Git, with the public deployment explicitly degrading to the reviewed committed facility baseline.
       </p>
     </div>
   </section>
@@ -108,7 +111,7 @@
     <div class="capability-grid">
       <article><span>01</span><h3>Incidents</h3><p>Current incident context, history, changes and source state.</p></article>
       <article><span>02</span><h3>Routes</h3><p>Stored route options, distances, road restrictions and access implications.</p></article>
-      <article><span>03</span><h3>Facilities</h3><p>Addresses, distances, verified capabilities and reception/support locations.</p></article>
+      <article><span>03</span><h3>Facilities</h3><p>Addresses, distances, reviewed capabilities and reception/support locations.</p></article>
       <article><span>04</span><h3>Consequences</h3><p>Dependencies, operational-period impact and what needs human inspection next.</p></article>
     </div>
   </section>
