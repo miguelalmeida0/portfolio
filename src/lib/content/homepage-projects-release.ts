@@ -9,9 +9,14 @@ const vigiaTile: ProjectTile = {
     'I built an operational intelligence system that connects incidents, routes, facilities, resources, restrictions, and consequence-aware planning.',
   valueLine: 'Real product logic, public synthetic scenario, no operational services connected.',
   href: '/work/vigia',
-  size: 'standard',
-  sequence: ['Incident', 'Routes', 'Facilities', 'Consequences'],
-  sequenceLabel: 'VIGIA operational intelligence sequence'
+  media: {
+    poster: '/projects/vigia/response-access.webp',
+    alt: 'VIGIA Response & Access interface showing mapped facilities, road-network routes and incident access around Évora.',
+    aspectRatio: '16 / 10',
+    focalPoint: { x: 50, y: 50 },
+    publicSafe: true
+  },
+  size: 'standard'
 };
 
 const secondVoiceTile = homepageProjectTiles.find((project) => project.id === 'ghostwriter');
@@ -36,9 +41,9 @@ const f24 = homepageProjectTiles.find((project) => project.id === 'f24-experienc
 const mirror = homepageProjectTiles.find((project) => project.id === 'mirror-ai');
 
 export const homepageReleaseProjectTiles: ProjectTile[] = [
-  camera,
-  vigiaTile,
-  f24,
   correctedSecondVoiceTile,
+  vigiaTile,
+  camera,
+  f24,
   mirror
 ].filter((project): project is ProjectTile => Boolean(project));
