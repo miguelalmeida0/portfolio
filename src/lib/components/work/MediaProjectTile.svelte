@@ -67,8 +67,13 @@
             Open live demo <span aria-hidden="true">↗</span>
           </a>
         {:else}
-          <a class="action action-primary" href={project.href}>
-            Open Second Voice AI <span aria-hidden="true">→</span>
+          <a
+            class="action action-primary"
+            href="https://secondvoice-ai.vercel.app/second-voice"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Open live app <span aria-hidden="true">↗</span>
           </a>
         {/if}
       </div>
