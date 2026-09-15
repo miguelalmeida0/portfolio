@@ -30,10 +30,10 @@
   <div class="hero-stage">
     <div class="hero-content">
       <h1 id="hero-title">
-        <span>I’m Miguel, a frontend</span> <span>engineer building multimodal</span> <span>and computer-vision systems.</span>
+        <span>I’m Miguel, a frontend</span> <span>engineer building interfaces</span> <span>for complicated systems.</span>
       </h1>
 
-      <p class="hero-focus">Frontend & design engineering for elite products.<br /><span>React, TypeScript, and Svelte.</span></p>
+      <p class="hero-focus">Production frontend at F24.<br /><span>Independent work across crisis operations, applied AI, and computer vision.</span></p>
 
       <div class="hero-actions" aria-label="Primary portfolio actions">
         <a class="primary" href="#work">Explore my work</a>

@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 820" role="img" aria-labelledby="title desc">
+  <title id="title">VIGIA operational decision loop</title>
+  <desc id="desc">Retained facts flow through global feasibility checks to a human commander. Unknown information remains explicit and VIGIA never dispatches resources.</desc>
+  <rect width="1600" height="820" fill="#080808"/>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="72" y="86" fill="#f4eadc" font-size="27" font-weight="700">VIGIA</text>
+    <text x="72" y="124" fill="#b7afa5" font-size="17">Operational period · decision support</text>
+    <text x="1528" y="86" fill="#e6503d" font-size="14" font-weight="700" text-anchor="end" letter-spacing="1.6">ADVISORY ONLY</text>
+
+    <line x1="72" y1="166" x2="1528" y2="166" stroke="#332f2b" stroke-width="1"/>
+
+    <text x="72" y="226" fill="#e6503d" font-size="13" font-weight="700" letter-spacing="1.4">01 · RETAINED FACTS</text>
+    <text x="578" y="226" fill="#e6503d" font-size="13" font-weight="700" letter-spacing="1.4">02 · GLOBAL FEASIBILITY</text>
+    <text x="1120" y="226" fill="#e6503d" font-size="13" font-weight="700" letter-spacing="1.4">03 · HUMAN COMMAND</text>
+
+    <g fill="#101010" stroke="#36312d">
+      <rect x="72" y="258" width="398" height="430" rx="3"/>
+      <rect x="578" y="258" width="434" height="430" rx="3"/>
+      <rect x="1120" y="258" width="408" height="430" rx="3"/>
+    </g>
+
+    <text x="104" y="310" fill="#f4eadc" font-size="25" font-weight="700">What is known now?</text>
+    <text x="104" y="342" fill="#aaa198" font-size="16">No invented route. No assumed availability.</text>
+    <g font-size="17" fill="#ded3c5">
+      <text x="104" y="404">Incident currentness</text>
+      <text x="104" y="460">Retained routes + travel time</text>
+      <text x="104" y="516">Resource capability + release</text>
+      <text x="104" y="572">Reserve policy</text>
+      <text x="104" y="628">Mutual-aid state</text>
+    </g>
+    <g fill="#e6503d">
+      <circle cx="430" cy="398" r="4"/><circle cx="430" cy="454" r="4"/><circle cx="430" cy="510" r="4"/><circle cx="430" cy="566" r="4"/><circle cx="430" cy="622" r="4"/>
+    </g>
+
+    <text x="610" y="310" fill="#f4eadc" font-size="25" font-weight="700">Can the whole plan work?</text>
+    <text x="610" y="342" fill="#aaa198" font-size="16">One feasible assignment can still break the system.</text>
+    <g font-size="15" font-weight="700">
+      <rect x="610" y="381" width="118" height="34" rx="17" fill="#17251d" stroke="#386647"/>
+      <text x="669" y="403" fill="#a5d5b2" text-anchor="middle">FEASIBLE</text>
+      <rect x="742" y="381" width="116" height="34" rx="17" fill="#282218" stroke="#69583c"/>
+      <text x="800" y="403" fill="#e0c58e" text-anchor="middle">UNKNOWN</text>
+      <rect x="872" y="381" width="108" height="34" rx="17" fill="#2d1816" stroke="#7b3f37"/>
+      <text x="926" y="403" fill="#ef9a8e" text-anchor="middle">BLOCKED</text>
+    </g>
+    <g font-size="16" fill="#ded3c5">
+      <text x="610" y="474">Double-booking + sequence</text>
+      <text x="610" y="519">Deadlines + co-arrival</text>
+      <text x="610" y="564">Capacity + reserve</text>
+      <text x="610" y="609">Coupled requirements</text>
+      <text x="610" y="654">Mutual exclusion</text>
+    </g>
+
+    <text x="1152" y="310" fill="#f4eadc" font-size="25" font-weight="700">A person decides.</text>
+    <text x="1152" y="342" fill="#aaa198" font-size="16">The engine explains constraints; it does not command.</text>
+    <g font-size="17" fill="#ded3c5">
+      <text x="1152" y="425">Transparent ordering</text>
+      <text x="1152" y="480">Named violations</text>
+      <text x="1152" y="535">Future capacity gaps</text>
+      <text x="1152" y="590">What changed</text>
+    </g>
+    <line x1="1152" y1="626" x2="1494" y2="626" stroke="#37322e"/>
+    <text x="1152" y="660" fill="#e6503d" font-size="15" font-weight="700">DISPATCHED: FALSE</text>
+    <text x="1340" y="660" fill="#e6503d" font-size="15" font-weight="700">WRITES: 0</text>
+
+    <g stroke="#766d64" stroke-width="2" fill="none">
+      <path d="M490 474 H548"/>
+      <path d="M1028 474 H1086"/>
+    </g>
+    <g fill="#766d64">
+      <path d="M548 474 l-10 -6 v12z"/>
+      <path d="M1086 474 l-10 -6 v12z"/>
+    </g>
+
+    <line x1="72" y1="744" x2="1528" y2="744" stroke="#332f2b"/>
+    <text x="72" y="786" fill="#f4eadc" font-size="18" font-weight="700">UNKNOWN ≠ SAFE</text>
+    <text x="244" y="786" fill="#aaa198" font-size="18">Missing data stays missing. It does not become confidence.</text>
+    <text x="1528" y="786" fill="#aaa198" font-size="14" text-anchor="end">Portfolio diagram · not a live operations screen</text>
+  </g>
+</svg>
