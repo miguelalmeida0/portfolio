@@ -1,2 +1,0 @@
-Portfolio release work started from clean baseline 8969b86.
-Purpose: integrate current Ghostwriter state and VIGIA public demo without touching the user's dirty local main checkout.
