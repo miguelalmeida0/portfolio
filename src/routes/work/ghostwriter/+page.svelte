@@ -29,7 +29,7 @@
           Choose a literary voice, tune the mood, and watch the passage rebuild itself through visible cuts and insertions. The interaction is playful. The server path behind it is intentionally conservative about identity, retries and spend.
         </p>
         <div class="actions">
-          <a class="primary" href="https://ghostwritter-alpha.vercel.app/second-voice" target="_blank" rel="noreferrer">Open deployed surface ↗</a>
+          <a class="primary" href="https://secondvoice-ai.vercel.app/second-voice" target="_blank" rel="noreferrer">Open deployed surface ↗</a>
           <a href="#release-state">Read release state</a>
         </div>
       </div>
@@ -151,7 +151,7 @@
     </section>
 
     <footer class="case-footer">
-      <a class="primary" href="https://ghostwritter-alpha.vercel.app/second-voice" target="_blank" rel="noreferrer">Open Second Voice AI ↗</a>
+      <a class="primary" href="https://secondvoice-ai.vercel.app/second-voice" target="_blank" rel="noreferrer">Open Second Voice AI ↗</a>
       <a href="/work/camera-harness">Next: Camera Harness →</a>
     </footer>
   </div>
