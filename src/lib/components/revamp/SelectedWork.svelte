@@ -1,9 +1,8 @@
 <script lang="ts">
   import { caseStudies } from '$lib/content/case-studies';
+  import { secondVoiceStudy, vigiaStudy } from '$lib/content/release-case-studies';
 
   const cameraHarness = caseStudies.find((project) => project.slug === 'camera-harness')!;
-  const atlas = caseStudies.find((project) => project.slug === 'atlas')!;
-  const ghostwriter = caseStudies.find((project) => project.slug === 'ghostwriter')!;
 </script>
 
 <section id="work" class="selected-work page-gutter" aria-labelledby="selected-work-title">
@@ -38,22 +37,23 @@
       </article>
 
       <div class="supporting-work">
-        {#each [atlas, ghostwriter] as project, index}
+        {#each [vigiaStudy, secondVoiceStudy] as project, index}
+          {@const isVigia = project.slug === 'vigia'}
           <article class="project supporting">
             <a class="project-link" href={`/work/${project.slug}`}>
               <div
-                class:atlas-visual={project.slug === 'atlas'}
-                class:ghostwriter-visual={project.slug === 'ghostwriter'}
-                class="project-visual"
+                class:vigia-visual={isVigia}
+                class:second-voice-visual={!isVigia}
+                class="project-visual supporting-visual"
                 aria-hidden="true"
               >
-                <span class="scope">{project.slug === 'atlas' ? 'finding' : 'account'}</span>
-                <span class="scope">{project.slug === 'atlas' ? 'evidence' : 'session'}</span>
-                <span class="scope">{project.slug === 'atlas' ? 'explanation' : 'database'}</span>
+                <span class="scope">{isVigia ? 'incident' : 'author'}</span>
+                <span class="scope">{isVigia ? 'route' : 'mood'}</span>
+                <span class="scope">{isVigia ? 'consequence' : 'rewrite'}</span>
                 <strong>
-                  {project.slug === 'atlas'
-                    ? 'deterministic signal → bounded explanation'
-                    : 'visible success → verified state'}
+                  {isVigia
+                    ? 'real console → synthetic public boundary'
+                    : 'visible rewrite → bounded live deployment'}
                 </strong>
               </div>
               <div class="project-copy">
@@ -185,20 +185,9 @@
     text-transform: uppercase;
   }
 
-  .signal-a {
-    top: 10%;
-    left: 7%;
-  }
-
-  .signal-b {
-    top: 22%;
-    right: 9%;
-  }
-
-  .signal-c {
-    right: 12%;
-    bottom: 12%;
-  }
+  .signal-a { top: 10%; left: 7%; }
+  .signal-b { top: 22%; right: 9%; }
+  .signal-c { right: 12%; bottom: 12%; }
 
   .project-copy {
     display: grid;
@@ -219,12 +208,7 @@
     text-transform: uppercase;
   }
 
-  h3,
-  p,
-  dl,
-  dd {
-    margin: 0;
-  }
+  h3, p, dl, dd { margin: 0; }
 
   h3 {
     font-size: clamp(2.5rem, 5vw, 5.4rem);
@@ -274,9 +258,7 @@
   }
 
   .project-link:hover .cta,
-  .project-link:focus-visible .cta {
-    color: var(--accent);
-  }
+  .project-link:focus-visible .cta { color: var(--accent); }
 
   .project-link:focus-visible {
     outline: 2px solid var(--ring);
@@ -294,26 +276,29 @@
     grid-template-rows: minmax(18rem, auto) 1fr;
   }
 
-  .supporting h3 {
-    font-size: clamp(2.4rem, 4.5vw, 4.5rem);
-  }
+  .supporting h3 { font-size: clamp(2.4rem, 4.5vw, 4.5rem); }
+  .supporting dl div { grid-template-columns: 1fr; gap: 0.35rem; }
 
-  .supporting dl div {
-    grid-template-columns: 1fr;
-    gap: 0.35rem;
-  }
-
-  .atlas-visual {
+  .supporting-visual {
     display: grid;
     align-content: center;
     gap: 0.55rem;
     padding: clamp(1.25rem, 3vw, 3rem);
+  }
+
+  .vigia-visual {
     background:
       linear-gradient(90deg, rgb(232 168 120 / 0.05), transparent 48%),
       #050505;
   }
 
-  .atlas-visual .scope {
+  .second-voice-visual {
+    background:
+      linear-gradient(135deg, rgb(244 234 220 / 0.05), transparent 52%),
+      #050505;
+  }
+
+  .supporting-visual .scope {
     width: min(100%, 24rem);
     border: 1px solid rgb(244 234 220 / 0.18);
     padding: 0.65rem 0.8rem;
@@ -323,15 +308,10 @@
     letter-spacing: 0.08em;
   }
 
-  .atlas-visual .scope:nth-child(2) {
-    margin-left: 1.5rem;
-  }
+  .supporting-visual .scope:nth-child(2) { margin-left: 1.5rem; }
+  .supporting-visual .scope:nth-child(3) { margin-left: 3rem; }
 
-  .atlas-visual .scope:nth-child(3) {
-    margin-left: 3rem;
-  }
-
-  .atlas-visual strong {
+  .supporting-visual strong {
     margin-top: 2rem;
     color: var(--foreground);
     font-size: clamp(1.35rem, 2.6vw, 2.5rem);
@@ -339,50 +319,18 @@
   }
 
   @media (max-width: 980px) {
-    .flagship .project-link {
-      grid-template-columns: 1fr;
-      min-height: 0;
-    }
-
-    .supporting-work {
-      grid-template-columns: 1fr;
-    }
-
-    .project-copy {
-      align-content: start;
-    }
+    .flagship .project-link { grid-template-columns: 1fr; min-height: 0; }
+    .supporting-work { grid-template-columns: 1fr; }
+    .project-copy { align-content: start; }
   }
 
   @media (max-width: 700px) {
-    .selected-work-header {
-      grid-template-columns: 1fr;
-      gap: 0.8rem;
-    }
-
-    .selected-work-header h2 {
-      font-size: clamp(2.8rem, 14vw, 4.7rem);
-    }
-
-    .project-visual {
-      min-height: 17rem;
-    }
-
-    .camera-visual strong {
-      font-size: clamp(2.4rem, 13vw, 4rem);
-    }
-
-    .project-copy {
-      padding: 1.2rem;
-    }
-
-    h3,
-    .supporting h3 {
-      font-size: clamp(2.35rem, 13vw, 4rem);
-    }
-
-    dl div {
-      grid-template-columns: 1fr;
-      gap: 0.35rem;
-    }
+    .selected-work-header { grid-template-columns: 1fr; gap: 0.8rem; }
+    .selected-work-header h2 { font-size: clamp(2.8rem, 14vw, 4.7rem); }
+    .project-visual { min-height: 17rem; }
+    .camera-visual strong { font-size: clamp(2.4rem, 13vw, 4rem); }
+    .project-copy { padding: 1.2rem; }
+    h3, .supporting h3 { font-size: clamp(2.35rem, 13vw, 4rem); }
+    dl div { grid-template-columns: 1fr; gap: 0.35rem; }
   }
 </style>
