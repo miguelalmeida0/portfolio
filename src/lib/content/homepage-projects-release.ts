@@ -4,10 +4,10 @@ const vigiaTile: ProjectTile = {
   id: 'vigia',
   title: 'VIGIA',
   category: 'Crisis intelligence system',
-  status: 'Portugal · live synthetic public demo',
+  status: 'Portugal · live backend-powered read-only deployment',
   shortDescription:
     'I built an operational intelligence system that connects incidents, routes, facilities, resources, restrictions, and consequence-aware planning.',
-  valueLine: 'Real product logic, public synthetic scenario, no operational services connected.',
+  valueLine: 'Real XIII backend, managed PostGIS, signed read-only public gateway.',
   href: '/work/vigia',
   media: {
     poster: 'https://vigia-public-demo.onrender.com/portfolio-media/intelligence.png',
@@ -27,7 +27,7 @@ const correctedSecondVoiceTile: ProjectTile | undefined = secondVoiceTile
       id: 'second-voice-ai',
       title: 'Second Voice AI',
       category: 'AI rewriting product',
-      status: 'Editorial interaction · controlled deployment',
+      status: 'Editorial interaction · live deployment',
       shortDescription:
         'I built an expressive rewriting interface where people choose a literary voice, tune the mood, and see the transformation unfold through visible edits.',
       valueLine: 'Visible edits, deliberate sharing, and bounded generation.',
