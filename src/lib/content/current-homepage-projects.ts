@@ -31,8 +31,8 @@ export const currentHomepageProjectTiles: ProjectTile[] = [
   },
   {
     id: 'ghostwriter',
-    title: 'Ghostwriter · Second Voice',
-    category: 'Live writing product',
+    title: 'Second Voice AI',
+    category: 'Literary AI product',
     status: 'Deployed surface · AI access gated',
     shortDescription:
       'A literary rewrite interface with visible word-level edits, deliberate sharing and a server path that stops when authorization or accounting is uncertain.',
