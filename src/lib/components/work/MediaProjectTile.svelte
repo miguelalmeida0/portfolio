@@ -60,11 +60,11 @@
         {#if isVigia}
           <a
             class="action action-primary"
-            href="https://vigia-public-demo.onrender.com"
+            href="https://vigia-live.onrender.com"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Open live demo <span aria-hidden="true">↗</span>
+            Open live system <span aria-hidden="true">↗</span>
           </a>
         {:else}
           <a
