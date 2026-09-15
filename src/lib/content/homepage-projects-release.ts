@@ -10,8 +10,8 @@ const vigiaTile: ProjectTile = {
   valueLine: 'Real product logic, public synthetic scenario, no operational services connected.',
   href: '/work/vigia',
   media: {
-    poster: '/projects/vigia/response-access.webp',
-    alt: 'VIGIA Response & Access interface showing mapped facilities, road-network routes and incident access around Évora.',
+    poster: 'https://vigia-public-demo.onrender.com/portfolio-media/intelligence.png',
+    alt: 'VIGIA operational intelligence interface showing the real product surface used in the crisis-intelligence system.',
     aspectRatio: '16 / 10',
     focalPoint: { x: 50, y: 50 },
     publicSafe: true
