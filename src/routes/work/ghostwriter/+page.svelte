@@ -7,10 +7,10 @@
 </script>
 
 <svelte:head>
-  <title>Ghostwriter · Second Voice — Miguel Almeida</title>
+  <title>Second Voice AI — Miguel Almeida</title>
   <meta
     name="description"
-    content="Ghostwriter / Second Voice is a deployed literary rewriting interface with visible edits and a deliberately bounded server path for authenticated AI generation."
+    content="Second Voice AI is a deployed literary rewriting interface with visible edits and a deliberately bounded server path for authenticated AI generation."
   />
 </svelte:head>
 
@@ -23,7 +23,7 @@
     <header class="hero">
       <div class="hero-copy">
         <p class="eyebrow">Live writing surface · protected AI access gated</p>
-        <h1>Ghostwriter<br /><span>Second Voice</span></h1>
+        <h1>Second Voice AI</h1>
         <p class="lede">A sentence can have more than one life.</p>
         <p class="intro">
           Choose a literary voice, tune the mood, and watch the passage rebuild itself through visible cuts and insertions. The interaction is playful. The server path behind it is intentionally conservative about identity, retries and spend.
@@ -76,7 +76,7 @@
     <section class="story">
       <p class="eyebrow">The engineering problem</p>
       <h2>The hard part was not calling a model. It was deciding when not to.</h2>
-      <div class="pipeline" aria-label="Ghostwriter protected generation path">
+      <div class="pipeline" aria-label="Second Voice AI protected generation path">
         <div><span>01</span><strong>Authenticate</strong><small>Identity and release eligibility</small></div>
         <div><span>02</span><strong>Admit</strong><small>Quota + one active operation</small></div>
         <div><span>03</span><strong>Dispatch once</strong><small>One provider call, bounded deadline</small></div>
@@ -90,7 +90,7 @@
         <p class="eyebrow">Failure semantics</p>
         <h2>A timeout does not mean the provider did nothing.</h2>
         <p>
-          If the browser stops waiting after dispatch, a second automatic generation could duplicate work and cost. Ghostwriter therefore does not treat uncertainty as a free retry. Completed operation keys replay the stored result; the same key with changed input is rejected; an uncertain operation remains accounted for until it can be reconciled.
+          If the browser stops waiting after dispatch, a second automatic generation could duplicate work and cost. Second Voice AI therefore does not treat uncertainty as a free retry. Completed operation keys replay the stored result; the same key with changed input is rejected; an uncertain operation remains accounted for until it can be reconciled.
         </p>
       </div>
       <aside class="rules">
@@ -151,7 +151,7 @@
     </section>
 
     <footer class="case-footer">
-      <a class="primary" href="https://ghostwritter-alpha.vercel.app/second-voice" target="_blank" rel="noreferrer">Open Second Voice ↗</a>
+      <a class="primary" href="https://ghostwritter-alpha.vercel.app/second-voice" target="_blank" rel="noreferrer">Open Second Voice AI ↗</a>
       <a href="/work/camera-harness">Next: Camera Harness →</a>
     </footer>
   </div>
@@ -161,19 +161,18 @@
   .ghost { min-height: 100svh; padding-block: clamp(6rem, 9vw, 8rem) 5rem; background: #050505; color: var(--foreground); }
   .shell { width: 100%; margin-inline: auto; }
   .back { display: inline-flex; min-height: 44px; align-items: center; margin-bottom: 1.5rem; color: rgb(244 234 220 / .7); font-size: .9rem; }
-  .back:hover { color: var(--accent); }
+  .back:hover { color: var(--foreground); }
   .hero { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(17rem, .7fr); gap: clamp(2rem, 6vw, 7rem); align-items: end; padding-bottom: clamp(2.5rem, 6vw, 5rem); }
-  .eyebrow, .facts span { margin: 0; color: var(--accent); font-size: var(--text-label); font-weight: 700; letter-spacing: .02em; }
+  .eyebrow, .facts span { margin: 0; color: rgb(244 234 220 / .68); font-size: var(--text-label); font-weight: 700; letter-spacing: .02em; }
   h1, h2, h3, p { margin: 0; }
-  h1 { margin-top: .75rem; font-family: var(--font-serif); font-size: clamp(3.6rem, 8vw, 8rem); font-weight: 400; letter-spacing: -.055em; line-height: .88; }
-  h1 span { color: rgb(244 234 220 / .45); }
-  .lede { margin-top: 1.6rem; font-family: var(--font-serif); font-size: clamp(1.7rem, 3vw, 3.2rem); letter-spacing: -.035em; line-height: 1.05; }
+  h1 { max-width: 11ch; margin-top: .75rem; font-family: var(--font-serif); font-size: clamp(3.6rem, 8vw, 8rem); font-weight: 400; letter-spacing: -.055em; line-height: .92; color: var(--foreground); }
+  .lede { margin-top: 1.6rem; font-family: var(--font-serif); font-size: clamp(1.7rem, 3vw, 3.2rem); letter-spacing: -.035em; line-height: 1.05; color: var(--foreground); }
   .intro { max-width: 48rem; margin-top: 1.2rem; color: rgb(244 234 220 / .72); font-size: var(--text-body); line-height: 1.65; }
   .actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.7rem; }
   .actions a { display: inline-flex; min-height: 44px; align-items: center; border: 1px solid rgb(244 234 220 / .28); border-radius: 999px; padding-inline: 1rem; color: var(--foreground); font-size: .82rem; font-weight: 700; }
   .actions .primary { border-color: var(--foreground); background: var(--foreground); color: #050505; }
   .release-card { border-top: 1px solid rgb(244 234 220 / .2); padding-top: 1rem; }
-  .release-card span { color: var(--accent); font-size: var(--text-label); font-weight: 700; }
+  .release-card span { color: rgb(244 234 220 / .68); font-size: var(--text-label); font-weight: 700; }
   .release-card strong { display: block; margin-top: .7rem; font-size: 1.25rem; }
   .release-card p { margin-top: .7rem; color: rgb(244 234 220 / .62); font-size: .9rem; line-height: 1.55; }
   .film { margin: 0 0 clamp(2.5rem, 7vw, 6rem); overflow: hidden; border-block: 1px solid rgb(244 234 220 / .14); padding-block: 1rem; }
@@ -183,29 +182,29 @@
   .facts div { display: grid; gap: .7rem; background: #050505; padding: 1.3rem 1.2rem; }
   .facts strong { font-size: .95rem; line-height: 1.5; }
   .story { padding-block: clamp(3.5rem, 8vw, 7rem); border-top: 1px solid rgb(244 234 220 / .15); }
-  .story h2 { max-width: 59rem; margin-top: .75rem; font-family: var(--font-serif); font-size: clamp(2rem, 4.4vw, 4.6rem); font-weight: 400; letter-spacing: -.045em; line-height: 1.03; }
+  .story h2 { max-width: 59rem; margin-top: .75rem; font-family: var(--font-serif); font-size: clamp(2rem, 4.4vw, 4.6rem); font-weight: 400; letter-spacing: -.045em; line-height: 1.03; color: var(--foreground); }
   .story > p:not(.eyebrow), .story div > p:not(.eyebrow), .story aside p { max-width: 59rem; margin-top: 1.4rem; color: rgb(244 234 220 / .72); font-size: var(--text-body); line-height: 1.7; }
   .split { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(16rem, .65fr); gap: clamp(2rem, 7vw, 8rem); }
   .split aside { align-self: end; border-top: 1px solid rgb(244 234 220 / .2); padding-top: 1.1rem; }
   .pipeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin-top: 2.5rem; background: rgb(244 234 220 / .14); }
   .pipeline div { display: grid; gap: .55rem; min-height: 11rem; align-content: start; background: #090909; padding: 1.3rem; }
-  .pipeline span { color: var(--accent); font-family: var(--font-mono); font-size: .75rem; }
+  .pipeline span { color: rgb(244 234 220 / .58); font-family: var(--font-mono); font-size: .75rem; }
   .pipeline strong { margin-top: 1.5rem; font-size: 1.15rem; }
   .pipeline small { color: rgb(244 234 220 / .55); line-height: 1.5; }
   .note { font-size: .9rem !important; color: rgb(244 234 220 / .52) !important; }
   .rules { display: grid; gap: 1px; background: rgb(244 234 220 / .14); }
   .rules div { display: flex; justify-content: space-between; gap: 1rem; background: #090909; padding: .9rem 1rem; }
-  .rules span { color: var(--accent); font-weight: 700; }
+  .rules span { color: var(--foreground); font-weight: 700; }
   .verification { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin-top: 2.5rem; background: rgb(244 234 220 / .14); }
   .verification article { display: grid; gap: .45rem; background: #090909; padding: 1.3rem; }
   .verification strong { font-family: var(--font-serif); font-size: clamp(2.2rem, 4vw, 4rem); font-weight: 400; }
   .verification span { color: rgb(244 234 220 / .58); font-size: .85rem; }
   .blockers aside > strong { display: block; margin-bottom: 1rem; }
   .gate { display: flex; justify-content: space-between; gap: 1rem; padding-block: .65rem; border-top: 1px solid rgb(244 234 220 / .14); font-size: .82rem; }
-  .gate b { color: var(--accent); font-size: .72rem; letter-spacing: .06em; }
+  .gate b { color: var(--foreground); font-size: .72rem; letter-spacing: .06em; }
   .case-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; padding-top: 2rem; border-top: 1px solid rgb(244 234 220 / .16); }
   .case-footer a { display: inline-flex; min-height: 44px; align-items: center; color: var(--foreground); font-size: .9rem; }
-  .case-footer .primary { color: var(--accent); }
+  .case-footer .primary { color: var(--foreground); }
   a:focus-visible { outline: 2px solid var(--ring); outline-offset: 4px; }
   @media (max-width: 900px) { .hero, .split { grid-template-columns: 1fr; } .pipeline, .verification { grid-template-columns: 1fr 1fr; } .facts { grid-template-columns: 1fr; } .release-card, .split aside { max-width: 38rem; } }
   @media (max-width: 620px) { .ghost { padding-block: 5.5rem 3rem; } .pipeline, .verification { grid-template-columns: 1fr; } .pipeline div { min-height: auto; } .hero { padding-bottom: 2.3rem; } }
