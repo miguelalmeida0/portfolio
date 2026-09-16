@@ -3,7 +3,7 @@
 **Frontend engineer building ambitious interactive systems across voice, AI, operational data, native learning, and design tooling.**
 
 <p align="center">
-  <img src="./docs/qa/screenshots/portfolio-production-fix/desktop-hero.png" alt="Miguel Almeida portfolio hero" width="100%">
+  <img src="./docs/readme/current/01-home-desktop.png" alt="Miguel Almeida portfolio hero" width="100%">
 </p>
 
 **Live:** https://miguelalmeida.is-a.dev
@@ -13,7 +13,7 @@ This repository is the engineering layer behind my portfolio. The site is delibe
 ## Selected work
 
 <p align="center">
-  <img src="./docs/qa/screenshots/portfolio-production-fix/desktop-project-cards.png" alt="Selected project cards" width="100%">
+  <img src="./docs/readme/current/02-selected-work-desktop.png" alt="Selected project cards" width="100%">
 </p>
 
 The portfolio brings together work across:
@@ -37,7 +37,7 @@ flowchart LR
 ```
 
 <p align="center">
-  <img src="./docs/qa/screenshots/portfolio-production-fix/desktop-work-featured-project.png" alt="Featured project story" width="100%">
+  <img src="./docs/readme/current/03-story-desktop.png" alt="Featured project story" width="100%">
 </p>
 
 ## Stack
@@ -86,12 +86,12 @@ That matters because several projects involve AI, perception, or operational sys
 
 <table>
   <tr>
-    <td width="62%"><img src="./docs/qa/screenshots/portfolio-production-fix/desktop-story.png" alt="Portfolio desktop story"></td>
-    <td width="38%"><img src="./docs/qa/screenshots/portfolio-production-fix/mobile-hero.png" alt="Portfolio mobile hero"></td>
+    <td width="62%"><img src="./docs/readme/current/04-contact-desktop.png" alt="Portfolio desktop story"></td>
+    <td width="38%"><img src="./docs/readme/current/90-home-mobile.png" alt="Portfolio mobile hero"></td>
   </tr>
 </table>
 
-The repository keeps production captures for desktop and mobile states rather than treating responsive behavior as an afterthought.
+The screenshots above are regenerated from the current deployed portfolio rather than retained from an older project-card layout.
 
 ## Engineering priorities
 
