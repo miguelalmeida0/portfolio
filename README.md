@@ -1,122 +1,138 @@
-# Miguel Almeida Portfolio
+# Miguel Almeida — Portfolio
 
-An evidence-led portfolio for Miguel Almeida, a frontend engineer working across product UI, design systems, browser architecture, reliability, and experimental multimodal interfaces.
+**Frontend engineer building ambitious interactive systems across voice, AI, operational data, native learning, and design tooling.**
 
-The site is intentionally editorial rather than a generic project grid. Camera Harness is the flagship engineering case study; Ghostwriter, Atlas, Creature App, and Mirror AI provide supporting reliability, architecture, interaction, and evidence stories. F24 appears as factual professional context rather than a fabricated company case study.
+<p align="center">
+  <img src="./docs/qa/screenshots/portfolio-production-fix/desktop-hero.png" alt="Miguel Almeida portfolio hero" width="100%">
+</p>
+
+**Live:** https://miguelalmeida.is-a.dev
+
+This repository is the engineering layer behind my portfolio. The site is deliberately closer to an editorial product story than a generic project-card grid: the work is presented through interaction, technical decisions, constraints, and verifiable artifacts.
+
+## Selected work
+
+<p align="center">
+  <img src="./docs/qa/screenshots/portfolio-production-fix/desktop-project-cards.png" alt="Selected project cards" width="100%">
+</p>
+
+The portfolio brings together work across:
+
+- **voice-first interaction** and conversational state;
+- **crisis intelligence** and geospatial operational interfaces;
+- **native iOS learning** and document interaction;
+- **local-first multimodal UI**;
+- **design systems and AI-agent tooling**;
+- production frontend architecture, performance, accessibility and QA.
+
+## Experience flow
+
+```mermaid
+flowchart LR
+    A[Landing] --> B[Selected work]
+    B --> C[Project story]
+    C --> D[Technical decisions]
+    D --> E[Evidence / constraints]
+    E --> F[Contact / CV]
+```
+
+<p align="center">
+  <img src="./docs/qa/screenshots/portfolio-production-fix/desktop-work-featured-project.png" alt="Featured project story" width="100%">
+</p>
 
 ## Stack
 
-- SvelteKit 2 and Svelte 5
+- SvelteKit 2 / Svelte 5
 - TypeScript
-- Tailwind CSS 4 plus component-scoped CSS
+- Tailwind CSS 4
 - Vite
-- Cloudflare adapter and Pages Functions
+- Cloudflare Pages / Functions
 - Playwright
-- Server-generated PDF resume
+- server-generated PDF CV
 
-## Local Development
+## Architecture
 
-Requirements: Node.js 20 or newer.
+```text
+src/lib/content/
+├── folio.ts                 profile / experience / navigation
+├── case-studies.ts          typed project narratives + claim status
+└── project-media.ts         approved visual assets
+
+src/lib/components/
+└── case-study/              reusable editorial presentation
+
+src/routes/
+├── work/[slug]/             project case studies
+├── api/miguel-llm/          bounded server-side assistant route
+└── cv / portfolio.pdf       shared resume output
+
+docs/qa/                     visual + production verification
+```
+
+## Claim discipline
+
+Project claims carry explicit status instead of being flattened into marketing language:
+
+- verified;
+- partial;
+- historical;
+- synthetic;
+- proposed;
+- not implemented.
+
+That matters because several projects involve AI, perception, or operational systems where a polished UI can otherwise imply more certainty than the implementation supports.
+
+## Responsive QA
+
+<table>
+  <tr>
+    <td width="62%"><img src="./docs/qa/screenshots/portfolio-production-fix/desktop-story.png" alt="Portfolio desktop story"></td>
+    <td width="38%"><img src="./docs/qa/screenshots/portfolio-production-fix/mobile-hero.png" alt="Portfolio mobile hero"></td>
+  </tr>
+</table>
+
+The repository keeps production captures for desktop and mobile states rather than treating responsive behavior as an afterthought.
+
+## Engineering priorities
+
+### Performance
+
+Offscreen media is lazy, client work is bounded, layouts are designed to avoid horizontal overflow, and visual QA is separated from production runtime artifacts.
+
+### Accessibility
+
+The implementation targets semantic landmarks, keyboard-operable navigation/dialogs, visible focus, useful touch targets, reduced-motion behavior, and readable supporting text.
+
+### Security
+
+Provider secrets remain server-side. Public AI-assisted surfaces use bounded input/output, rate limiting, and deterministic fallbacks rather than exposing provider credentials in the browser.
+
+### Content architecture
+
+Case studies are structured data instead of scattered page copy, allowing the web portfolio and PDF/CV surfaces to share factual source material.
+
+## Run locally
 
 ```bash
+git clone https://github.com/miguelalmeida0/portfolio-new.git
+cd portfolio-new
+git checkout portfolio
 npm install
 npm run dev
 ```
 
-The development server uses a strict, explicit address:
-
-```text
-http://127.0.0.1:3010
-```
-
-Useful commands:
+Useful checks:
 
 ```bash
 npm run lint
 npm run build
 npm run e2e
-npm run preview
-npm run qa:capture-revamp
 ```
 
-`qa:capture-revamp` expects the production preview on port `4173` and writes the revamp screenshots and before/after comparisons under `docs/qa/screenshots/portfolio-content-revamp-2026-09-05/`.
+## A note on professional work
 
-## Project Structure
+F24 appears as professional experience, not as a fabricated public case study. Private employer implementation details, customer information, screenshots, and internal metrics are intentionally excluded.
 
-```text
-src/lib/content/folio.ts              profile, navigation, experience, and resume content
-src/lib/content/case-studies.ts       typed project and evidence records
-src/lib/components/case-study/        reusable case-study presentation components
-src/routes/work/[slug]/               all five project case studies
-src/lib/content/project-media.ts      approved project media and homepage order
-src/data/miguel-llm/                  approved retrieval knowledge
-src/lib/miguel-llm/                   retrieval, fallback, guardrails, and response types
-src/routes/api/miguel-llm/            provider-agnostic server route
-src/lib/server/pdf.ts                  downloadable resume generator
-docs/qa/                              verification notes and visual evidence
-```
+---
 
-## Content And Evidence
-
-`src/lib/content/case-studies.ts` is the authoritative public project source. Evidence is classified as:
-
-- `verified`: supported by the current implementation or dossier.
-- `partial`: implemented in part or missing broader validation.
-- `historical`: retained evidence from an earlier commit or integration state.
-- `synthetic`: deterministic test evidence, not live model quality.
-- `proposed`: an architecture recommendation, not current behavior.
-- `not-implemented`: explicitly outside the current product graph.
-
-Optional fields are omitted when no sourced public claim exists. Do not render `TBD`, `Unknown`, empty metrics, unsupported adoption numbers, or promotional estimates.
-
-To add a case study:
-
-1. Add a typed record in `src/lib/content/case-studies.ts`.
-2. Add only public-safe links and evidence.
-3. Qualify every metric with source, environment, and limitations.
-4. Use stable section IDs for evidence links.
-5. Add a dedicated route only when the project needs a distinct narrative.
-
-## MiguelLLM
-
-MiguelLLM is an evidence-navigation interface, not a live persona or a local ML infrastructure demo. API keys never enter client code.
-
-Provider order:
-
-1. Cerebras when `CEREBRAS_API_KEY` exists.
-2. OpenAI Responses API when `OPENAI_API_KEY` exists.
-3. Deterministic local fallback.
-
-Copy `.env.example` to `.env.local` and configure only the providers you intend to use:
-
-```text
-CEREBRAS_API_KEY=
-OPENAI_API_KEY=
-MIGUEL_LLM_PROVIDER=auto
-MIGUEL_LLM_MODEL=
-```
-
-The interface limits questions per browser session. The server limits input length, retrieval chunks, output length, and request rate, and falls back to deterministic answers when a provider fails.
-
-## Resume
-
-`/cv` and `/portfolio.pdf` draw from the same experience and project content. The PDF prioritizes readable extraction and print layout. It is not claimed to be a fully tagged accessible PDF; that remains a documented limitation.
-
-## Accessibility And Performance Goals
-
-The implementation targets semantic landmarks, visible focus, keyboard-operable navigation and dialogs, reduced-motion support, useful touch targets, readable supporting text, responsive layouts without horizontal overflow, lazy offscreen media, and bounded client work.
-
-These are implementation goals, not a claim of complete WCAG conformance. Record completed checks and remaining limitations in `docs/qa/`.
-
-## Production
-
-The canonical public URL is `https://miguelalmeida.is-a.dev`. Production builds use Node.js 22, `npm run build`, and the `.svelte-kit/cloudflare` output directory; Cloudflare Pages serves that artifact, while GitHub Actions validates release branches. Provider-generated hostnames are infrastructure only and are not the portfolio's public identity.
-
-## Public Claim Rules
-
-- Camera Harness is an experimental system, not a production-ready perception product.
-- Current, historical, synthetic, and proposed behavior must remain visibly distinct.
-- No private F24 implementation details, customer information, screenshots, or metrics are public.
-- No private camera footage belongs in the Camera Harness case study.
-- Project repository and demo links are shown only when public, functional, and safe.
-- Public technical claims should trace to the Camera Harness dossier, a public repository artifact, or a documented portfolio source.
+Designed and built by [Miguel Almeida](https://github.com/miguelalmeida0).
