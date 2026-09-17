@@ -1,5 +1,6 @@
 <script lang="ts">
   import { homepageProjectTiles } from '$lib/content/project-media';
+  import { reveal } from '$lib/motion/actions/reveal';
   import MediaProjectTile from './MediaProjectTile.svelte';
 </script>
 
@@ -7,9 +8,10 @@
   <div class="work-wall-inner">
     <header>
       <div>
-        <h2 id="work-wall-title">Selected work</h2>
-        <p>Production frontend and independent systems built around clear feedback, visible state, and human control.</p>
+        <h2 id="work-wall-title" use:reveal={{ threshold: 0.1 }}>Selected work</h2>
+        <p use:reveal={{ threshold: 0.1, delay: 70 }}>Production frontend and independent systems built around clear feedback, visible state, and human control.</p>
       </div>
+      <span class="section-rule" use:reveal={{ variant: 'rule', threshold: 0.1 }} aria-hidden="true"></span>
     </header>
 
     <div class="work-mosaic">
@@ -36,6 +38,7 @@
   }
 
   header {
+    position: relative;
     display: flex;
     align-items: baseline;
     justify-content: space-between;
@@ -43,6 +46,18 @@
     margin-bottom: clamp(1.4rem, 3vw, 2.4rem);
     padding-bottom: 0.8rem;
     border-bottom: 1px solid rgb(244 234 220 / 0.15);
+  }
+
+  /*
+   * The accent rule draws along the existing section border as the wall arrives.
+   * It sits on top of the border, so nothing about the resting layout changes.
+   */
+  .section-rule {
+    position: absolute;
+    inset: auto 0 -1px 0;
+    display: block;
+    height: 1px;
+    background: color-mix(in srgb, var(--accent) 70%, transparent);
   }
 
   h2 {

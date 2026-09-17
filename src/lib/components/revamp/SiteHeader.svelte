@@ -14,6 +14,8 @@
   let activeTarget = '';
   let menuOpen = false;
   let headerElement: HTMLElement;
+  /** The section the visitor is actually looking at, or '' when none is in view. */
+  let visibleSection = '';
 
   afterNavigate(() => {
     activeTarget = $page.url.pathname === '/' ? ($page.url.hash || '/') : $page.url.pathname;
@@ -51,6 +53,49 @@
       if (window.innerWidth > 760) menuOpen = false;
     };
 
+    /*
+     * The active navigation state follows what is really on screen rather than the
+     * last hash the visitor clicked. Only the in-page targets take part; `/story` and
+     * `/cv` are separate routes and keep their ordinary `aria-current="page"`.
+     */
+    const sectionTargets = navigation
+      .filter((item) => item.href.startsWith('#'))
+      .map((item) => item.href);
+
+    let sectionObserver: IntersectionObserver | undefined;
+
+    if ('IntersectionObserver' in window) {
+      const ratios = new Map<string, number>();
+
+      sectionObserver = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            ratios.set(
+              `#${entry.target.id}`,
+              entry.isIntersecting ? entry.intersectionRatio : 0
+            );
+          }
+
+          let best = '';
+          let bestRatio = 0;
+          for (const [href, ratio] of ratios) {
+            if (ratio > bestRatio) {
+              best = href;
+              bestRatio = ratio;
+            }
+          }
+
+          visibleSection = best;
+        },
+        { threshold: [0, 0.2, 0.5, 0.8], rootMargin: '-20% 0px -40% 0px' }
+      );
+
+      for (const href of sectionTargets) {
+        const section = document.querySelector(href);
+        if (section) sectionObserver.observe(section);
+      }
+    }
+
     syncLocation();
     window.addEventListener('hashchange', syncLocation);
     window.addEventListener('popstate', syncLocation);
@@ -58,6 +103,7 @@
     window.addEventListener('resize', closeOnDesktop);
 
     return () => {
+      sectionObserver?.disconnect();
       window.removeEventListener('hashchange', syncLocation);
       window.removeEventListener('popstate', syncLocation);
       window.removeEventListener('keydown', closeOnEscape);
@@ -66,6 +112,7 @@
   });
 
   $: activeHref =
+    ($page.url.pathname === '/' && visibleSection) ||
     activeTarget ||
     ($page.url.pathname === '/' && $page.url.hash ? $page.url.hash : $page.url.pathname);
 
@@ -253,6 +300,29 @@
       transform var(--interaction-duration) var(--interaction-ease);
   }
 
+  /*
+   * The accent rule, at navigation scale. It resolves under the label instead of
+   * moving the label itself, so nothing in the pill shifts and the focus ring stays
+   * a separate, clearly visible signal.
+   */
+  .top-nav a::after {
+    position: absolute;
+    inset: auto 0.9rem 0.34rem;
+    height: 1px;
+    background: var(--nav-accent);
+    content: '';
+    opacity: 0.85;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--motion-indicator) var(--motion-ease-feedback);
+  }
+
+  .top-nav a:hover::after,
+  .top-nav a:focus-visible::after,
+  .top-nav a.active::after {
+    transform: scaleX(1);
+  }
+
   .top-nav a:hover,
   .top-nav a:focus-visible,
   .top-nav a.active {
@@ -428,8 +498,8 @@
       border-bottom: 1px solid rgb(244 234 220 / 0.14);
       color: rgb(244 234 220 / 0.62);
       opacity: 0;
-      animation: menu-link-enter 520ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      animation-delay: calc(80ms + var(--menu-index) * 65ms);
+      animation: menu-link-enter 300ms var(--motion-settle) forwards;
+      animation-delay: calc(40ms + var(--menu-index) * 38ms);
       transition:
         color 180ms ease,
         padding-inline 380ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -467,7 +537,7 @@
     @keyframes menu-link-enter {
       from {
         opacity: 0;
-        transform: translateY(1rem);
+        transform: translateY(0.55rem);
       }
       to {
         opacity: 1;
@@ -487,6 +557,27 @@
         opacity: 1;
         animation: none;
       }
+    }
+
+    :global(html[data-motion='reduced']) .menu-toggle,
+    :global(html[data-motion='reduced']) .menu-icon,
+    :global(html[data-motion='reduced']) :global(.mobile-menu-arrow) {
+      transition: none;
+    }
+
+    :global(html[data-motion='reduced']) .mobile-panel a {
+      opacity: 1;
+      animation: none;
+    }
+  }
+
+  :global(html[data-motion='reduced']) .top-nav a::after {
+    transition: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .top-nav a::after {
+      transition: none;
     }
   }
 

@@ -1,0 +1,221 @@
+/*
+ * Editorial in Motion — shared motion primitives.
+ *
+ * Three repeated gestures carry the whole site: a frame/aperture that opens, an
+ * accent rule that draws, and a directional arrow that steps. Everything below is
+ * expressed with transform, opacity and clip-path only, so no layout is disturbed.
+ *
+ * Timing mirrors `src/lib/motion/tokens.ts`. Keep the two in step.
+ */
+
+:root {
+  --motion-press: 110ms;
+  --motion-feedback: 170ms;
+  --motion-indicator: 220ms;
+  --motion-drawer: 260ms;
+  --motion-route: 360ms;
+  --motion-section: 520ms;
+  --motion-media-reveal: 620ms;
+  --motion-hero-max: 900ms;
+
+  --motion-settle: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-ease-feedback: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --motion-heading-shift: 20px;
+  --motion-section-shift: 14px;
+  --motion-arrow-shift: 3px;
+  --motion-media-hover-scale: 1.025;
+
+  /* Written by the pointer-depth action; zero until it runs. */
+  --depth-x: 0px;
+  --depth-y: 0px;
+  --depth-tilt: 0deg;
+}
+
+/* ---------------------------------------------------------------------------
+   Reveal families
+   The pending state only ever exists while JavaScript is driving the element.
+   --------------------------------------------------------------------------- */
+
+[data-reveal] {
+  transition:
+    opacity var(--motion-section) var(--motion-settle),
+    transform var(--motion-section) var(--motion-settle),
+    clip-path var(--motion-media-reveal) var(--motion-settle);
+}
+
+[data-reveal='pending'] {
+  opacity: 0;
+}
+
+[data-reveal='pending'][data-reveal-variant='settle'] {
+  transform: translate3d(0, var(--motion-section-shift), 0);
+}
+
+[data-reveal='in'] {
+  opacity: 1;
+  transform: none;
+  clip-path: none;
+}
+
+/* The aperture: a short crop that resolves around genuine media. */
+[data-reveal='pending'][data-reveal-variant='frame'] {
+  opacity: 1;
+  clip-path: inset(4% 8% 4% 8%);
+  transform: scale(1.012);
+}
+
+[data-reveal='in'][data-reveal-variant='frame'] {
+  clip-path: inset(0% 0% 0% 0%);
+  transform: none;
+}
+
+/* The accent rule: a line that draws from the leading edge. */
+[data-reveal='pending'][data-reveal-variant='rule'] {
+  opacity: 1;
+  transform: scaleX(0);
+}
+
+[data-reveal-variant='rule'] {
+  transform-origin: left center;
+  transition: transform var(--motion-section) var(--motion-settle);
+}
+
+[data-reveal='in'][data-reveal-variant='rule'] {
+  transform: scaleX(1);
+}
+
+/* ---------------------------------------------------------------------------
+   Shared vocabulary helpers
+   --------------------------------------------------------------------------- */
+
+/* A hairline that belongs to a heading or a section label. */
+.motion-rule {
+  display: block;
+  height: 1px;
+  background: color-mix(in srgb, var(--accent) 62%, transparent);
+}
+
+/* The directional arrow step, reused by tiles, links and the footer. */
+.motion-arrow {
+  display: inline-block;
+  transition: transform var(--motion-indicator) var(--motion-ease-feedback);
+}
+
+:where(a, button):hover > .motion-arrow,
+:where(a, button):focus-visible > .motion-arrow,
+[data-media-active='true'] .motion-arrow {
+  transform: translate(var(--motion-arrow-shift), calc(-1 * var(--motion-arrow-shift)));
+}
+
+/* ---------------------------------------------------------------------------
+   Route continuity
+   --------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: var(--motion-route);
+    animation-timing-function: var(--motion-settle);
+  }
+
+  ::view-transition-group(project-media) {
+    animation-duration: 320ms;
+    animation-timing-function: var(--motion-settle);
+  }
+
+  ::view-transition-old(project-media),
+  ::view-transition-new(project-media) {
+    animation-duration: 320ms;
+    animation-timing-function: var(--motion-settle);
+    mix-blend-mode: normal;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion
+
+   `data-motion` is resolved before the first paint and is the single switch: it
+   already carries the OS preference, the site's own Reduced control and Save-Data.
+   A `data-reveal` attribute only ever exists because JavaScript put it there, and
+   the same code guarantees `data-motion` is set first — so one selector covers
+   every route into reduced motion, and the media query below only has to cover the
+   handful of effects that are pure CSS.
+   --------------------------------------------------------------------------- */
+
+/*
+ * Collapsing the tokens is what actually turns motion off: every transition and
+ * every bounded distance in the codebase is expressed through them, so one block
+ * neutralises the lot without hunting down each component. (The OS preference is
+ * additionally covered by the global rule in app.css.)
+ */
+html[data-motion='reduced'] {
+  --motion-press: 0.01ms;
+  --motion-feedback: 0.01ms;
+  --motion-indicator: 0.01ms;
+  --motion-drawer: 0.01ms;
+  --motion-route: 0.01ms;
+  --motion-section: 0.01ms;
+  --motion-media-reveal: 0.01ms;
+  --motion-hero-max: 0.01ms;
+
+  --motion-heading-shift: 0px;
+  --motion-section-shift: 0px;
+  --motion-arrow-shift: 0px;
+  --motion-media-hover-scale: 1;
+}
+
+html[data-motion='reduced'] [data-reveal] {
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
+  transition: none !important;
+}
+
+html[data-motion='reduced'] [data-reveal-variant='rule'] {
+  transform: scaleX(1) !important;
+}
+
+html[data-motion='reduced'] .motion-arrow {
+  transition: none !important;
+  transform: none !important;
+}
+
+html[data-motion='reduced'] ::view-transition-group(*),
+html[data-motion='reduced'] ::view-transition-old(*),
+html[data-motion='reduced'] ::view-transition-new(*) {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-arrow {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Print
+   A page being printed is a document. Nothing may be mid-reveal on paper, so
+   every animated state resolves to its finished composition.
+   --------------------------------------------------------------------------- */
+
+@media print {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    transition: none !important;
+  }
+
+  [data-reveal-variant='rule'] {
+    transform: scaleX(1) !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

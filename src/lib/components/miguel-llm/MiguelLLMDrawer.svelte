@@ -648,14 +648,20 @@
     .drawer-header { padding-top: max(12px, env(safe-area-inset-top)); }
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    .drawer-backdrop {
-      animation: backdrop-in 180ms ease both;
-    }
+  /*
+   * The drawer enters from the edge it lives on. Focus moves the moment the dialog
+   * mounts — it never waits for the animation — and because there is no outro the
+   * exit is always interruptible: closing removes the panel immediately.
+   *
+   * Keyed on the site's motion policy rather than the media query alone, so the
+   * footer's Reduced control silences it too.
+   */
+  :global(html[data-motion='full']) .drawer-backdrop {
+    animation: backdrop-in 180ms var(--motion-ease-feedback) both;
+  }
 
-    .drawer-panel {
-      animation: drawer-in 260ms var(--interaction-ease) both;
-    }
+  :global(html[data-motion='full']) .drawer-panel {
+    animation: drawer-in var(--motion-drawer) var(--motion-settle) both;
   }
 
   @keyframes backdrop-in {
@@ -669,10 +675,37 @@
 
   @keyframes drawer-in {
     from {
-      transform: translate3d(0, 0.45rem, 0) scale(0.985);
+      opacity: 0.6;
+      transform: translate3d(1.25rem, 0, 0);
     }
     to {
+      opacity: 1;
       transform: translate3d(0, 0, 0);
+    }
+  }
+
+  /* Below 680px the panel is a full-height sheet, so it arrives from the bottom. */
+  @media (max-width: 680px) {
+    :global(html[data-motion='full']) .drawer-panel {
+      animation-name: drawer-in-sheet;
+    }
+  }
+
+  @keyframes drawer-in-sheet {
+    from {
+      opacity: 0.6;
+      transform: translate3d(0, 1.5rem, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .drawer-backdrop,
+    .drawer-panel {
+      animation: none;
     }
   }
 </style>

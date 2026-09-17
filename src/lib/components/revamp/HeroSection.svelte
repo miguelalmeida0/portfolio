@@ -3,6 +3,7 @@
   import Sparkles from '@lucide/svelte/icons/sparkles';
 
   import MiguelLLMDrawer from '$lib/components/miguel-llm/MiguelLLMDrawer.svelte';
+  import { pointerDepth } from '$lib/motion/actions/pointerDepth';
   import type { MiguelLLMMode } from '$lib/miguel-llm/types';
   import HeroPortrait from './HeroPortrait.svelte';
 
@@ -35,6 +36,8 @@
 
       <p class="hero-focus">Frontend & design engineering for elite products.<br /><span>React, TypeScript, and Svelte.</span></p>
 
+      <span class="hero-rule" aria-hidden="true"></span>
+
       <div class="hero-actions" aria-label="Primary portfolio actions">
         <a class="primary" href="#work">Explore my work</a>
         <a href="/cv">View résumé</a>
@@ -45,7 +48,7 @@
       </div>
     </div>
 
-    <div class="portrait-wrap">
+    <div class="portrait-wrap" use:pointerDepth>
       <HeroPortrait />
     </div>
   </div>
@@ -55,6 +58,85 @@
 
 <style>
   .hero-section { overflow: clip; background: #000; color: #f4eadc; border-bottom: 1px solid rgb(244 234 220 / 0.16); }
+
+  /*
+   * The opening composition. Every line, the rule and the three actions are present
+   * and clickable in the first meaningful paint; only their arrival is animated, and
+   * only once the pre-paint probe has confirmed full motion. Total sequence stays
+   * inside the 900ms budget: the last element starts at 260ms and runs for 520ms.
+   */
+  :global(html[data-motion='full']) .hero-content > *:not(h1) {
+    animation: hero-settle var(--motion-section) var(--motion-settle) both;
+  }
+
+  /* The headline settles line by line rather than as one block. */
+  :global(html[data-motion='full']) h1 span {
+    animation: hero-settle var(--motion-section) var(--motion-settle) both;
+    animation-delay: calc(var(--line) * 65ms);
+  }
+
+  :global(html[data-motion='full']) .hero-focus { animation-delay: 195ms; }
+  :global(html[data-motion='full']) .hero-rule { animation-delay: 230ms; }
+  :global(html[data-motion='full']) .hero-actions { animation-delay: 260ms; }
+
+  h1 span:nth-child(1) { --line: 0; }
+  h1 span:nth-child(2) { --line: 1; }
+  h1 span:nth-child(3) { --line: 2; }
+
+  @keyframes hero-settle {
+    from { opacity: 0; transform: translate3d(0, var(--motion-heading-shift), 0); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* The accent rule that recurs across the site, at hero scale. */
+  .hero-rule {
+    display: block;
+    width: min(9.5rem, 34vw);
+    height: 1px;
+    background: color-mix(in srgb, #f4eadc 42%, transparent);
+    transform-origin: left center;
+  }
+
+  :global(html[data-motion='full']) .hero-rule {
+    animation-name: hero-rule-draw;
+    animation-duration: var(--motion-section);
+  }
+
+  @keyframes hero-rule-draw {
+    from { opacity: 0; transform: scaleX(0); }
+    to { opacity: 1; transform: scaleX(1); }
+  }
+
+  @media (max-width: 760px) {
+    /* Small screens: a shorter decoration-only settle, no added height. */
+    :global(html[data-motion='full']) .hero-content > *:not(h1),
+    :global(html[data-motion='full']) h1 span {
+      animation-duration: 420ms;
+    }
+
+    :global(html[data-motion='full']) h1 span { animation-delay: calc(var(--line) * 48ms); }
+    :global(html[data-motion='full']) .hero-focus { animation-delay: 150ms; }
+    :global(html[data-motion='full']) .hero-rule { animation-delay: 180ms; }
+    :global(html[data-motion='full']) .hero-actions { animation-delay: 210ms; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-content > *,
+    h1 span,
+    .hero-rule {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+
+  :global(html[data-motion='reduced']) .hero-content > *,
+  :global(html[data-motion='reduced']) h1 span,
+  :global(html[data-motion='reduced']) .hero-rule {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
   .hero-stage { position: relative; height: clamp(600px, 42.7vw, 800px); width: 100%; margin-inline: auto; }
   .hero-content { position: relative; z-index: 4; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 18px; height: 100%; padding: 48px 0 0 3.6vw; }
   h1 { margin: 0; font-family: var(--font-serif); font-size: var(--text-page); font-weight: 430; letter-spacing: -0.046em; line-height: 1.07; }
@@ -62,7 +144,8 @@
   .hero-focus { margin: 0; max-width: 38rem; color: rgb(244 234 220 / 0.75); font-size: var(--text-label); line-height: 1.6; }
   .hero-focus span { color: rgb(244 234 220 / 0.55); }
   .hero-actions { display: flex; flex-wrap: wrap; gap: 9px; }
-  .hero-actions a, .hero-actions button { display: inline-flex; min-height: 40px; align-items: center; justify-content: center; gap: 6px; border: 1px solid rgb(244 234 220 / 0.3); border-radius: 999px; background: #000; padding: 0 14px; color: #f4eadc; cursor: pointer; font-family: var(--font-sans); font-size: 11px; font-weight: 760; line-height: 1; transition: background-color 180ms ease; }
+  .hero-actions a, .hero-actions button { display: inline-flex; min-height: 40px; align-items: center; justify-content: center; gap: 6px; border: 1px solid rgb(244 234 220 / 0.3); border-radius: 999px; background: #000; padding: 0 14px; color: #f4eadc; cursor: pointer; font-family: var(--font-sans); font-size: 11px; font-weight: 760; line-height: 1; transition: background-color var(--motion-feedback) var(--motion-ease-feedback), border-color var(--motion-feedback) var(--motion-ease-feedback), scale var(--motion-press) var(--motion-ease-feedback); }
+  .hero-actions a:active, .hero-actions button:active { scale: 0.975; }
   .hero-actions .primary { border-color: #f4eadc; background: #f4eadc; color: #050505; }
   .hero-actions a:hover, .hero-actions button:hover { background: #24221e; }
   .hero-actions .primary:hover { background: #e3d6c3; }

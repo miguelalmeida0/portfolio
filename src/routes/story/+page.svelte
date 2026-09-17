@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { reveal } from '$lib/motion/actions/reveal';
   import SiteHeader from '$lib/components/revamp/SiteHeader.svelte';
   import { getApprovedMedia } from '$lib/content/project-media';
 
@@ -68,8 +69,8 @@
 <main class="story-page page-gutter">
   <header class="story-intro">
     <div class="intro-copy">
-      <p class="eyebrow">About · Berlin</p>
-      <h1>Frontend engineering. From zero to production.</h1>
+      <p class="eyebrow" use:reveal>About · Berlin</p>
+      <h1 use:reveal={{ delay: 60 }}>Frontend engineering. From zero to production.</h1>
       <p class="lede">
         I built a business application’s frontend from its first mockups through production, then
         migrated it to React. Hundreds of companies now use the application. Today I build production frontends
@@ -80,7 +81,7 @@
     <div class="opening-media" aria-label="F24 hackathon photographs">
       {#each storyMedia as item}
         {#if item.media}
-          <figure>
+          <figure use:reveal={{ variant: 'frame', threshold: 0.15 }}>
             <picture>
               <source
                 type="image/avif"
@@ -113,12 +114,12 @@
   <div class="chapter-list">
     {#each chapters as chapter}
       <section id={chapter.id} class="chapter" aria-labelledby={`${chapter.id}-title`}>
-        <div class="chapter-meta">
+        <div class="chapter-meta" use:reveal={{ threshold: 0.1 }}>
           <span>{chapter.number}</span>
           <span>{chapter.label}</span>
         </div>
         <div class="chapter-copy">
-          <h2 id={`${chapter.id}-title`}>{chapter.title}</h2>
+          <h2 id={`${chapter.id}-title`} use:reveal={{ threshold: 0.1, delay: 60 }}>{chapter.title}</h2>
           {#each chapter.paragraphs as paragraph}<p>{paragraph}</p>{/each}
         </div>
       </section>
@@ -128,6 +129,13 @@
 </main>
 
 <style>
+  /*
+   * The accent rule was tried in this intro and cut: `.intro-copy` is a two-column
+   * grid, so a rule between the headline and the lede took the second cell and broke
+   * the pairing. The gesture stays on the case studies, where each chapter heading
+   * owns a single column.
+   */
+
   .story-page {
     min-height: 100svh;
     padding-block: clamp(6.25rem, 8vw, 7.5rem) clamp(4rem, 7vw, 7rem);

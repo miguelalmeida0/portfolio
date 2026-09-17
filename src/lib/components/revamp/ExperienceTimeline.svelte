@@ -1,16 +1,29 @@
 <script lang="ts">
   import { experienceTeaser } from '$lib/content/folio';
+  import { chapterProgress } from '$lib/motion/actions/chapterProgress';
+  import { reveal } from '$lib/motion/actions/reveal';
+
+  /** Share of rows that have actually entered the viewport, 0–1. */
+  let progress = 0;
 </script>
 
 <section id="experience" class="experience page-gutter" aria-labelledby="experience-title">
   <div class="experience-inner">
     <div class="section-title">
-      <p>Production experience</p>
-      <h2 id="experience-title">Built from scratch.<br />Used by hundreds of companies.</h2>
+      <p use:reveal={{ threshold: 0.1 }}>Production experience</p>
+      <h2 id="experience-title" use:reveal={{ threshold: 0.1, delay: 60 }}>Built from scratch.<br />Used by hundreds of companies.</h2>
     </div>
 
     <div>
-      <ol>
+      <!--
+        The rule advances with the rows the visitor has actually reached; the dates and
+        role names never move, because they are the content people came to read.
+      -->
+      <ol
+        class="timeline"
+        style={`--rows-entered: ${progress}`}
+        use:chapterProgress={{ selector: 'li', onProgress: (value) => (progress = value) }}
+      >
         {#each experienceTeaser as item}
           <li>
             <time datetime={item.years.split(' ')[0]}>{item.years}</time>
@@ -18,7 +31,7 @@
           </li>
         {/each}
       </ol>
-      <a href="/cv">Read the full résumé →</a>
+      <a href="/cv">Read the full résumé <span class="motion-arrow" aria-hidden="true">→</span></a>
     </div>
   </div>
 </section>
@@ -63,9 +76,24 @@
   }
 
   ol {
+    position: relative;
     margin: 0;
     padding: 0;
     list-style: none;
+  }
+
+  /* The progress rule: one hairline that grows to the share of rows reached. */
+  .timeline::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -0.85rem;
+    width: 1px;
+    background: color-mix(in srgb, var(--accent) 60%, transparent);
+    content: '';
+    transform: scaleY(var(--rows-entered, 0));
+    transform-origin: top center;
+    transition: transform var(--motion-section) var(--motion-settle);
   }
 
   li {
@@ -76,6 +104,19 @@
     min-height: 3rem;
     padding-block: 0.65rem;
     border-bottom: 1px solid rgb(244 234 220 / 0.12);
+    opacity: 1;
+    transition:
+      opacity var(--motion-section) var(--motion-settle),
+      transform var(--motion-section) var(--motion-settle);
+  }
+
+  /*
+   * Rows arrive by 12px. `data-chapter-entered` is only ever added by the observer,
+   * so with no JavaScript the list renders complete and static.
+   */
+  :global(html[data-motion='full']) .timeline li:not([data-chapter-entered]) {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
   }
 
   time {
@@ -93,6 +134,7 @@
 
   a {
     display: inline-flex;
+    gap: 0.35rem;
     min-height: 2.75rem;
     align-items: center;
     margin-top: 0.4rem;
@@ -105,7 +147,7 @@
   }
 
   a:hover {
-    transform: translateX(2px);
+    color: var(--foreground);
   }
 
   a:focus-visible {
@@ -117,6 +159,18 @@
     .experience-inner { grid-template-columns: minmax(16rem, 0.7fr) minmax(0, 2fr); }
     ol { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
     li { grid-template-columns: 1fr; align-content: start; gap: 0.8rem; padding-bottom: 1rem; }
+
+    /* The rows sit side by side here, so the rule advances across them, not down. */
+    .timeline::before {
+      top: -0.55rem;
+      right: 0;
+      bottom: auto;
+      left: 0;
+      width: auto;
+      height: 1px;
+      transform: scaleX(var(--rows-entered, 0));
+      transform-origin: left center;
+    }
   }
 
   @media (max-width: 760px) {
@@ -124,6 +178,25 @@
       grid-template-columns: 1fr;
       gap: 1.5rem;
     }
+
+    .timeline::before {
+      left: -0.55rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .timeline::before,
+    .timeline li {
+      transition: none;
+      transform: none;
+    }
+  }
+
+  :global(html[data-motion='reduced']) .timeline::before,
+  :global(html[data-motion='reduced']) .timeline li {
+    transition: none;
+    transform: none;
+    opacity: 1;
   }
 
   @media (max-width: 540px) {
