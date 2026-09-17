@@ -27,11 +27,23 @@ The portfolio brings together work across:
 
 ```mermaid
 flowchart LR
-    A[Landing] --> B[Selected work]
-    B --> C[Project story]
-    C --> D[Technical decisions]
-    D --> E[Evidence / constraints]
-    E --> F[Contact / CV]
+  LAND(["Landing"]):::actor
+  WORK["Selected work"]:::data
+  STORY["Project story"]:::system
+  DECISIONS["Technical decisions"]:::system
+  STATUS["Constraints + claim status"]:::guard
+  CONTACT(["Contact / CV"]):::safe
+
+  LAND --> WORK --> STORY --> DECISIONS --> STATUS --> CONTACT
+
+  classDef actor fill:#E8F1FF,stroke:#2563EB,color:#0F172A,stroke-width:1.6px;
+classDef system fill:#ECFEFF,stroke:#0891B2,color:#0F172A,stroke-width:1.6px;
+classDef decision fill:#FFFBEB,stroke:#D97706,color:#0F172A,stroke-width:1.6px;
+classDef guard fill:#FFF7ED,stroke:#EA580C,color:#0F172A,stroke-width:1.6px;
+classDef safe fill:#ECFDF5,stroke:#059669,color:#0F172A,stroke-width:1.6px;
+classDef private fill:#FFF1F2,stroke:#E11D48,color:#0F172A,stroke-width:1.6px;
+classDef data fill:#F8FAFC,stroke:#64748B,color:#0F172A,stroke-width:1.6px;
+linkStyle default stroke:#94A3B8,stroke-width:1.5px;
 ```
 
 ## Stack
