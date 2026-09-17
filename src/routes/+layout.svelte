@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { page } from '$app/stores';
+  import { initMotionPolicy } from '$lib/motion/policy';
+  import { installRouteTransitions } from '$lib/motion/routeTransition';
   import {
     SITE_DESCRIPTION,
     SITE_IMAGE_URL,
@@ -24,6 +27,11 @@
   });
 
   $: canonicalUrl = `${SITE_ORIGIN}${$page.url.pathname}`;
+
+  // `onNavigate` has to be registered while the layout initialises.
+  installRouteTransitions();
+
+  onMount(() => initMotionPolicy());
 </script>
 
 <svelte:head>

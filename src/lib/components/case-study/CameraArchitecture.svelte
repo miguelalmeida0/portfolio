@@ -16,7 +16,7 @@
 
 <section id="system-flow" class="architecture" aria-labelledby="architecture-title">
   <header><div><p class="eyebrow">Architecture · Camera Harness</p><h2 id="architecture-title">What I built. What I integrated.</h2></div><span class="hint">Select a boundary to inspect it</span></header>
-  <div class="diagram" role="group" aria-label="Camera processing paths">
+  <div class="diagram" data-selected={selected} role="group" aria-label="Camera processing paths">
     <button class="browser node" class:active={selected === 'browser'} aria-pressed={selected === 'browser'} on:click={() => selected = 'browser'}>
       <span class="node-type"><Camera size={16} /> Built · browser</span><strong>Camera & mode lifecycle</strong><span class="description">Capture · schedule · cancel · release</span>
     </button>
@@ -26,7 +26,12 @@
     </div>
   </div>
   <button class="proposal" class:active={selected === 'proposed'} aria-pressed={selected === 'proposed'} on:click={() => selected = 'proposed'}><Lightbulb size={17} /><span><strong>Proposed next layer</strong> Shared frame, region & answer identity</span><Layers3 size={18} /></button>
-  <div class="detail" aria-live="polite"><h3>{details[selected].title}</h3><p>{details[selected].body}</p></div>
+  <div class="detail" aria-live="polite">
+    {#key selected}
+      <h3>{details[selected].title}</h3>
+      <p>{details[selected].body}</p>
+    {/key}
+  </div>
 </section>
 
 <style>
@@ -43,7 +48,31 @@
   .description { color: rgb(244 234 220 / 0.58); font-size: var(--text-label); line-height: 1.5; }
   .branches { display: grid; gap: 16px; }
   .path { display: grid; grid-template-columns: 20px minmax(0, 1fr) 95px; gap: 16px; align-items: center; }
-  .path > :global(svg) { color: var(--accent); }
+  /*
+   * Selecting a boundary traces the edge that already exists between it and the
+   * lifecycle node. The line is drawn from the arrow that is printed there either
+   * way, so nothing implies traffic the diagram does not describe, and keyboard
+   * focus produces exactly the same explanation as a click.
+   */
+  .path > :global(svg) { color: var(--accent); transition: opacity var(--motion-indicator) var(--motion-ease-feedback); opacity: 0.55; }
+  .path { position: relative; }
+  .path::before {
+    position: absolute;
+    top: 50%;
+    /* The 16px gap between the printed arrow and the node it points at. */
+    left: 20px;
+    width: 16px;
+    height: 1px;
+    background: var(--accent);
+    content: '';
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 260ms var(--motion-settle);
+  }
+  .diagram[data-selected='microscope'] .path:nth-child(1)::before,
+  .diagram[data-selected='ask'] .path:nth-child(2)::before { transform: scaleX(1); }
+  .diagram[data-selected='microscope'] .path:nth-child(1) > :global(svg),
+  .diagram[data-selected='ask'] .path:nth-child(2) > :global(svg) { opacity: 1; }
   .destination { color: rgb(244 234 220 / 0.64); font-size: var(--text-label); line-height: 1.5; }
   .proposal { display: flex; align-items: center; gap: 12px; width: 100%; padding: 18px 24px; background: transparent; border: 1px dashed rgb(244 234 220 / 0.25); border-top: 0; color: rgb(244 234 220 / 0.65); font-size: var(--text-label); text-align: left; cursor: pointer; }
   .proposal strong { color: var(--accent); margin-right: 12px; font-weight: 500; }
@@ -52,8 +81,22 @@
   .detail { padding: 22px 24px; border: 1px solid rgb(244 234 220 / 0.15); border-top: 0; border-radius: 0 0 12px 12px; }
   .detail h3 { margin: 0 0 8px; font-size: 15px; font-weight: 600; }
   .detail p { max-width: 88ch; margin: 0; font-size: var(--text-label); line-height: 1.65; color: rgb(244 234 220 / 0.65); }
+  /* The explanation arrives with the traced edge. Text is never hidden mid-read: the
+     previous copy is replaced, not faded out and back in. */
+  :global(html[data-motion='full']) .detail h3,
+  :global(html[data-motion='full']) .detail p { animation: detail-arrive 300ms var(--motion-settle) both; }
+  :global(html[data-motion='full']) .detail p { animation-delay: 50ms; }
+  @keyframes detail-arrive { from { opacity: 0; transform: translate3d(0, 6px, 0); } to { opacity: 1; transform: none; } }
   button:hover { border-color: var(--accent); }
   button:focus-visible { outline: 2px solid var(--ring); outline-offset: 4px; }
-  @media (max-width: 760px) { .diagram { grid-template-columns: 1fr; gap: 16px; } .node { padding: 16px; gap: 10px; } .path { grid-template-columns: 18px minmax(0, 1fr); gap: 10px; } .destination { grid-column: 2; padding-left: 16px; } .path > :global(svg) { transform: rotate(90deg); } .proposal { padding: 16px; } .proposal strong { display: block; margin: 0 0 4px; } .detail { padding: 18px; } }
-  @media (prefers-reduced-motion: reduce) { .node { transition: none; } }
+  @media (max-width: 760px) { .path::before { display: none; } .diagram { grid-template-columns: 1fr; gap: 16px; } .node { padding: 16px; gap: 10px; } .path { grid-template-columns: 18px minmax(0, 1fr); gap: 10px; } .destination { grid-column: 2; padding-left: 16px; } .path > :global(svg) { transform: rotate(90deg); } .proposal { padding: 16px; } .proposal strong { display: block; margin: 0 0 4px; } .detail { padding: 18px; } }
+  @media (prefers-reduced-motion: reduce) {
+    .node, .path::before, .path > :global(svg), .detail h3, .detail p { transition: none; animation: none; }
+    .path::before { transform: scaleX(1); }
+  }
+  :global(html[data-motion='reduced']) .node,
+  :global(html[data-motion='reduced']) .path::before,
+  :global(html[data-motion='reduced']) .detail h3,
+  :global(html[data-motion='reduced']) .detail p { transition: none; animation: none; }
+  :global(html[data-motion='reduced']) .path::before { transform: scaleX(1); }
 </style>

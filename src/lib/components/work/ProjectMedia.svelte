@@ -52,16 +52,34 @@
     height: 100%;
     object-fit: contain;
     object-position: var(--focal-x) var(--focal-y);
-    transition: filter 220ms ease;
+    transition:
+      filter var(--motion-indicator) var(--motion-ease-feedback),
+      scale var(--motion-indicator) var(--motion-ease-feedback);
+  }
+
+  /*
+   * The inner response. Only the image and the video surface move, never the frame
+   * or the link, so the clickable area and the playback control stay exactly where
+   * the pointer found them. Capped at the 1.025 limit.
+   */
+  .active img,
+  .active :global(video) {
+    scale: var(--motion-media-hover-scale, 1.025);
   }
 
   .active img {
     filter: brightness(0.94);
   }
 
+  :global(video) {
+    transition: scale var(--motion-indicator) var(--motion-ease-feedback);
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    img {
+    img,
+    :global(video) {
       transition: none;
+      scale: 1;
     }
   }
 </style>

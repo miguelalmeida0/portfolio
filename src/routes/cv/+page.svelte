@@ -1,5 +1,11 @@
 <script lang="ts">
   import SiteHeader from "$lib/components/revamp/SiteHeader.svelte";
+  /*
+   * The résumé is deliberately still. Only the identity block settles; the roles,
+   * dates, stack lists and recommendation stay exactly where they render, so the
+   * document reads, scrolls, prints and downloads like a document.
+   */
+  import { reveal } from '$lib/motion/actions/reveal';
   import ArrowUpRight from '@lucide/svelte/icons/arrow-up-right';
   import ArrowRight from '@lucide/svelte/icons/arrow-right';
   import Download from '@lucide/svelte/icons/download';
@@ -31,7 +37,7 @@
 <main class="cv-sheet page-gutter">
   <header>
     <div class="intro">
-      <div class="identity"><p>Miguel Almeida</p><h1>Mid-level Frontend Engineer</h1><span class="location"><MapPin size={17} aria-hidden="true" />Berlin, Germany</span>
+      <div class="identity"><p use:reveal>Miguel Almeida</p><h1 use:reveal={{ delay: 60 }}>Mid-level Frontend Engineer</h1><span class="location"><MapPin size={17} aria-hidden="true" />Berlin, Germany</span>
         <div class="identity-actions"><a class="pill download" href="/portfolio.pdf" download="miguel-almeida-cv.pdf"><Download size={17} aria-hidden="true" />Download PDF</a></div>
       </div>
       <div class="intro-details">

@@ -23,6 +23,30 @@
       />
     </noscript>
     %sveltekit.head%
+    <script>
+      /*
+       * Resolves the motion policy before the first paint so the opening sequence
+       * never flashes its final state first. `src/lib/motion/policy.ts` owns the
+       * value from hydration onwards; without JavaScript no attribute is set and
+       * every surface simply renders its finished composition.
+       */
+      (function () {
+        try {
+          var stored = null;
+          try { stored = localStorage.getItem('miguel-motion-preference'); } catch (e) {}
+          var systemReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+          var saveData = !!(navigator.connection && navigator.connection.saveData);
+          var root = document.documentElement;
+          root.dataset.motion =
+            systemReduced || stored === 'reduced' || saveData ? 'reduced' : 'full';
+          root.dataset.pointer = matchMedia('(pointer: fine) and (hover: hover)').matches
+            ? 'fine'
+            : 'coarse';
+        } catch (e) {
+          /* A failed probe leaves the finished, unanimated composition in place. */
+        }
+      })();
+    </script>
   </head>
   <body data-sveltekit-preload-data="hover">
     <div id="app">%sveltekit.body%</div>

@@ -10,6 +10,8 @@
   import { recruiterBriefs } from '$lib/content/recruiter-briefs';
   import { recruiterCaseStudies } from '$lib/content/case-studies';
   import { getApprovedMedia } from '$lib/content/project-media';
+  import { reveal } from '$lib/motion/actions/reveal';
+  import { PROJECT_MEDIA_TRANSITION_NAME, SHARED_MEDIA_SLUGS } from '$lib/motion/routeTransition';
   import type { MiguelLLMMode } from '$lib/miguel-llm/types';
   import type { PageData } from './$types';
 
@@ -20,6 +22,16 @@
   let engineeringOpen = true;
 
   $: projectMedia = data.study.mediaId ? getApprovedMedia(data.study.mediaId) : undefined;
+  /*
+   * Exactly one element per document may hold the shared frame name, and only the two
+   * studies whose hero is a single 16/10 media frame take part. The tile and the hero
+   * do not use the same asset, so this carries the frame while the contents cross-fade
+   * inside it; it never claims the two images are the same picture.
+   */
+  $: sharedFrameName =
+    (SHARED_MEDIA_SLUGS as readonly string[]).includes(data.study.slug) && projectMedia
+      ? PROJECT_MEDIA_TRANSITION_NAME
+      : undefined;
   $: currentIndex = recruiterCaseStudies.findIndex((study) => study.slug === data.study.slug);
   $: nextStudy = recruiterCaseStudies[(currentIndex + 1) % recruiterCaseStudies.length];
 
@@ -51,19 +63,26 @@
 <SiteHeader />
 
 <main class="case-study page-gutter">
-  <div class="case-back"><a class="back-link" href="/#work">← Selected work</a></div>
+  <div class="case-back"><a class="back-link" href="/#work"><span class="back-arrow" aria-hidden="true">←</span> Selected work</a></div>
   <header class="case-hero" class:has-media={Boolean(projectMedia)}>
     <div class="case-copy">
-      <p class="eyebrow">{data.study.type}</p>
-      <h1>{data.study.title}</h1>
-      <p class="thesis">{data.study.thesis}</p>
+      <p class="eyebrow" use:reveal>{data.study.type}</p>
+      <h1 use:reveal={{ delay: 60 }}>{data.study.title}</h1>
+      <span class="chapter-rule" use:reveal={{ variant: 'rule', delay: 120 }} aria-hidden="true"></span>
+      <p class="thesis" use:reveal={{ delay: 150 }}>{data.study.thesis}</p>
       {#if recruiterBriefs[data.study.slug]}<RecruiterSummary brief={recruiterBriefs[data.study.slug]} compact />{/if}
     </div>
 
     {#if data.study.slug === 'camera-harness'}
       <div id="artifact" class="camera-examples"><CameraFeatureGallery compact /></div>
     {:else}
-    <div id="artifact" class="artifact" class:text-only={!projectMedia}>
+    <div
+      id="artifact"
+      class="artifact"
+      class:text-only={!projectMedia}
+      style:view-transition-name={sharedFrameName}
+      use:reveal={{ variant: 'frame', threshold: 0.12 }}
+    >
       {#if projectMedia}
         {#if projectMedia.kind === 'video'}
           <VideoLoop
@@ -106,7 +125,8 @@
 
   <section class="problem-section story-section" aria-labelledby="problem-title">
     <div class="main-copy">
-      <h2 id="problem-title">{data.study.sectionTitles.problem}</h2>
+      <h2 id="problem-title" use:reveal>{data.study.sectionTitles.problem}</h2>
+      <span class="chapter-rule" use:reveal={{ variant: 'rule', delay: 60 }} aria-hidden="true"></span>
       <p>{data.study.problem}</p>
     </div>
     <aside id="contribution">
@@ -120,7 +140,7 @@
 
   {#if data.study.slug === 'mirror-ai'}
     <section id="corrections" class="story-section incident" aria-labelledby="corrections-title">
-      <header><p class="eyebrow">Correction → evaluation</p><h2 id="corrections-title">A wrong answer becomes a test.</h2></header>
+      <header><p class="eyebrow">Correction → evaluation</p><h2 id="corrections-title" use:reveal>A wrong answer becomes a test.</h2><span class="chapter-rule" use:reveal={{ variant: 'rule', delay: 60 }} aria-hidden="true"></span></header>
       <ol class="incident-steps">
         <li><span>01 · Inspect</span><h3>Give the answer a visible subject</h3><p>Select a contour, inspect its crop and interpretation, or deliberately mark a missed region for targeted analysis.</p></li>
         <li><span>02 · Correct</span><h3>Preserve the user’s evidence</h3><p>Append-only correction history takes precedence over weaker model results that arrive later.</p></li>
@@ -131,7 +151,7 @@
 
   {#if data.study.slug === 'ghostwriter'}
     <section id="incident" class="story-section incident" aria-labelledby="incident-title">
-      <header><p class="eyebrow">Server orchestration</p><h2 id="incident-title">Reserve before the rewrite.</h2></header>
+      <header><p class="eyebrow">Server orchestration</p><h2 id="incident-title" use:reveal>Reserve before the rewrite.</h2><span class="chapter-rule" use:reveal={{ variant: 'rule', delay: 60 }} aria-hidden="true"></span></header>
       <ol class="incident-steps">
         <li><span>01 · Authorize</span><h3>Validate policy & identity</h3><p>Server-controlled models and token limits, verified identity, and approved-beta access define who can generate.</p></li>
         <li><span>02 · Reserve</span><h3>Give spending an operation</h3><p>Reserve budget before dispatch. Durable identifiers, input fingerprints, and account/global limits coordinate overlapping requests.</p></li>
@@ -145,7 +165,8 @@
   <summary>Technical decisions & failure states</summary>
   <section id="decisions" class="alternatives story-section" aria-labelledby="alternatives-title">
     <header>
-      <h2 id="alternatives-title">{data.study.sectionTitles.alternatives}</h2>
+      <h2 id="alternatives-title" use:reveal>{data.study.sectionTitles.alternatives}</h2>
+      <span class="chapter-rule" use:reveal={{ variant: 'rule', delay: 60 }} aria-hidden="true"></span>
     </header>
     <div class="option-grid">
       {#each data.study.alternatives as alternative, index}
@@ -170,7 +191,8 @@
 
   <section class="behavior story-section" aria-labelledby="behavior-title">
     <header>
-      <h2 id="behavior-title">{data.study.sectionTitles.behavior}</h2>
+      <h2 id="behavior-title" use:reveal>{data.study.sectionTitles.behavior}</h2>
+      <span class="chapter-rule" use:reveal={{ variant: 'rule', delay: 60 }} aria-hidden="true"></span>
     </header>
     <div class="behavior-table" aria-label="Behavior before and after the decision">
       <div class="behavior-row behavior-head">
@@ -192,7 +214,8 @@
 
   <section id="result" class="result story-section" aria-labelledby="result-title">
     <div class="main-copy">
-      <h2 id="result-title">{data.study.sectionTitles.result}</h2>
+      <h2 id="result-title" use:reveal>{data.study.sectionTitles.result}</h2>
+      <span class="chapter-rule" use:reveal={{ variant: 'rule', delay: 60 }} aria-hidden="true"></span>
       <p>{data.study.outcome}</p>
     </div>
     <aside id="reflection">
@@ -205,7 +228,7 @@
   <footer class="case-footer">
     <button type="button" on:click={askAboutProject}>Ask the portfolio guide about {data.study.title}</button>
     <a href={`/work/${nextStudy.slug}`}>
-      Next project <span>{nextStudy.title} →</span>
+      Next project <span>{nextStudy.title} <span class="motion-arrow" aria-hidden="true">→</span></span>
     </a>
   </footer>
 </main>
@@ -214,6 +237,14 @@
 
 <style>
   .case-back { width: min(100%, 100rem); margin-inline: auto; }
+  /*
+   * The chapter rule: the same accent gesture the home page uses, at heading scale.
+   * It marks where a chapter starts without moving any of the text around it.
+   */
+  .chapter-rule { display: block; width: min(8rem, 30vw); height: 1px; margin-top: 1rem; background: color-mix(in srgb, var(--accent) 60%, transparent); transform-origin: left center; }
+  /* The directional arrow, mirrored: a back link steps back. */
+  .back-arrow { display: inline-block; transition: transform var(--motion-indicator) var(--motion-ease-feedback); }
+  .back-link:hover .back-arrow, .back-link:focus-visible .back-arrow { transform: translateX(calc(-1 * var(--motion-arrow-shift))); }
   .case-hero > .artifact, .case-hero > .camera-examples { margin-top: 0; }
   .camera-examples { min-width: 0; width: min(100%, 36rem); justify-self: end; }
   .engineering-detail { width: 100%; margin-inline: auto; }
@@ -264,6 +295,7 @@
 
   .back-link {
     display: inline-flex;
+    gap: 0.4rem;
     min-height: 2.75rem;
     align-items: center;
     margin-bottom: 1.5rem;
@@ -276,7 +308,6 @@
 
   .back-link:hover {
     color: var(--accent);
-    transform: translateX(-2px);
   }
 
   .back-link:focus-visible,
@@ -649,12 +680,13 @@
 
   @media (prefers-reduced-motion: reduce) {
     .back-link,
+    .back-arrow,
     .case-footer button,
     .case-footer a {
       transition: none;
     }
 
-    .back-link:hover,
+    .back-link:hover .back-arrow,
     .case-footer button:hover,
     .case-footer a:hover {
       transform: none;

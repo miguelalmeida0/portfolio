@@ -1,12 +1,23 @@
 <script lang="ts">
   import type { ProjectTile } from '$lib/content/project-media';
+  import { mediaResponse } from '$lib/motion/actions/mediaResponse';
+  import { reveal } from '$lib/motion/actions/reveal';
+  import { claimProjectMediaFrame } from '$lib/motion/routeTransition';
   import ProjectMedia from './ProjectMedia.svelte';
 
   export let project: ProjectTile;
 
   let active = false;
+  let surface: HTMLElement;
 
   $: isSecondVoice = project.id === 'ghostwriter';
+
+  /**
+   * Hands this tile's frame to the route transition for the navigation that is about
+   * to start. The helper decides whether the destination can accept it and clears the
+   * name again once the transition settles.
+   */
+  const carryFrame = () => claimProjectMediaFrame(surface, project.href);
 </script>
 
 <article
@@ -14,14 +25,14 @@
   class:featured={project.featured}
   data-project-tile={project.id}
   data-project-size={project.size}
-  on:mouseenter={() => (active = true)}
-  on:mouseleave={() => (active = false)}
-  on:focusin={() => (active = true)}
-  on:focusout={(event) => {
-    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) active = false;
-  }}
+  data-media-active={active}
+  use:mediaResponse={{ onChange: (next) => (active = next) }}
 >
-  <div class="tile-surface">
+  <div
+    bind:this={surface}
+    class="tile-surface"
+    use:reveal={{ variant: 'frame', threshold: 0.18 }}
+  >
     {#if project.media?.publicSafe}
       <ProjectMedia media={project.media} {active} featured={Boolean(project.featured)} />
     {:else if project.sequence}
@@ -34,7 +45,12 @@
         {/each}
       </ol>
     {/if}
-    <a class="surface-link" href={project.href} aria-label={`Open ${project.title}`}>
+    <a
+      class="surface-link"
+      href={project.href}
+      aria-label={`Open ${project.title}`}
+      on:click={carryFrame}
+    >
       <span class="sr-only">Open {project.title}</span>
     </a>
   </div>
@@ -44,9 +60,14 @@
       <span>{project.category}</span>
       {#if project.status}<span>{project.status}</span>{/if}
     </div>
-    <a class="title-link" href={project.href} aria-label={`${project.title}. ${project.shortDescription}`}>
+    <a
+      class="title-link"
+      href={project.href}
+      aria-label={`${project.title}. ${project.shortDescription}`}
+      on:click={carryFrame}
+    >
       <h3>{project.title}</h3>
-      <span aria-hidden="true">↗</span>
+      <span class="motion-arrow" aria-hidden="true">↗</span>
     </a>
     <p>{project.shortDescription}</p>
     {#if project.valueLine}
@@ -86,7 +107,24 @@
     aspect-ratio: 16 / 10;
     overflow: hidden;
     background: #0a0a0a;
+    /*
+     * The frame accent. An inset ring costs no layout and never clips the real
+     * media or its controls, so the screenshot stays undistorted and readable.
+     */
+    box-shadow: inset 0 0 0 1px rgb(244 234 220 / 0);
+    transition: box-shadow var(--motion-indicator) var(--motion-ease-feedback);
   }
+
+  [data-media-active='true'] .tile-surface {
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+
+  /*
+   * Crop marks were tried here and cut: at tile scale they sat on top of a real
+   * screenshot and read as clutter rather than as a frame. The aperture gesture stays
+   * where it is legible — the entrance reveal above, and the hero portrait — and the
+   * ring alone carries the selected state.
+   */
 
   .featured .tile-surface {
     aspect-ratio: 21 / 9;
@@ -155,15 +193,11 @@
     font-size: clamp(1.8rem, 2.7vw, 2.85rem);
   }
 
+  /* Movement comes from the shared `.motion-arrow` rule, so every arrow on the
+     site steps by the same distance with the same easing. */
   .title-link > span {
     color: var(--accent);
     font-size: 1.45rem;
-    transition: transform var(--interaction-duration) var(--interaction-ease);
-  }
-
-  .title-link:hover > span,
-  .title-link:focus-visible > span {
-    transform: translate(0.15rem, -0.15rem);
   }
 
   p {
@@ -345,14 +379,12 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .title-link > span,
+    .tile-surface,
     .evidence-sequence li,
     .action {
       transition: none;
     }
 
-    .title-link:hover > span,
-    .title-link:focus-visible > span,
     .evidence-sequence .active-step,
     .action:hover,
     .action:focus-visible {
