@@ -1,0 +1,445 @@
+{
+  "generatedAt": "2026-05-06T13:32:24.045Z",
+  "baseUrl": "http://127.0.0.1:4173",
+  "chromePath": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "cdpPort": 9392,
+  "scenarios": [],
+  "interactions": [
+    {
+      "name": "theme-click-desktop",
+      "targetLabel": "Switch to light mode",
+      "responseMs": 53.19999999925494,
+      "eventEntries": [
+        {
+          "name": "pointerenter",
+          "startTime": 962.5999999977648,
+          "duration": 24,
+          "processingDelay": 4.100000001490116,
+          "target": "DIV"
+        },
+        {
+          "name": "pointerenter",
+          "startTime": 962.5999999977648,
+          "duration": 24,
+          "processingDelay": 4.100000001490116,
+          "target": "BUTTON"
+        },
+        {
+          "name": "pointerenter",
+          "startTime": 962.5999999977648,
+          "duration": 24,
+          "processingDelay": 4.100000001490116,
+          "target": "svg"
+        },
+        {
+          "name": "pointerenter",
+          "startTime": 962.5999999977648,
+          "duration": 24,
+          "processingDelay": 4.100000001490116,
+          "target": "path"
+        },
+        {
+          "name": "mouseover",
+          "startTime": 962.5999999977648,
+          "duration": 24,
+          "processingDelay": 4.100000001490116,
+          "target": "path"
+        },
+        {
+          "name": "pointerdown",
+          "startTime": 962.5999999977648,
+          "duration": 24,
+          "processingDelay": 4.100000001490116,
+          "target": "path"
+        },
+        {
+          "name": "mousedown",
+          "startTime": 962.5999999977648,
+          "duration": 24,
+          "processingDelay": 4.100000001490116,
+          "target": "path"
+        },
+        {
+          "name": "pointerup",
+          "startTime": 975.0999999977648,
+          "duration": 40,
+          "processingDelay": 0.20000000298023224,
+          "target": "path"
+        },
+        {
+          "name": "mouseup",
+          "startTime": 975.0999999977648,
+          "duration": 40,
+          "processingDelay": 0.20000000298023224,
+          "target": "path"
+        },
+        {
+          "name": "click",
+          "startTime": 975.0999999977648,
+          "duration": 40,
+          "processingDelay": 0.20000000298023224,
+          "target": "path"
+        }
+      ],
+      "clicks": [
+        {
+          "t": 975.6999999992549,
+          "tag": "path",
+          "text": ""
+        }
+      ]
+    },
+    {
+      "name": "work-nav-scroll-desktop",
+      "responseMs": 645.6999999992549,
+      "finalState": {
+        "now": 2084.699999999255,
+        "scrollY": 2143,
+        "top": 96,
+        "hash": "#work"
+      },
+      "eventEntries": [
+        {
+          "name": "pointerleave",
+          "startTime": 1461.300000000745,
+          "duration": 72,
+          "processingDelay": 28.899999998509884,
+          "target": "BUTTON"
+        },
+        {
+          "name": "pointerleave",
+          "startTime": 1461.300000000745,
+          "duration": 72,
+          "processingDelay": 28.899999998509884,
+          "target": "DIV"
+        },
+        {
+          "name": "pointerover",
+          "startTime": 1461.300000000745,
+          "duration": 72,
+          "processingDelay": 28.899999998509884,
+          "target": "A"
+        },
+        {
+          "name": "pointerenter",
+          "startTime": 1461.300000000745,
+          "duration": 72,
+          "processingDelay": 28.899999998509884,
+          "target": "NAV"
+        },
+        {
+          "name": "pointerenter",
+          "startTime": 1461.300000000745,
+          "duration": 72,
+          "processingDelay": 28.899999998509884,
+          "target": "A"
+        },
+        {
+          "name": "mouseout",
+          "startTime": 1461.300000000745,
+          "duration": 72,
+          "processingDelay": 28.899999998509884,
+          "target": "path"
+        },
+        {
+          "name": "mouseover",
+          "startTime": 1461.300000000745,
+          "duration": 72,
+          "processingDelay": 28.899999998509884,
+          "target": "A"
+        },
+        {
+          "name": "pointerdown",
+          "startTime": 1461.300000000745,
+          "duration": 72,
+          "processingDelay": 28.899999998509884,
+          "target": "A"
+        },
+        {
+          "name": "mousedown",
+          "startTime": 1461.300000000745,
+          "duration": 72,
+          "processingDelay": 29,
+          "target": "A"
+        },
+        {
+          "name": "pointerup",
+          "startTime": 1494.3999999985099,
+          "duration": 56,
+          "processingDelay": 13,
+          "target": "A"
+        },
+        {
+          "name": "mouseup",
+          "startTime": 1494.3999999985099,
+          "duration": 56,
+          "processingDelay": 13.100000001490116,
+          "target": "A"
+        },
+        {
+          "name": "click",
+          "startTime": 1494.3999999985099,
+          "duration": 56,
+          "processingDelay": 13.100000001490116,
+          "target": "A"
+        }
+      ],
+      "clicks": [
+        {
+          "t": 975.6999999992549,
+          "tag": "path",
+          "text": ""
+        },
+        {
+          "t": 1507.5,
+          "tag": "A",
+          "text": "Work"
+        }
+      ]
+    },
+    {
+      "name": "contact-input-desktop",
+      "responseMs": 420.69999999925494,
+      "finalState": {
+        "now": 2884.099999997765,
+        "match": true,
+        "active": "INPUT"
+      },
+      "eventEntries": [
+        {
+          "name": "keypress",
+          "startTime": 2700.89999999851,
+          "duration": 64,
+          "processingDelay": 2.5,
+          "target": "INPUT"
+        },
+        {
+          "name": "beforeinput",
+          "startTime": 2703.5,
+          "duration": 64,
+          "processingDelay": 0,
+          "target": "INPUT"
+        },
+        {
+          "name": "input",
+          "startTime": 2703.89999999851,
+          "duration": 64,
+          "processingDelay": 0.19999999925494194,
+          "target": "INPUT"
+        },
+        {
+          "name": "keypress",
+          "startTime": 2706.599999997765,
+          "duration": 56,
+          "processingDelay": 0.20000000298023224,
+          "target": "INPUT"
+        },
+        {
+          "name": "beforeinput",
+          "startTime": 2706.89999999851,
+          "duration": 56,
+          "processingDelay": 0,
+          "target": "INPUT"
+        },
+        {
+          "name": "input",
+          "startTime": 2707.5,
+          "duration": 56,
+          "processingDelay": 0.19999999925494194,
+          "target": "INPUT"
+        },
+        {
+          "name": "keypress",
+          "startTime": 2719.599999997765,
+          "duration": 64,
+          "processingDelay": 0.6000000014901161,
+          "target": "INPUT"
+        },
+        {
+          "name": "beforeinput",
+          "startTime": 2720.199999999255,
+          "duration": 64,
+          "processingDelay": 0,
+          "target": "INPUT"
+        },
+        {
+          "name": "input",
+          "startTime": 2720.599999997765,
+          "duration": 64,
+          "processingDelay": 0.20000000298023224,
+          "target": "INPUT"
+        },
+        {
+          "name": "keypress",
+          "startTime": 2738.699999999255,
+          "duration": 64,
+          "processingDelay": 0.6999999992549419,
+          "target": "INPUT"
+        },
+        {
+          "name": "beforeinput",
+          "startTime": 2739.5,
+          "duration": 64,
+          "processingDelay": 0,
+          "target": "INPUT"
+        },
+        {
+          "name": "input",
+          "startTime": 2739.599999997765,
+          "duration": 64,
+          "processingDelay": 0.20000000298023224,
+          "target": "INPUT"
+        },
+        {
+          "name": "keypress",
+          "startTime": 2778,
+          "duration": 64,
+          "processingDelay": 0.30000000074505806,
+          "target": "INPUT"
+        },
+        {
+          "name": "beforeinput",
+          "startTime": 2778.300000000745,
+          "duration": 64,
+          "processingDelay": 0,
+          "target": "INPUT"
+        },
+        {
+          "name": "input",
+          "startTime": 2778.699999999255,
+          "duration": 64,
+          "processingDelay": 0.19999999925494194,
+          "target": "INPUT"
+        }
+      ],
+      "keys": [
+        {
+          "t": 2805.699999999255,
+          "key": "Enter"
+        }
+      ]
+    },
+    {
+      "name": "theme-click-mobile-cpu6x",
+      "targetLabel": "Switch to dark mode",
+      "responseMs": 220.5,
+      "eventEntries": [
+        {
+          "name": "pointerenter",
+          "startTime": 1172.1000000014901,
+          "duration": 32,
+          "processingDelay": 3.300000000745058,
+          "target": "DIV"
+        },
+        {
+          "name": "pointerenter",
+          "startTime": 1172.1000000014901,
+          "duration": 32,
+          "processingDelay": 3.300000000745058,
+          "target": "DIV"
+        },
+        {
+          "name": "pointerenter",
+          "startTime": 1172.1000000014901,
+          "duration": 32,
+          "processingDelay": 3.300000000745058,
+          "target": "BUTTON"
+        },
+        {
+          "name": "pointerenter",
+          "startTime": 1172.1000000014901,
+          "duration": 32,
+          "processingDelay": 3.300000000745058,
+          "target": "svg"
+        },
+        {
+          "name": "mouseover",
+          "startTime": 1172.1000000014901,
+          "duration": 32,
+          "processingDelay": 3.399999998509884,
+          "target": "svg"
+        },
+        {
+          "name": "pointerdown",
+          "startTime": 1172.1000000014901,
+          "duration": 32,
+          "processingDelay": 3.399999998509884,
+          "target": "svg"
+        },
+        {
+          "name": "mousedown",
+          "startTime": 1172.1000000014901,
+          "duration": 32,
+          "processingDelay": 3.399999998509884,
+          "target": "svg"
+        },
+        {
+          "name": "pointerup",
+          "startTime": 1186.300000000745,
+          "duration": 120,
+          "processingDelay": 4,
+          "target": "svg"
+        },
+        {
+          "name": "mouseup",
+          "startTime": 1186.300000000745,
+          "duration": 120,
+          "processingDelay": 4,
+          "target": "svg"
+        },
+        {
+          "name": "click",
+          "startTime": 1186.300000000745,
+          "duration": 120,
+          "processingDelay": 4,
+          "target": "svg"
+        }
+      ],
+      "clicks": [
+        {
+          "t": 1192.800000000745,
+          "tag": "svg",
+          "text": ""
+        }
+      ]
+    }
+  ],
+  "scroll": [
+    {
+      "name": "scroll-desktop-normal",
+      "durationMs": 3500,
+      "frames": {
+        "count": 221,
+        "max": 75,
+        "avg": 17.19443438914027,
+        "p95": 49.70000000000073,
+        "p99": 58.30000000000018,
+        "over32": 35,
+        "over50": 5,
+        "over100": 0,
+        "scrollEvents": 22,
+        "scrollY": 5311
+      }
+    },
+    {
+      "name": "scroll-mobile-cpu6x-fast3g",
+      "durationMs": 3500,
+      "frames": {
+        "count": 369,
+        "max": 82.90000000000009,
+        "avg": 10.229268292682926,
+        "p95": 16.90000000000009,
+        "p99": 66.79999999999995,
+        "over32": 6,
+        "over50": 5,
+        "over100": 0,
+        "scrollEvents": 23,
+        "scrollY": 5763
+      }
+    }
+  ],
+  "longSession": [],
+  "artifacts": {
+    "outDir": "/Users/malmeida/Documents/Development/portfolio/docs/qa/performance/2026-05-06-portfolio-after-fixes-interactions-final"
+  }
+}
