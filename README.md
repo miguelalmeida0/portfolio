@@ -3,7 +3,7 @@
 **Frontend engineer building ambitious interactive systems across voice, AI, operational data, native learning, and design tooling.**
 
 <p align="center">
-  <img src="./docs/readme/current/01-home-desktop.png" alt="Miguel Almeida portfolio hero" width="100%">
+  <img src="./docs/readme/previews/desktop-viewport.png" alt="Portfolio — desktop viewport excerpt" width="960">
 </p>
 
 **Live:** https://miguelalmeida.is-a.dev
@@ -11,10 +11,6 @@
 This repository is the engineering layer behind my portfolio. The site is deliberately closer to an editorial product story than a generic project-card grid: the work is presented through interaction, technical decisions, constraints, and verifiable artifacts.
 
 ## Selected work
-
-<p align="center">
-  <img src="./docs/readme/current/02-selected-work-desktop.png" alt="Selected project cards" width="100%">
-</p>
 
 The portfolio brings together work across:
 
@@ -35,10 +31,6 @@ flowchart LR
     D --> E[Evidence / constraints]
     E --> F[Contact / CV]
 ```
-
-<p align="center">
-  <img src="./docs/readme/current/03-story-desktop.png" alt="Featured project story" width="100%">
-</p>
 
 ## Stack
 
@@ -82,16 +74,20 @@ Project claims carry explicit status instead of being flattened into marketing l
 
 That matters because several projects involve AI, perception, or operational systems where a polished UI can otherwise imply more certainty than the implementation supports.
 
-## Responsive QA
+## Responsive preview
 
-<table>
-  <tr>
-    <td width="62%"><img src="./docs/readme/current/04-contact-desktop.png" alt="Portfolio desktop story"></td>
-    <td width="38%"><img src="./docs/readme/current/90-home-mobile.png" alt="Portfolio mobile hero"></td>
-  </tr>
-</table>
+The desktop preview above and the phone excerpt below are shown separately. Each is cropped to one viewport; the original full-page captures are retained.
 
-The screenshots above are regenerated from the current deployed portfolio rather than retained from an older project-card layout.
+<details>
+<summary>View the mobile viewport</summary>
+
+<p align="center">
+  <img src="./docs/readme/previews/mobile-viewport.png" alt="Portfolio — mobile viewport excerpt" width="360">
+</p>
+
+</details>
+
+[Capture provenance](./docs/readme/previews/PROVENANCE.json)
 
 ## Engineering priorities
 
@@ -136,3 +132,7 @@ F24 appears as professional experience, not as a fabricated public case study. P
 ---
 
 Designed and built by [Miguel Almeida](https://github.com/miguelalmeida0).
+
+[Repository guide](./docs/START_HERE.md)
+
+<!-- repository-presentation-repair:1 -->
