@@ -4,12 +4,6 @@
 
 <figure class="hero-portrait" aria-label="Portrait of Miguel Almeida">
   <div class="portrait-frame" aria-hidden="true">
-    <span class="portrait-aperture">
-      <span class="mark mark-tl"></span>
-      <span class="mark mark-tr"></span>
-      <span class="mark mark-bl"></span>
-      <span class="mark mark-br"></span>
-    </span>
     <img
       src={heroPortrait}
       srcset="/images/miguel-hero-720.webp 720w, /images/miguel-hero-1451.webp 1451w"
@@ -52,42 +46,10 @@
   }
 
   /*
-   * The aperture: four editorial crop marks that resolve with the portrait. Corner
-   * marks rather than a full box, so nothing ever draws a line across the subject.
-   * This is the site's frame vocabulary at its largest scale; the work tiles and the
-   * case-study hero use the same gesture smaller.
+   * Crop marks around the portrait were tried and removed at the author's request.
+   * The opening moment is the settle itself: the portrait resolves from 1.035 scale
+   * into its exact resting frame, with no decoration drawn over or around it.
    */
-  .portrait-aperture {
-    position: absolute;
-    /* The top inset clears the fixed header so all four marks stay legible. */
-    inset: 20% 12% 12%;
-    z-index: 2;
-    display: block;
-    pointer-events: none;
-  }
-
-  .mark {
-    --arm: clamp(14px, 1.6vw, 26px);
-
-    position: absolute;
-    width: var(--arm);
-    height: var(--arm);
-    border: 0 solid rgb(244 234 220 / 0.22);
-  }
-
-  .mark-tl { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; }
-  .mark-tr { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
-  .mark-bl { bottom: 0; left: 0; border-bottom-width: 1px; border-left-width: 1px; }
-  .mark-br { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
-
-  :global(html[data-motion='full']) .portrait-aperture {
-    animation: aperture-resolve 700ms var(--motion-settle) 140ms both;
-  }
-
-  @keyframes aperture-resolve {
-    from { opacity: 0; scale: 1.05; }
-    to { opacity: 1; scale: 1; }
-  }
 
   .portrait-image {
     position: absolute;
@@ -164,16 +126,14 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .portrait-image,
-    .portrait-aperture {
+    .portrait-image {
       transform: none;
       transition: none;
       animation: none;
     }
   }
 
-  :global(html[data-motion='reduced']) .portrait-image,
-  :global(html[data-motion='reduced']) .portrait-aperture {
+  :global(html[data-motion='reduced']) .portrait-image {
     transform: none;
     transition: none;
     animation: none;

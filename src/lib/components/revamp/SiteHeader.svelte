@@ -284,7 +284,7 @@
     min-height: 30px;
     border: 0;
     border-radius: 999px;
-    background: transparent;
+    background-color: transparent;
     padding: 0 0.9rem;
     font-family: var(--font-display);
     font-size: 11px; text-transform: uppercase;
@@ -294,39 +294,52 @@
     color: rgb(244 234 220 / 0.82);
     outline: none;
     box-shadow: none;
-    transition:
-      background-color var(--interaction-duration) var(--interaction-ease),
-      color var(--interaction-duration) var(--interaction-ease),
-      transform var(--interaction-duration) var(--interaction-ease);
   }
 
   /*
-   * The accent rule, at navigation scale. It resolves under the label instead of
-   * moving the label itself, so nothing in the pill shifts and the focus ring stays
-   * a separate, clearly visible signal.
+   * Selection wipes in from the leading edge rather than fading, so a pointer moving
+   * across the bar reads as direction rather than as four independent lights. It is
+   * painted as a background gradient, which means it sits under the label with no
+   * extra element, no stacking games and nothing in the pill shifting.
+   *
+   * `background-size` carries the wipe; `background-position` keeps it anchored left.
    */
-  .top-nav a::after {
-    position: absolute;
-    inset: auto 0.9rem 0.34rem;
-    height: 1px;
-    background: var(--nav-accent);
-    content: '';
-    opacity: 0.85;
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: transform var(--motion-indicator) var(--motion-ease-feedback);
-  }
-
-  .top-nav a:hover::after,
-  .top-nav a:focus-visible::after,
-  .top-nav a.active::after {
-    transform: scaleX(1);
+  .top-nav a {
+    /*
+     * The fill carries a little of the site's warm accent at its leading edge and
+     * cools to cream — enough that the bar reads as part of this portfolio's palette
+     * rather than a generic grey pill, and far too little to compete with the label.
+     */
+    background-image: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--accent) 22%, transparent) 0%,
+      rgb(244 234 220 / 0.12) 62%
+    );
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: 0% 100%;
+    transition:
+      background-size var(--motion-indicator) var(--motion-ease-feedback),
+      color var(--motion-indicator) var(--motion-ease-feedback);
   }
 
   .top-nav a:hover,
-  .top-nav a:focus-visible,
+  .top-nav a:focus-visible {
+    background-size: 100% 100%;
+    color: var(--nav-cream);
+  }
+
+  /*
+   * The section you are actually in is a state, not a hover: it is already filled,
+   * slightly stronger, and it does not animate on arrival.
+   */
   .top-nav a.active {
-    background: rgb(244 234 220 / 0.12);
+    background-image: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--accent) 30%, transparent) 0%,
+      rgb(244 234 220 / 0.18) 62%
+    );
+    background-size: 100% 100%;
     color: var(--nav-cream);
   }
 
@@ -571,12 +584,13 @@
     }
   }
 
-  :global(html[data-motion='reduced']) .top-nav a::after {
-    transition: none;
-  }
-
+  /*
+   * Reduced motion keeps the same selection state, it just arrives at once: the
+   * token collapse in motion.css already zeroes `--motion-indicator`, and this
+   * covers the case where only the OS preference is set.
+   */
   @media (prefers-reduced-motion: reduce) {
-    .top-nav a::after {
+    .top-nav a {
       transition: none;
     }
   }
