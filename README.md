@@ -6,7 +6,7 @@
   <img src="./docs/readme/previews/desktop-viewport.png" alt="Portfolio — desktop viewport excerpt" width="960">
 </p>
 
-**Live:** https://miguelalmeida.is-a.dev
+**Live:** https://github.com/miguelalmeida0/portfolio/deployments
 
 This repository is the engineering layer behind my portfolio. The site is deliberately closer to an editorial product story than a generic project-card grid: the work is presented through interaction, technical decisions, constraints, and verifiable artifacts.
 
