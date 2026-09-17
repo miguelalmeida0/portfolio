@@ -19,9 +19,7 @@
     "qa:capture-revamp": "PLAYWRIGHT_BROWSERS_PATH=$PWD/.cache/ms-playwright node scripts/capture-content-revamp-qa.mjs",
     "preview": "npm run build && npm run start",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "start": "wrangler pages dev .svelte-kit/cloudflare --ip 127.0.0.1 --port 4173 --log-level error --show-interactive-dev-session=false",
-    "check:performance": "node scripts/check-performance-budget.mjs",
-    "media:generate": "node scripts/generate-media-variants.mjs"
+    "start": "wrangler pages dev .svelte-kit/cloudflare --ip 127.0.0.1 --port 4173 --log-level error --show-interactive-dev-session=false"
   },
   "devDependencies": {
     "@lucide/svelte": "^1.28.0",

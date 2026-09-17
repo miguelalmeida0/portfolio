@@ -12,6 +12,4 @@ docs/private-media-review/
 .env.*
 !.env.example
 
-# Browser performance traces may capture sensitive request data
-docs/qa/performance/**/traces/
-.tmp/
+tmp/
