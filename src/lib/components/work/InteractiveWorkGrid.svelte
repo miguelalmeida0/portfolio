@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { homepageProjectTiles } from '$lib/content/project-media';
+  import { currentHomepageProjectTiles as homepageProjectTiles } from '$lib/content/current-homepage-projects';
   import MediaProjectTile from './MediaProjectTile.svelte';
 </script>
 
