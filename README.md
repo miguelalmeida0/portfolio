@@ -1,5 +1,7 @@
 # Miguel Almeida — Portfolio
 
+
+[Live portfolio ↗](https://miguelalmeida.is-a.dev) *(external — leaves GitHub)*
 **Frontend engineer building ambitious interactive systems across voice, AI, operational data, native learning, and design tooling.**
 
 <p align="center">
