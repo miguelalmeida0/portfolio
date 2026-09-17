@@ -110,8 +110,8 @@ Case studies are structured data instead of scattered page copy, allowing the we
 ## Run locally
 
 ```bash
-git clone https://github.com/miguelalmeida0/portfolio-new.git
-cd portfolio-new
+git clone https://github.com/miguelalmeida0/portfolio.git
+cd portfolio
 git checkout portfolio
 npm install
 npm run dev
