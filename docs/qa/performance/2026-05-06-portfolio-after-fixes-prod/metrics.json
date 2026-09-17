@@ -1,0 +1,2917 @@
+{
+  "generatedAt": "2026-05-06T13:12:45.393Z",
+  "baseUrl": "http://127.0.0.1:4173",
+  "chromePath": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "cdpPort": 9567,
+  "scenarios": [
+    {
+      "name": "cold-desktop-normal",
+      "options": {
+        "path": "/",
+        "viewport": "desktop",
+        "cpu": 1,
+        "network": "none",
+        "disableCache": true,
+        "clearCookies": true,
+        "introSeen": false,
+        "waitIntro": true,
+        "captureDom": true,
+        "captureReadyAfterIntro": true
+      },
+      "wallMs": 11144,
+      "domContentEventTs": 22105.860732,
+      "loadEventTs": 22105.861746,
+      "timings": {
+        "ttfb": 13.399999998509884,
+        "domContentLoaded": 68.89999999850988,
+        "load": 69.89999999850988,
+        "fcp": 116,
+        "lcp": 116,
+        "cls": 0.004123805845912101,
+        "introReadyMs": 10676.300000000745
+      },
+      "pageSummary": {
+        "url": "http://127.0.0.1:4173/",
+        "title": "Miguel Almeida — Frontend Engineer · Berlin",
+        "now": 11085.800000000745,
+        "nav": {
+          "name": "http://127.0.0.1:4173/",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 69.89999999850988,
+          "initiatorType": "navigation",
+          "deliveryType": "",
+          "nextHopProtocol": "http/1.1",
+          "renderBlockingStatus": "non-blocking",
+          "contentEncoding": "br",
+          "workerStart": 0,
+          "workerRouterEvaluationStart": 0,
+          "workerCacheLookupStart": 0,
+          "workerMatchedSourceType": "",
+          "workerFinalSourceType": "",
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": 0.5999999977648258,
+          "domainLookupStart": 0.5999999977648258,
+          "domainLookupEnd": 0.5999999977648258,
+          "connectStart": 0.5999999977648258,
+          "secureConnectionStart": 0,
+          "connectEnd": 0.5999999977648258,
+          "requestStart": 1.8999999985098839,
+          "responseStart": 13.399999998509884,
+          "firstInterimResponseStart": 0,
+          "finalResponseHeadersStart": 13.399999998509884,
+          "responseEnd": 14.199999999254942,
+          "transferSize": 7656,
+          "encodedBodySize": 7356,
+          "decodedBodySize": 42123,
+          "responseStatus": 200,
+          "serverTiming": [],
+          "unloadEventStart": 0,
+          "unloadEventEnd": 0,
+          "domInteractive": 68.89999999850988,
+          "domContentLoadedEventStart": 68.89999999850988,
+          "domContentLoadedEventEnd": 68.89999999850988,
+          "domComplete": 69.89999999850988,
+          "loadEventStart": 69.89999999850988,
+          "loadEventEnd": 69.89999999850988,
+          "type": "navigate",
+          "redirectCount": 0,
+          "activationStart": 0,
+          "criticalCHRestart": 0,
+          "notRestoredReasons": null,
+          "confidence": {
+            "randomizedTriggerRate": 0.4994798,
+            "value": "low"
+          }
+        },
+        "paints": [
+          {
+            "name": "first-paint",
+            "startTime": 116
+          },
+          {
+            "name": "first-contentful-paint",
+            "startTime": 116
+          }
+        ],
+        "resources": [
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/assets/0.DIIfSAz0.css",
+            "initiatorType": "link",
+            "startTime": 23,
+            "duration": 12.399999998509884,
+            "transferSize": 14203,
+            "encodedBodySize": 13903,
+            "decodedBodySize": 102523,
+            "responseStart": 34.80000000074506,
+            "responseEnd": 35.399999998509884,
+            "renderBlockingStatus": "blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/assets/2.BtniTsXa.css",
+            "initiatorType": "link",
+            "startTime": 23.199999999254942,
+            "duration": 22.399999998509884,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 45.599999997764826,
+            "renderBlockingStatus": "blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/BRXmkQn_.js",
+            "initiatorType": "script",
+            "startTime": 24.800000000745058,
+            "duration": 19.199999999254942,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 44,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/entry/start.mC06ofQE.js",
+            "initiatorType": "script",
+            "startTime": 24.800000000745058,
+            "duration": 19.5,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 44.30000000074506,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/CiK3z3eL.js",
+            "initiatorType": "script",
+            "startTime": 24.899999998509884,
+            "duration": 18.5,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 43.399999998509884,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/Day8xdyn.js",
+            "initiatorType": "script",
+            "startTime": 24.899999998509884,
+            "duration": 19,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 43.899999998509884,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/entry/app.DZBYmvS2.js",
+            "initiatorType": "script",
+            "startTime": 24.899999998509884,
+            "duration": 20.900000002235174,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 45.80000000074506,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/D87HHz1p.js",
+            "initiatorType": "script",
+            "startTime": 24.899999998509884,
+            "duration": 20.900000002235174,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 45.80000000074506,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/CsyXVt_3.js",
+            "initiatorType": "script",
+            "startTime": 24.899999998509884,
+            "duration": 21,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 45.899999998509884,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/ClBxftqQ.js",
+            "initiatorType": "script",
+            "startTime": 24.899999998509884,
+            "duration": 22.699999999254942,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 47.599999997764826,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/BQ577Osw.js",
+            "initiatorType": "script",
+            "startTime": 25,
+            "duration": 20.899999998509884,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 45.899999998509884,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/nodes/0.DZvS5F_D.js",
+            "initiatorType": "script",
+            "startTime": 25,
+            "duration": 20.899999998509884,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 45.899999998509884,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/gxuvRnnN.js",
+            "initiatorType": "script",
+            "startTime": 25,
+            "duration": 21.399999998509884,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 46.399999998509884,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/CmVNlvZM.js",
+            "initiatorType": "script",
+            "startTime": 25,
+            "duration": 21.599999997764826,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 46.599999997764826,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/nodes/2.CMIFXshN.js",
+            "initiatorType": "script",
+            "startTime": 25,
+            "duration": 21.599999997764826,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 46.599999997764826,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/B3-at9Ax.js",
+            "initiatorType": "script",
+            "startTime": 25,
+            "duration": 21.599999997764826,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 46.599999997764826,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/BpWPDLG1.js",
+            "initiatorType": "script",
+            "startTime": 25.099999997764826,
+            "duration": 21.5,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 46.599999997764826,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/CtmsiVGh.js",
+            "initiatorType": "script",
+            "startTime": 25.099999997764826,
+            "duration": 21.700000002980232,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 46.80000000074506,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/fMqSyHj-.js",
+            "initiatorType": "script",
+            "startTime": 25.099999997764826,
+            "duration": 22.5,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 47.599999997764826,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/DuiOGKyg.js",
+            "initiatorType": "script",
+            "startTime": 25.099999997764826,
+            "duration": 22.5,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 47.599999997764826,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/assets/portrait-480.DTScYgwR.avif",
+            "initiatorType": "img",
+            "startTime": 25.899999998509884,
+            "duration": 21.699999999254942,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 47.599999997764826,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap",
+            "initiatorType": "link",
+            "startTime": 25.899999998509884,
+            "duration": 79,
+            "transferSize": 1387,
+            "encodedBodySize": 1087,
+            "decodedBodySize": 19637,
+            "responseStart": 103.19999999925494,
+            "responseEnd": 104.89999999850988,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/favicon.svg",
+            "initiatorType": "other",
+            "startTime": 80.09999999776483,
+            "duration": 0.7000000029802322,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 80.80000000074506,
+            "renderBlockingStatus": "non-blocking"
+          }
+        ],
+        "qa": {
+          "createdAt": 24.599999997764826,
+          "longTasks": [],
+          "events": [],
+          "paints": [
+            {
+              "name": "first-paint",
+              "startTime": 116
+            },
+            {
+              "name": "first-contentful-paint",
+              "startTime": 116
+            }
+          ],
+          "layoutShifts": [
+            {
+              "startTime": 180.69999999925494,
+              "value": 0.004123805845912101,
+              "sources": [
+                {
+                  "previousRect": {
+                    "x": 69.59375,
+                    "y": 498.71875,
+                    "width": 866.40625,
+                    "height": 148,
+                    "top": 498.71875,
+                    "right": 936,
+                    "bottom": 646.71875,
+                    "left": 69.59375
+                  },
+                  "currentRect": {
+                    "x": 71.59375,
+                    "y": 492.71875,
+                    "width": 864.40625,
+                    "height": 148,
+                    "top": 492.71875,
+                    "right": 936,
+                    "bottom": 640.71875,
+                    "left": 71.59375
+                  }
+                },
+                {
+                  "previousRect": {
+                    "x": 40,
+                    "y": 381.484375,
+                    "width": 138.8125,
+                    "height": 169,
+                    "top": 381.484375,
+                    "right": 178.8125,
+                    "bottom": 550.484375,
+                    "left": 40
+                  },
+                  "currentRect": {
+                    "x": 40,
+                    "y": 374.484375,
+                    "width": 155.34375,
+                    "height": 169,
+                    "top": 374.484375,
+                    "right": 195.34375,
+                    "bottom": 543.484375,
+                    "left": 40
+                  }
+                },
+                {
+                  "previousRect": {
+                    "x": 348.453125,
+                    "y": 381.484375,
+                    "width": 114,
+                    "height": 169,
+                    "top": 381.484375,
+                    "right": 462.453125,
+                    "bottom": 550.484375,
+                    "left": 348.453125
+                  },
+                  "currentRect": {
+                    "x": 372.078125,
+                    "y": 374.484375,
+                    "width": 119.296875,
+                    "height": 169,
+                    "top": 374.484375,
+                    "right": 491.375,
+                    "bottom": 543.484375,
+                    "left": 372.078125
+                  }
+                },
+                {
+                  "previousRect": {
+                    "x": 559.140625,
+                    "y": 381.484375,
+                    "width": 94,
+                    "height": 169,
+                    "top": 381.484375,
+                    "right": 653.140625,
+                    "bottom": 550.484375,
+                    "left": 559.140625
+                  },
+                  "currentRect": {
+                    "x": 594.90625,
+                    "y": 374.484375,
+                    "width": 102.296875,
+                    "height": 169,
+                    "top": 374.484375,
+                    "right": 697.203125,
+                    "bottom": 543.484375,
+                    "left": 594.90625
+                  }
+                }
+              ]
+            }
+          ],
+          "lcp": {
+            "startTime": 116,
+            "renderTime": 116,
+            "loadTime": 0,
+            "size": 21545,
+            "id": "",
+            "url": "",
+            "tagName": "SPAN"
+          },
+          "cls": 0.004123805845912101,
+          "clicks": [],
+          "keys": [],
+          "observerErrors": []
+        },
+        "dom": {
+          "nodes": 375,
+          "images": 1,
+          "scripts": 2,
+          "stylesheets": 2,
+          "scrollHeight": 6010,
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "dpr": 1
+          },
+          "scrollY": 0,
+          "activeElement": "BODY",
+          "fixedCandidates": [
+            {
+              "tag": "DIV",
+              "zIndex": 120,
+              "position": "fixed",
+              "opacity": 1,
+              "text": "✦ Miguel Almeida26 / 202652.52° N · 13.40° EMA · 26-A",
+              "rect": {
+                "x": 0,
+                "y": 0,
+                "width": 1440,
+                "height": 900,
+                "top": 0,
+                "right": 1440,
+                "bottom": 900,
+                "left": 0
+              }
+            },
+            {
+              "tag": "HEADER",
+              "zIndex": 50,
+              "position": "fixed",
+              "opacity": 1,
+              "text": "Miguel. WorkApproachStoryCVContact   Contact",
+              "rect": {
+                "x": 0,
+                "y": 0,
+                "width": 1440,
+                "height": 74.5,
+                "top": 0,
+                "right": 1440,
+                "bottom": 74.5,
+                "left": 0
+              }
+            }
+          ],
+          "htmlInlineOverflow": "",
+          "bodyInlineOverflow": "",
+          "htmlComputedOverflow": "visible",
+          "bodyComputedOverflow": "clip visible"
+        }
+      },
+      "resourceSummary": {
+        "byType": {
+          "link": {
+            "count": 3,
+            "transferSize": 15590,
+            "encodedBodySize": 14990,
+            "maxDuration": 79
+          },
+          "script": {
+            "count": 18,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "maxDuration": 22.699999999254942
+          },
+          "img": {
+            "count": 1,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "maxDuration": 21.699999999254942
+          },
+          "other": {
+            "count": 1,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "maxDuration": 0.7000000029802322
+          }
+        },
+        "slowest": [
+          {
+            "name": "https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap",
+            "initiatorType": "link",
+            "duration": 79,
+            "transferSize": 1387,
+            "encodedBodySize": 1087
+          },
+          {
+            "name": "/_app/immutable/chunks/ClBxftqQ.js",
+            "initiatorType": "script",
+            "duration": 23,
+            "transferSize": 0,
+            "encodedBodySize": 0
+          },
+          {
+            "name": "/_app/immutable/chunks/fMqSyHj-.js",
+            "initiatorType": "script",
+            "duration": 23,
+            "transferSize": 0,
+            "encodedBodySize": 0
+          },
+          {
+            "name": "/_app/immutable/chunks/DuiOGKyg.js",
+            "initiatorType": "script",
+            "duration": 23,
+            "transferSize": 0,
+            "encodedBodySize": 0
+          },
+          {
+            "name": "/_app/immutable/assets/2.BtniTsXa.css",
+            "initiatorType": "link",
+            "duration": 22,
+            "transferSize": 0,
+            "encodedBodySize": 0
+          },
+          {
+            "name": "/_app/immutable/chunks/CtmsiVGh.js",
+            "initiatorType": "script",
+            "duration": 22,
+            "transferSize": 0,
+            "encodedBodySize": 0
+          },
+          {
+            "name": "/_app/immutable/assets/portrait-480.DTScYgwR.avif",
+            "initiatorType": "img",
+            "duration": 22,
+            "transferSize": 0,
+            "encodedBodySize": 0
+          },
+          {
+            "name": "/_app/immutable/chunks/CmVNlvZM.js",
+            "initiatorType": "script",
+            "duration": 22,
+            "transferSize": 0,
+            "encodedBodySize": 0
+          },
+          {
+            "name": "/_app/immutable/nodes/2.CMIFXshN.js",
+            "initiatorType": "script",
+            "duration": 22,
+            "transferSize": 0,
+            "encodedBodySize": 0
+          },
+          {
+            "name": "/_app/immutable/chunks/B3-at9Ax.js",
+            "initiatorType": "script",
+            "duration": 22,
+            "transferSize": 0,
+            "encodedBodySize": 0
+          }
+        ]
+      },
+      "perfMetrics": {
+        "Timestamp": 22116.882145,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 2,
+        "Frames": 2,
+        "JSEventListeners": 3,
+        "LayoutObjects": 608,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 863,
+        "Resources": 73,
+        "ContextLifecycleStateObservers": 10,
+        "V8PerContextDatas": 1,
+        "WorkerGlobalScopes": 0,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 2,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 0,
+        "LayoutCount": 4,
+        "RecalcStyleCount": 196,
+        "LayoutDuration": 0.040576,
+        "RecalcStyleDuration": 0.025514,
+        "DevToolsCommandDuration": 0.09076,
+        "ScriptDuration": 0.004538,
+        "V8CompileDuration": 0.00016,
+        "TaskDuration": 0.254752,
+        "TaskOtherDuration": 0.093204,
+        "ThreadTime": 0.242952,
+        "ProcessTime": 0.936153,
+        "JSHeapUsedSize": 1521576,
+        "JSHeapTotalSize": 2883584,
+        "FirstMeaningfulPaint": 22105.906857,
+        "DomContentLoaded": 22105.860714,
+        "NavigationStart": 22105.791807
+      },
+      "networkEvents": [
+        {
+          "url": "http://127.0.0.1:4173/",
+          "type": "Document",
+          "status": 200,
+          "mimeType": "text/html",
+          "timing": {
+            "requestTime": 22105.793439,
+            "proxyStart": -1,
+            "proxyEnd": -1,
+            "dnsStart": -1,
+            "dnsEnd": -1,
+            "connectStart": -1,
+            "connectEnd": -1,
+            "sslStart": -1,
+            "sslEnd": -1,
+            "workerStart": -1,
+            "workerReady": -1,
+            "workerFetchStart": -1,
+            "workerRespondWithSettled": -1,
+            "sendStart": 0.258,
+            "sendEnd": 0.322,
+            "pushStart": 0,
+            "pushEnd": 0,
+            "receiveHeadersStart": 11.788,
+            "receiveHeadersEnd": 11.858
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4173/_app/immutable/assets/0.DIIfSAz0.css",
+          "type": "Stylesheet",
+          "status": 200,
+          "mimeType": "text/css",
+          "timing": {
+            "requestTime": 22105.816152,
+            "proxyStart": -1,
+            "proxyEnd": -1,
+            "dnsStart": -1,
+            "dnsEnd": -1,
+            "connectStart": -1,
+            "connectEnd": -1,
+            "sslStart": -1,
+            "sslEnd": -1,
+            "workerStart": -1,
+            "workerReady": -1,
+            "workerFetchStart": -1,
+            "workerRespondWithSettled": -1,
+            "sendStart": 0.187,
+            "sendEnd": 0.22,
+            "pushStart": 0,
+            "pushEnd": 0,
+            "receiveHeadersStart": 10.495,
+            "receiveHeadersEnd": 10.549
+          }
+        },
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap",
+          "type": "Stylesheet",
+          "status": 200,
+          "mimeType": "text/css",
+          "timing": {
+            "requestTime": 22105.819635,
+            "proxyStart": -1,
+            "proxyEnd": -1,
+            "dnsStart": 0.221,
+            "dnsEnd": 19.522,
+            "connectStart": 19.583,
+            "connectEnd": 55.916,
+            "sslStart": 31.395,
+            "sslEnd": 55.912,
+            "workerStart": -1,
+            "workerReady": -1,
+            "workerFetchStart": -1,
+            "workerRespondWithSettled": -1,
+            "sendStart": 56.041,
+            "sendEnd": 56.11,
+            "pushStart": 0,
+            "pushEnd": 0,
+            "receiveHeadersStart": 75.339,
+            "receiveHeadersEnd": 75.506
+          }
+        },
+        {
+          "url": "https://fonts.gstatic.com/s/librebaskerville/v24/kmKnZrc3Hgbbcjq75U4uslyuy4kn0qNZaxMaC82U.woff2",
+          "type": "Font",
+          "status": 200,
+          "mimeType": "font/woff2",
+          "timing": {
+            "requestTime": 22105.907429,
+            "proxyStart": -1,
+            "proxyEnd": -1,
+            "dnsStart": -1,
+            "dnsEnd": -1,
+            "connectStart": -1,
+            "connectEnd": -1,
+            "sslStart": -1,
+            "sslEnd": -1,
+            "workerStart": -1,
+            "workerReady": -1,
+            "workerFetchStart": -1,
+            "workerRespondWithSettled": -1,
+            "sendStart": 0.265,
+            "sendEnd": 0.294,
+            "pushStart": 0,
+            "pushEnd": 0,
+            "receiveHeadersStart": 32.983,
+            "receiveHeadersEnd": 33.122
+          }
+        },
+        {
+          "url": "https://fonts.gstatic.com/s/sourcesans3/v19/nwpStKy2OAdR1K-IwhWudF-R3w8aZejf5Hc.woff2",
+          "type": "Font",
+          "status": 200,
+          "mimeType": "font/woff2",
+          "timing": {
+            "requestTime": 22105.907768,
+            "proxyStart": -1,
+            "proxyEnd": -1,
+            "dnsStart": -1,
+            "dnsEnd": -1,
+            "connectStart": -1,
+            "connectEnd": -1,
+            "sslStart": -1,
+            "sslEnd": -1,
+            "workerStart": -1,
+            "workerReady": -1,
+            "workerFetchStart": -1,
+            "workerRespondWithSettled": -1,
+            "sendStart": 0.116,
+            "sendEnd": 0.14,
+            "pushStart": 0,
+            "pushEnd": 0,
+            "receiveHeadersStart": 21.514,
+            "receiveHeadersEnd": 21.612
+          }
+        },
+        {
+          "url": "https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwgknk-4.woff2",
+          "type": "Font",
+          "status": 200,
+          "mimeType": "font/woff2",
+          "timing": {
+            "requestTime": 22105.907042,
+            "proxyStart": -1,
+            "proxyEnd": -1,
+            "dnsStart": 0,
+            "dnsEnd": 0,
+            "connectStart": 0,
+            "connectEnd": 0,
+            "sslStart": 0,
+            "sslEnd": 0,
+            "workerStart": -1,
+            "workerReady": -1,
+            "workerFetchStart": -1,
+            "workerRespondWithSettled": -1,
+            "sendStart": 0.527,
+            "sendEnd": 0.626,
+            "pushStart": 0,
+            "pushEnd": 0,
+            "receiveHeadersStart": 26.925,
+            "receiveHeadersEnd": 27.101
+          }
+        },
+        {
+          "url": "https://fonts.gstatic.com/s/sourcesans3/v19/nwpStKy2OAdR1K-IwhWudF-R3w8aZejf5Hc.woff2",
+          "type": "Font",
+          "status": 200,
+          "mimeType": "font/woff2",
+          "timing": {
+            "requestTime": 22105.908439,
+            "proxyStart": -1,
+            "proxyEnd": -1,
+            "dnsStart": -1,
+            "dnsEnd": -1,
+            "connectStart": -1,
+            "connectEnd": -1,
+            "sslStart": -1,
+            "sslEnd": -1,
+            "workerStart": -1,
+            "workerReady": -1,
+            "workerFetchStart": -1,
+            "workerRespondWithSettled": -1,
+            "sendStart": 0.037,
+            "sendEnd": 0.064,
+            "pushStart": 0,
+            "pushEnd": 0,
+            "receiveHeadersStart": 36.838,
+            "receiveHeadersEnd": 36.953
+          }
+        },
+        {
+          "url": "https://fonts.gstatic.com/s/librebaskerville/v24/kmKnZrc3Hgbbcjq75U4uslyuy4kn0qNZaxMaC82U.woff2",
+          "type": "Font",
+          "status": 200,
+          "mimeType": "font/woff2",
+          "timing": {
+            "requestTime": 22105.907816,
+            "proxyStart": -1,
+            "proxyEnd": -1,
+            "dnsStart": -1,
+            "dnsEnd": -1,
+            "connectStart": -1,
+            "connectEnd": -1,
+            "sslStart": -1,
+            "sslEnd": -1,
+            "workerStart": -1,
+            "workerReady": -1,
+            "workerFetchStart": -1,
+            "workerRespondWithSettled": -1,
+            "sendStart": 0.027,
+            "sendEnd": 0.05,
+            "pushStart": 0,
+            "pushEnd": 0,
+            "receiveHeadersStart": 42.247,
+            "receiveHeadersEnd": 42.482
+          }
+        }
+      ],
+      "consoleLogs": [
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073166262.848,
+          "url": "http://127.0.0.1:4173/_app/immutable/assets/2.BtniTsXa.css",
+          "networkRequestId": "24499.3"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073166262.908,
+          "url": "http://127.0.0.1:4173/_app/immutable/assets/portrait-480.DTScYgwR.avif",
+          "networkRequestId": "24499.25"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_RESET",
+          "timestamp": 1778073166263.108,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/CiK3z3eL.js",
+          "networkRequestId": "24499.7"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_RESET",
+          "timestamp": 1778073166263.122,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/Day8xdyn.js",
+          "networkRequestId": "24499.6"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_EMPTY_RESPONSE",
+          "timestamp": 1778073166263.136,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/BRXmkQn_.js",
+          "networkRequestId": "24499.5"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_EMPTY_RESPONSE",
+          "timestamp": 1778073166263.159,
+          "url": "http://127.0.0.1:4173/_app/immutable/entry/start.mC06ofQE.js",
+          "networkRequestId": "24499.4"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073166263.174,
+          "url": "http://127.0.0.1:4173/_app/immutable/entry/app.DZBYmvS2.js",
+          "networkRequestId": "24499.9"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073166263.184,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/D87HHz1p.js",
+          "networkRequestId": "24499.10"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073166263.196,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/CsyXVt_3.js",
+          "networkRequestId": "24499.11"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073166263.21,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/BQ577Osw.js",
+          "networkRequestId": "24499.12"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073166263.223,
+          "url": "http://127.0.0.1:4173/_app/immutable/nodes/0.DZvS5F_D.js",
+          "networkRequestId": "24499.13"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073166263.235,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/gxuvRnnN.js",
+          "networkRequestId": "24499.14"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073166263.245,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/CmVNlvZM.js",
+          "networkRequestId": "24499.15"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073166263.253,
+          "url": "http://127.0.0.1:4173/_app/immutable/nodes/2.CMIFXshN.js",
+          "networkRequestId": "24499.16"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073166263.265,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/B3-at9Ax.js",
+          "networkRequestId": "24499.17"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073166263.279,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/BpWPDLG1.js",
+          "networkRequestId": "24499.18"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073166263.29,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/CtmsiVGh.js",
+          "networkRequestId": "24499.19"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073166263.301,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/fMqSyHj-.js",
+          "networkRequestId": "24499.20"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073166263.311,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/DuiOGKyg.js",
+          "networkRequestId": "24499.21"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073166263.33,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/ClBxftqQ.js",
+          "networkRequestId": "24499.8"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073166276.29,
+          "url": "http://127.0.0.1:4173/favicon.svg",
+          "networkRequestId": "24499.30"
+        }
+      ],
+      "screenshots": {
+        "domContent": "/Users/malmeida/Documents/Development/portfolio/docs/qa/performance/2026-05-06-portfolio-after-fixes-prod/screenshots/cold-desktop-normal-domcontent.png",
+        "afterLoad": null,
+        "ready": "/Users/malmeida/Documents/Development/portfolio/docs/qa/performance/2026-05-06-portfolio-after-fixes-prod/screenshots/cold-desktop-normal-ready.png"
+      },
+      "trace": null
+    },
+    {
+      "name": "warm-desktop-normal",
+      "options": {
+        "path": "/",
+        "viewport": "desktop",
+        "cpu": 1,
+        "network": "none",
+        "disableCache": false,
+        "clearCookies": false,
+        "introSeen": true,
+        "waitIntro": true,
+        "captureReady": true
+      },
+      "wallMs": 11025,
+      "domContentEventTs": 22117.602158,
+      "loadEventTs": 22117.624829,
+      "timings": {
+        "ttfb": 2.100000001490116,
+        "domContentLoaded": 30.199999999254942,
+        "load": 52.80000000074506,
+        "fcp": 100,
+        "lcp": 100,
+        "cls": 0,
+        "introReadyMs": 10615.10000000149
+      },
+      "pageSummary": {
+        "url": "http://127.0.0.1:4173/",
+        "title": "Miguel Almeida — Frontend Engineer · Berlin",
+        "now": 10969.5,
+        "nav": {
+          "name": "http://127.0.0.1:4173/",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 52.80000000074506,
+          "initiatorType": "navigation",
+          "deliveryType": "cache",
+          "nextHopProtocol": "",
+          "renderBlockingStatus": "non-blocking",
+          "contentEncoding": "br",
+          "workerStart": 0,
+          "workerRouterEvaluationStart": 0,
+          "workerCacheLookupStart": 0,
+          "workerMatchedSourceType": "",
+          "workerFinalSourceType": "",
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": 0.6999999992549419,
+          "domainLookupStart": 0.6999999992549419,
+          "domainLookupEnd": 0.6999999992549419,
+          "connectStart": 0.6999999992549419,
+          "secureConnectionStart": 0,
+          "connectEnd": 0.6999999992549419,
+          "requestStart": 1.300000000745058,
+          "responseStart": 2.100000001490116,
+          "firstInterimResponseStart": 2.100000001490116,
+          "finalResponseHeadersStart": 0,
+          "responseEnd": 2.5,
+          "transferSize": 0,
+          "encodedBodySize": 7356,
+          "decodedBodySize": 42123,
+          "responseStatus": 200,
+          "serverTiming": [],
+          "unloadEventStart": 0,
+          "unloadEventEnd": 0,
+          "domInteractive": 30.199999999254942,
+          "domContentLoadedEventStart": 30.199999999254942,
+          "domContentLoadedEventEnd": 30.199999999254942,
+          "domComplete": 52.80000000074506,
+          "loadEventStart": 52.80000000074506,
+          "loadEventEnd": 52.80000000074506,
+          "type": "navigate",
+          "redirectCount": 0,
+          "activationStart": 0,
+          "criticalCHRestart": 0,
+          "notRestoredReasons": null,
+          "confidence": {
+            "randomizedTriggerRate": 0.4994798,
+            "value": "high"
+          }
+        },
+        "paints": [
+          {
+            "name": "first-paint",
+            "startTime": 100
+          },
+          {
+            "name": "first-contentful-paint",
+            "startTime": 100
+          }
+        ],
+        "resources": [
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/assets/2.BtniTsXa.css",
+            "initiatorType": "link",
+            "startTime": 18.399999998509884,
+            "duration": 1.5,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 19.899999998509884,
+            "renderBlockingStatus": "blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/assets/0.DIIfSAz0.css",
+            "initiatorType": "link",
+            "startTime": 18.399999998509884,
+            "duration": 3.100000001490116,
+            "transferSize": 0,
+            "encodedBodySize": 13903,
+            "decodedBodySize": 102523,
+            "responseStart": 21,
+            "responseEnd": 21.5,
+            "renderBlockingStatus": "blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/entry/start.mC06ofQE.js",
+            "initiatorType": "script",
+            "startTime": 21.800000000745058,
+            "duration": 0.3999999985098839,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 22.199999999254942,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/BRXmkQn_.js",
+            "initiatorType": "script",
+            "startTime": 21.800000000745058,
+            "duration": 0.5,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 22.300000000745058,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/Day8xdyn.js",
+            "initiatorType": "script",
+            "startTime": 21.800000000745058,
+            "duration": 0.6999999992549419,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 22.5,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/CiK3z3eL.js",
+            "initiatorType": "script",
+            "startTime": 21.800000000745058,
+            "duration": 1.0999999977648258,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 22.899999998509884,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/ClBxftqQ.js",
+            "initiatorType": "script",
+            "startTime": 21.899999998509884,
+            "duration": 1.4000000022351742,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 23.300000000745058,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/entry/app.DZBYmvS2.js",
+            "initiatorType": "script",
+            "startTime": 21.899999998509884,
+            "duration": 1.300000000745058,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 23.199999999254942,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/D87HHz1p.js",
+            "initiatorType": "script",
+            "startTime": 21.899999998509884,
+            "duration": 2.600000001490116,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 24.5,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/CsyXVt_3.js",
+            "initiatorType": "script",
+            "startTime": 22,
+            "duration": 2.600000001490116,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 24.600000001490116,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/BQ577Osw.js",
+            "initiatorType": "script",
+            "startTime": 22,
+            "duration": 2.699999999254942,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 24.699999999254942,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/nodes/0.DZvS5F_D.js",
+            "initiatorType": "script",
+            "startTime": 22,
+            "duration": 2.899999998509884,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 24.899999998509884,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/gxuvRnnN.js",
+            "initiatorType": "script",
+            "startTime": 22,
+            "duration": 3.300000000745058,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 25.300000000745058,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/CmVNlvZM.js",
+            "initiatorType": "script",
+            "startTime": 22,
+            "duration": 3.399999998509884,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 25.399999998509884,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/nodes/2.CMIFXshN.js",
+            "initiatorType": "script",
+            "startTime": 22,
+            "duration": 3.5,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 25.5,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/B3-at9Ax.js",
+            "initiatorType": "script",
+            "startTime": 22,
+            "duration": 3.800000000745058,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 25.800000000745058,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/BpWPDLG1.js",
+            "initiatorType": "script",
+            "startTime": 22.100000001490116,
+            "duration": 4.099999997764826,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 26.199999999254942,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/CtmsiVGh.js",
+            "initiatorType": "script",
+            "startTime": 22.100000001490116,
+            "duration": 4.199999999254942,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 26.300000000745058,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/fMqSyHj-.js",
+            "initiatorType": "script",
+            "startTime": 22.100000001490116,
+            "duration": 4.299999997019768,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 26.399999998509884,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/chunks/DuiOGKyg.js",
+            "initiatorType": "script",
+            "startTime": 22.100000001490116,
+            "duration": 4.5,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 26.600000001490116,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap",
+            "initiatorType": "link",
+            "startTime": 22.5,
+            "duration": 5,
+            "transferSize": 0,
+            "encodedBodySize": 1087,
+            "decodedBodySize": 19637,
+            "responseStart": 27.300000000745058,
+            "responseEnd": 27.5,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/_app/immutable/assets/portrait-480.DTScYgwR.avif",
+            "initiatorType": "img",
+            "startTime": 22.600000001490116,
+            "duration": 4.099999997764826,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 26.699999999254942,
+            "renderBlockingStatus": "non-blocking"
+          },
+          {
+            "name": "http://127.0.0.1:4173/favicon.svg",
+            "initiatorType": "other",
+            "startTime": 89.60000000149012,
+            "duration": 1,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "decodedBodySize": 0,
+            "responseStart": 0,
+            "responseEnd": 90.60000000149012,
+            "renderBlockingStatus": "non-blocking"
+          }
+        ],
+        "qa": {
+          "createdAt": 19.800000000745058,
+          "longTasks": [],
+          "events": [],
+          "paints": [
+            {
+              "name": "first-paint",
+              "startTime": 100
+            },
+            {
+              "name": "first-contentful-paint",
+              "startTime": 100
+            }
+          ],
+          "layoutShifts": [],
+          "lcp": {
+            "startTime": 100,
+            "renderTime": 100,
+            "loadTime": 0,
+            "size": 26364,
+            "id": "",
+            "url": "",
+            "tagName": "SPAN"
+          },
+          "cls": 0,
+          "clicks": [],
+          "keys": [],
+          "observerErrors": []
+        },
+        "dom": {
+          "nodes": 375,
+          "images": 1,
+          "scripts": 2,
+          "stylesheets": 2,
+          "scrollHeight": 6010,
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "dpr": 1
+          },
+          "scrollY": 0,
+          "activeElement": "BODY",
+          "fixedCandidates": [
+            {
+              "tag": "DIV",
+              "zIndex": 120,
+              "position": "fixed",
+              "opacity": 1,
+              "text": "✦ Miguel Almeida26 / 202652.52° N · 13.40° EMA · 26-A",
+              "rect": {
+                "x": 0,
+                "y": 0,
+                "width": 1440,
+                "height": 900,
+                "top": 0,
+                "right": 1440,
+                "bottom": 900,
+                "left": 0
+              }
+            },
+            {
+              "tag": "HEADER",
+              "zIndex": 50,
+              "position": "fixed",
+              "opacity": 1,
+              "text": "Miguel. WorkApproachStoryCVContact   Contact",
+              "rect": {
+                "x": 0,
+                "y": 0,
+                "width": 1440,
+                "height": 74.5,
+                "top": 0,
+                "right": 1440,
+                "bottom": 74.5,
+                "left": 0
+              }
+            }
+          ],
+          "htmlInlineOverflow": "",
+          "bodyInlineOverflow": "",
+          "htmlComputedOverflow": "visible",
+          "bodyComputedOverflow": "clip visible"
+        }
+      },
+      "resourceSummary": {
+        "byType": {
+          "link": {
+            "count": 3,
+            "transferSize": 0,
+            "encodedBodySize": 14990,
+            "maxDuration": 5
+          },
+          "script": {
+            "count": 18,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "maxDuration": 4.5
+          },
+          "img": {
+            "count": 1,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "maxDuration": 4.099999997764826
+          },
+          "other": {
+            "count": 1,
+            "transferSize": 0,
+            "encodedBodySize": 0,
+            "maxDuration": 1
+          }
+        },
+        "slowest": [
+          {
+            "name": "https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap",
+            "initiatorType": "link",
+            "duration": 5,
+            "transferSize": 0,
+            "encodedBodySize": 1087
+          },
+          {
+            "name": "/_app/immutable/chunks/DuiOGKyg.js",
+            "initiatorType": "script",
+            "duration": 5,
+            "transferSize": 0,
+            "encodedBodySize": 0
+          },
+          {
+            "name": "/_app/immutable/chunks/fMqSyHj-.js",
+            "initiatorType": "script",
+            "duration": 4,
+            "transferSize": 0,
+            "encodedBodySize": 0
+          },
+          {
+            "name": "/_app/immutable/chunks/CtmsiVGh.js",
+            "initiatorType": "script",
+            "duration": 4,
+            "transferSize": 0,
+            "encodedBodySize": 0
+          },
+          {
+            "name": "/_app/immutable/chunks/BpWPDLG1.js",
+            "initiatorType": "script",
+            "duration": 4,
+            "transferSize": 0,
+            "encodedBodySize": 0
+          },
+          {
+            "name": "/_app/immutable/assets/portrait-480.DTScYgwR.avif",
+            "initiatorType": "img",
+            "duration": 4,
+            "transferSize": 0,
+            "encodedBodySize": 0
+          },
+          {
+            "name": "/_app/immutable/chunks/B3-at9Ax.js",
+            "initiatorType": "script",
+            "duration": 4,
+            "transferSize": 0,
+            "encodedBodySize": 0
+          },
+          {
+            "name": "/_app/immutable/nodes/2.CMIFXshN.js",
+            "initiatorType": "script",
+            "duration": 4,
+            "transferSize": 0,
+            "encodedBodySize": 0
+          },
+          {
+            "name": "/_app/immutable/chunks/CmVNlvZM.js",
+            "initiatorType": "script",
+            "duration": 3,
+            "transferSize": 0,
+            "encodedBodySize": 0
+          },
+          {
+            "name": "/_app/immutable/chunks/gxuvRnnN.js",
+            "initiatorType": "script",
+            "duration": 3,
+            "transferSize": 0,
+            "encodedBodySize": 0
+          }
+        ]
+      },
+      "perfMetrics": {
+        "Timestamp": 22128.542474,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 2,
+        "Frames": 2,
+        "JSEventListeners": 3,
+        "LayoutObjects": 608,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 863,
+        "Resources": 73,
+        "ContextLifecycleStateObservers": 10,
+        "V8PerContextDatas": 1,
+        "WorkerGlobalScopes": 0,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 2,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 0,
+        "LayoutCount": 5,
+        "RecalcStyleCount": 206,
+        "LayoutDuration": 0.029466,
+        "RecalcStyleDuration": 0.02439,
+        "DevToolsCommandDuration": 0.08774,
+        "ScriptDuration": 0.004526,
+        "V8CompileDuration": 0.000177,
+        "TaskDuration": 0.223624,
+        "TaskOtherDuration": 0.077325,
+        "ThreadTime": 0.222511,
+        "ProcessTime": 0.750219,
+        "JSHeapUsedSize": 933860,
+        "JSHeapTotalSize": 2097152,
+        "FirstMeaningfulPaint": 22117.671498,
+        "DomContentLoaded": 22117.602152,
+        "NavigationStart": 22117.572023
+      },
+      "networkEvents": [
+        {
+          "url": "http://127.0.0.1:4173/",
+          "type": "Document",
+          "status": 200,
+          "mimeType": "text/html",
+          "timing": {
+            "requestTime": 22117.573166,
+            "proxyStart": -1,
+            "proxyEnd": -1,
+            "dnsStart": -1,
+            "dnsEnd": -1,
+            "connectStart": -1,
+            "connectEnd": -1,
+            "sslStart": -1,
+            "sslEnd": -1,
+            "workerStart": -1,
+            "workerReady": -1,
+            "workerFetchStart": -1,
+            "workerRespondWithSettled": -1,
+            "sendStart": 0.065,
+            "sendEnd": 0.065,
+            "pushStart": 0,
+            "pushEnd": 0,
+            "receiveHeadersStart": 0.955,
+            "receiveHeadersEnd": 0.991
+          }
+        },
+        {
+          "url": "http://127.0.0.1:4173/_app/immutable/assets/0.DIIfSAz0.css",
+          "type": "Stylesheet",
+          "status": 200,
+          "mimeType": "text/css",
+          "timing": {
+            "requestTime": 22117.59153,
+            "proxyStart": -1,
+            "proxyEnd": -1,
+            "dnsStart": -1,
+            "dnsEnd": -1,
+            "connectStart": -1,
+            "connectEnd": -1,
+            "sslStart": -1,
+            "sslEnd": -1,
+            "workerStart": -1,
+            "workerReady": -1,
+            "workerFetchStart": -1,
+            "workerRespondWithSettled": -1,
+            "sendStart": 0.065,
+            "sendEnd": 0.065,
+            "pushStart": 0,
+            "pushEnd": 0,
+            "receiveHeadersStart": 1.452,
+            "receiveHeadersEnd": 1.478
+          }
+        },
+        {
+          "url": "https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap",
+          "type": "Stylesheet",
+          "status": 200,
+          "mimeType": "text/css",
+          "timing": {
+            "requestTime": 22117.598514,
+            "proxyStart": -1,
+            "proxyEnd": -1,
+            "dnsStart": -1,
+            "dnsEnd": -1,
+            "connectStart": -1,
+            "connectEnd": -1,
+            "sslStart": -1,
+            "sslEnd": -1,
+            "workerStart": -1,
+            "workerReady": -1,
+            "workerFetchStart": -1,
+            "workerRespondWithSettled": -1,
+            "sendStart": 0.021,
+            "sendEnd": 0.021,
+            "pushStart": 0,
+            "pushEnd": 0,
+            "receiveHeadersStart": 0.806,
+            "receiveHeadersEnd": 0.835
+          }
+        },
+        {
+          "url": "https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwgknk-4.woff2",
+          "type": "Font",
+          "status": 200,
+          "mimeType": "font/woff2",
+          "timing": {
+            "requestTime": 22117.628377,
+            "proxyStart": -1,
+            "proxyEnd": -1,
+            "dnsStart": -1,
+            "dnsEnd": -1,
+            "connectStart": -1,
+            "connectEnd": -1,
+            "sslStart": -1,
+            "sslEnd": -1,
+            "workerStart": -1,
+            "workerReady": -1,
+            "workerFetchStart": -1,
+            "workerRespondWithSettled": -1,
+            "sendStart": 0.035,
+            "sendEnd": 0.035,
+            "pushStart": 0,
+            "pushEnd": 0,
+            "receiveHeadersStart": 1.367,
+            "receiveHeadersEnd": 1.378
+          }
+        },
+        {
+          "url": "https://fonts.gstatic.com/s/librebaskerville/v24/kmKnZrc3Hgbbcjq75U4uslyuy4kn0qNZaxMaC82U.woff2",
+          "type": "Font",
+          "status": 200,
+          "mimeType": "font/woff2",
+          "timing": {
+            "requestTime": 22117.629026,
+            "proxyStart": -1,
+            "proxyEnd": -1,
+            "dnsStart": -1,
+            "dnsEnd": -1,
+            "connectStart": -1,
+            "connectEnd": -1,
+            "sslStart": -1,
+            "sslEnd": -1,
+            "workerStart": -1,
+            "workerReady": -1,
+            "workerFetchStart": -1,
+            "workerRespondWithSettled": -1,
+            "sendStart": 0.028,
+            "sendEnd": 0.028,
+            "pushStart": 0,
+            "pushEnd": 0,
+            "receiveHeadersStart": 0.57,
+            "receiveHeadersEnd": 0.595
+          }
+        },
+        {
+          "url": "https://fonts.gstatic.com/s/librebaskerville/v24/kmKnZrc3Hgbbcjq75U4uslyuy4kn0qNZaxMaC82U.woff2",
+          "type": "Font",
+          "status": 200,
+          "mimeType": "font/woff2",
+          "timing": {
+            "requestTime": 22117.629313,
+            "proxyStart": -1,
+            "proxyEnd": -1,
+            "dnsStart": -1,
+            "dnsEnd": -1,
+            "connectStart": -1,
+            "connectEnd": -1,
+            "sslStart": -1,
+            "sslEnd": -1,
+            "workerStart": -1,
+            "workerReady": -1,
+            "workerFetchStart": -1,
+            "workerRespondWithSettled": -1,
+            "sendStart": 0.028,
+            "sendEnd": 0.028,
+            "pushStart": 0,
+            "pushEnd": 0,
+            "receiveHeadersStart": 1.039,
+            "receiveHeadersEnd": 1.077
+          }
+        },
+        {
+          "url": "https://fonts.gstatic.com/s/sourcesans3/v19/nwpStKy2OAdR1K-IwhWudF-R3w8aZejf5Hc.woff2",
+          "type": "Font",
+          "status": 200,
+          "mimeType": "font/woff2",
+          "timing": {
+            "requestTime": 22117.629187,
+            "proxyStart": -1,
+            "proxyEnd": -1,
+            "dnsStart": -1,
+            "dnsEnd": -1,
+            "connectStart": -1,
+            "connectEnd": -1,
+            "sslStart": -1,
+            "sslEnd": -1,
+            "workerStart": -1,
+            "workerReady": -1,
+            "workerFetchStart": -1,
+            "workerRespondWithSettled": -1,
+            "sendStart": 0.039,
+            "sendEnd": 0.039,
+            "pushStart": 0,
+            "pushEnd": 0,
+            "receiveHeadersStart": 0.707,
+            "receiveHeadersEnd": 0.775
+          }
+        },
+        {
+          "url": "https://fonts.gstatic.com/s/sourcesans3/v19/nwpStKy2OAdR1K-IwhWudF-R3w8aZejf5Hc.woff2",
+          "type": "Font",
+          "status": 200,
+          "mimeType": "font/woff2",
+          "timing": {
+            "requestTime": 22117.6309,
+            "proxyStart": -1,
+            "proxyEnd": -1,
+            "dnsStart": -1,
+            "dnsEnd": -1,
+            "connectStart": -1,
+            "connectEnd": -1,
+            "sslStart": -1,
+            "sslEnd": -1,
+            "workerStart": -1,
+            "workerReady": -1,
+            "workerFetchStart": -1,
+            "workerRespondWithSettled": -1,
+            "sendStart": 0.038,
+            "sendEnd": 0.038,
+            "pushStart": 0,
+            "pushEnd": 0,
+            "receiveHeadersStart": 0.244,
+            "receiveHeadersEnd": 0.278
+          }
+        }
+      ],
+      "consoleLogs": [
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073177998.654,
+          "url": "http://127.0.0.1:4173/_app/immutable/assets/2.BtniTsXa.css",
+          "networkRequestId": "24611.3"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178027.814,
+          "url": "http://127.0.0.1:4173/_app/immutable/assets/portrait-480.DTScYgwR.avif",
+          "networkRequestId": "24611.25"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178028.102,
+          "url": "http://127.0.0.1:4173/_app/immutable/entry/start.mC06ofQE.js",
+          "networkRequestId": "24611.4"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178028.119,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/BRXmkQn_.js",
+          "networkRequestId": "24611.5"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178028.132,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/Day8xdyn.js",
+          "networkRequestId": "24611.6"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178028.142,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/CiK3z3eL.js",
+          "networkRequestId": "24611.7"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178028.151,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/ClBxftqQ.js",
+          "networkRequestId": "24611.8"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178028.161,
+          "url": "http://127.0.0.1:4173/_app/immutable/entry/app.DZBYmvS2.js",
+          "networkRequestId": "24611.9"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178028.173,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/D87HHz1p.js",
+          "networkRequestId": "24611.10"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178028.184,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/CsyXVt_3.js",
+          "networkRequestId": "24611.11"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178028.195,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/BQ577Osw.js",
+          "networkRequestId": "24611.12"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178028.208,
+          "url": "http://127.0.0.1:4173/_app/immutable/nodes/0.DZvS5F_D.js",
+          "networkRequestId": "24611.13"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178028.22,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/gxuvRnnN.js",
+          "networkRequestId": "24611.14"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178028.229,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/CmVNlvZM.js",
+          "networkRequestId": "24611.15"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178028.24,
+          "url": "http://127.0.0.1:4173/_app/immutable/nodes/2.CMIFXshN.js",
+          "networkRequestId": "24611.16"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178028.25,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/B3-at9Ax.js",
+          "networkRequestId": "24611.17"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178028.261,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/BpWPDLG1.js",
+          "networkRequestId": "24611.18"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178028.272,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/CtmsiVGh.js",
+          "networkRequestId": "24611.19"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178028.285,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/fMqSyHj-.js",
+          "networkRequestId": "24611.20"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178028.294,
+          "url": "http://127.0.0.1:4173/_app/immutable/chunks/DuiOGKyg.js",
+          "networkRequestId": "24611.21"
+        },
+        {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+          "timestamp": 1778073178066.698,
+          "url": "http://127.0.0.1:4173/favicon.svg",
+          "networkRequestId": "24611.81"
+        }
+      ],
+      "screenshots": {
+        "domContent": null,
+        "afterLoad": "/Users/malmeida/Documents/Development/portfolio/docs/qa/performance/2026-05-06-portfolio-after-fixes-prod/screenshots/warm-desktop-normal-after-load.png",
+        "ready": null
+      },
+      "trace": null
+    },
+    {
+      "name": "cold-mobile-fast3g-cpu6x",
+      "options": {
+        "path": "/",
+        "viewport": "mobile",
+        "cpu": 6,
+        "network": "fast3g",
+        "disableCache": true,
+        "clearCookies": true,
+        "introSeen": false,
+        "waitIntro": true,
+        "introTimeout": 18000,
+        "captureDom": true,
+        "captureReadyAfterIntro": true,
+        "trace": true,
+        "afterLoadDelay": 750
+      },
+      "wallMs": 1681,
+      "domContentEventTs": 22129.431395,
+      "loadEventTs": 22129.53046,
+      "timings": {
+        "ttfb": 0.5,
+        "domContentLoaded": 92.5,
+        "load": 191.5,
+        "fcp": 200,
+        "lcp": 200,
+        "cls": 0,
+        "introReadyMs": 1092.4000000022352
+      },
+      "pageSummary": {
+        "url": "chrome-error://chromewebdata/",
+        "title": "127.0.0.1",
+        "now": 1413.300000000745,
+        "nav": {
+          "name": "http://127.0.0.1:4173/",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 191.5,
+          "initiatorType": "navigation",
+          "deliveryType": "cache",
+          "nextHopProtocol": "",
+          "renderBlockingStatus": "non-blocking",
+          "contentEncoding": "",
+          "workerStart": 0,
+          "workerRouterEvaluationStart": 0,
+          "workerCacheLookupStart": 0,
+          "workerMatchedSourceType": "",
+          "workerFinalSourceType": "",
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": 0.5,
+          "domainLookupStart": 0.5,
+          "domainLookupEnd": 0.5,
+          "connectStart": 0.5,
+          "secureConnectionStart": 0,
+          "connectEnd": 0.5,
+          "requestStart": 0.5,
+          "responseStart": 0.5,
+          "firstInterimResponseStart": 0,
+          "finalResponseHeadersStart": 0,
+          "responseEnd": 36.80000000074506,
+          "transferSize": 0,
+          "encodedBodySize": 184521,
+          "decodedBodySize": 184521,
+          "responseStatus": 0,
+          "serverTiming": [],
+          "unloadEventStart": 0,
+          "unloadEventEnd": 0,
+          "domInteractive": 72.10000000149012,
+          "domContentLoadedEventStart": 72.10000000149012,
+          "domContentLoadedEventEnd": 92.5,
+          "domComplete": 191.20000000298023,
+          "loadEventStart": 191.5,
+          "loadEventEnd": 191.5,
+          "type": "navigate",
+          "redirectCount": 0,
+          "activationStart": 0,
+          "criticalCHRestart": 0,
+          "notRestoredReasons": null,
+          "confidence": {
+            "randomizedTriggerRate": 0.4994798,
+            "value": "high"
+          }
+        },
+        "paints": [
+          {
+            "name": "first-paint",
+            "startTime": 200
+          },
+          {
+            "name": "first-contentful-paint",
+            "startTime": 200
+          }
+        ],
+        "resources": [],
+        "qa": {
+          "createdAt": 29.700000002980232,
+          "longTasks": [
+            {
+              "startTime": 99.80000000074506,
+              "duration": 88,
+              "name": "unknown"
+            }
+          ],
+          "events": [],
+          "paints": [
+            {
+              "name": "first-paint",
+              "startTime": 200
+            },
+            {
+              "name": "first-contentful-paint",
+              "startTime": 200
+            }
+          ],
+          "layoutShifts": [],
+          "lcp": {
+            "startTime": 200,
+            "renderTime": 200,
+            "loadTime": 0,
+            "size": 6885,
+            "id": "",
+            "url": "",
+            "tagName": "H1"
+          },
+          "cls": 0,
+          "clicks": [],
+          "keys": [],
+          "observerErrors": []
+        },
+        "dom": {
+          "nodes": 51,
+          "images": 2,
+          "scripts": 2,
+          "stylesheets": 3,
+          "scrollHeight": 844,
+          "viewport": {
+            "width": 390,
+            "height": 844,
+            "dpr": 3
+          },
+          "scrollY": 0,
+          "activeElement": "BODY",
+          "fixedCandidates": [],
+          "htmlInlineOverflow": "",
+          "bodyInlineOverflow": "",
+          "htmlComputedOverflow": "visible",
+          "bodyComputedOverflow": "visible"
+        }
+      },
+      "resourceSummary": {
+        "byType": {},
+        "slowest": []
+      },
+      "perfMetrics": {
+        "Timestamp": 22130.753583,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 4,
+        "Frames": 4,
+        "JSEventListeners": 6,
+        "LayoutObjects": 48,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 383,
+        "Resources": 3,
+        "ContextLifecycleStateObservers": 15,
+        "V8PerContextDatas": 1,
+        "WorkerGlobalScopes": 0,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 4,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 0,
+        "LayoutCount": 3,
+        "RecalcStyleCount": 11,
+        "LayoutDuration": 0.075104,
+        "RecalcStyleDuration": 0.009309,
+        "DevToolsCommandDuration": 0.008602,
+        "ScriptDuration": 0.025382,
+        "V8CompileDuration": 0.008884,
+        "TaskDuration": 0.222829,
+        "TaskOtherDuration": 0.095548,
+        "ThreadTime": 1.212922,
+        "ProcessTime": 1.333526,
+        "JSHeapUsedSize": 1174680,
+        "JSHeapTotalSize": 2621440,
+        "FirstMeaningfulPaint": 22129.537156,
+        "DomContentLoaded": 22129.41109,
+        "NavigationStart": 22129.338962
+      },
+      "networkEvents": [
+        {
+          "url": "data:image/png;base64,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",
+          "type": "Image",
+          "status": 200,
+          "mimeType": "image/png"
+        },
+        {
+          "url": "data:image/png;base64,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",
+          "type": "Image",
+          "status": 200,
+          "mimeType": "image/png"
+        },
+        {
+          "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJAAAACQAQMAAADdiHD7AAAABlBMVEUAAABTU1OoaSf/AAAAAXRSTlMAQObYZgAAAFJJREFUeF7t0cENgDAMQ9FwYgxG6WjpaIzCCAxQxVggFuDiCvlLOeRdHR9yzjncHVoq3npu+wQUrUuJHylSTmBaespJyJQoObUeyxDQb3bEm5Au81c0pSCD8HYAAAAASUVORK5CYII=",
+          "type": "Image",
+          "status": 200,
+          "mimeType": "image/png"
+        }
+      ],
+      "consoleLogs": [],
+      "screenshots": {
+        "domContent": "/Users/malmeida/Documents/Development/portfolio/docs/qa/performance/2026-05-06-portfolio-after-fixes-prod/screenshots/cold-mobile-fast3g-cpu6x-domcontent.png",
+        "afterLoad": null,
+        "ready": "/Users/malmeida/Documents/Development/portfolio/docs/qa/performance/2026-05-06-portfolio-after-fixes-prod/screenshots/cold-mobile-fast3g-cpu6x-ready.png"
+      },
+      "trace": {
+        "file": "/Users/malmeida/Documents/Development/portfolio/docs/qa/performance/2026-05-06-portfolio-after-fixes-prod/traces/cold-mobile-fast3g-cpu6x.json",
+        "summary": {
+          "eventCount": 20578,
+          "longTasks": [
+            {
+              "name": "RunTask",
+              "ms": 88.054,
+              "ts": 22129440096
+            },
+            {
+              "name": "RunTask",
+              "ms": 67.693,
+              "ts": 22129272122
+            },
+            {
+              "name": "RunTask",
+              "ms": 52.419,
+              "ts": 22130359572
+            }
+          ],
+          "byName": {
+            "RunTask": {
+              "count": 4149,
+              "totalMs": 786.3949999999849,
+              "maxMs": 88.054
+            },
+            "UpdateLayoutTree": {
+              "count": 12,
+              "totalMs": 9.370000000000001,
+              "maxMs": 5.858
+            },
+            "Paint": {
+              "count": 11,
+              "totalMs": 7.911,
+              "maxMs": 5.246
+            },
+            "Layout": {
+              "count": 3,
+              "totalMs": 75.081,
+              "maxMs": 74.589
+            },
+            "FunctionCall": {
+              "count": 4,
+              "totalMs": 21.687,
+              "maxMs": 19.469
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "warm-desktop-slow3g-cpu4x",
+      "options": {
+        "path": "/",
+        "viewport": "desktop",
+        "cpu": 4,
+        "network": "slow3g",
+        "disableCache": true,
+        "clearCookies": false,
+        "introSeen": true,
+        "waitIntro": true,
+        "captureReady": true,
+        "afterLoadDelay": 750
+      },
+      "wallMs": 1180,
+      "domContentEventTs": 22131.621924,
+      "loadEventTs": 22131.662298,
+      "timings": {
+        "ttfb": 0.3999999985098839,
+        "domContentLoaded": 49.899999998509884,
+        "load": 90.19999999925494,
+        "fcp": 104,
+        "lcp": 104,
+        "cls": 0,
+        "introReadyMs": 883.1999999992549
+      },
+      "pageSummary": {
+        "url": "chrome-error://chromewebdata/",
+        "title": "127.0.0.1",
+        "now": 1136.2999999970198,
+        "nav": {
+          "name": "http://127.0.0.1:4173/",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 90.19999999925494,
+          "initiatorType": "navigation",
+          "deliveryType": "cache",
+          "nextHopProtocol": "",
+          "renderBlockingStatus": "non-blocking",
+          "contentEncoding": "",
+          "workerStart": 0,
+          "workerRouterEvaluationStart": 0,
+          "workerCacheLookupStart": 0,
+          "workerMatchedSourceType": "",
+          "workerFinalSourceType": "",
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": 0.3999999985098839,
+          "domainLookupStart": 0.3999999985098839,
+          "domainLookupEnd": 0.3999999985098839,
+          "connectStart": 0.3999999985098839,
+          "secureConnectionStart": 0,
+          "connectEnd": 0.3999999985098839,
+          "requestStart": 0.3999999985098839,
+          "responseStart": 0.3999999985098839,
+          "firstInterimResponseStart": 0,
+          "finalResponseHeadersStart": 0,
+          "responseEnd": 26.5,
+          "transferSize": 0,
+          "encodedBodySize": 184521,
+          "decodedBodySize": 184521,
+          "responseStatus": 0,
+          "serverTiming": [],
+          "unloadEventStart": 0,
+          "unloadEventEnd": 0,
+          "domInteractive": 44.79999999701977,
+          "domContentLoadedEventStart": 44.79999999701977,
+          "domContentLoadedEventEnd": 49.899999998509884,
+          "domComplete": 90.09999999776483,
+          "loadEventStart": 90.19999999925494,
+          "loadEventEnd": 90.19999999925494,
+          "type": "navigate",
+          "redirectCount": 0,
+          "activationStart": 0,
+          "criticalCHRestart": 0,
+          "notRestoredReasons": null,
+          "confidence": {
+            "randomizedTriggerRate": 0.4994798,
+            "value": "low"
+          }
+        },
+        "paints": [
+          {
+            "name": "first-paint",
+            "startTime": 104
+          },
+          {
+            "name": "first-contentful-paint",
+            "startTime": 104
+          }
+        ],
+        "resources": [],
+        "qa": {
+          "createdAt": 22.199999999254942,
+          "longTasks": [],
+          "events": [],
+          "paints": [
+            {
+              "name": "first-paint",
+              "startTime": 104
+            },
+            {
+              "name": "first-contentful-paint",
+              "startTime": 104
+            }
+          ],
+          "layoutShifts": [],
+          "lcp": {
+            "startTime": 104,
+            "renderTime": 104,
+            "loadTime": 0,
+            "size": 7560,
+            "id": "",
+            "url": "",
+            "tagName": "H1"
+          },
+          "cls": 0,
+          "clicks": [],
+          "keys": [],
+          "observerErrors": []
+        },
+        "dom": {
+          "nodes": 51,
+          "images": 2,
+          "scripts": 2,
+          "stylesheets": 3,
+          "scrollHeight": 900,
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "dpr": 1
+          },
+          "scrollY": 0,
+          "activeElement": "BODY",
+          "fixedCandidates": [],
+          "htmlInlineOverflow": "",
+          "bodyInlineOverflow": "",
+          "htmlComputedOverflow": "visible",
+          "bodyComputedOverflow": "visible"
+        }
+      },
+      "resourceSummary": {
+        "byType": {},
+        "slowest": []
+      },
+      "perfMetrics": {
+        "Timestamp": 22132.710132,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 4,
+        "Frames": 4,
+        "JSEventListeners": 6,
+        "LayoutObjects": 47,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 374,
+        "Resources": 3,
+        "ContextLifecycleStateObservers": 15,
+        "V8PerContextDatas": 1,
+        "WorkerGlobalScopes": 0,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 4,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 0,
+        "LayoutCount": 1,
+        "RecalcStyleCount": 3,
+        "LayoutDuration": 0.030603,
+        "RecalcStyleDuration": 0.000876,
+        "DevToolsCommandDuration": 0.007861,
+        "ScriptDuration": 0.006964,
+        "V8CompileDuration": 0.005694,
+        "TaskDuration": 0.096911,
+        "TaskOtherDuration": 0.044913,
+        "ThreadTime": 0.876056,
+        "ProcessTime": 0.961387,
+        "JSHeapUsedSize": 1132696,
+        "JSHeapTotalSize": 2621440,
+        "FirstMeaningfulPaint": 22131.674673,
+        "DomContentLoaded": 22131.616908,
+        "NavigationStart": 22131.572104
+      },
+      "networkEvents": [
+        {
+          "url": "data:image/png;base64,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",
+          "type": "Image",
+          "status": 200,
+          "mimeType": "image/png"
+        },
+        {
+          "url": "data:image/png;base64,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",
+          "type": "Image",
+          "status": 200,
+          "mimeType": "image/png"
+        },
+        {
+          "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABIAQMAAABvIyEEAAAABlBMVEUAAABTU1OoaSf/AAAAAXRSTlMAQObYZgAAAENJREFUeF7tzbEJACEQRNGBLeAasBCza2lLEGx0CxFGG9hBMDDxRy/72O9FMnIFapGylsu1fgoBdkXfUHLrQgdfrlJN1BdYBjQQm3UAAAAASUVORK5CYII=",
+          "type": "Image",
+          "status": 200,
+          "mimeType": "image/png"
+        }
+      ],
+      "consoleLogs": [],
+      "screenshots": {
+        "domContent": null,
+        "afterLoad": "/Users/malmeida/Documents/Development/portfolio/docs/qa/performance/2026-05-06-portfolio-after-fixes-prod/screenshots/warm-desktop-slow3g-cpu4x-after-load.png",
+        "ready": null
+      },
+      "trace": null
+    },
+    {
+      "name": "cold-story-direct-normal",
+      "options": {
+        "path": "/story",
+        "viewport": "desktop",
+        "cpu": 1,
+        "network": "none",
+        "disableCache": true,
+        "clearCookies": true,
+        "introSeen": false,
+        "waitIntro": true,
+        "captureDom": true,
+        "captureReadyAfterIntro": true
+      },
+      "wallMs": 870,
+      "domContentEventTs": 22133.369551,
+      "loadEventTs": 22133.378259,
+      "timings": {
+        "ttfb": 0.3999999985098839,
+        "domContentLoaded": 14.199999999254942,
+        "load": 23,
+        "fcp": 28,
+        "lcp": 28,
+        "cls": 0,
+        "introReadyMs": 554.3000000007451
+      },
+      "pageSummary": {
+        "url": "chrome-error://chromewebdata/",
+        "title": "127.0.0.1",
+        "now": 832.5,
+        "nav": {
+          "name": "http://127.0.0.1:4173/story",
+          "entryType": "navigation",
+          "startTime": 0,
+          "duration": 23,
+          "initiatorType": "navigation",
+          "deliveryType": "cache",
+          "nextHopProtocol": "",
+          "renderBlockingStatus": "non-blocking",
+          "contentEncoding": "",
+          "workerStart": 0,
+          "workerRouterEvaluationStart": 0,
+          "workerCacheLookupStart": 0,
+          "workerMatchedSourceType": "",
+          "workerFinalSourceType": "",
+          "redirectStart": 0,
+          "redirectEnd": 0,
+          "fetchStart": 0.3999999985098839,
+          "domainLookupStart": 0.3999999985098839,
+          "domainLookupEnd": 0.3999999985098839,
+          "connectStart": 0.3999999985098839,
+          "secureConnectionStart": 0,
+          "connectEnd": 0.3999999985098839,
+          "requestStart": 0.3999999985098839,
+          "responseStart": 0.3999999985098839,
+          "firstInterimResponseStart": 0,
+          "finalResponseHeadersStart": 0,
+          "responseEnd": 8.300000000745058,
+          "transferSize": 0,
+          "encodedBodySize": 184526,
+          "decodedBodySize": 184526,
+          "responseStatus": 0,
+          "serverTiming": [],
+          "unloadEventStart": 0,
+          "unloadEventEnd": 0,
+          "domInteractive": 12.5,
+          "domContentLoadedEventStart": 12.5,
+          "domContentLoadedEventEnd": 14.199999999254942,
+          "domComplete": 22.899999998509884,
+          "loadEventStart": 23,
+          "loadEventEnd": 23,
+          "type": "navigate",
+          "redirectCount": 0,
+          "activationStart": 0,
+          "criticalCHRestart": 0,
+          "notRestoredReasons": null,
+          "confidence": {
+            "randomizedTriggerRate": 0.4994798,
+            "value": "high"
+          }
+        },
+        "paints": [
+          {
+            "name": "first-paint",
+            "startTime": 28
+          },
+          {
+            "name": "first-contentful-paint",
+            "startTime": 28
+          }
+        ],
+        "resources": [],
+        "qa": {
+          "createdAt": 7.5,
+          "longTasks": [],
+          "events": [],
+          "paints": [
+            {
+              "name": "first-paint",
+              "startTime": 28
+            },
+            {
+              "name": "first-contentful-paint",
+              "startTime": 28
+            }
+          ],
+          "layoutShifts": [],
+          "lcp": {
+            "startTime": 28,
+            "renderTime": 28,
+            "loadTime": 0,
+            "size": 7560,
+            "id": "",
+            "url": "",
+            "tagName": "H1"
+          },
+          "cls": 0,
+          "clicks": [],
+          "keys": [],
+          "observerErrors": []
+        },
+        "dom": {
+          "nodes": 51,
+          "images": 2,
+          "scripts": 2,
+          "stylesheets": 3,
+          "scrollHeight": 900,
+          "viewport": {
+            "width": 1440,
+            "height": 900,
+            "dpr": 1
+          },
+          "scrollY": 0,
+          "activeElement": "BODY",
+          "fixedCandidates": [],
+          "htmlInlineOverflow": "",
+          "bodyInlineOverflow": "",
+          "htmlComputedOverflow": "visible",
+          "bodyComputedOverflow": "visible"
+        }
+      },
+      "resourceSummary": {
+        "byType": {},
+        "slowest": []
+      },
+      "perfMetrics": {
+        "Timestamp": 22134.18908,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 3,
+        "Frames": 2,
+        "JSEventListeners": 6,
+        "LayoutObjects": 46,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 370,
+        "Resources": 3,
+        "ContextLifecycleStateObservers": 14,
+        "V8PerContextDatas": 1,
+        "WorkerGlobalScopes": 0,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 3,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 0,
+        "LayoutCount": 1,
+        "RecalcStyleCount": 4,
+        "LayoutDuration": 0.006645,
+        "RecalcStyleDuration": 0.000704,
+        "DevToolsCommandDuration": 0.001715,
+        "ScriptDuration": 0.002504,
+        "V8CompileDuration": 0.001301,
+        "TaskDuration": 0.020602,
+        "TaskOtherDuration": 0.007733,
+        "ThreadTime": 0.019888,
+        "ProcessTime": 0.089266,
+        "JSHeapUsedSize": 1121940,
+        "JSHeapTotalSize": 2621440,
+        "FirstMeaningfulPaint": 22133.382923,
+        "DomContentLoaded": 22133.367874,
+        "NavigationStart": 22133.355293
+      },
+      "networkEvents": [
+        {
+          "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABNEAAABkBAMAAABayruYAAAAJFBMVEUAAADa2tr/////9/e6urpTU1O5ubn39/f///9ZWVlfX1/z8/O/OctmAAAACXRSTlMA//////////ZO3iNwAAALPElEQVR4AezdwY6bShMF4GP6krX9Bqgk9kiI/SzyAAir9lnlFfL6N26OWhXckDae9mClj/L7L1czMMbfbYDMOCgpKSkpwelyRmIEd6mEhTQpDabvu1C7vsf2ALM6cLlctquVtq2YDwC1jrfHEVDV8fagvln7p7XOlUKVi9SKWrncY5GQnN0DhLuZ1HZJa7WZPemU0GCc6hUMBtVue4BZHeD3v1caTn9KIyiPSimIvjw8SqtDVaQlvKrT2e91JEVUsEilOtGTNkkNUglWnFLX1oDrWSwGSOZ8V91CRczFDnBkWVEaKG0WBISZDPOTeeD2MIZK/Sz4YESUkbxdRhlkTXTrJ74d+aQ1bFRPSRvYjUuLmLOKmNjIch3/fQesGygrHW/SyO2WWzWmSyvSHjpVE1WJSWsIqwJk0agmSmsb39gnzbGKSaOXyJTGKmFSA6vvv/Nh3NQaDpyjPWaCp22mt0+ahkj+LlTzU4tu3Ujjrt4nrZoIq20qlT8brW/4k7S5sQGq73ZJO+M5aawjc5pHRmmYLxMozY/64llp8oAeeaQrMWkir5EGnSPLg8aZ6OaIrJ3n8WsX0lptPCy5ldOiYaT5xro0p9cEaa7nAENd99DOrEzIK0btxOrDSKMl0JeyCgugtr2DSWunmDR2Xy7tdF7c7MgmrfmLNDa7LWmOX9pllzbSDac0UBqrpTQOHOboeQBpIWJOjU3Oq8dItu+pNZRWLaWFBg+nnyBt6FhxIMIrVGxfFqGujcuDj/lkf6S0EeYC9E5aGDiUtAMcPUNkMZ8xl/Oj0qqJ0tomSFs2xDfkaWlOr1FpZzwrzU5qP3jn1px/qeroQUGVDyR2q/hs9X5auSI44T5nLheTJkppdnDpiNJCY1ta3wVQcB2lceBrpH3Dj29F2qdKO50vEWunl0qb6RDUcO0ojQOGYFya6++gnVlRGiubIO1CXgtq+IFPTZF2AeJvBBeT+Ffz8TlpvJnhZTleSTo+NwOB4Iq0QbvPl/btJz41Rdpanpemf5EWbmZQVheXZgei0m7Fp0v7+Ts/APteqI6savX/Y22XCa3NJVlH9qrP092DSROfv3qUOXdt/t8z0iyo3rjplgMJ0ugkemPjHCobnKK3PPiFnNOOL61Iq95cGq89rZ9aQ6l1MKNYhLqi9XKZX79if0EokqNrk9FZwtZj0EJks01pamYztFYaSz7qXmmue5U0f+0Zs0FpWqR9rbSpIqwGFWEpG0Fau1/a4Fn1r5rTskv7pV5aJeYwA4hKli4UjFXmh2LhGho8mujW1yNzlFE+R7QdpDWUNgGoOHmxQWnazP090nr/R/UV0sLfe2ryGVfcZB1Zkms+qLRKhGki0iTkC6VNglmaNKC0KTSCNAhnvf3SOnT5pW3pwlgnzWnLqwOY9ghKE2nDzuQ7laUL81KMtHlYDC9TtpNIY+xJsrTl1pmnD6I8OeNE1gAsGzZgpIGz3pa0fkvaFe7qpfX5pH18fPyj0sKX6SRipTHKiHyJtIrS0Fppk4ANwgvSpNmW5hOXdu078Cab5pP23/cZx9oZV6I0qI5RaVC9SVO+dwyd5OlCNXKHQ9QsTF5qy8nY0zRp0a2nUiPO1bY9O6O0RaO10hpsSHPb0oD80vzP3AKqutSVfD+NITS7JAnrQaWRFeulNA35ImmVzLAgbZBmGySnKdIwJEjDkH1Oe4U0+94JnWTqQlUNNARpd5napTob2QYU33qqNEbifUn+3ahbK0Ga25bm/JzGhTKep+VOTmlFWpMiDcOmtKEbtLs9aNZrz9dIY+z5fKYu1MTc5dDVTBKlliBtsfWUyNpXiG2nSpvENHiJqT1B9To/dIDjQFSa0+ugvV5d32f7G/Yi7d2lAVYaQ0zMFeAgB0jwThrglDYzSMMXSIOPZOnGpW1Tm5pK2qelIS2yeptXGOB5aZ0zNaXZAaqLSKPNIm21W6TRCakMpqY0/8QNlmNcWpfj9wheElEbydxFVBpE1qVhSS2FkOyTlrDsPmlGVxfQXPuO0swAh1gupdHm+0uT3F1EoGWXJjiANCLqezuJMYMZIEGWVhoHcvwW3uupSfYurLRtapPc0iBOTXywFtkpTZBJGvp+CCdmvJIEYwZIkKWRlu932I8vrUjL8KlWhuDwhtLSr+3zdxGDZqnxdi2LBlhSEwlF+qv6XGkQaWZyImmNHZ815HojLfETYFguoeG0+gkwx5ZWpO3Krk+14tVCzk+1ej01kVd0EYHmNf15a2NOw1FLTSBM6qtKjajgYNJ4upb3k/r+TWki7SRr0iYRlX9Kmh/su8yfPvqa8MglqiKpXeGBzXYlaQ2khntpLX9AyEuLsOFWU+XYrSdHcDxpbtAuDGT6ROV/SVollNZULdcd32oSHZ7OcevKvKc0WGmZPiX+ZRFVgaikd3lgW1JLWsOs7F6a/3yLBmvSBBAh5/2vKn/ySztyji8NVZAW1m1CaXNQpL2vNOFDWjcSEUldAxQxaSLSTg3WpBHYQ9IERdpqijQmLi09qkXaYY+eKqndeBLXAFU+RA6gTcKqd7yq40hzFlS3MRCX1uHoKdJqfG2c86AGb6Wbf1b7ejcAx4GINA68c8Jvhqd240lbw3p4hra66vSoLrZ+gAyDhqnLXZUzlB0gwXnAWWl2IH+KtPeOc/3vdCCoWxYDJEhfHVz4LTwzkJKSEmetDN1ygARvA47/7OfQud4OJKWkxFJxCQOh5pP3S0lJSUlJSYmq4sipVcdF/Y4pqcfbnwNHgXFRv2FKagWgOG74D97a+h1Tonw8ZgiLjxo6nxQteV1GzmzK8NlxYkyMz/lAydGmEEVJSe7Mc0dJrY8uPyaedO4PN5I96Zsr+yp9c6ppKwKjSIuurYAZk48wy4xJb7COO2jU3CIXKPsqcV8dMnXaEjuiO76DL9xLZV/Va9+T6oP/LSVN3yO3wMXzRLEnY9lXyUk8dOquw8R4vHNG1T3fmCa90LKv0vfV/+2dQW6jQBBFEascwyqpL9RSiZO0ejvL4QZDbmB8g/hy0zXwRUPZ0QiRDfwnJ5aesstTCdNNm7yAEEJaWXE7ztQQEnRFPM6Q04+orftuwLS64XaUacjpR5Q7KyQuRirMBt0QjzLNmSHyr7TNSVuFOJuPYRjGifsw/GFp+yCtqBHlnemH4XOcKdH9Ymm7IKIT8eYNShvB/X1p3cYY2RlNznSXKI20CgQmrk2PkWZ8U1remtrBqDddukJpRNxHvxDDaqj1w7hwn0pLKbl5lfOL0pIrzZkuX6A00sYqDwy5sBpq/edYMZWWsxWTC3VpaWsK6o12G5NgmhPD0uRlaQFmKu05Pp6FL5TW5ZxRydSMqbQ1BXXGulqbDNOcFtKqqMoM7q5FM6Eq7WGlGShNp5lmoBm0B4MQVwYzbW0STENOS1AJUTQKLsuso2ARiBRnprfKvsbCo7zdUVpeLrLiG5O6vDX22pguw5y0NIKurDIJqorSROyXvU+ljVaaUZeWXFfedMmX5kyXLlAaCXNkWpcWA0JAaV/PbWkp/09pzmjypek1SmNp0ZWmMEtpoytNfUU7zTVLY2nK0sjPlKa+NGFp5AdKc58INE4/LI0cWloUe6E0TDjxpT1YGtmLaEFEcD8NJkiA6S2xmRGlZYBmDjENOftWDtFCrEyU9WrUBFajsIqElaajTEOuVFpQZKDx3Qr7Mozwx4eYhpyXsJR2m4wsGbzeNcQ9t2QHLf7pKjD1SPM7IVka2UUruKshMMGEISyNHMe8mh6lMrhuc88RDCyN7Gba9xhvlYlaBJ/CI8fSBg0qt9pIEYvpkdrdRhpLI57dXw66Mh+/K3haAuEJMOQ88FQrsoO/etICpT2ul1QAAAAASUVORK5CYII=",
+          "type": "Image",
+          "status": 200,
+          "mimeType": "image/png"
+        },
+        {
+          "url": "data:image/png;base64,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",
+          "type": "Image",
+          "status": 200,
+          "mimeType": "image/png"
+        },
+        {
+          "url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABIAQMAAABvIyEEAAAABlBMVEUAAABTU1OoaSf/AAAAAXRSTlMAQObYZgAAAENJREFUeF7tzbEJACEQRNGBLeAasBCza2lLEGx0CxFGG9hBMDDxRy/72O9FMnIFapGylsu1fgoBdkXfUHLrQgdfrlJN1BdYBjQQm3UAAAAASUVORK5CYII=",
+          "type": "Image",
+          "status": 200,
+          "mimeType": "image/png"
+        }
+      ],
+      "consoleLogs": [],
+      "screenshots": {
+        "domContent": "/Users/malmeida/Documents/Development/portfolio/docs/qa/performance/2026-05-06-portfolio-after-fixes-prod/screenshots/cold-story-direct-normal-domcontent.png",
+        "afterLoad": null,
+        "ready": "/Users/malmeida/Documents/Development/portfolio/docs/qa/performance/2026-05-06-portfolio-after-fixes-prod/screenshots/cold-story-direct-normal-ready.png"
+      },
+      "trace": null
+    }
+  ],
+  "interactions": [
+    {
+      "name": "theme-click-desktop",
+      "error": "Theme button not found"
+    },
+    {
+      "name": "view-work-hash-scroll-desktop",
+      "error": "Work nav link not found"
+    },
+    {
+      "name": "contact-input-desktop",
+      "error": "Contact input not found"
+    },
+    {
+      "name": "theme-click-mobile-cpu6x",
+      "error": "Theme button not found"
+    }
+  ],
+  "scroll": [
+    {
+      "name": "scroll-desktop-normal",
+      "durationMs": 3500,
+      "frames": {
+        "count": 454,
+        "max": 16.600000000000136,
+        "avg": 8.351762114537445,
+        "p95": 9.300000000000182,
+        "p99": 9.400000000000091,
+        "over32": 0,
+        "over50": 0,
+        "over100": 0,
+        "scrollEvents": 0,
+        "scrollY": 0
+      }
+    },
+    {
+      "name": "scroll-mobile-cpu6x-fast3g",
+      "durationMs": 3500,
+      "frames": {
+        "count": 450,
+        "max": 9.400000000000546,
+        "avg": 8.333777777777778,
+        "p95": 9.200000000000728,
+        "p99": 9.399999999999977,
+        "over32": 0,
+        "over50": 0,
+        "over100": 0,
+        "scrollEvents": 0,
+        "scrollY": 0
+      }
+    }
+  ],
+  "longSession": [
+    {
+      "name": "idle-home-30s-desktop",
+      "durationMs": 30000,
+      "before": {
+        "Timestamp": 22139.94869,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 3,
+        "Frames": 2,
+        "JSEventListeners": 8,
+        "LayoutObjects": 46,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 370,
+        "Resources": 3,
+        "ContextLifecycleStateObservers": 14,
+        "V8PerContextDatas": 1,
+        "WorkerGlobalScopes": 0,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 3,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 0,
+        "LayoutCount": 1,
+        "RecalcStyleCount": 4,
+        "LayoutDuration": 0.00661,
+        "RecalcStyleDuration": 0.000706,
+        "DevToolsCommandDuration": 0.0026,
+        "ScriptDuration": 0.009441,
+        "V8CompileDuration": 0.001284,
+        "TaskDuration": 0.067721,
+        "TaskOtherDuration": 0.04708,
+        "ThreadTime": 0.075443,
+        "ProcessTime": 0.229919,
+        "JSHeapUsedSize": 1224384,
+        "JSHeapTotalSize": 3407872,
+        "FirstMeaningfulPaint": 22134.834466,
+        "DomContentLoaded": 22134.820487,
+        "NavigationStart": 22134.80792
+      },
+      "after": {
+        "Timestamp": 22169.953591,
+        "AudioHandlers": 0,
+        "AudioWorkletProcessors": 0,
+        "Documents": 3,
+        "Frames": 2,
+        "JSEventListeners": 8,
+        "LayoutObjects": 46,
+        "MediaKeySessions": 0,
+        "MediaKeys": 0,
+        "Nodes": 370,
+        "Resources": 3,
+        "ContextLifecycleStateObservers": 14,
+        "V8PerContextDatas": 1,
+        "WorkerGlobalScopes": 0,
+        "UACSSResources": 0,
+        "RTCPeerConnections": 0,
+        "ResourceFetchers": 3,
+        "AdSubframes": 0,
+        "DetachedScriptStates": 0,
+        "ArrayBufferContents": 0,
+        "LayoutCount": 1,
+        "RecalcStyleCount": 4,
+        "LayoutDuration": 0.00661,
+        "RecalcStyleDuration": 0.000706,
+        "DevToolsCommandDuration": 0.003018,
+        "ScriptDuration": 0.054412,
+        "V8CompileDuration": 0.001284,
+        "TaskDuration": 0.397874,
+        "TaskOtherDuration": 0.331844,
+        "ThreadTime": 0.452767,
+        "ProcessTime": 0.928673,
+        "JSHeapUsedSize": 1389220,
+        "JSHeapTotalSize": 3670016,
+        "FirstMeaningfulPaint": 22134.834466,
+        "DomContentLoaded": 22134.820487,
+        "NavigationStart": 22134.80792
+      },
+      "delta": {
+        "TaskDuration": 0.33015300000000003,
+        "JSHeapUsedSize": 164836,
+        "Nodes": 0,
+        "LayoutCount": 0,
+        "RecalcStyleCount": 0
+      },
+      "mainThreadBusyPct": 1.10051,
+      "frames": {
+        "count": 3600,
+        "max": 16.599999999999454,
+        "avg": 8.334472222222221,
+        "p95": 9.200000000000728,
+        "over50": 0
+      }
+    }
+  ],
+  "artifacts": {
+    "outDir": "/Users/malmeida/Documents/Development/portfolio/docs/qa/performance/2026-05-06-portfolio-after-fixes-prod"
+  }
+}
