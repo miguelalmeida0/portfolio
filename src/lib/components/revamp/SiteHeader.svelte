@@ -232,6 +232,8 @@
     --nav-line: #42433d;
     --nav-frame: #a8a8a8;
     --nav-accent: #f4eadc;
+    /* One place to tune how square the navigation segments read. */
+    --nav-segment-radius: 5px;
 
     position: fixed;
     inset: 0 0 auto;
@@ -265,7 +267,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.12rem;
+    gap: 1px;
     border: 1px solid rgb(244 234 220 / 0.16);
     border-radius: 999px;
     background: rgb(0 0 0 / 0.42);
@@ -283,7 +285,12 @@
     min-width: 102px;
     min-height: 30px;
     border: 0;
-    border-radius: 999px;
+    /*
+     * A small shared radius, not a capsule. Capsules put a rounded end between
+     * every pair of items, so two lit neighbours read as two unrelated lozenges;
+     * a near-square segment inside the rounded container reads as one track.
+     */
+    border-radius: var(--nav-segment-radius);
     background-color: transparent;
     padding: 0 0.9rem;
     font-family: var(--font-display);
@@ -306,14 +313,14 @@
    */
   .top-nav a {
     /*
-     * The fill carries a little of the site's warm accent at its leading edge and
-     * cools to cream — enough that the bar reads as part of this portfolio's palette
-     * rather than a generic grey pill, and far too little to compete with the label.
+     * The fill is the page's own cream at low alpha — of the palette, but neutral:
+     * no hue is pushed at the label. It is brighter at the leading edge and settles
+     * back, which gives the wipe a direction without introducing a second colour.
      */
     background-image: linear-gradient(
       90deg,
-      color-mix(in srgb, var(--accent) 22%, transparent) 0%,
-      rgb(244 234 220 / 0.12) 62%
+      rgb(244 234 220 / 0.155) 0%,
+      rgb(244 234 220 / 0.085) 72%
     );
     background-repeat: no-repeat;
     background-position: left center;
@@ -333,11 +340,15 @@
    * The section you are actually in is a state, not a hover: it is already filled,
    * slightly stronger, and it does not animate on arrival.
    */
+  /*
+   * The section you are actually in is a settled state, so its fill is even rather
+   * than directional — a hover has a leading edge, a state does not — and it never
+   * animates on arrival.
+   */
   .top-nav a.active {
     background-image: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--accent) 30%, transparent) 0%,
-      rgb(244 234 220 / 0.18) 62%
+      rgb(244 234 220 / 0.125),
+      rgb(244 234 220 / 0.125)
     );
     background-size: 100% 100%;
     color: var(--nav-cream);
