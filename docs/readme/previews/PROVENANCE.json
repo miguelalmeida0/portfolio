@@ -1,0 +1,33 @@
+{
+  "note": "Excerpts of retained captures; no recapture or pixel replacement.",
+  "images": [
+    {
+      "source": "docs/readme/current/01-home-desktop.png",
+      "original": [
+        1440,
+        3814
+      ],
+      "excerpt": [
+        1440,
+        900
+      ],
+      "operation": "top viewport crop; no replacement pixels",
+      "source_sha256": "e24523720db6f935ecec1c2ce0f438f8cb86ba59b9a3713ebf13343742716bf4",
+      "output": "docs/readme/previews/desktop-viewport.png"
+    },
+    {
+      "source": "docs/readme/current/90-home-mobile.png",
+      "original": [
+        390,
+        4573
+      ],
+      "excerpt": [
+        390,
+        844
+      ],
+      "operation": "top viewport crop; no replacement pixels",
+      "source_sha256": "67bfa26a601fc44acfd9b689ab43918dcb8f34457326d7e48c098e5f407e802f",
+      "output": "docs/readme/previews/mobile-viewport.png"
+    }
+  ]
+}
