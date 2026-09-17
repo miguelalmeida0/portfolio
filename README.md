@@ -8,7 +8,7 @@
   <img src="./docs/readme/previews/desktop-viewport.png" alt="Portfolio — desktop viewport excerpt" width="960">
 </p>
 
-**Live:** https://github.com/miguelalmeida0/portfolio/deployments
+**Live:** https://miguelalmeida.is-a.dev *(external — leaves GitHub)*
 
 This repository is the engineering layer behind my portfolio. The site is deliberately closer to an editorial product story than a generic project-card grid: the work is presented through interaction, technical decisions, constraints, and verifiable artifacts.
 
@@ -78,16 +78,13 @@ That matters because several projects involve AI, perception, or operational sys
 
 ## Responsive preview
 
-The desktop preview above and the phone excerpt below are shown separately. Each is cropped to one viewport; the original full-page captures are retained.
-
-<details>
-<summary>View the mobile viewport</summary>
+The desktop capture above is one viewport, not a stitched full-page image. The mobile viewport is shown separately at phone scale.
 
 <p align="center">
   <img src="./docs/readme/previews/mobile-viewport.png" alt="Portfolio — mobile viewport excerpt" width="360">
 </p>
 
-</details>
+<p align="center"><sub>Mobile viewport · 390px-class layout</sub></p>
 
 [Capture provenance](./docs/readme/previews/PROVENANCE.json)
 
