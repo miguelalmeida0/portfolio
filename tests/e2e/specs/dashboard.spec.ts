@@ -34,6 +34,17 @@ test.describe('portfolio overview', () => {
     await expect(page.getByRole('link', { name: site.email })).toHaveAttribute('href', /^mailto:/);
   });
 
+  test('Second Voice exposes the live app from the homepage', async ({ page }) => {
+    await gotoReady(page, routes.home);
+
+    const secondVoice = page.locator('[data-project-tile="second-voice-ai"]');
+    await expectLinkTarget(secondVoice.getByRole('link', { name: /Open live app/i }), {
+      href: 'https://secondvoice-ai.vercel.app/second-voice',
+      target: '_blank',
+      relIncludes: 'noopener'
+    });
+  });
+
   test('all project-wall entries are visible and route to real destinations', async ({ page }) => {
     await gotoReady(page, routes.home);
 
