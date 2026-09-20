@@ -10,7 +10,7 @@
   let active = false;
   let surface: HTMLElement;
 
-  $: isSecondVoice = project.id === 'ghostwriter';
+  $: isSecondVoice = project.id === 'second-voice-ai';
 
   /**
    * Hands this tile's frame to the route transition for the navigation that is about
@@ -73,6 +73,20 @@
     {#if project.valueLine}
       <small>{project.valueLine}</small>
     {/if}
+
+    {#if isSecondVoice}
+      <div class="project-actions" aria-label="Second Voice AI links">
+        <a class="action action-secondary" href={project.href}>Case study</a>
+        <a
+          class="action action-primary"
+          href="https://secondvoice-ai.vercel.app/second-voice"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Open live app <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    {/if}
   </div>
 </article>
 
@@ -123,7 +137,8 @@
   }
 
   .surface-link:focus-visible,
-  .title-link:focus-visible {
+  .title-link:focus-visible,
+  .action:focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: -3px;
   }
@@ -197,6 +212,61 @@
     max-width: 48rem;
     color: rgb(244 234 220 / 0.74);
     font-weight: 500;
+  }
+
+  .project-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 0.45rem;
+  }
+
+  .action {
+    display: inline-flex;
+    min-height: 2.8rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    border: 1px solid rgb(244 234 220 / 0.2);
+    border-radius: 999px;
+    padding: 0.68rem 0.95rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+    line-height: 1;
+    transition:
+      background var(--interaction-duration) var(--interaction-ease),
+      border-color var(--interaction-duration) var(--interaction-ease),
+      color var(--interaction-duration) var(--interaction-ease),
+      transform var(--interaction-duration) var(--interaction-ease);
+  }
+
+  .action-secondary {
+    color: rgb(244 234 220 / 0.72);
+    background: transparent;
+  }
+
+  .action-primary {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #090909;
+  }
+
+  .action:hover,
+  .action:focus-visible {
+    transform: translateY(-1px);
+  }
+
+  .action-secondary:hover,
+  .action-secondary:focus-visible {
+    border-color: rgb(244 234 220 / 0.45);
+    color: var(--foreground);
+  }
+
+  .action-primary:hover,
+  .action-primary:focus-visible {
+    background: var(--foreground);
+    border-color: var(--foreground);
+    color: #090909;
   }
 
   .evidence-sequence {
@@ -292,6 +362,19 @@
 
     small {
       color: rgb(244 234 220 / 0.74);
+    }
+
+    .project-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-top: 0.6rem;
+    }
+
+    .action {
+      width: 100%;
+      padding-inline: 0.7rem;
+      font-size: 0.82rem;
     }
   }
 
