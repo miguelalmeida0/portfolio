@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { homepageProjectTiles } from '$lib/content/project-media';
+  import { homepageReleaseProjectTiles } from '$lib/content/homepage-projects-release';
   import { reveal } from '$lib/motion/actions/reveal';
   import MediaProjectTile from './MediaProjectTile.svelte';
 </script>
@@ -15,7 +15,7 @@
     </header>
 
     <div class="work-mosaic">
-      {#each homepageProjectTiles as project}
+      {#each homepageReleaseProjectTiles as project}
         <MediaProjectTile {project} />
       {/each}
     </div>
