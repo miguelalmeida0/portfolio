@@ -116,7 +116,7 @@ export const experienceTeaser: ExperienceTeaserItem[] = [
   },
   {
     years: '2022–now',
-    role: 'Software engineering · Business application build & React migration',
+    role: 'Software engineering · Svelte production frontend + ongoing React delivery',
     company: '',
     responsibility: '',
     proof: []
@@ -193,7 +193,7 @@ export const conversationFlows: ConversationFlow[] = [
 ];
 
 export const cvBio =
-  'Frontend engineer with a product-design background. Built a business application’s frontend from initial mockups through production. The application is now used by hundreds of companies. Later led its migration to React. I work across product design, TypeScript, reusable UI, and AI interfaces.';
+  'Frontend engineer with a product-design background. Built a business application’s original production frontend in Svelte from initial mockups through production. The application is now used by hundreds of companies. Later moved into the React application and continue shipping product features and shared UI architecture there. I work across product design, TypeScript, reusable UI, and AI interfaces.';
 
 export const professionalRecommendation = {
   name: 'Richard Nespithal',
@@ -223,8 +223,8 @@ export const cvHighlights = [
     label: 'production frontend at F24'
   },
   {
-    value: 'React + TS',
-    label: 'product UI and shared frontend patterns'
+    value: 'Svelte + React',
+    label: 'production product UI across both codebases'
   },
   {
     value: 'Mid-level',
@@ -239,8 +239,8 @@ export const cvExperience: CvExperienceEntry[] = [
     company: 'F24',
     location: 'Berlin',
     bullets: [
-      'Built a business application’s frontend from scratch, taking initial mockups and product design through to production. The application is now used by hundreds of companies.',
-      'Migrated the application to React, taking ownership of the frontend transition and shared UI architecture.',
+      'Built the original production frontend in Svelte from scratch, taking initial mockups and product design through to production. The application is now used by hundreds of companies.',
+      'Moved into the React application as the frontend evolved, and continue shipping product features and shared UI architecture in that codebase.',
       'Grew into frontend delivery leadership, coordinating design, product, backend, and QA from early concepts through release.',
       'Led the frontend for F24’s first shared AI service during an internal hackathon, connecting the service to its first end-to-end interface.'
     ]
@@ -260,8 +260,8 @@ export const cvExperience: CvExperienceEntry[] = [
 export const cvStack = [
   'JavaScript',
   'TypeScript',
-  'React',
   'Svelte',
+  'React',
   'Figma',
   'Design systems',
   'Accessibility',
