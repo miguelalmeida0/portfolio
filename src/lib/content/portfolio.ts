@@ -89,7 +89,7 @@ export const portfolio: PortfolioContent = {
       title: 'Platform',
       titleItalic: 'Foundations',
       summary:
-        'Built core product UI from early wireframes to production and shipped scalable interfaces used across enterprise workflows.',
+        'Built the production Svelte UI from early wireframes and shipped scalable interfaces used across enterprise workflows.',
       tags: ['Svelte', 'Architecture', 'Wireframes to production'],
       href: '#experience'
     },
@@ -99,8 +99,8 @@ export const portfolio: PortfolioContent = {
       title: 'Frontend',
       titleItalic: 'Systems',
       summary:
-        'Improving consistency and component architecture across the app with cleaner patterns, better reuse, and more confident shipping.',
-      tags: ['Component systems', 'Design collaboration', 'UI consistency'],
+        'Shipping product features in React while improving shared component architecture, reuse, and UI consistency.',
+      tags: ['React', 'Component systems', 'UI consistency'],
       href: '#experience'
     }
   ],
@@ -133,14 +133,14 @@ export const portfolio: PortfolioContent = {
       title: 'Frontend Engineer',
       company: 'F24',
       place: 'Berlin - Remote',
-      body: 'Scaling frontend systems, improving consistency, and shipping new features.'
+      body: 'Shipping product features in React while improving shared frontend architecture and UI consistency.'
     },
     {
       year: '2022 - 26',
       title: 'Junior Software Engineer',
       company: 'F24',
       place: 'Munich, Germany',
-      body: 'Built the platform from early designs to production and developed reusable UI.'
+      body: 'Built the production platform in Svelte from early designs and developed reusable UI across growing workflows.'
     }
   ],
   contact: {
