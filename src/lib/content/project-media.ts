@@ -383,11 +383,11 @@ export const homepageProjectTiles: ProjectTile[] = [
   {
     id: 'f24-experience',
     title: 'Production frontend at F24',
-    category: 'Professional experience',
+    category: 'Professional frontend · Svelte + React',
     status: '2022 — now · Berlin',
     shortDescription:
-      'I built a business application’s frontend from scratch and later migrated it to React. Hundreds of companies now use the application.',
-    valueLine: 'Frontend lead for the company’s first shared AI service during an internal hackathon.',
+      'I built the original production frontend in Svelte, then moved into the React application, where I continue shipping product features and shared UI architecture. Hundreds of companies use the product.',
+    valueLine: 'Svelte · TypeScript · Tailwind · Playwright · React',
     href: '/story#at-work',
     media: f24Poster
       ? {
