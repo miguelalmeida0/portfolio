@@ -10,12 +10,12 @@
   <title>Miguel Almeida — Frontend Engineer</title>
   <meta
     name="description"
-    content="Frontend engineer in Berlin with production experience at F24 and projects exploring clear, dependable camera and AI interfaces."
+    content="Frontend engineer in Berlin with production Svelte and React experience at F24 and projects exploring clear, dependable camera and AI interfaces."
   />
   <meta property="og:title" content="Miguel Almeida — Frontend Engineer" />
   <meta
     property="og:description"
-    content="Frontend engineer in Berlin with production experience at F24 and projects exploring clear, dependable camera and AI interfaces."
+    content="Frontend engineer in Berlin with production Svelte and React experience at F24 and projects exploring clear, dependable camera and AI interfaces."
   />
 </svelte:head>
 
