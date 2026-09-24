@@ -1,8 +1,12 @@
 # Miguel Almeida Portfolio
 
-An evidence-led portfolio for Miguel Almeida, a frontend engineer working across product UI, design systems, browser architecture, reliability, and experimental multimodal interfaces.
+A Svelte 5 / SvelteKit portfolio for Miguel Almeida, a frontend engineer working across production product UI, design systems, browser architecture, reliability, and experimental multimodal interfaces.
 
-The site is intentionally editorial rather than a generic project grid. Camera Harness is the flagship engineering case study; Ghostwriter, Atlas, Creature App, and Mirror AI provide supporting reliability, architecture, interaction, and evidence stories. F24 appears as factual professional context rather than a fabricated company case study.
+The site is intentionally editorial rather than a generic project grid. Camera Harness is the flagship engineering case study; Ghostwriter, Atlas, Creature App, and Mirror AI provide supporting reliability, architecture, interaction, and evidence stories. F24 appears as factual professional context, including production Svelte work and ongoing React delivery, rather than a fabricated company case study.
+
+## Svelte implementation
+
+This repository is also an inspectable Svelte project, not only a container for portfolio content. The current application uses Svelte 5 components and SvelteKit routing/server endpoints across the homepage, CV, case studies, motion layer, and MiguelLLM interface.
 
 ## Stack
 
