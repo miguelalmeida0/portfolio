@@ -5,7 +5,7 @@ export const careerKnowledge = [
     source: 'CV / Experience timeline',
     tags: ['career', 'f24', 'mid-level', 'software engineer', 'frontend'],
     content:
-      'From 2026 to now, Miguel is listed as Software Engineer (Mid-level) at F24. The CV says he is taking increasing ownership of the design-system layer and shared frontend architecture while shipping product features with stronger attention to reliability and UI consistency.'
+      'From 2026 to now, Miguel is listed as Software Engineer (Mid-level) at F24. The CV says he continues shipping product features in the React application while taking increasing ownership of shared frontend architecture, reliability, and UI consistency.'
   },
   {
     id: 'career-f24-lead-frontend',
@@ -13,15 +13,15 @@ export const careerKnowledge = [
     source: 'CV / Experience timeline',
     tags: ['career', 'f24', 'frontend', 'product lead', 'shipping'],
     content:
-      'From 2023 to 2025, Miguel is listed as Frontend Engineer / Frontend Delivery Lead at F24. The public CV says he helped lead frontend delivery for a product area from early wireframes through production implementation and worked closely with design and product to turn requirements into durable product UI.'
+      'From 2023 to 2025, Miguel is listed as Frontend Engineer / Frontend Delivery Lead at F24. The public CV says he worked on the production Svelte frontend, helped lead delivery from early wireframes through implementation, and worked closely with design and product to turn requirements into durable product UI.'
   },
   {
     id: 'career-f24-frontend',
     title: 'Frontend Engineer, F24',
     source: 'CV / Experience timeline',
-    tags: ['career', 'f24', 'frontend', 'react', 'typescript', 'components'],
+    tags: ['career', 'f24', 'frontend', 'svelte', 'typescript', 'components'],
     content:
-      'From 2022 to 2023, Miguel is listed as Frontend Engineer at F24. The CV says he built and maintained reusable UI in React and TypeScript and established steadier patterns for components, forms, and layout behavior.'
+      'From 2022 to 2023, Miguel is listed as Frontend Engineer at F24. The CV says he built and maintained reusable UI in Svelte and TypeScript and established steadier patterns for components, forms, and layout behavior.'
   },
   {
     id: 'career-freelance',
