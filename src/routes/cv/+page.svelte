@@ -29,7 +29,7 @@
 
 <svelte:head>
   <title>CV — Miguel Almeida · Frontend Engineer</title>
-  <meta name="description" content="Miguel Almeida’s engineering experience, education, and technical focus. Business applications from first mockups to production, React migration, and frontend delivery leadership." />
+  <meta name="description" content="Miguel Almeida’s engineering experience, education, and technical focus. Business applications from first mockups to production, production Svelte experience, ongoing React delivery, and frontend leadership." />
 </svelte:head>
 
 <a class="skip-link" href="#experience">Skip to experience</a>
@@ -62,8 +62,8 @@
           {#if index === 0}
             <div class="delivery-card">
               <div class="delivery-copy">
-                <p>Built a business application’s frontend from scratch, from initial mockups through to production. The application is now used by hundreds of companies.</p>
-                <ul class="role-signals"><li><Users size={23} aria-hidden="true" /><span>From mockups to production</span></li><li><Layers size={23} aria-hidden="true" /><span>React migration</span></li><li><TrendingUp size={23} aria-hidden="true" /><span>Frontend delivery lead</span></li></ul>
+                <p>Built the original production frontend in Svelte from initial mockups through production, then moved into the React application and continue shipping product features there. The application is now used by hundreds of companies.</p>
+                <ul class="role-signals"><li><Users size={23} aria-hidden="true" /><span>From mockups to production</span></li><li><Layers size={23} aria-hidden="true" /><span>Svelte + React delivery</span></li><li><TrendingUp size={23} aria-hidden="true" /><span>Frontend delivery lead</span></li></ul>
               </div>
               <a class="delivery-image" href="/story#hackathon" aria-label="Read about leading the frontend for F24’s first shared AI service"><img src="/projects/f24-ai-hackathon/team-demo-640.webp" srcset="/projects/f24-ai-hackathon/team-demo-640.webp 640w, /projects/f24-ai-hackathon/team-demo-1024.webp 1024w" sizes="(max-width: 800px) 90vw, 45vw" width="1600" height="1000" alt="Miguel and the hackathon team beside the shared AI service demonstration." decoding="async" /><span>Shared AI service · the team<ArrowUpRight size={14} aria-hidden="true" /></span></a>
             </div>
