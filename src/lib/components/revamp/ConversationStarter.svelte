@@ -22,6 +22,7 @@
     </div>
     <footer>
       <a href="/portfolio.pdf" download="miguel-almeida-cv.pdf">Download résumé <span class="motion-arrow" aria-hidden="true">↗</span></a>
+      <span class="build-note">Built with Svelte 5 · SvelteKit · TypeScript · Tailwind</span>
       <MotionToggle />
       <span>Miguel Almeida · Berlin</span>
     </footer>
@@ -55,6 +56,7 @@
   footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; border-top: 1px solid rgb(244 234 220 / 0.2); padding-top: 1.5rem; font-size: 0.9rem; color: rgb(244 234 220 / 0.7); }
   footer a { min-height: 44px; display: flex; align-items: center; }
   footer span { align-self: center; }
+  .build-note { color: rgb(244 234 220 / 0.48); }
   @media (max-width: 850px) { .main { grid-template-columns: 1fr; gap: 2.5rem; padding-bottom: 2.5rem; } .identity img { width: 88px; } }
   @media (max-width: 480px) { h2 { font-size: 2.5rem; } .intro { font-size: 0.95rem; margin-top: 1rem; } footer { font-size: 0.75rem; flex-wrap: wrap; } nav a { gap: 0.7rem; } }
 </style>
