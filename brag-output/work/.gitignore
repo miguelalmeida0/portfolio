@@ -1,0 +1,9 @@
+# Regenerable intermediates (see README.md › Rebuild).
+frames/
+stills/
+poster/
+det-*/
+audio/*.wav
+*.mp4
+*.log
+__pycache__/

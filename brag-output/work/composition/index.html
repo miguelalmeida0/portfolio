@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:," />
+    <title>Miguel Almeida · portfolio film</title>
+    <link rel="stylesheet" href="fonts/fonts.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!--
+      A 1920×1080 stage. Nothing here animates on its own: timeline.js sets every
+      property from the current time, so any frame can be rendered in any order.
+    -->
+    <div id="stage">
+      <!-- The portfolio homepage: hero, then Selected work one viewport below. -->
+      <div id="page">
+        <section id="hero">
+          <div id="portraitWrap">
+            <img id="portrait" src="/static/images/miguel-hero-1451.webp" alt="" />
+          </div>
+          <div id="heroText">
+            <h1 id="headline">
+              <span class="line">I’m Miguel, a frontend</span>
+              <span class="line">engineer building multimodal</span>
+              <span class="line">and computer-vision systems.</span>
+            </h1>
+            <p id="focus">Frontend &amp; design engineering for elite products.<br /><span>React, TypeScript, and Svelte.</span></p>
+            <span id="heroRule"></span>
+            <div id="heroActions">
+              <span class="pill primary" id="btnExplore">Explore my work</span>
+              <span class="pill">View résumé</span>
+              <span class="pill"><svg viewBox="0 0 24 24" class="icon"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" /><path d="M20 2v4" /><path d="M22 4h-4" /><circle cx="4" cy="20" r="2" /></svg>Ask MiguelLLM</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="work">
+          <header id="workHeader">
+            <h2 id="workTitle">Selected work</h2>
+            <p id="workLede">Production frontend and independent systems built around clear feedback, visible state, and human control.</p>
+            <span id="workRule"></span>
+          </header>
+          <div id="tiles">
+            <article class="tile" data-tile="sv">
+              <div class="surface"><img src="/brag-output/work/frames/secondvoice/f0064.jpg" alt="" /></div>
+              <div class="meta">AI rewriting product</div>
+              <h3>Second Voice AI <span class="arrow">↗</span></h3>
+            </article>
+            <article class="tile" data-tile="vigia">
+              <div class="surface"><img src="assets/vigia/overview.png" alt="" /></div>
+              <div class="meta">Crisis intelligence system</div>
+              <h3>VIGIA <span class="arrow">↗</span></h3>
+            </article>
+            <article class="tile" data-tile="camera">
+              <div class="surface"><img src="/static/projects/camera-harness/recognition-poster-1600.webp" alt="" class="cover-top" /></div>
+              <div class="meta">Independent research prototype</div>
+              <h3>Camera Harness <span class="arrow">↗</span></h3>
+            </article>
+            <article class="tile" data-tile="f24">
+              <div class="surface"><img src="/static/projects/f24-ai-hackathon/presentation-room-1024.webp" alt="" /></div>
+              <div class="meta">Professional frontend · Svelte + React</div>
+              <h3>Production frontend at F24 <span class="arrow">↗</span></h3>
+            </article>
+            <article class="tile" data-tile="mirror">
+              <div class="surface"><img src="/static/projects/mirror-ai/active-image-demo-poster.jpg" alt="" /></div>
+              <div class="meta">Visual selection interface</div>
+              <h3>Mirror AI <span class="arrow">↗</span></h3>
+            </article>
+          </div>
+        </section>
+      </div>
+
+      <nav id="siteNav"><span>Work</span><span>Story</span><span>CV</span><span>Contact</span></nav>
+
+      <!-- Camera Harness chrome and recognition labels for the opening. -->
+      <div id="slit"></div>
+      <div id="hookChrome">
+        <div class="ch-pill camera-on" id="chCameraOn"><svg viewBox="0 0 24 24" class="icon"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5" /><rect x="2" y="6" width="14" height="12" rx="2" /></svg>Camera on</div>
+        <div class="ch-pill status" id="chStatus">Automatic vision active</div>
+        <div class="ch-pill live" id="chLive"><i></i>LIVE</div>
+      </div>
+      <div id="labels">
+        <div class="vlabel" id="L1">
+          <div class="chip"><span class="state from">Identifying…</span><span class="state to">Miguel Almeida&nbsp;✓</span></div>
+          <i class="anchor"></i>
+        </div>
+        <div class="vlabel" id="L2">
+          <div class="chip"><span class="state from">Possible Engineer</span><span class="state to">Frontend engineer&nbsp;✓</span></div>
+          <i class="anchor"></i>
+        </div>
+        <div class="vlabel" id="L3">
+          <div class="chip"><span class="state from">Identifying…</span><span class="state to">React · TypeScript · Svelte&nbsp;✓</span></div>
+          <i class="anchor"></i>
+        </div>
+      </div>
+
+      <!-- Project chapters: one text column, one shared media frame. -->
+      <div id="projects">
+        <div class="ptext" id="pt-sv">
+          <div class="idx"><span class="digit">01</span><span class="of">/ 05</span></div>
+          <div class="eyebrow">AI rewriting product</div>
+          <h2 class="ptitle">Second Voice AI</h2>
+          <span class="prule"></span>
+          <p class="claim">Rewrite anything with <i class="sv-voice">Tolkien</i> as author.</p>
+        </div>
+        <div class="ptext" id="pt-mirror">
+          <div class="idx"><span class="digit">02</span><span class="of">/ 05</span></div>
+          <div class="eyebrow">Visual selection interface</div>
+          <h2 class="ptitle">Mirror AI</h2>
+          <span class="prule"></span>
+          <p class="claim">Point to what you want to understand.</p>
+        </div>
+        <div class="ptext" id="pt-camera">
+          <div class="idx"><span class="digit">03</span><span class="of">/ 05</span></div>
+          <div class="eyebrow">Browser media · applied AI</div>
+          <h2 class="ptitle">Camera Harness</h2>
+          <span class="prule"></span>
+          <p class="claim">A live camera as an interactive companion.</p>
+        </div>
+        <div class="ptext" id="pt-vigia">
+          <div class="idx"><span class="digit">04</span><span class="of">/ 05</span></div>
+          <div class="eyebrow">Crisis intelligence · Portugal</div>
+          <h2 class="ptitle">VIGIA</h2>
+          <span class="prule"></span>
+          <p class="claim">Incidents, routes, facilities: one usable picture.</p>
+        </div>
+
+        <div id="pFrame">
+          <div class="pmedia" id="pm-sv"><img id="svFilm" alt="" /></div>
+          <!-- Second Voice's live-rewrite panel, re-set at video size from the recorded film. -->
+          <div class="pmedia" id="pm-svclose">
+            <div class="sv-panel">
+              <div class="sv-head"><span class="sv-title">Live rewrite</span><span class="sv-mood">52% MYTHIC · STARLIT</span></div>
+              <div class="sv-sub">The rewrite is happening in front of you, cut by cut.</div>
+              <div class="sv-card"><p id="svDiff"></p></div>
+            </div>
+          </div>
+          <div class="pmedia" id="pm-mirror"><img id="mirrorFilm" alt="" /></div>
+          <div class="pmedia" id="pm-camera"><img id="cameraShot" src="/static/projects/camera-harness/gesture-1600.webp" alt="" /></div>
+          <div class="pmedia" id="pm-vigia">
+            <img id="vigiaA" src="assets/vigia/overview.png" alt="" />
+            <img id="vigiaB" src="assets/vigia/respond.png" alt="" />
+          </div>
+          <div class="pmedia" id="pm-f24"><img id="f24Photo" src="/static/projects/f24-ai-hackathon/presentation-room.png" alt="" /></div>
+          <div id="irisRing"></div>
+        </div>
+
+        <!-- The Camera Harness result panel, rebuilt from the product's copy. -->
+        <div id="chCard">
+          <div class="kicker">NEEDS CONFIRMATION</div>
+          <div class="sentence" id="chSentence"></div>
+          <div class="hint">Confirm the sentence or try again.</div>
+          <div class="conf">PEACE SIGN · CONFIDENCE 0.86</div>
+          <div class="buttons"><span class="b dark">Try another movement</span><span class="b">Speak result</span><span class="b">Confirm</span></div>
+        </div>
+      </div>
+
+      <!-- Production at F24. -->
+      <div id="f24">
+        <div id="f24Scrim"></div>
+        <div id="f24Text">
+          <div class="eyebrow">Production frontend · F24 · 2022 — now</div>
+          <h2>
+            <span class="line">Built from scratch.</span>
+            <span class="line">Used by <em>hundreds</em></span>
+            <span class="line"><em>of companies.</em></span>
+          </h2>
+        </div>
+        <div id="f24Caption">Demo · F24’s first shared AI service</div>
+      </div>
+
+      <!-- Thesis and recap. -->
+      <div id="thesis">
+        <h2 id="thesisLine"></h2>
+        <div id="recap">
+          <div class="rtile" data-r="sv"><img src="/brag-output/work/frames/secondvoice/f0120.jpg" alt="" /></div>
+          <div class="rtile" data-r="mirror"><img src="/brag-output/work/frames/mirror/f0075.jpg" alt="" /></div>
+          <div class="rtile" data-r="camera"><img src="/static/projects/camera-harness/gesture-720.webp" alt="" class="cam-crop" /></div>
+          <div class="rtile" data-r="vigia"><img src="assets/vigia/overview.png" alt="" /></div>
+          <div class="rtile" data-r="f24"><img src="/static/projects/f24-ai-hackathon/presentation-room-1024.webp" alt="" /></div>
+        </div>
+      </div>
+
+      <!-- End card: the name set behind the portrait. -->
+      <div id="endcard">
+        <div id="endGlow"></div>
+        <div id="endName"></div>
+        <img id="endPortrait" src="assets/miguel-cutout.png" alt="" />
+        <div id="endFoot">
+          <div id="endRole">Frontend Engineer <b>·</b> Berlin</div>
+          <div id="endUrl" class="pill primary">miguelalmeida.is-a.dev <svg viewBox="0 0 24 24" class="icon arrow-icon"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></div>
+        </div>
+      </div>
+
+      <div id="cursor"><svg viewBox="0 0 28 40" width="28" height="40"><path d="M2 2 L2 31 L9.5 24.5 L14.6 36.4 L19.4 34.3 L14.4 22.8 L24.2 22.8 Z" fill="#fff" stroke="#111" stroke-width="2" stroke-linejoin="round" /></svg></div>
+      <div id="vignette"></div>
+    </div>
+    <script src="timeline.js"></script>
+  </body>
+</html>

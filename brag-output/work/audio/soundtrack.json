@@ -1,0 +1,121 @@
+{
+  "duration_s": 25.0,
+  "bpm": 96,
+  "key": "D major",
+  "integrated_lufs": -14.0,
+  "true_peak_dbtp": -1.26,
+  "cues": [
+    {
+      "t": 0.0,
+      "label": "slit"
+    },
+    {
+      "t": 0.12,
+      "label": "aperture opens"
+    },
+    {
+      "t": 0.3125,
+      "label": "label appears"
+    },
+    {
+      "t": 0.625,
+      "label": "label confirmed"
+    },
+    {
+      "t": 0.7812,
+      "label": "label appears"
+    },
+    {
+      "t": 1.0938,
+      "label": "label confirmed"
+    },
+    {
+      "t": 1.25,
+      "label": "label appears"
+    },
+    {
+      "t": 1.27,
+      "label": "riser"
+    },
+    {
+      "t": 1.5625,
+      "label": "label confirmed"
+    },
+    {
+      "t": 2.5,
+      "label": "drop: hero"
+    },
+    {
+      "t": 5.9375,
+      "label": "click: Explore my work"
+    },
+    {
+      "t": 6.22,
+      "label": "scroll"
+    },
+    {
+      "t": 7.36,
+      "label": "chapter: Second Voice"
+    },
+    {
+      "t": 8.125,
+      "label": "click: Rewrite as Tolkien"
+    },
+    {
+      "t": 8.75,
+      "label": "rewrite begins"
+    },
+    {
+      "t": 9.9,
+      "label": "chapter: Mirror AI"
+    },
+    {
+      "t": 10.625,
+      "label": "contour selected"
+    },
+    {
+      "t": 11.125,
+      "label": "inspector opens"
+    },
+    {
+      "t": 12.5,
+      "label": "chapter: Camera Harness (iris)"
+    },
+    {
+      "t": 12.8125,
+      "label": "result: needs confirmation"
+    },
+    {
+      "t": 14.85,
+      "label": "chapter: VIGIA"
+    },
+    {
+      "t": 16.25,
+      "label": "cut: event response"
+    },
+    {
+      "t": 17.5,
+      "label": "lift: F24"
+    },
+    {
+      "t": 19.94,
+      "label": "breakdown: thesis"
+    },
+    {
+      "t": 20.97,
+      "label": "riser"
+    },
+    {
+      "t": 22.5,
+      "label": "final hit: end card"
+    },
+    {
+      "t": 22.5,
+      "label": "logo chime"
+    },
+    {
+      "t": 23.66,
+      "label": "url arrow steps"
+    }
+  ]
+}
