@@ -45,6 +45,14 @@ npm run qa:capture-revamp
 
 `qa:capture-revamp` expects the production preview on port `4173` and writes the revamp screenshots and before/after comparisons under `docs/qa/screenshots/portfolio-content-revamp-2026-09-05/`.
 
+## Hero Animation
+
+The homepage uses `@shadergradient/react` for slow red folds drawn from the existing hero palette. A lazy React island owns only the decorative WebGL canvas; routing, content, and interactions remain Svelte. The preset lives in `src/lib/graphics/hero-gradient/preset.ts`, and the colours live beside the existing tokens in `src/app.css`.
+
+`HeroGradient.svelte` follows the shared motion policy. It skips the renderer for reduced motion and Save-Data, pauses GPU rendering offscreen or in a hidden tab, and releases the canvas on navigation. A static red/black composition remains available during loading, without JavaScript, or after a WebGL failure. The renderer adds approximately 340 KB gzip, deferred until after the hero's initial paint; it uses local lighting without external HDR assets.
+
+`tests/e2e/specs/hero-gradient.spec.ts` covers moving frames, offscreen GPU suspension, the persisted motion preference, Save-Data, context loss, and the mobile layout. Run it with `npm run e2e -- hero-gradient.spec.ts`.
+
 ## Project Structure
 
 ```text

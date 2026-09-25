@@ -6,6 +6,7 @@
   import { pointerDepth } from '$lib/motion/actions/pointerDepth';
   import type { MiguelLLMMode } from '$lib/miguel-llm/types';
   import HeroPortrait from './HeroPortrait.svelte';
+  import HeroGradient from './HeroGradient.svelte';
 
   let drawerOpen = false;
   let drawerMode: MiguelLLMMode = 'recruiter';
@@ -27,7 +28,8 @@
   });
 </script>
 
-<section id="top" class="hero-section" aria-labelledby="hero-title">
+<section id="top" class="hero-section relative isolate" aria-labelledby="hero-title">
+  <HeroGradient />
   <div class="hero-stage">
     <div class="hero-content">
       <h1 id="hero-title">
@@ -48,7 +50,7 @@
       </div>
     </div>
 
-    <div class="portrait-wrap" use:pointerDepth>
+    <div class="portrait-wrap [mask-image:radial-gradient(ellipse_48%_70%_at_50%_50%,#000_50%,transparent_90%)]" use:pointerDepth>
       <HeroPortrait />
     </div>
   </div>

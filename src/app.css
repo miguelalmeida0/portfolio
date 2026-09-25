@@ -41,6 +41,9 @@ html {
 }
 
 :root {
+  --hero-black: #000000;
+  --hero-red: #e91f2d;
+  --hero-gradient-shadow: #240408;
   --text-page: clamp(2rem, 3.2vw, 3rem);
   --text-section: clamp(1.5rem, 2vw, 2rem);
   --text-card: clamp(1.2rem, 1.5vw, 1.5rem);
