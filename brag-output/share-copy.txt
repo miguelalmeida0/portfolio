@@ -1,0 +1,1 @@
+I build the systems around AI: request ownership, spending controls, and inspectable evidence. Here are 25 seconds of the work: Second Voice AI, Mirror AI, Camera Harness, VIGIA, and the production frontend I built from scratch at F24, now used by hundreds of companies. Frontend engineer in Berlin: miguelalmeida.is-a.dev
