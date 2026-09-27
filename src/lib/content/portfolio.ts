@@ -23,7 +23,7 @@ export const portfolio: PortfolioContent = {
     location: 'Berlin, Germany',
     availability: '2022 to Present',
     journalMark: "est. 2026",
-    portraitSrc: '/miguel-almeida-portrait.png',
+    portraitSrc: '/images/miguel-original.webp',
     portraitAlt: 'Portrait of Miguel Almeida.',
     linkedinHref: 'https://www.linkedin.com/in/miguelalmeida1/',
     primaryCta: {

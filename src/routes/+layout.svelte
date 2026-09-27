@@ -1,5 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { afterNavigate } from '$app/navigation';
+  import { installSmoothScroll, syncScrollPosition } from '$lib/motion/smooth-scroll';
   import { page } from '$app/stores';
   import { initMotionPolicy } from '$lib/motion/policy';
   import { installRouteTransitions } from '$lib/motion/routeTransition';
@@ -10,6 +12,11 @@
     SITE_ORIGIN
   } from '$lib/config/site';
   import '../app.css';
+  import 'lenis/dist/lenis.css';
+  import BookmarkScrollbar from '$lib/components/experience/BookmarkScrollbar.svelte';
+  import Header from '$lib/components/experience/Header.svelte';
+  import Contact from '$lib/components/experience/Contact.svelte';
+  import PixelIntroduction from '$lib/components/experience/PixelIntroduction.svelte';
 
   const personStructuredData = JSON.stringify({
     '@context': 'https://schema.org',
@@ -31,7 +38,12 @@
   // `onNavigate` has to be registered while the layout initialises.
   installRouteTransitions();
 
-  onMount(() => initMotionPolicy());
+  afterNavigate(() => syncScrollPosition());
+  onMount(() => {
+    const disposePolicy = initMotionPolicy();
+    const disposeScroll = installSmoothScroll();
+    return () => { disposeScroll(); disposePolicy(); };
+  });
 </script>
 
 <svelte:head>
@@ -48,4 +60,12 @@
   {@html `<script type="application/ld+json">${personStructuredData}</script>`}
 </svelte:head>
 
-<slot />
+{#if $page.url.pathname === '/'}<PixelIntroduction />{/if}
+<div id="portfolio-content">
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded focus:bg-plum focus:px-5 focus:py-3 focus:text-white">Skip to content</a>
+  <Header />
+  <main id="main"><slot /></main>
+  <Contact />
+</div>
+
+<BookmarkScrollbar />

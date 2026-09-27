@@ -4,22 +4,23 @@
   "version": "0.1.0",
   "type": "module",
   "engines": {
-    "node": ">=20.0.0"
+    "node": "^22.12.0 || >=24.0.0"
   },
   "scripts": {
-    "dev": "vite dev --host 127.0.0.1 --port 3010 --strictPort",
+    "dev": "vite dev --host 0.0.0.0 --port 4173 --strictPort",
     "prepare": "svelte-kit sync",
     "build": "vite build",
     "lint": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "e2e": "mkdir -p .cache/tmp .cache/ms-playwright && TMPDIR=$PWD/.cache/tmp PLAYWRIGHT_BROWSERS_PATH=$PWD/.cache/ms-playwright playwright test",
-    "e2e:against-server": "mkdir -p .cache/tmp .cache/ms-playwright && TMPDIR=$PWD/.cache/tmp PLAYWRIGHT_BROWSERS_PATH=$PWD/.cache/ms-playwright PLAYWRIGHT_SKIP_WEB_SERVER=1 playwright test",
-    "e2e:install": "mkdir -p .cache/tmp .cache/ms-playwright && TMPDIR=$PWD/.cache/tmp PLAYWRIGHT_BROWSERS_PATH=$PWD/.cache/ms-playwright playwright install chromium",
+    "e2e": "npm run e2e:install && mkdir -p .cache/tmp && TMPDIR=$PWD/.cache/tmp playwright test",
+    "e2e:against-server": "npm run e2e:install && mkdir -p .cache/tmp && TMPDIR=$PWD/.cache/tmp PLAYWRIGHT_SKIP_WEB_SERVER=1 playwright test",
+    "e2e:install": "playwright install chromium firefox webkit",
     "e2e:report": "playwright show-report",
-    "e2e:ui": "mkdir -p .cache/tmp && TMPDIR=$PWD/.cache/tmp playwright test --ui",
-    "qa:capture-revamp": "PLAYWRIGHT_BROWSERS_PATH=$PWD/.cache/ms-playwright node scripts/capture-content-revamp-qa.mjs",
+    "e2e:ui": "npm run e2e:install && mkdir -p .cache/tmp && TMPDIR=$PWD/.cache/tmp playwright test --ui",
+    "qa:capture-revamp": "node scripts/capture-content-revamp-qa.mjs",
     "preview": "npm run build && npm run start",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "start": "wrangler pages dev .svelte-kit/cloudflare --ip 127.0.0.1 --port 4173 --log-level error --show-interactive-dev-session=false"
+    "start": "wrangler pages dev .svelte-kit/cloudflare --ip 127.0.0.1 --port 4173 --log-level error --show-interactive-dev-session=false",
+    "test:unit": "node --test tests/unit/*.test.mjs"
   },
   "devDependencies": {
     "@lucide/svelte": "^1.28.0",
@@ -35,6 +36,11 @@
     "tailwindcss": "^4.1.13",
     "typescript": "^5.8.3",
     "vite": "^8.2.2",
-    "wrangler": "^4.129.0"
+    "wrangler": "^4.137.0"
+  },
+  "dependencies": {
+    "gsap": "3.15.0",
+    "lenis": "^1.3.26",
+    "motion": "^13.4.4"
   }
 }

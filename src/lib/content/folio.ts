@@ -31,8 +31,8 @@ export const hero: HeroContent = {
   subtitle: 'MID-LEVEL FRONTEND ENGINEER',
   intro: 'Mid-level Frontend Engineer',
   primaryCta: {
-    label: 'Read Camera Harness',
-    href: '/work/camera-harness'
+    label: 'Try Second Voice AI',
+    href: '/work/second-voice-ai'
   },
   secondaryCta: {
     label: 'Read the resume',
@@ -64,24 +64,9 @@ export const heroStats = [
 ];
 
 export const selectedWork: SelectedWorkItem[] = [
-  {
-    title: 'Camera Harness',
-    tagline: 'Browser lifecycle controls that reject late camera responses after a session ends.',
-    meta: '2026 — Independent research prototype',
-    href: '/work/camera-harness'
-  },
-  {
-    title: 'Ghostwriter',
-    tagline: 'An expressive rewriting interface with budget reservation, explicit request state, and deliberate sharing.',
-    meta: '2026 — Independent product',
-    href: '/work/ghostwriter'
-  },
-  {
-    title: 'Mirror AI',
-    tagline: 'An image-selection flow that keeps the chosen object visible while its details open.',
-    meta: '2026 — Independent prototype',
-    href: '/work/mirror-ai'
-  }
+  { title: 'Second Voice AI', tagline: 'Literary rewriting with explicit request state, clear edits and budget safeguards.', meta: '2026 · Independent product', href: '/work/second-voice-ai' },
+  { title: 'VIGIA', tagline: 'An operational interface connecting incidents, infrastructure and planning context.', meta: '2026 · Independent system', href: '/work/vigia' },
+  { title: 'Mirror AI', tagline: 'An image-selection flow that keeps the chosen object visible while its details open.', meta: '2026 · Independent prototype', href: '/work/mirror-ai' }
 ];
 
 export const approach: ApproachItem[] = [
@@ -193,7 +178,7 @@ export const conversationFlows: ConversationFlow[] = [
 ];
 
 export const cvBio =
-  'Frontend engineer with a product-design background. Built a business application’s original production frontend in Svelte from initial mockups through production. The application is now used by hundreds of companies. Later moved into the React application and continue shipping product features and shared UI architecture there. I work across product design, TypeScript, reusable UI, and AI interfaces.';
+  'Frontend engineer with a product-design background. Built a business application’s original production frontend in Svelte from initial mockups through production, then continued product delivery in React with the wider team. The application is now used by hundreds of companies. I work across product design, TypeScript, reusable UI, and AI interfaces.';
 
 export const professionalRecommendation = {
   name: 'Richard Nespithal',
@@ -235,7 +220,7 @@ export const cvHighlights = [
 export const cvExperience: CvExperienceEntry[] = [
   {
     years: '2022 — now',
-    role: 'Software Engineer · Frontend delivery lead',
+    role: 'Software Engineer · Frontend',
     company: 'F24',
     location: 'Berlin',
     bullets: [

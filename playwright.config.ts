@@ -46,7 +46,7 @@ export default defineConfig({
     : undefined,
   projects: [
     {
-      name: 'chromium',
+      name: 'chromium-desktop',
       use: {
         ...devices['Desktop Chrome'],
         launchOptions: chromiumExecutablePath
@@ -55,6 +55,34 @@ export default defineConfig({
             }
           : undefined,
         viewport: { width: 1440, height: 1000 }
+      }
+    },
+    {
+      name: 'firefox-desktop',
+      use: {
+        ...devices['Desktop Firefox'],
+        viewport: { width: 1440, height: 1000 }
+      }
+    },
+    {
+      name: 'webkit-desktop',
+      use: {
+        ...devices['Desktop Safari'],
+        viewport: { width: 1440, height: 1000 }
+      }
+    },
+    {
+      name: 'chromium-mobile',
+      use: {
+        ...devices['Pixel 7'],
+        viewport: { width: 390, height: 844 }
+      }
+    },
+    {
+      name: 'webkit-mobile',
+      use: {
+        ...devices['iPhone 13'],
+        viewport: { width: 390, height: 844 }
       }
     }
   ]

@@ -388,6 +388,7 @@
     inset: 0;
     border: 0;
     background: rgb(6 3 2 / 0.5);
+    -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
     cursor: pointer;
   }

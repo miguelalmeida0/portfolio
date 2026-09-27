@@ -1,15 +1,5 @@
-import { createPortfolioPdf } from '$lib/server/pdf';
+import { redirect } from '@sveltejs/kit';
 
-export const GET = async () => {
-  const pdf = createPortfolioPdf();
-  const bytes = Buffer.from(pdf);
-  const body = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
-
-  return new Response(body, {
-    headers: {
-      'content-type': 'application/pdf',
-      'content-disposition': 'inline; filename="miguel-almeida-cv.pdf"',
-      'cache-control': 'no-cache'
-    }
-  });
-};
+// The searchable, font-embedded PDF is generated from the shared CV content.
+// Run `node scripts/generate-cv.mjs` after changing that content.
+export const GET = () => redirect(307, '/files/miguel-almeida-cv.pdf');

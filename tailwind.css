@@ -1,4 +1,10 @@
 @theme {
+  --font-folio-wordmark: "Roboto Condensed", "Arial Narrow", sans-serif;
+  --color-folio-paper: #e7edc8;
+  --color-folio-ink: #183c31;
+  --color-folio-plum: #54213f;
+  --color-folio-black: #080909;
+  --color-folio-blue: #a3dfff;
   /* Colors */
   --color-just-black: #0e100f;
   --color-surface-cream: #fffce1;

@@ -16,8 +16,6 @@ const MAX_OUTPUT_TOKENS = 420;
 const MAX_SHORT_ANSWER_CHARS = 360;
 const MAX_BULLET_CHARS = 220;
 const MAX_SUGGESTION_CHARS = 100;
-const DEFAULT_CEREBRAS_MODEL = 'gpt-oss-120b';
-const DEFAULT_OPENAI_MODEL = 'gpt-4o-mini';
 const LOCAL_FALLBACK_MODEL = 'deterministic-local-fallback';
 const CEREBRAS_OPENAI_COMPATIBLE_URL = 'https://api.cerebras.ai/v1/chat/completions';
 const OPENAI_RESPONSES_URL = 'https://api.openai.com/v1/responses';
@@ -107,30 +105,28 @@ function clampText(value: string, maxLength: number) {
 
 function selectedProvider(): MiguelLLMProvider {
   const configuredProvider = (env.MIGUEL_LLM_PROVIDER || 'auto').toLowerCase();
+  const hasRemoteModel = Boolean(env.MIGUEL_LLM_MODEL?.trim());
 
   if (configuredProvider === 'local' || configuredProvider === 'local-fallback') {
     return 'local-fallback';
   }
 
   if (configuredProvider === 'cerebras') {
-    if (env.CEREBRAS_API_KEY) return 'cerebras';
-    if (env.OPENAI_API_KEY) return 'openai';
-    return 'local-fallback';
+    return env.CEREBRAS_API_KEY && hasRemoteModel ? 'cerebras' : 'local-fallback';
   }
 
   if (configuredProvider === 'openai') {
-    return env.OPENAI_API_KEY ? 'openai' : 'local-fallback';
+    return env.OPENAI_API_KEY && hasRemoteModel ? 'openai' : 'local-fallback';
   }
 
-  if (env.CEREBRAS_API_KEY) return 'cerebras';
-  if (env.OPENAI_API_KEY) return 'openai';
+  if (env.CEREBRAS_API_KEY && hasRemoteModel) return 'cerebras';
+  if (env.OPENAI_API_KEY && hasRemoteModel) return 'openai';
   return 'local-fallback';
 }
 
 function resolvedModel(provider: MiguelLLMProvider) {
-  if (provider === 'cerebras') return env.MIGUEL_LLM_MODEL || DEFAULT_CEREBRAS_MODEL;
-  if (provider === 'openai') return env.MIGUEL_LLM_MODEL || DEFAULT_OPENAI_MODEL;
-  return LOCAL_FALLBACK_MODEL;
+  if (provider === 'local-fallback') return LOCAL_FALLBACK_MODEL;
+  return env.MIGUEL_LLM_MODEL?.trim() || LOCAL_FALLBACK_MODEL;
 }
 
 function buildProviderInput(

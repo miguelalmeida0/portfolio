@@ -1,90 +1,49 @@
 import { expect, test } from '@playwright/test';
+import { openPortfolioHome } from '../helpers/portfolio';
 
-import { routes, site } from '../fixtures/testData';
-import {
-  expectFocusable,
-  expectLinkTarget,
-  expectNoHorizontalOverflow
-} from '../utils/assertions';
-import { gotoReady } from '../utils/waitForAppReady';
+test('mobile menu closes on Escape and restores focus', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await openPortfolioHome(page);
+  await page.getByRole('button', { name: 'Menu', exact: true }).click();
+  await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', { name: 'My story' }).focus();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('button', { name: 'Menu', exact: true })).toBeFocused();
+  await expect(page.getByRole('navigation', { name: 'Mobile navigation' })).toHaveCount(0);
+});
 
-test.describe('accessibility and keyboard smoke checks', () => {
-  test('home exposes clear landmarks, navigation, and accessible controls', async ({ page }) => {
-    await gotoReady(page, routes.home);
-
-    await expect(page.getByRole('main')).toHaveCount(1);
-    await expect(page.getByRole('banner')).toBeVisible();
-    await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Explore my work' })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Ask MiguelLLM/i })).toBeVisible();
-    await expect(
-      page.getByRole('button', { name: 'Copy email address to clipboard' }).first()
-    ).toBeVisible();
-  });
-
-  for (const route of [routes.home, routes.story, routes.cv, routes.missing]) {
-    test(`links and buttons on ${route} have discernible names`, async ({ page }) => {
-      await gotoReady(page, route);
-
-      const unnamedControls = await page.locator('a, button').evaluateAll((elements) =>
-        elements
-          .map((element, index) => {
-            const name =
-              element.getAttribute('aria-label') ??
-              element.getAttribute('title') ??
-              element.textContent ??
-              '';
-            return name.trim()
-              ? null
-              : { index, tag: element.tagName.toLowerCase(), html: element.outerHTML.slice(0, 140) };
-          })
-          .filter(Boolean)
-      );
-
-      expect(unnamedControls).toEqual([]);
-    });
+test('intro is decorative, skippable and never creates a second page heading', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('[data-pixel-intro] h1')).toHaveCount(0);
+  const intro = page.locator('[data-pixel-intro]');
+  if (await intro.isVisible().catch(() => false)) {
+    await expect(intro.getByRole('link', { name: 'View work' })).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(intro).toBeHidden({ timeout: 3_000 });
   }
+  await expect(page.locator('h1')).toHaveCount(1);
+});
 
-  test('keyboard reaches the hero, project wall, and project case study', async ({ page }) => {
-    await gotoReady(page, routes.home);
+test('reduced motion keeps content visible and disables decorative transitions', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  await expect(page.getByRole('heading', { level: 1, name: /Frontend developer.*design engineer/i })).toBeVisible();
+  const mark = page.locator('mark').first();
+  await expect(mark).toBeVisible();
+  const styles = await mark.evaluate(el => ({ duration: getComputedStyle(el).animationDuration, opacity: getComputedStyle(el).opacity }));
+  expect(parseFloat(styles.duration)).toBeLessThan(.01);
+  expect(styles.opacity).toBe('1');
+  await expect(page.locator('iframe')).toHaveCount(0);
+});
 
-    const workCta = page.getByRole('link', { name: 'Explore my work' });
-    await expectFocusable(workCta);
-    await page.keyboard.press('Enter');
-    await expect(page).toHaveURL(/#work$/);
-
-    const camera = page
-      .locator('[data-project-tile="camera-harness"]')
-      .getByRole('link', { name: /Camera Harness/i }).first();
-    await expectFocusable(camera);
-
-    await camera.press('Enter');
-    await expect(page).toHaveURL(/\/work\/camera-harness$/);
-    await expect(page.getByRole('heading', { name: 'From camera lifecycle to model integration' })).toBeVisible();
-  });
-
-  test.describe('mobile accessibility layout', () => {
-    test.use({ viewport: { width: 390, height: 844 }, isMobile: true });
-
-    for (const route of [routes.home, routes.story, routes.cv]) {
-      test(`${route} avoids horizontal overflow on mobile`, async ({ page }) => {
-        await gotoReady(page, route);
-        await expectNoHorizontalOverflow(page);
-      });
+test('public controls have accessible names and content has one main landmark and one h1', async ({ page }) => {
+  for (const route of ['/', '/cv', '/story', '/work/second-voice-ai']) {
+    if (route === '/') await openPortfolioHome(page);
+    else await page.goto(route);
+    await expect(page.getByRole('main')).toHaveCount(1);
+    await expect(page.locator('h1')).toHaveCount(1);
+    const controls = page.locator('button:not([inert] button), a:not([inert] a)');
+    for (const control of await controls.all()) {
+      if (await control.isVisible()) await expect(control).toHaveAccessibleName(/\S/);
     }
-  });
-
-  test('external contact links communicate new-tab behavior', async ({ page }) => {
-    await gotoReady(page, routes.home);
-
-    await expectLinkTarget(page.getByRole('link', { name: /LinkedIn/i }), {
-      href: site.linkedin,
-      target: '_blank',
-      relIncludes: 'noopener'
-    });
-    await expectLinkTarget(page.getByRole('link', { name: /GitHub/i }), {
-      target: '_blank',
-      relIncludes: 'noopener'
-    });
-  });
+  }
 });

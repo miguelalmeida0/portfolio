@@ -15,7 +15,7 @@ for (const [input, output, widths] of assets) {
     console.log(`${file}: ${Math.round((await stat(file)).size / 1024)} KB`);
   }
 }
-const avatar = '/Users/malmeida/Downloads/ChatGPT Image Sep 7, 2026, 12_42_47 PM.png';
+const avatar = 'static/miguel-almeida-portrait.png';
 for (const size of [32, 180, 192, 512]) {
   await sharp(avatar).resize(size, size).png().toFile(`static/images/avatar-${size}.png`);
 }

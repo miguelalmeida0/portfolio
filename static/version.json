@@ -1,0 +1,11 @@
+{
+  "build": "2026.09.27-cross-browser-v5",
+  "portrait": "high-resolution transparent restoration from original reference",
+  "rewritePlayback": true,
+  "f24Media": true,
+  "f24MediaKind": "hackathon photograph only",
+  "f24ProductMedia": false,
+  "identityMotion": "GSAP SplitText + Flip, every fresh homepage load, interruptible",
+  "footerLinks": "compact, vertically centered",
+  "crossBrowserQA": "Chromium + Firefox + WebKit, desktop + mobile"
+}

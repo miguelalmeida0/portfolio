@@ -386,7 +386,7 @@ export const homepageProjectTiles: ProjectTile[] = [
     category: 'Professional frontend · Svelte + React',
     status: '2022 — now · Berlin',
     shortDescription:
-      'I built the original production frontend in Svelte, then moved into the React application, where I continue shipping product features and shared UI architecture. Hundreds of companies use the product.',
+      'Built the original production frontend in Svelte, then continued in the React application through product features and shared UI architecture with the wider team. Hundreds of companies use the product.',
     valueLine: 'Svelte · TypeScript · Tailwind · Playwright · React',
     href: '/story#at-work',
     media: f24Poster

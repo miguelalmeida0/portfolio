@@ -37,7 +37,7 @@ export function buildFallbackAnswer(question: string, mode: MiguelLLMMode, _rece
       [site.email], ['Résumé & download|/cv', 'Contact Miguel|/#contact'], ['What did Miguel personally build?', 'What kind of role fits Miguel?']);
   }
   if (/connectivity|\bf24\b|production (frontend |work |experience)|\b(current employer|work history|professional experience)\b/.test(q)) {
-    return make('Miguel built a business application’s frontend from initial mockups through production, then migrated it to React. The application is now used by hundreds of companies.',
+    return make('At F24, the original Svelte frontend moved from initial mockups through production as part of the wider product team. Miguel’s frontend contribution later continued in the React application. The application is now used by hundreds of companies.',
       [cvExperience[0].bullets[2], 'The company-adoption figure describes the application, not a claim that Miguel alone created its business impact.'],
       ['Production experience|/cv#experience', 'F24 work|/story#at-work'], ['What did Miguel personally build?', 'What does his previous team lead say?', 'What kind of role fits Miguel?']);
   }
@@ -51,7 +51,7 @@ export function buildFallbackAnswer(question: string, mode: MiguelLLMMode, _rece
       ['Résumé & experience|/cv', 'Selected work|/#work'], ['What did Miguel personally build?', 'Which project should I start with?']);
   }
   if (/\b(personally|ownership|own|built|build)\b/.test(q) && !resolveProject(question, projectSlug)) {
-    return make('Miguel took the frontend of a business application from mockups and design through implementation, then migrated it to React. His independent projects cover camera lifecycle, a writing interface, and image-selection interactions.',
+    return make('At F24, Miguel’s frontend contribution spans the original Svelte implementation and later React delivery with product, design, backend and QA. His independent projects cover camera lifecycle, a writing interface, and image-selection interactions.',
       ['At F24, he worked with product, design, backend, and QA; frontend ownership is distinct from sole ownership of the whole product.'],
       ['Experience|/cv#experience', 'Camera contribution|/work/camera-harness#contribution', 'Mirror contribution|/work/mirror-ai#contribution']);
   }
