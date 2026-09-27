@@ -1,0 +1,80 @@
+name: Intro live diagnosis
+on:
+  pull_request:
+    branches: [portfolio]
+permissions:
+  contents: read
+jobs:
+  live-entry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Observe production first visit and background-tab activation
+        run: |
+          cat > /tmp/intro-live-probe.mjs <<'JS'
+          import { chromium } from '${{ github.workspace }}/node_modules/playwright/index.mjs';
+          const browser = await chromium.launch({ headless: false });
+          const urls = ['https://miguelalmeida.is-a.dev/', 'https://miguelalmeida-portfolio.pages.dev/'];
+          async function instrument(context) {
+            await context.addInitScript(() => {
+              window.entryProbe = {events: [], stages: [], shortcuts: 0};
+              for (const type of ['wheel','keydown','touchstart','touchmove','visibilitychange','pageshow','resize','scroll']) {
+                (type === 'visibilitychange' ? document : window).addEventListener(type, e => {
+                  window.entryProbe.events.push({type, at: Math.round(performance.now()), trusted: e.isTrusted, key: e.key, deltaY:e.deltaY, y: scrollY, hidden: document.hidden});
+                }, {capture: true, passive:true});
+              }
+              new MutationObserver(records => {
+                for (const r of records) {
+                  if (r.type === 'attributes' && r.target instanceof HTMLElement) {
+                    window.entryProbe.stages.push({at: Math.round(performance.now()), attribute:r.attributeName, value:r.target.getAttribute(r.attributeName), hidden:document.hidden});
+                  }
+                  for (const n of r.addedNodes) if (n instanceof Element && n.matches('[data-shortcut-stairs]')) window.entryProbe.shortcuts++;
+                }
+              }).observe(document,{subtree:true,childList:true,attributes:true,attributeFilter:['data-stage','data-presentation']});
+            });
+          }
+          async function snapshot(page,label) {
+            console.log('ENTRY_PROBE '+JSON.stringify({label,url:page.url(),...await page.evaluate(() => ({title:document.title,build:document.querySelector('meta[name="portfolio-build"]')?.content,root:{...document.documentElement.dataset},stage:document.querySelector('[data-pixel-intro]')?.getAttribute('data-stage'),hidden:document.hidden,prerendering:document.prerendering,scrollY,heading:document.querySelector('h1')?.textContent,inert:document.querySelector('#portfolio-content')?.inert,trace:window.entryProbe}))}));
+          }
+          for (const url of urls) {
+            const context = await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'no-preference'});
+            await instrument(context);
+            const page = await context.newPage();
+            page.on('pageerror', error => console.log('PAGE_ERROR '+JSON.stringify({url,error:error.message})));
+            try {
+              const response = await page.goto(url,{waitUntil:'domcontentloaded',timeout:25000});
+              const html = await response.text();
+              console.log('DOCUMENT '+JSON.stringify({url,status:response.status(),headers:await response.allHeaders(),hasTrustedGuard:html.includes('!event.isTrusted'),scripts:[...html.matchAll(/(?:src|import)\s*(?:=|\()\s*["']([^"']+\.js)/g)].map(m=>m[1])}));
+              await snapshot(page,'fresh');
+              await page.waitForTimeout(1600);
+              await snapshot(page,'fresh+1600ms');
+              await page.waitForTimeout(5600);
+              await snapshot(page,'fresh-complete');
+            } catch(error) {console.log('NAVIGATION_ERROR '+JSON.stringify({url,error:String(error)}));}
+            await context.close();
+          }
+          const context = await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'no-preference'});
+          await instrument(context);
+          const background = await context.newPage();
+          const foreground = await context.newPage();
+          await foreground.goto('about:blank');
+          await foreground.bringToFront();
+          await background.goto(urls[0],{waitUntil:'domcontentloaded',timeout:25000});
+          await snapshot(background,'background-start');
+          await background.waitForTimeout(8000);
+          await snapshot(background,'background-after-eight-seconds');
+          await background.bringToFront();
+          await snapshot(background,'activated-no-input');
+          await background.waitForTimeout(1300);
+          await snapshot(background,'activated+1300ms');
+          await context.close();
+          await browser.close();
+          JS
+          xvfb-run -a node /tmp/intro-live-probe.mjs
