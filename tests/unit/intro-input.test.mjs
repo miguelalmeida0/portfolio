@@ -97,18 +97,21 @@ test('a single-finger swipe needs movement, not merely contact or a pinch', t =>
 function boot(options = {}) {
   const root = { dataset: {} };
   const window = eventTarget();
+  const document = { ...eventTarget(), documentElement: root, querySelector: () => null,
+    hidden: Boolean(options.hidden), prerendering: Boolean(options.prerendering) };
   const history = { scrollRestoration: 'auto' };
   const timers = [];
   window.scrollTo = () => {};
   vm.runInNewContext(bootstrap, {
-    window, history, document: { documentElement: root, querySelector: () => null },
+    window, history, document,
     location: { pathname: '/', hash: '', ...options.location },
     localStorage: { getItem: () => null }, navigator: {},
     matchMedia: () => ({ matches: Boolean(options.reduced) }),
     performance: { now: () => 10, getEntriesByType: () => [{ type: options.type ?? 'navigate' }] },
-    setTimeout: (fn, ms) => { timers.push({ fn, ms }); }
+    setTimeout: (fn, ms) => { const timer = { fn, ms, cancelled: false }; timers.push(timer); return timer; },
+    clearTimeout: timer => { if (timer) timer.cancelled = true; }
   });
-  return { root, window, history, timers };
+  return { root, window, document, history, timers };
 }
 
 test('pre-hydration startup ignores synthetic events and unrelated clicks', () => {
@@ -123,9 +126,38 @@ test('pre-hydration startup ignores synthetic events and unrelated clicks', () =
 
 test('a stalled bundle still releases the introduction without a shortcut', () => {
   const { root, history, timers } = boot();
-  timers.find(timer => timer.ms === 6000).fn();
+  timers.find(timer => timer.ms === 6000 && !timer.cancelled).fn();
   assert.equal(root.dataset.presentation, 'complete');
   assert.equal(history.scrollRestoration, 'auto');
+});
+
+for (const options of [{ hidden: true }, { prerendering: true }]) {
+  test(`pre-hydration timeout is not armed during ${options.hidden ? 'a hidden tab' : 'prerendering'}`, () => {
+    const { root, document, timers } = boot(options);
+    assert.equal(root.dataset.presentation, 'pending');
+    assert.equal(timers.length, 0);
+    document.hidden = false;
+    document.prerendering = false;
+    document.emit('visibilitychange');
+    assert.equal(timers.filter(timer => timer.ms === 6000 && !timer.cancelled).length, 1);
+    assert.equal(root.dataset.presentation, 'pending');
+  });
+}
+
+test('hiding cancels the bootstrap timeout and hydration removes lifecycle listeners', () => {
+  const { root, document, timers, window } = boot();
+  const initialTimer = timers.find(timer => timer.ms === 6000);
+  document.hidden = true;
+  document.emit('visibilitychange');
+  assert.equal(initialTimer.cancelled, true);
+  // Even an already-queued timer cannot complete the intro in a hidden document.
+  initialTimer.fn();
+  assert.equal(root.dataset.presentation, 'pending');
+  root.dataset.introHydrated = 'true';
+  document.hidden = false;
+  document.emit('visibilitychange');
+  assert.equal([...document.listeners.values(), ...window.listeners.values()].some(set => set.size), false);
+  assert.equal(timers.some(timer => !timer.cancelled), false);
 });
 
 for (const [name, options] of [ ['deep link', { location: { hash: '#work' } }], ['history navigation', { type: 'back_forward' }], ['reduced motion', { reduced: true }] ]) {
