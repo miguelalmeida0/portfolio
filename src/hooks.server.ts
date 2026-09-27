@@ -21,13 +21,12 @@ export const handle: Handle = async ({ event, resolve }) => {
     headers.set('strict-transport-security', 'max-age=31536000; includeSubDomains; preload');
   }
 
-  const contentType = headers.get('content-type') ?? '';
-  const isHtml = contentType.includes('text/html');
-
-  if (dev && isHtml) {
-    headers.set('cache-control', 'no-store');
-  } else if (event.request.method === 'GET' && isHtml && !headers.has('cache-control')) {
-    headers.set('cache-control', 'public, max-age=60, stale-while-revalidate=86400');
+  const isHtml = (headers.get('content-type') ?? '').includes('text/html');
+  if (isHtml) {
+    // Revalidate the entry document before reuse; stale HTML can select an old
+    // animation bundle on navigation while a refresh selects the fixed release.
+    // Fingerprinted scripts, styles and other static assets keep their own cache policy.
+    headers.set('cache-control', dev ? 'no-store' : 'no-cache, max-age=0, must-revalidate');
   }
 
   return new Response(response.body, {

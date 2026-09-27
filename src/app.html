@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="portfolio-build" content="2026.09.27-cross-browser-v5" />
+    <meta name="portfolio-build" content="2026.09.27-intro-visible-v7" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#edf0df" />
     <meta name="color-scheme" content="light" />
@@ -12,12 +12,7 @@
     <link rel="preload" as="image" href="%sveltekit.assets%/images/avatar-192.png" />
     %sveltekit.head%
     <script>
-      /*
-       * Resolves the motion policy before the first paint so the opening sequence
-       * never flashes its final state first. `src/lib/motion/policy.ts` owns the
-       * value from hydration onwards; without JavaScript no attribute is set and
-       * every surface simply renders its finished composition.
-       */
+      /* Resolve motion before first paint; the hydrated policy owns it afterwards. */
       (function () {
         try {
           var stored = null;
@@ -38,9 +33,20 @@
             history.scrollRestoration = 'manual';
             window.scrollTo(0, 0);
             var inputs = ['wheel', 'touchmove', 'keydown', 'click'];
+            var visibilityEvents = ['visibilitychange', 'prerenderingchange'];
+            var failSafe;
             var started = 0;
             var lastInput = 0;
-            var cleanup = function () { inputs.forEach(function (type) { window.removeEventListener(type, settle, true); }); };
+            var cleanup = function () {
+              clearTimeout(failSafe);
+              inputs.forEach(function (type) { window.removeEventListener(type, settle, true); });
+              visibilityEvents.forEach(function (type) { document.removeEventListener(type, visibility); });
+            };
+            var visibility = function () {
+              clearTimeout(failSafe);
+              if (root.dataset.introHydrated || root.dataset.presentation !== 'pending') { cleanup(); return; }
+              if (!document.hidden && !document.prerendering) failSafe = setTimeout(function () { settle(); }, 6000);
+            };
             var release = function () {
               var now = performance.now();
               if (now - started >= 1800 || (now - started >= 700 && now - lastInput >= 180)) cleanup();
@@ -48,6 +54,7 @@
             };
             var settle = function (event) {
               if (root.dataset.introHydrated) { cleanup(); return; }
+              if (document.hidden || document.prerendering) { visibility(); return; }
               // Only deliberate input can skip before hydration; script events are not gestures.
               if (event && !event.isTrusted) return;
               if (event?.type === 'click' && (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey ||
@@ -80,8 +87,9 @@
               if (!started) cleanup();
             };
             inputs.forEach(function (type) { window.addEventListener(type, settle, { passive: false, capture: true }); });
-            /* A stalled bundle must never leave an opening screen in the way. */
-            setTimeout(settle, 6000);
+            visibilityEvents.forEach(function (type) { document.addEventListener(type, visibility); });
+            /* A stalled bundle fails open after visible time, never during prerender. */
+            visibility();
           }
         } catch (e) {
           /* A failed probe leaves the finished, unanimated composition in place. */
