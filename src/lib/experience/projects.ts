@@ -44,7 +44,7 @@ export const projects: Project[] = [
     summary: 'Read a passage. Find the gap. Return to the exact source.',
     role: 'Product design, native iOS engineering & learning systems', period: 'Independent product · 2026',
     stack: ['SwiftUI', 'PDFKit', 'Swift', 'ONNX Runtime', 'Kokoro-82M'],
-    image: '/projects/leu/leu-native-poster.svg', alt: 'Leu native iOS product loop showing the Library, source selection, diagnosis, feedback, Teach It Back and exact source return.',
+    image: '/projects/leu/leu-loop-poster.jpg', alt: 'Leu native iOS product loop showing the Library, source selection, diagnosis, feedback, Teach It Back and exact source return.',
     caption: '28-second native iOS product loop: Library → passage → diagnosis → feedback → Teach It Back → exact source return.', video: '/projects/leu/leu-loop-web.mp4',
     problem: 'Reading a PDF is not the same as understanding it. Generic AI explanations can drift away from the source, while quiz flows often test recall without helping the learner repair the exact gap.',
     contribution: 'I designed and engineered the native learning loop around source ownership: select a passage, answer a grounded diagnostic question, receive specific feedback, clarify or go harder, return to the exact source, then Teach It Back. The iOS app also includes an in-process neural narration system with source-following highlights and explicit playback state.',
