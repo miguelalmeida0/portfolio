@@ -6,6 +6,22 @@ export type ProjectSystem = {
 };
 
 export const projectSystems: Record<string, ProjectSystem> = {
+  leu: {
+    summary: 'The native reader owns source selection and exact return. A shared learning core owns session state, while a separate voice provider generates neural audio entirely in-process on the device.',
+    flow: [
+      { name: 'Read', detail: 'Select an exact passage in the native PDF reader.' },
+      { name: 'Diagnose', detail: 'Ask a source-grounded question and capture the learner answer.' },
+      { name: 'Repair', detail: 'Give specific feedback, clarification or a harder follow-up.' },
+      { name: 'Teach back', detail: 'Return to the source, explain it, and preserve the completed trace.' }
+    ],
+    tools: [
+      { area: 'Native interface', names: 'SwiftUI · PDFKit · Swift', purpose: 'Keep reading, selection, source return and learning state inside a native iOS experience.' },
+      { area: 'Learning core', names: 'ShelfCore · source anchors · persisted session state', purpose: 'Preserve document identity, exact source ranges, drafts, feedback and Teach It Back transitions.' },
+      { area: 'Neural voice', names: 'Kokoro-82M · ONNX Runtime · AVAudioEngine', purpose: 'Generate narration on-device, time-stretch playback without pitch shift, and map playback state back to the active source.' },
+      { area: 'Verification', names: 'XCTest · XCUITest · iOS Simulator', purpose: 'Exercise cancellation, stale-result suppression, source ownership, selected-passage playback and the learning Listen journey.' }
+    ],
+    quality: 'A stale or cancelled speech result cannot start after a newer request or Stop. Voice preference persists across relaunch, playback itself does not, and narration marks are transient rather than saved as source annotations.'
+  },
   'second-voice-ai': {
     summary: 'The browser owns the writing experience. The server owns validation, provider access and the spending decision. A durable operation key connects a request to its result.',
     flow: [

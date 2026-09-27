@@ -9,7 +9,24 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    slug: 'second-voice-ai', name: 'Second Voice AI', category: 'Product design & frontend', type: 'Personal project', number: '01',
+    slug: 'leu', name: 'Leu', category: 'Native AI learning', type: 'Personal project', number: '01',
+    summary: 'Read a passage. Find the gap. Return to the exact source.',
+    role: 'Product design, native iOS engineering & learning systems', period: 'Independent product · 2026',
+    stack: ['SwiftUI', 'PDFKit', 'Swift', 'ONNX Runtime', 'Kokoro-82M'],
+    image: '/projects/leu/leu-native-poster.svg', alt: 'Editorial Leu cover showing a warm paper reading surface with a highlighted source passage and compact playback controls.',
+    caption: 'Leu. Editorial case-study cover based on the native reader direction.',
+    problem: 'Reading a PDF is not the same as understanding it. Generic AI explanations can drift away from the source, while quiz flows often test recall without helping the learner repair the exact gap.',
+    contribution: 'I designed and engineered the native learning loop around source ownership: select a passage, answer a grounded diagnostic question, receive specific feedback, clarify or go harder, return to the exact source, then Teach It Back. The iOS app also includes an in-process neural narration system with source-following highlights and explicit playback state.',
+    outcome: 'A native SwiftUI/PDFKit learning product with source-linked sessions, exact source return, persistent learning state and on-device neural narration. The current Kokoro build completed more than 2.8 minutes of continuous native playback in iOS Simulator, and its generated clips were listening-reviewed before this case study was published.',
+    limitation: 'Physical-iPhone performance, peak memory and energy use, a full VoiceOver/Reduce Motion pass, production-PDF validation on the new Simulator, and TestFlight signing remain release work.',
+    decisions: [
+      { title: 'Never detach the answer from the source.', detail: 'Selections preserve document identity and exact text ranges through questioning, feedback and source return. The learner can always get back to the passage that triggered the session.', tradeoff: 'The product carries more source-state than a conventional chat or quiz flow, but that state is what makes the learning trace inspectable.' },
+      { title: 'Diagnose, repair, then ask for explanation.', detail: 'A session can move from a diagnostic answer into specific feedback, clarification, a harder follow-up and Teach It Back instead of ending at correct or incorrect.', tradeoff: 'The state machine is more involved than a card carousel, but each transition has a distinct learning job.' },
+      { title: 'Keep neural voice inside the app.', detail: 'Kokoro-82M runs through native ONNX Runtime and AVAudioEngine. Narration follows the active source, pause softens the mark, Stop clears it, and stale generation cannot begin playing after replacement or cancellation.', tradeoff: 'Bundled model assets and runtime memory are meaningful costs, so physical-device performance still needs release validation.' }
+    ]
+  },
+  {
+    slug: 'second-voice-ai', name: 'Second Voice AI', category: 'Product design & frontend', type: 'Personal project', number: '02',
     summary: 'Choose a literary voice. See exactly what changes.',
     role: 'Product design, frontend & server orchestration', period: 'Independent product · 2026',
     stack: ['Next.js', 'React', 'TypeScript', 'Supabase', 'Groq'],
@@ -27,7 +44,7 @@ export const projects: Project[] = [
     ]
   },
   {
-    slug: 'f24', name: 'F24', category: 'Production frontend', type: 'Professional work', number: '02',
+    slug: 'f24', name: 'F24', category: 'Production frontend', type: 'Professional work', number: '03',
     summary: 'Four years of frontend delivery across Svelte and React.',
     role: 'Original Svelte implementation · product UI · React feature delivery', period: 'F24 · 2022–2026',
     stack: ['Svelte', 'React', 'TypeScript', 'Docker', 'GitLab CI'],
@@ -40,7 +57,7 @@ export const projects: Project[] = [
     decisions: []
   },
   {
-    slug: 'vigia', name: 'VIGIA', category: 'Crisis intelligence', type: 'Personal project', number: '03',
+    slug: 'vigia', name: 'VIGIA', category: 'Crisis intelligence', type: 'Personal project', number: '04',
     summary: 'An operational picture that connects incidents to the decisions around them.',
     role: 'Product strategy, interaction design & frontend systems', period: 'Independent system · Portugal first',
     stack: ['Node.js', 'PostGIS', 'MapLibre', 'OSRM', 'Docker'],
@@ -58,7 +75,7 @@ export const projects: Project[] = [
     ]
   },
   {
-    slug: 'mirror-ai', name: 'Mirror AI', category: 'Visual selection', type: 'Personal project', number: '04',
+    slug: 'mirror-ai', name: 'Mirror AI', category: 'Visual selection', type: 'Personal project', number: '05',
     summary: 'Point to something. Keep the selected object in context.',
     role: 'Interaction design, frontend & local model integration', period: 'Independent prototype · 2026',
     stack: ['TypeScript', 'Vite', 'Web Workers', 'IndexedDB', 'Ollama'],

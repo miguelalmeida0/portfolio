@@ -9,13 +9,14 @@
   import { onDestroy, tick } from 'svelte';
   import { PROJECT_TRANSITION_MS, scrollToPosition } from '$lib/motion/smooth-scroll';
   import { workSignature } from '$lib/motion/signature';
-  let active = $state<string | null>('second-voice-ai');
+  let active = $state<string | null>('leu');
   let cancelAnchor: (() => void) | undefined;
   onDestroy(() => cancelAnchor?.());
   let selection = 0;
 
   function projectMeta(project: (typeof projects)[number]) {
     const metadata: Record<string, string> = {
+      leu: 'Native learning · iOS & AI systems · 2026',
       'second-voice-ai': 'Literary rewriting · design & frontend · 2026',
       f24: 'Product frontend · design engineering · 2022–2026',
       vigia: 'Crisis intelligence · product & frontend · 2026',
@@ -60,7 +61,7 @@
       </h2>
       <div data-project-panel id={'project-content-'+project.slug} aria-labelledby={'project-trigger-'+project.slug} inert={!open} aria-hidden={!open} style:transition-duration={`${PROJECT_TRANSITION_MS}ms`} class="grid transition-[grid-template-rows,opacity] ease-[cubic-bezier(.37,0,.63,1)] {open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}">
         <div class="min-h-0 overflow-clip">
-          {#if index===0}
+          {#if project.slug === 'second-voice-ai'}
             <div class="mb-5 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 sm:pl-12">
               <p class="font-serif text-lg leading-snug">One passage. Four voices. Compare the changes.</p>
               <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
