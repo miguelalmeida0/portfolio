@@ -48,6 +48,10 @@
             };
             var settle = function (event) {
               if (root.dataset.introHydrated) { cleanup(); return; }
+              // Only deliberate input can skip before hydration; script events are not gestures.
+              if (event && !event.isTrusted) return;
+              if (event?.type === 'click' && (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey ||
+                  !event.target?.closest?.('[data-intro-exit]'))) return;
               if (event && (root.dataset.presentation === 'pending' || started) &&
                   (event.type === 'wheel' && !event.ctrlKey && Math.abs(event.deltaY) > Math.abs(event.deltaX) || event.type === 'touchmove' && event.touches.length === 1 ||
                    event.type === 'keydown' && !event.metaKey && !event.ctrlKey && !event.altKey && ['ArrowDown','ArrowUp','PageDown','PageUp','Home','End',' '].includes(event.key))) {
