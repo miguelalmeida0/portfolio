@@ -38,7 +38,9 @@ export function pixelIntroduction(node: HTMLElement) {
   let deadline: ReturnType<typeof setTimeout> | undefined;
   let unsubscribe = () => {};
   const hadInert = site.inert;
-  const width = window.innerWidth;
+  // Block focus/interaction behind the overlay, including while its bundle loads.
+  site.inert = true;
+  const positionEvents = ['scroll', 'resize', 'pageshow', 'load'] as const;
   const lifecycleEvents = ['popstate', 'pagehide'] as const;
   const finish = () => {
     if (done) return;
@@ -59,8 +61,7 @@ export function pixelIntroduction(node: HTMLElement) {
     releaseScroll();
     window.removeEventListener('keydown', keydown, true);
 
-    window.removeEventListener('resize', resize);
-    window.removeEventListener('scroll', scroll);
+    positionEvents.forEach(type => window.removeEventListener(type, pinStart));
     node.removeEventListener('click', exit);
     document.removeEventListener('visibilitychange', visibility);
     unsubscribe();
@@ -68,11 +69,11 @@ export function pixelIntroduction(node: HTMLElement) {
   };
   // Interruption keeps the current pose; its opening gesture is consumed by the scroll gate.
   // Never seek the transfer timeline or restore its styles while it is visible.
-  const dismiss = () => {
+  const dismiss = (preserveScrollJourney = false) => {
     if (done || dismissing) return;
     if (prefersReducedMotion()) { finish(); return; }
     dismissing = true;
-    resetScrollMotion();
+    if (!preserveScrollJourney) resetScrollMotion();
     node.dataset.stage = 'dismissing';
     timeline?.kill();
     cancelAnimationFrame(frameRequest);
@@ -87,21 +88,30 @@ export function pixelIntroduction(node: HTMLElement) {
     deadline = setTimeout(finish, 1550);
   };
   const keydown = (event: KeyboardEvent) => {
-    if (event.key === 'Tab' || event.key === 'Escape') finish();
+    if (event.isTrusted && (event.key === 'Tab' || event.key === 'Escape')) finish();
   };
   const exit = (event: MouseEvent) => {
-    if ((event.target as Element).closest('[data-intro-exit]')) { releaseScroll(); dismiss(); }
+    if (!event.isTrusted || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const control = (event.target as Element).closest('[data-intro-exit]');
+    if (!control) return;
+    releaseScroll();
+    // The document's anchor handler has already started View work's scroll journey.
+    dismiss(control instanceof HTMLAnchorElement);
   };
   const visibility = () => { if (document.hidden) finish(); };
-  // Mobile browser chrome can resize height without expressing an intent to leave.
-  const resize = () => { if (window.innerWidth !== width) dismiss(); };
-  const scroll = () => { if (window.scrollY > 4) dismiss(); };
+  // Scroll restoration, hydration and viewport changes are not user intent.
+  // Keep a fresh introduction at the top; only the input gate/exit controls skip it.
+  // Stop pinning immediately on an intentional exit so View work can reach its anchor.
+  const pinStart = () => {
+    if (done || dismissing || (window.scrollX === 0 && window.scrollY === 0)) return;
+    window.scrollTo({ left: 0, top: 0, behavior: 'instant' });
+    resetScrollMotion();
+  };
   lifecycleEvents.forEach(type => window.addEventListener(type, finish, { passive: true, capture: true }));
   releaseScroll = introScrollGate(dismiss);
   window.addEventListener('keydown', keydown, { capture: true });
 
-  window.addEventListener('resize', resize, { passive: true });
-  window.addEventListener('scroll', scroll, { passive: true });
+  positionEvents.forEach(type => window.addEventListener(type, pinStart, { passive: true }));
   node.addEventListener('click', exit);
   document.addEventListener('visibilitychange', visibility);
   unsubscribe = motionState.subscribe(({ reduced }) => { if (reduced) finish(); });
@@ -132,7 +142,6 @@ export function pixelIntroduction(node: HTMLElement) {
       // This authoring-only still shows the exact composition used by the sequence.
       const still = import.meta.env.DEV && new URLSearchParams(location.search).get('intro') === 'still';
       root.dataset.presentation = still ? 'preview' : 'running';
-      site!.inert = true;
       if (still) return;
 
       context = gsap.context(() => {
