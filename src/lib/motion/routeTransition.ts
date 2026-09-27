@@ -1,5 +1,6 @@
 import { onNavigate } from '$app/navigation';
 import { motionSnapshot } from './policy';
+import { resetScrollMotion, syncScrollPosition } from './smooth-scroll';
 
 /**
  * Progressive-enhancement route continuity built on the native View Transitions API.
@@ -63,7 +64,8 @@ function releaseClaimedFrames() {
  */
 export function installRouteTransitions() {
   onNavigate((navigation) => {
-    if (!viewTransitionsSupported()) {
+    resetScrollMotion();
+    if (!viewTransitionsSupported() || document.visibilityState !== 'visible') {
       releaseClaimedFrames();
       return;
     }
@@ -94,19 +96,25 @@ export function installRouteTransitions() {
     document.documentElement.dataset.routeTransition = 'active';
 
     return new Promise<void>((resolve) => {
-      const transition = startViewTransition.call(document, async () => {
-        // Resolving first is what keeps SvelteKit's navigation from waiting on the
-        // animation: the DOM swap happens inside the callback, nothing blocks it.
-        resolve();
-        await navigation.complete;
-      });
-
+      // Navigation must still complete when a background tab or browser policy
+      // skips the native transition callback.
+      const failSafe = window.setTimeout(resolve, 180);
       const cleanup = () => {
+        window.clearTimeout(failSafe);
+        resolve();
         delete document.documentElement.dataset.routeTransition;
         releaseClaimedFrames();
       };
-
-      transition.finished.then(cleanup, cleanup);
+      try {
+        const transition = startViewTransition.call(document, async () => {
+          window.clearTimeout(failSafe);
+          resolve();
+          await navigation.complete;
+          syncScrollPosition();
+        });
+        transition.ready.catch(cleanup);
+        transition.finished.then(cleanup, cleanup);
+      } catch { cleanup(); }
     });
   });
 }

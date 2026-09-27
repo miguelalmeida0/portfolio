@@ -1,14 +1,16 @@
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 
-import { getReleaseCaseStudy } from '$lib/content/release-case-studies';
+import { findProject } from '$lib/experience/projects';
+import { redirect } from '@sveltejs/kit';
 
 export const load: PageLoad = ({ params }) => {
-  const study = getReleaseCaseStudy(params.slug);
+  if (params.slug === 'ghostwriter') redirect(308, '/work/second-voice-ai');
+  const project = findProject(params.slug);
 
-  if (!study) {
+  if (!project) {
     error(404, 'Case study not found');
   }
 
-  return { study };
+  return { project };
 };

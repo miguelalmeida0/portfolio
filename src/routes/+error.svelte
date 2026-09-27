@@ -1,31 +1,11 @@
 <script lang="ts">
   import { page } from '$app/stores';
+  import LinkButton from '$lib/components/experience/LinkButton.svelte';
 </script>
-
-<svelte:head>
-  <title>Page not found — Miguel Almeida</title>
-  <meta
-    name="description"
-    content="The page you were looking for could not be found. Return to Miguel Almeida's portfolio."
-  />
-</svelte:head>
-
-<main class="page-gutter flex min-h-screen items-center justify-center pb-24 pt-24">
-  <div class="surface-card max-w-xl rounded-[28px] px-8 py-10 text-center">
-    <div class="eyebrow">404 · Not found</div>
-    <h1 class="mt-5 font-display text-[clamp(3rem,8vw,5rem)] leading-[0.95] tracking-[-0.05em] text-foreground">
-      Wrong page.
-    </h1>
-    <p class="mt-5 text-lg leading-relaxed text-foreground/76">
-      That route does not exist in the portfolio. The calm option is to head back home and keep reading from there.
-    </p>
-    <div class="mt-8">
-      <a
-        href="/"
-        class="interactive-button button-solid inline-flex items-center gap-2 rounded-full px-5 py-3 font-sans text-[12px] font-semibold focus-visible:ring-2 focus-visible:ring-ring/45"
-      >
-        Return home
-      </a>
-    </div>
-  </div>
-</main>
+<svelte:head><title>{$page.status} — Miguel Almeida</title><meta name="robots" content="noindex" /></svelte:head>
+<section class="shell py-20 sm:py-32">
+  <p class="label-type text-plum">{$page.status} / A small detour</p>
+  <h1 class="display-type mt-6 max-w-3xl text-[clamp(3rem,7vw,7rem)]">{$page.status===404 ? 'Nothing here. Plenty to explore.' : 'That didn’t go as planned.'}</h1>
+  <p class="mb-8 mt-6 max-w-xl text-lg leading-relaxed">{$page.status===404 ? 'This page may have moved. The selected work is a good place to pick up the thread.' : 'Please try again, or head back to the portfolio.'}</p>
+  <LinkButton href="/" label="Back to the work" />
+</section>

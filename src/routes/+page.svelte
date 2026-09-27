@@ -1,29 +1,10 @@
 <script lang="ts">
-  import ConversationStarter from '$lib/components/revamp/ConversationStarter.svelte';
-  import ExperienceTimeline from '$lib/components/revamp/ExperienceTimeline.svelte';
-  import Hero from '$lib/components/revamp/Hero.svelte';
-  import SiteHeader from '$lib/components/revamp/SiteHeader.svelte';
-  import InteractiveWorkGrid from '$lib/components/work/InteractiveWorkGrid.svelte';
+  import Hero from '$lib/components/experience/Hero.svelte';
+  import WorkIndex from '$lib/components/experience/WorkIndex.svelte';
 </script>
-
 <svelte:head>
-  <title>Miguel Almeida — Frontend Engineer</title>
-  <meta
-    name="description"
-    content="Frontend engineer in Berlin with production Svelte and React experience at F24 and projects exploring clear, dependable camera and AI interfaces."
-  />
-  <meta property="og:title" content="Miguel Almeida — Frontend Engineer" />
-  <meta
-    property="og:description"
-    content="Frontend engineer in Berlin with production Svelte and React experience at F24 and projects exploring clear, dependable camera and AI interfaces."
-  />
+  <title>Miguel Almeida — Frontend developer & design engineer</title>
+  <meta name="description" content="Frontend developer and design engineer in Berlin. Built an application’s original Svelte frontend from first mockups to production at F24; the product is now used by hundreds of companies. Explore Second Voice AI, VIGIA and Mirror AI." />
 </svelte:head>
-
-<SiteHeader />
-
-<main class="relative">
-  <Hero />
-  <InteractiveWorkGrid />
-  <ExperienceTimeline />
-  <ConversationStarter />
-</main>
+<Hero />
+<WorkIndex />
