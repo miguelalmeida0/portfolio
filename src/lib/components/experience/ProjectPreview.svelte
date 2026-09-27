@@ -16,7 +16,7 @@
     </div>
   {:else}
   <div class="min-w-0 overflow-clip rounded-xl bg-ivory">
-    {#if project.video}<ProductLoop src={project.video} poster={project.image} label={project.alt} {active} />
+    {#if project.video}<ProductLoop src={project.video} poster={project.image} label={project.alt} {active} startAt={project.slug === 'leu' ? 1.55 : 0} />
     {:else if imageError}<div class="flex min-h-60 items-center justify-center p-8 text-center font-serif text-xl">The project image is unavailable. You can still read the full case study below.</div>
     {:else if project.slug === 'vigia'}<img src="/projects/vigia/intelligence-focus.webp" alt="VIGIA incident context beside its intelligence brief." width="930" height="420" loading="lazy" decoding="async" onerror={() => imageError = true} class="aspect-[2.2/1] h-auto w-full object-cover" />
     {:else}<img src={project.image} alt={project.alt} width="1200" height="750" loading="lazy" decoding="async" onerror={() => imageError = true} class="aspect-[1.5] h-auto w-full object-cover object-top" />{/if}
