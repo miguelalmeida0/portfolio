@@ -35,13 +35,17 @@ export function pixelIntroduction(node: HTMLElement) {
   let timeline: ReturnType<typeof Gsap.timeline> | undefined;
   let split: Split | undefined;
   let frameRequest = 0;
+  let elapsed = 0;
+  let lastFrame: number | undefined;
   let deadline: ReturnType<typeof setTimeout> | undefined;
   let unsubscribe = () => {};
+  const canPlay = () => !document.hidden && !(document as Document & { prerendering?: boolean }).prerendering;
   const hadInert = site.inert;
   // Block focus/interaction behind the overlay, including while its bundle loads.
   site.inert = true;
   const positionEvents = ['scroll', 'resize', 'pageshow', 'load'] as const;
   const lifecycleEvents = ['popstate', 'pagehide'] as const;
+  const visibilityEvents = ['visibilitychange', 'prerenderingchange'] as const;
   const finish = () => {
     if (done) return;
     done = true;
@@ -60,10 +64,9 @@ export function pixelIntroduction(node: HTMLElement) {
     lifecycleEvents.forEach(type => window.removeEventListener(type, finish, true));
     releaseScroll();
     window.removeEventListener('keydown', keydown, true);
-
     positionEvents.forEach(type => window.removeEventListener(type, pinStart));
     node.removeEventListener('click', exit);
-    document.removeEventListener('visibilitychange', visibility);
+    visibilityEvents.forEach(type => document.removeEventListener(type, visibility));
     unsubscribe();
     if (focusedInside) site.querySelector<HTMLAnchorElement>('[data-identity-home]')?.focus({ preventScroll: true });
   };
@@ -98,9 +101,27 @@ export function pixelIntroduction(node: HTMLElement) {
     // The document's anchor handler has already started View work's scroll journey.
     dismiss(control instanceof HTMLAnchorElement);
   };
-  const visibility = () => { if (document.hidden) finish(); };
+  // Count only visible playback. A background tab or prerender must not spend
+  // the introduction before its visitor sees the page.
+  const advance = (now: number) => {
+    if (done || dismissing || !canPlay()) return;
+    if (lastFrame !== undefined) elapsed += now - lastFrame;
+    lastFrame = now;
+    timeline?.totalTime(elapsed / 1000);
+    if (!done && !dismissing) frameRequest = requestAnimationFrame(advance);
+  };
+  const visibility = () => {
+    if (done) return;
+    if (dismissing) { if (!canPlay()) finish(); return; }
+    cancelAnimationFrame(frameRequest);
+    clearTimeout(deadline);
+    lastFrame = undefined;
+    if (!canPlay()) return;
+    // Retain the fail-open safeguard, but never let it expire off-screen.
+    deadline = setTimeout(finish, 6500);
+    if (timeline) frameRequest = requestAnimationFrame(advance);
+  };
   // Scroll restoration, hydration and viewport changes are not user intent.
-  // Keep a fresh introduction at the top; only the input gate/exit controls skip it.
   // Stop pinning immediately on an intentional exit so View work can reach its anchor.
   const pinStart = () => {
     if (done || dismissing || (window.scrollX === 0 && window.scrollY === 0)) return;
@@ -110,10 +131,9 @@ export function pixelIntroduction(node: HTMLElement) {
   lifecycleEvents.forEach(type => window.addEventListener(type, finish, { passive: true, capture: true }));
   releaseScroll = introScrollGate(dismiss);
   window.addEventListener('keydown', keydown, { capture: true });
-
   positionEvents.forEach(type => window.addEventListener(type, pinStart, { passive: true }));
   node.addEventListener('click', exit);
-  document.addEventListener('visibilitychange', visibility);
+  visibilityEvents.forEach(type => document.addEventListener(type, visibility));
   unsubscribe = motionState.subscribe(({ reduced }) => { if (reduced) finish(); });
 
   async function start() {
@@ -139,7 +159,6 @@ export function pixelIntroduction(node: HTMLElement) {
       const tiles = [...node.querySelectorAll<HTMLElement>('[data-intro-tile]')];
       const backdrop = node.querySelector<HTMLElement>('[data-intro-backdrop]')!;
       const secondary = [...node.querySelectorAll<HTMLElement>('[data-intro-secondary]')];
-      // This authoring-only still shows the exact composition used by the sequence.
       const still = import.meta.env.DEV && new URLSearchParams(location.search).get('intro') === 'still';
       root.dataset.presentation = still ? 'preview' : 'running';
       if (still) return;
@@ -157,7 +176,6 @@ export function pixelIntroduction(node: HTMLElement) {
         timeline.set(split.chars, { clearProps: 'willChange' }, 2.45);
         timeline.call(() => { node.dataset.stage = 'hold'; }, [], 2.45);
         // Four crops of the original image assemble; the underlying portrait is untouched.
-        // The separated pose is already in SSR markup, before fonts or GSAP load.
         timeline.to(tiles, { x: 0, y: 0, duration: .85, stagger: .06 }, .3);
         timeline.set(avatar, { opacity: 1 }, 1.34);
         timeline.set(tiles, { opacity: 0 }, 1.35);
@@ -174,28 +192,15 @@ export function pixelIntroduction(node: HTMLElement) {
         timeline.to(secondary, { opacity: 0, y: -5, duration: .2, stagger: .025 }, 'transfer');
         timeline.to(frame, { opacity: 0, scale: .94, duration: .18 }, 'transfer');
         timeline.to(backdrop, { yPercent: -100, duration: .9, ease: 'power3.inOut' }, 'transfer+=.08');
-
-        // The real header is never transformed, faded, or replaced. The large
-        // title exits before the curtain reveals that already-rendered identity.
+        // Reveal the existing header without transforming or replacing its identity.
         timeline.to([first, last, portrait], {
           y: -32, opacity: 0, duration: .42, ease: 'power2.in'
         }, 'transfer');
       }, node);
-      // Keep this short presentation on elapsed time, independent of GSAP's global
-      // lag smoothing. A delayed frame must not stretch the hold or skip the handoff.
-      const started = performance.now();
-      const advance = (now: number) => {
-        if (done || dismissing) return;
-        timeline?.totalTime((now - started) / 1000);
-        if (!done && !dismissing) frameRequest = requestAnimationFrame(advance);
-      };
-      frameRequest = requestAnimationFrame(advance);
-      // A throttled tab must not stretch a brief introduction into a long wait.
-      clearTimeout(deadline);
-      deadline = setTimeout(finish, 6500);
+      visibility();
     } catch (error) { if (import.meta.env.DEV) console.warn('Introduction settled without animation:', error); finish(); }
   }
-  deadline = setTimeout(finish, 6500);
+  visibility();
   void start();
   return { destroy: finish };
 }
