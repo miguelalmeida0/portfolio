@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { openPortfolioHome } from '../helpers/portfolio';
+import { openPortfolioHome, openSecondVoiceStudio } from '../helpers/portfolio';
 
 const projects = ['second-voice-ai', 'f24', 'vigia', 'mirror-ai'];
 
@@ -10,7 +10,9 @@ test('recruiter sees role, production experience and skills immediately', async 
   await expect(page.getByRole('heading', { name: 'From scratch to hundreds of companies.' })).toBeVisible();
   await expect(page.getByLabel('Core skills')).toContainText('TypeScript');
   await expect(page.locator('main img[src*="miguel"]')).toHaveCount(0);
-  await expect(page.locator('#work > article')).toHaveCount(4);
+  await expect(page.locator('#work > article')).toHaveCount(5);
+  await expect(page.locator('#project-trigger-leu')).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.locator('#project-trigger-second-voice-ai')).toHaveAttribute('aria-expanded', 'false');
   await expect(page.getByText('Camera Harness', { exact: true })).toHaveCount(0);
 });
 
@@ -33,8 +35,8 @@ for (const slug of projects) test(`${slug} exposes its current case-study struct
 });
 
 test('case study navigation completes without a full reload', async ({ page }) => {
-  await openPortfolioHome(page);
-  await page.getByRole('link', { name: 'Case study', exact: true }).click();
+  await openSecondVoiceStudio(page);
+  await page.locator('#project-content-second-voice-ai').getByRole('link', { name: 'Case study', exact: true }).click();
   await expect(page).toHaveURL(/\/work\/second-voice-ai$/);
   await page.getByRole('link', { name: 'Next case study F24' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'F24' })).toBeVisible();
@@ -84,6 +86,6 @@ test('CV download contains a real PDF and sitemap lists only selected projects',
   expect(pdf.ok()).toBe(true);
   expect((await pdf.body()).subarray(0, 5).toString()).toBe('%PDF-');
   const sitemap = await (await request.get('/sitemap.xml')).text();
-  for (const slug of projects) expect(sitemap).toContain('/work/' + slug);
+  for (const slug of ['leu', ...projects]) expect(sitemap).toContain('/work/' + slug);
   expect(sitemap).not.toContain('camera-harness');
 });
