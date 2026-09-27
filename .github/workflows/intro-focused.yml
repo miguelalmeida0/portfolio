@@ -1,0 +1,31 @@
+name: Focused deployed intro regression
+on:
+  push:
+    branches: [diagnostics/intro-entry-proof]
+permissions:
+  contents: read
+jobs:
+  focused:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci > /tmp/install.log 2>&1 || { cat /tmp/install.log; exit 1; }
+      - run: npx playwright install --with-deps chromium firefox webkit > /tmp/browser.log 2>&1 || { cat /tmp/browser.log; exit 1; }
+      - name: Check all visibility profiles against the deployed candidate
+        env:
+          PLAYWRIGHT_SKIP_WEB_SERVER: '1'
+          PLAYWRIGHT_BASE_URL: https://2fae57d0.miguelalmeida-portfolio.pages.dev
+        run: npx playwright test tests/e2e/specs/intro-visibility.spec.ts --workers=3 --max-failures=1 --retries=0
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: focused-intro-report
+          path: |
+            test-results
+            playwright-report
+          retention-days: 3
