@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { installClipboardStub, openPortfolioHome } from '../helpers/portfolio';
+import { installClipboardStub, openSecondVoiceStudio } from '../helpers/portfolio';
 
 async function chooseAuthor(page: import('@playwright/test').Page, name: string) {
   await page.getByText(name, { exact: true }).first().click();
@@ -7,7 +7,7 @@ async function chooseAuthor(page: import('@playwright/test').Page, name: string)
 }
 
 test('author choice remains readable and selected', async ({ page }) => {
-  await openPortfolioHome(page);
+  await openSecondVoiceStudio(page);
   await chooseAuthor(page, 'Tolstoy');
   const choice = page.locator('input[value="Tolstoy"] + span');
   await expect(choice).toHaveClass(/text-plum/);
@@ -18,7 +18,7 @@ test('author choice remains readable and selected', async ({ page }) => {
 });
 
 test('prepared author and strength controls update a clearly labelled result', async ({ page }) => {
-  await openPortfolioHome(page);
+  await openSecondVoiceStudio(page);
   await chooseAuthor(page, 'Hemingway');
   await page.getByText('Strong', { exact: true }).first().click();
   await expect(page.getByRole('radio', { name: 'Strong', exact: true })).toBeChecked();
@@ -30,7 +30,7 @@ test('prepared author and strength controls update a clearly labelled result', a
 });
 
 test('prepared sample preserves the source while switching voices', async ({ page }) => {
-  await openPortfolioHome(page);
+  await openSecondVoiceStudio(page);
   const source = 'Every winter, the harbor lights went dark. Elias kept the last lamp burning, though no ship had returned in twenty years.';
   const draft = page.getByRole('region', { name: 'Draft' });
   await expect(draft.getByText(source, { exact: true })).toBeVisible();
@@ -41,7 +41,7 @@ test('prepared sample preserves the source while switching voices', async ({ pag
 });
 
 test('opening another project preserves the Second Voice selection', async ({ page }) => {
-  await openPortfolioHome(page);
+  await openSecondVoiceStudio(page);
   await chooseAuthor(page, 'Hemingway');
   const f24 = page.locator('#project-trigger-f24');
   await f24.scrollIntoViewIfNeeded();
@@ -54,7 +54,7 @@ test('opening another project preserves the Second Voice selection', async ({ pa
 
 test('mobile studio keeps draft and result visible in reading order', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await openPortfolioHome(page);
+  await openSecondVoiceStudio(page);
   const draft = page.getByRole('region', { name: 'Draft' });
   const result = page.getByRole('region', { name: 'Result' });
   await expect(draft).toBeVisible();
@@ -68,7 +68,7 @@ test('mobile studio keeps draft and result visible in reading order', async ({ p
 
 test('copy result and contact provide feedback without browser-specific clipboard permissions', async ({ page }) => {
   await installClipboardStub(page);
-  await openPortfolioHome(page);
+  await openSecondVoiceStudio(page);
   await page.getByRole('button', { name: 'Copy rewrite', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Copied', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Copy email address' }).click();

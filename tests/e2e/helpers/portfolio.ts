@@ -11,6 +11,14 @@ export async function openPortfolioHome(page: Page) {
   await expect(page.getByRole('heading', { level: 1, name: /Frontend developer.*design engineer/i })).toBeVisible();
 }
 
+/** Leu opens first; reach the Second Voice studio through its real project control. */
+export async function openSecondVoiceStudio(page: Page) {
+  await openPortfolioHome(page);
+  await page.locator('#project-trigger-second-voice-ai').click();
+  await expect(page.locator('#project-content-second-voice-ai')).toHaveAttribute('aria-hidden', 'false');
+  await expect(page.locator('#project-content-second-voice-ai')).toHaveJSProperty('inert', false);
+}
+
 export async function installClipboardStub(page: Page) {
   await page.addInitScript(() => {
     const clipboard = { writeText: async (_value: string) => undefined };
