@@ -16,23 +16,18 @@ jobs:
           cache: npm
       - run: npm ci > /tmp/npm-install.log 2>&1 || { cat /tmp/npm-install.log; exit 1; }
       - run: npx playwright install --with-deps chromium > /tmp/browser-install.log 2>&1 || { cat /tmp/browser-install.log; exit 1; }
-      - name: Observe real production document visibility and save first-frame proof
+      - name: Observe production entry with native document visibility
         run: |
           cat > /tmp/intro-live-probe.mjs <<'JS'
           import { chromium } from '${{ github.workspace }}/node_modules/playwright/index.mjs';
-          import { spawn } from 'node:child_process';
-          import { mkdir } from 'node:fs/promises';
+          import { mkdir, writeFile } from 'node:fs/promises';
           import assert from 'node:assert/strict';
-          const chrome = spawn(chromium.executablePath(), ['--no-sandbox','--remote-debugging-port=9222','--user-data-dir=/tmp/intro-native-profile','--no-first-run','--no-default-browser-check','--window-size=1440,1100','about:blank'], {stdio:'ignore'});
-          let browser;
+          const browser = await chromium.launch({ headless:false, ignoreDefaultArgs:['--disable-backgrounding-occluded-windows','--disable-renderer-backgrounding','--disable-background-timer-throttling'] });
+          const results=[];
+          const errors=[];
+          await mkdir('/tmp/intro-entry-proof',{recursive:true});
           try {
-            for (let i=0;i<50;i++) {
-              try { browser = await chromium.connectOverCDP('http://127.0.0.1:9222'); break; }
-              catch { await new Promise(resolve=>setTimeout(resolve,100)); }
-            }
-            assert(browser,'Native Chromium did not start');
-            await mkdir('/tmp/intro-entry-proof',{recursive:true});
-            const context=browser.contexts()[0];
+            const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'no-preference'});
             await context.addInitScript(() => {
               window.entryProbe={events:[],stages:[],shortcuts:0};
               for(const type of ['wheel','keydown','touchmove','visibilitychange','prerenderingchange','pageshow','scroll']) {
@@ -46,10 +41,13 @@ jobs:
               }).observe(document,{subtree:true,childList:true,attributes:true,attributeFilter:['data-stage','data-presentation']});
             });
             async function snapshot(page,label){
-              console.log('ENTRY_PROBE '+JSON.stringify({label,url:page.url(),...await page.evaluate(()=>({title:document.title,build:document.querySelector('meta[name="portfolio-build"]')?.content,root:{...document.documentElement.dataset},stage:document.querySelector('[data-pixel-intro]')?.getAttribute('data-stage'),hidden:document.hidden,prerendering:document.prerendering,activationStart:performance.getEntriesByType('navigation')[0]?.activationStart,scrollY,inert:document.querySelector('#portfolio-content')?.inert,trace:window.entryProbe}))}));
+              const result={label,url:page.url(),...await page.evaluate(()=>({title:document.title,build:document.querySelector('meta[name="portfolio-build"]')?.content,root:{...document.documentElement.dataset},stage:document.querySelector('[data-pixel-intro]')?.getAttribute('data-stage'),hidden:document.hidden,prerendering:document.prerendering,scrollY,inert:document.querySelector('#portfolio-content')?.inert,trace:window.entryProbe}))};
+              results.push(result);
+              console.log('ENTRY_PROBE '+JSON.stringify(result));
+              return result;
             }
-            const foreground=context.pages()[0];
-            foreground.on('pageerror',error=>console.log('PAGE_ERROR '+error.message));
+            const foreground=await context.newPage();
+            foreground.on('pageerror',error=>errors.push(error.message));
             const response=await foreground.goto('https://miguelalmeida.is-a.dev/',{waitUntil:'domcontentloaded'});
             console.log('PROD_HEADERS '+JSON.stringify({status:response.status(),cacheControl:response.headers()['cache-control']}));
             await foreground.waitForTimeout(1200);
@@ -58,15 +56,16 @@ jobs:
             await foreground.waitForTimeout(6000);
             await snapshot(foreground,'normal-complete');
             await foreground.goto('about:blank');
-            const session=await browser.newBrowserCDPSession();
-            const created=context.waitForEvent('page');
-            await session.send('Target.createTarget',{url:'about:blank',background:true});
-            const background=await created;
-            background.on('pageerror',error=>console.log('PAGE_ERROR '+error.message));
+            const background=await context.newPage();
+            background.on('pageerror',error=>errors.push(error.message));
+            for (const page of [foreground,background]) {
+              const cdp=await context.newCDPSession(page);
+              await cdp.send('Emulation.setFocusEmulationEnabled',{enabled:false});
+            }
             await foreground.bringToFront();
             await background.goto('https://miguelalmeida.is-a.dev/',{waitUntil:'domcontentloaded'});
-            assert.equal(await background.evaluate(()=>document.hidden),true,'This probe must use a genuinely hidden tab');
             await snapshot(background,'native-hidden-start');
+            assert.equal(await background.evaluate(()=>document.hidden),true,'This probe must use a genuinely hidden tab');
             await background.waitForTimeout(8500);
             await snapshot(background,'native-hidden-after-8500ms');
             await background.bringToFront();
@@ -75,9 +74,19 @@ jobs:
             await background.screenshot({path:'/tmp/intro-entry-proof/native-activated-no-input.png'});
             await background.waitForTimeout(6500);
             await snapshot(background,'native-activated-complete');
+            // Verify a deliberate exit still works after a fresh navigation.
+            await background.reload({waitUntil:'domcontentloaded'});
+            await background.waitForSelector('[data-pixel-intro][data-stage="typing"]');
+            await background.locator('[data-pixel-intro] button[data-intro-exit]').click();
+            await background.waitForTimeout(1800);
+            const exit=await snapshot(background,'deliberate-exit');
+            assert.equal(exit.root.presentation,'complete');
+            assert.equal(exit.inert,false);
+            assert.equal(exit.trace.shortcuts,1);
+            assert.deepEqual(errors,[]);
           } finally {
-            await browser?.close();
-            chrome.kill('SIGTERM');
+            await writeFile('/tmp/intro-entry-proof/results.json',JSON.stringify({results,errors},null,2));
+            await browser.close();
           }
           JS
           xvfb-run -a node /tmp/intro-live-probe.mjs
