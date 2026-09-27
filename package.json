@@ -36,7 +36,7 @@
     "tailwindcss": "^4.1.13",
     "typescript": "^5.8.3",
     "vite": "^8.2.2",
-    "wrangler": "^4.137.0"
+    "wrangler": "4.137.0"
   },
   "dependencies": {
     "gsap": "3.15.0",
