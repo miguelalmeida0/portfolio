@@ -3,6 +3,7 @@
   import ArrowRight from '@lucide/svelte/icons/arrow-right';
   import { projects, type Project } from '$lib/experience/projects';
   import ProjectMedia from './ProjectMedia.svelte';
+  import LeuProductFilm from './LeuProductFilm.svelte';
   import FreshnessDemo from './FreshnessDemo.svelte';
   import CorrectionDemo from './CorrectionDemo.svelte';
   import WritingDecision from './WritingDecision.svelte';
@@ -40,16 +41,26 @@
       </div>
     {/if}
   </header>
+  {#if project.slug === 'leu'}
+    <LeuProductFilm />
+  {/if}
   {#if project.slug !== 'f24' && projectSystems[project.slug]}
     <ProjectArchitecture system={projectSystems[project.slug]} />
   {/if}
-  <div class="grid items-center gap-7 py-8 {project.slug === 'f24' ? 'min-[51.25rem]:grid-cols-[minmax(0,24rem)_minmax(0,1fr)]' : 'min-[51.25rem]:grid-cols-[1.3fr_1fr]'} min-[51.25rem]:gap-10 sm:py-10">
-    <div class="min-w-0">{#key project.slug}<ProjectMedia {project} />{/key}</div>
-    <section id="context" class="scroll-mt-8" use:enter>
-      <p class="label-type mb-4 text-plum">{project.slug === 'f24' ? 'The starting point' : 'The challenge'}</p>
-      <h2 class="font-serif text-[clamp(1.3rem,1.8vw,1.625rem)] leading-[1.4] tracking-[-.015em]">{project.problem}</h2>
+  {#if project.slug === 'leu'}
+    <section id="context" class="scroll-mt-8 border-b border-rule py-10 sm:py-14" use:enter>
+      <p class="label-type mb-4 text-plum">The challenge</p>
+      <h2 class="max-w-3xl font-serif text-[clamp(1.3rem,1.8vw,1.625rem)] leading-[1.4] tracking-[-.015em]">{project.problem}</h2>
     </section>
-  </div>
+  {:else}
+    <div class="grid items-center gap-7 py-8 {project.slug === 'f24' ? 'min-[51.25rem]:grid-cols-[minmax(0,24rem)_minmax(0,1fr)]' : 'min-[51.25rem]:grid-cols-[1.3fr_1fr]'} min-[51.25rem]:gap-10 sm:py-10">
+      <div class="min-w-0">{#key project.slug}<ProjectMedia {project} />{/key}</div>
+      <section id="context" class="scroll-mt-8" use:enter>
+        <p class="label-type mb-4 text-plum">{project.slug === 'f24' ? 'The starting point' : 'The challenge'}</p>
+        <h2 class="font-serif text-[clamp(1.3rem,1.8vw,1.625rem)] leading-[1.4] tracking-[-.015em]">{project.problem}</h2>
+      </section>
+    </div>
+  {/if}
   <div class="grid gap-10 min-[60rem]:grid-cols-[1fr_2.3fr] min-[60rem]:gap-16">
     <nav aria-label="Case study sections" class="flex h-fit flex-wrap gap-x-6 gap-y-1 border-y border-rule py-3 text-sm min-[60rem]:sticky min-[60rem]:top-6 min-[60rem]:flex-col min-[60rem]:border-b-0">
       {#each (project.slug === 'f24' ? [['context','Starting point'],['contribution','Svelte foundation'],['outcome','React evolution']] : [['architecture','Architecture & tools'],['context','The challenge'],['decisions','Key decisions'],['outcome','The outcome']]) as [id,label]}
