@@ -14,67 +14,76 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      - name: Observe production first visit and background-tab activation
+      - run: npm ci > /tmp/npm-install.log 2>&1 || { cat /tmp/npm-install.log; exit 1; }
+      - run: npx playwright install --with-deps chromium > /tmp/browser-install.log 2>&1 || { cat /tmp/browser-install.log; exit 1; }
+      - name: Observe real production document visibility and save first-frame proof
         run: |
           cat > /tmp/intro-live-probe.mjs <<'JS'
           import { chromium } from '${{ github.workspace }}/node_modules/playwright/index.mjs';
-          const browser = await chromium.launch({ headless: false });
-          const urls = ['https://miguelalmeida.is-a.dev/', 'https://miguelalmeida-portfolio.pages.dev/'];
-          async function instrument(context) {
+          import { spawn } from 'node:child_process';
+          import { mkdir } from 'node:fs/promises';
+          import assert from 'node:assert/strict';
+          const chrome = spawn(chromium.executablePath(), ['--no-sandbox','--remote-debugging-port=9222','--user-data-dir=/tmp/intro-native-profile','--no-first-run','--no-default-browser-check','--window-size=1440,1100','about:blank'], {stdio:'ignore'});
+          let browser;
+          try {
+            for (let i=0;i<50;i++) {
+              try { browser = await chromium.connectOverCDP('http://127.0.0.1:9222'); break; }
+              catch { await new Promise(resolve=>setTimeout(resolve,100)); }
+            }
+            assert(browser,'Native Chromium did not start');
+            await mkdir('/tmp/intro-entry-proof',{recursive:true});
+            const context=browser.contexts()[0];
             await context.addInitScript(() => {
-              window.entryProbe = {events: [], stages: [], shortcuts: 0};
-              for (const type of ['wheel','keydown','touchstart','touchmove','visibilitychange','pageshow','resize','scroll']) {
-                (type === 'visibilitychange' ? document : window).addEventListener(type, e => {
-                  window.entryProbe.events.push({type, at: Math.round(performance.now()), trusted: e.isTrusted, key: e.key, deltaY:e.deltaY, y: scrollY, hidden: document.hidden});
-                }, {capture: true, passive:true});
+              window.entryProbe={events:[],stages:[],shortcuts:0};
+              for(const type of ['wheel','keydown','touchmove','visibilitychange','prerenderingchange','pageshow','scroll']) {
+                (['visibilitychange','prerenderingchange'].includes(type)?document:window).addEventListener(type,e=>window.entryProbe.events.push({type,at:Math.round(performance.now()),trusted:e.isTrusted,key:e.key,y:scrollY,hidden:document.hidden}),{capture:true,passive:true});
               }
-              new MutationObserver(records => {
-                for (const r of records) {
-                  if (r.type === 'attributes' && r.target instanceof HTMLElement) {
-                    window.entryProbe.stages.push({at: Math.round(performance.now()), attribute:r.attributeName, value:r.target.getAttribute(r.attributeName), hidden:document.hidden});
-                  }
-                  for (const n of r.addedNodes) if (n instanceof Element && n.matches('[data-shortcut-stairs]')) window.entryProbe.shortcuts++;
+              new MutationObserver(records=>{
+                for(const r of records){
+                  if(r.type==='attributes' && r.target instanceof HTMLElement) window.entryProbe.stages.push({at:Math.round(performance.now()),attribute:r.attributeName,value:r.target.getAttribute(r.attributeName),hidden:document.hidden});
+                  for(const n of r.addedNodes) if(n instanceof Element && n.matches('[data-shortcut-stairs]')) window.entryProbe.shortcuts++;
                 }
               }).observe(document,{subtree:true,childList:true,attributes:true,attributeFilter:['data-stage','data-presentation']});
             });
+            async function snapshot(page,label){
+              console.log('ENTRY_PROBE '+JSON.stringify({label,url:page.url(),...await page.evaluate(()=>({title:document.title,build:document.querySelector('meta[name="portfolio-build"]')?.content,root:{...document.documentElement.dataset},stage:document.querySelector('[data-pixel-intro]')?.getAttribute('data-stage'),hidden:document.hidden,prerendering:document.prerendering,activationStart:performance.getEntriesByType('navigation')[0]?.activationStart,scrollY,inert:document.querySelector('#portfolio-content')?.inert,trace:window.entryProbe}))}));
+            }
+            const foreground=context.pages()[0];
+            foreground.on('pageerror',error=>console.log('PAGE_ERROR '+error.message));
+            const response=await foreground.goto('https://miguelalmeida.is-a.dev/',{waitUntil:'domcontentloaded'});
+            console.log('PROD_HEADERS '+JSON.stringify({status:response.status(),cacheControl:response.headers()['cache-control']}));
+            await foreground.waitForTimeout(1200);
+            await snapshot(foreground,'normal-first-entry');
+            await foreground.screenshot({path:'/tmp/intro-entry-proof/normal-first-entry.png'});
+            await foreground.waitForTimeout(6000);
+            await snapshot(foreground,'normal-complete');
+            await foreground.goto('about:blank');
+            const session=await browser.newBrowserCDPSession();
+            const created=context.waitForEvent('page');
+            await session.send('Target.createTarget',{url:'about:blank',background:true});
+            const background=await created;
+            background.on('pageerror',error=>console.log('PAGE_ERROR '+error.message));
+            await foreground.bringToFront();
+            await background.goto('https://miguelalmeida.is-a.dev/',{waitUntil:'domcontentloaded'});
+            assert.equal(await background.evaluate(()=>document.hidden),true,'This probe must use a genuinely hidden tab');
+            await snapshot(background,'native-hidden-start');
+            await background.waitForTimeout(8500);
+            await snapshot(background,'native-hidden-after-8500ms');
+            await background.bringToFront();
+            await background.waitForTimeout(600);
+            await snapshot(background,'native-activated-no-input');
+            await background.screenshot({path:'/tmp/intro-entry-proof/native-activated-no-input.png'});
+            await background.waitForTimeout(6500);
+            await snapshot(background,'native-activated-complete');
+          } finally {
+            await browser?.close();
+            chrome.kill('SIGTERM');
           }
-          async function snapshot(page,label) {
-            console.log('ENTRY_PROBE '+JSON.stringify({label,url:page.url(),...await page.evaluate(() => ({title:document.title,build:document.querySelector('meta[name="portfolio-build"]')?.content,root:{...document.documentElement.dataset},stage:document.querySelector('[data-pixel-intro]')?.getAttribute('data-stage'),hidden:document.hidden,prerendering:document.prerendering,scrollY,heading:document.querySelector('h1')?.textContent,inert:document.querySelector('#portfolio-content')?.inert,trace:window.entryProbe}))}));
-          }
-          for (const url of urls) {
-            const context = await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'no-preference'});
-            await instrument(context);
-            const page = await context.newPage();
-            page.on('pageerror', error => console.log('PAGE_ERROR '+JSON.stringify({url,error:error.message})));
-            try {
-              const response = await page.goto(url,{waitUntil:'domcontentloaded',timeout:25000});
-              const html = await response.text();
-              console.log('DOCUMENT '+JSON.stringify({url,status:response.status(),headers:await response.allHeaders(),hasTrustedGuard:html.includes('!event.isTrusted'),scripts:[...html.matchAll(/(?:src|import)\s*(?:=|\()\s*["']([^"']+\.js)/g)].map(m=>m[1])}));
-              await snapshot(page,'fresh');
-              await page.waitForTimeout(1600);
-              await snapshot(page,'fresh+1600ms');
-              await page.waitForTimeout(5600);
-              await snapshot(page,'fresh-complete');
-            } catch(error) {console.log('NAVIGATION_ERROR '+JSON.stringify({url,error:String(error)}));}
-            await context.close();
-          }
-          const context = await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'no-preference'});
-          await instrument(context);
-          const background = await context.newPage();
-          const foreground = await context.newPage();
-          await foreground.goto('about:blank');
-          await foreground.bringToFront();
-          await background.goto(urls[0],{waitUntil:'domcontentloaded',timeout:25000});
-          await snapshot(background,'background-start');
-          await background.waitForTimeout(8000);
-          await snapshot(background,'background-after-eight-seconds');
-          await background.bringToFront();
-          await snapshot(background,'activated-no-input');
-          await background.waitForTimeout(1300);
-          await snapshot(background,'activated+1300ms');
-          await context.close();
-          await browser.close();
           JS
           xvfb-run -a node /tmp/intro-live-probe.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: intro-live-proof-${{ github.run_attempt }}
+          path: /tmp/intro-entry-proof
+          retention-days: 7
