@@ -11,8 +11,10 @@ test('recruiter sees role, production experience and skills immediately', async 
   await expect(page.getByLabel('Core skills')).toContainText('TypeScript');
   await expect(page.locator('main img[src*="miguel"]')).toHaveCount(0);
   await expect(page.locator('#work > article')).toHaveCount(5);
-  await expect(page.locator('#project-trigger-leu')).toHaveAttribute('aria-expanded', 'true');
-  await expect(page.locator('#project-trigger-second-voice-ai')).toHaveAttribute('aria-expanded', 'false');
+  await expect(page.locator('#project-trigger-second-voice-ai')).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.locator('#project-trigger-f24')).toHaveAttribute('aria-expanded', 'false');
+  await expect(page.locator('#project-trigger-leu')).toHaveAttribute('aria-expanded', 'false');
+  await expect(page.locator('[aria-label="Project overview"] button')).toHaveText(['Second Voice AI','F24','Leu','VIGIA','Mirror AI']);
   await expect(page.getByText('Camera Harness', { exact: true })).toHaveCount(0);
 });
 

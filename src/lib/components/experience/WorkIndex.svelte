@@ -9,7 +9,7 @@
   import { onDestroy, tick } from 'svelte';
   import { PROJECT_TRANSITION_MS, scrollToPosition } from '$lib/motion/smooth-scroll';
   import { workSignature } from '$lib/motion/signature';
-  let active = $state<string | null>('leu');
+  let active = $state<string | null>('second-voice-ai');
   let cancelAnchor: (() => void) | undefined;
   onDestroy(() => cancelAnchor?.());
   let selection = 0;
