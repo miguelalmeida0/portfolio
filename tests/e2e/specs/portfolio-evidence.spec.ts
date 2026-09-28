@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { openPortfolioHome, openSecondVoiceStudio } from '../helpers/portfolio';
 
-const projects = ['second-voice-ai', 'f24', 'vigia', 'mirror-ai'];
+const projects = ['second-voice-ai', 'f24', 'leu', 'flow', 'mirror-ai'];
 
 test('recruiter sees role, production experience and skills immediately', async ({ page }) => {
   await openPortfolioHome(page);
@@ -14,7 +14,7 @@ test('recruiter sees role, production experience and skills immediately', async 
   await expect(page.locator('#project-trigger-second-voice-ai')).toHaveAttribute('aria-expanded', 'true');
   await expect(page.locator('#project-trigger-f24')).toHaveAttribute('aria-expanded', 'false');
   await expect(page.locator('#project-trigger-leu')).toHaveAttribute('aria-expanded', 'false');
-  await expect(page.locator('[aria-label="Project overview"] button')).toHaveText(['Second Voice AI','F24','Leu','VIGIA','Mirror AI']);
+  await expect(page.locator('[aria-label="Project overview"] button')).toHaveText(['Second Voice','F24','Leu','Flow','Mirror AI']);
   await expect(page.getByText('Camera Harness', { exact: true })).toHaveCount(0);
 });
 
@@ -31,7 +31,7 @@ for (const slug of projects) test(`${slug} exposes its current case-study struct
     await expect(page.getByText('Product · Design · Backend · QA', { exact: true })).toBeVisible();
   } else {
     await expect(page.locator('#decisions [data-decision-item] h3')).toHaveCount(3);
-    await expect(page.locator('#outcome')).toContainText(/prototype|implemented|interface|experience/i);
+    await expect(page.locator('#outcome')).toContainText(/prototype|implemented|interface|experience|persistent|native/i);
   }
   await expect(page.getByRole('link', { name: 'All work', exact: true })).toHaveAttribute('href', '/#work');
 });
@@ -88,6 +88,31 @@ test('CV download contains a real PDF and sitemap lists only selected projects',
   expect(pdf.ok()).toBe(true);
   expect((await pdf.body()).subarray(0, 5).toString()).toBe('%PDF-');
   const sitemap = await (await request.get('/sitemap.xml')).text();
-  for (const slug of ['leu', ...projects]) expect(sitemap).toContain('/work/' + slug);
+  for (const slug of projects) expect(sitemap).toContain('/work/' + slug);
   expect(sitemap).not.toContain('camera-harness');
+  expect(sitemap).not.toContain('/work/vigia');
+});
+
+test('removed VIGIA route is not redirected to Flow', async ({ request }) => {
+  const response = await request.get('/work/vigia', { maxRedirects: 0 });
+  expect(response.status()).toBe(404);
+  expect(response.headers().location).toBeUndefined();
+});
+
+test('Flow film loads, plays silently and restores its poster for reduced motion', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/work/flow');
+  const video = page.locator('video');
+  await expect(video).toHaveAttribute('src', '/projects/flow/flow-loop-web-final.mp4');
+  await expect(video).toHaveAttribute('poster', '/projects/flow/flow-loop-poster-final.jpg');
+  await video.scrollIntoViewIfNeeded();
+  await expect(video).toHaveAttribute('loop', '');
+  await expect(video).toHaveAttribute('playsinline', '');
+  await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).muted)).toBe(true);
+  await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).readyState)).toBeGreaterThanOrEqual(2);
+  await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).currentTime)).toBeGreaterThan(0);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(video).toBeHidden();
+  await expect(page.locator('img[src="/projects/flow/flow-loop-poster-final.jpg"]')).toBeVisible();
+  await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).paused)).toBe(true);
 });

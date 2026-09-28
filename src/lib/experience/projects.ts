@@ -9,7 +9,7 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    slug: 'second-voice-ai', name: 'Second Voice AI', category: 'Product design & frontend', type: 'Personal project', number: '01',
+    slug: 'second-voice-ai', name: 'Second Voice', category: 'Product design & frontend', type: 'Personal project', number: '01',
     summary: 'Choose a literary voice. See exactly what changes.',
     role: 'Product design, frontend & server orchestration', period: 'Independent product · 2026',
     stack: ['Next.js', 'React', 'TypeScript', 'Supabase', 'Groq'],
@@ -57,23 +57,47 @@ export const projects: Project[] = [
     ]
   },
 {
-    slug: 'vigia', name: 'VIGIA', category: 'Crisis intelligence', type: 'Personal project', number: '04',
-    summary: 'An operational picture that connects incidents to the decisions around them.',
-    role: 'Product strategy, interaction design & frontend systems', period: 'Independent system · Portugal first',
-    stack: ['Node.js', 'PostGIS', 'MapLibre', 'OSRM', 'Docker'],
-    image: '/projects/vigia/intelligence.webp', alt: 'VIGIA’s operational intelligence workspace with incident context and a Portugal map.',
-    caption: 'VIGIA Intelligence. Captured public evaluation interface; the poster is stored with this portfolio.',
-    live: { href: 'https://vigia-public-demo.onrender.com', label: 'Explore the public demo' },
-    problem: 'A map can show an incident without explaining its consequences. An operator also needs to know which roads and facilities matter, what changed, what support is available, and what remains uncertain.',
-    contribution: 'I shaped the interaction model around incidents, facilities, route restrictions, dependencies, resource feasibility and situation history. The interface keeps an incident’s context together instead of scattering it across disconnected dashboards.',
-    outcome: 'An explorable operator interface supported by consequence and planning logic. The public portfolio scenario lets visitors inspect the product’s decisions without treating it as an operational emergency system.',
-    limitation: 'The public demo is an evaluation surface. Its scenarios do not establish current emergency conditions, safe passage or dispatch authority. Availability depends on its separate deployment.',
-    decisions: [
-      { title: 'Start with what changed.', detail: 'Incident context, affected services and the next useful inspection stay close to the operational view, so the map supports the task rather than becoming the task.', tradeoff: 'A focused incident view exposes less information at once than an all-layers dashboard.' },
-      { title: 'Keep uncertainty visible.', detail: 'Observations carry provenance and freshness. Expired information cannot silently continue to look current.', tradeoff: 'A clear unknown can be less visually satisfying than a definitive answer, but it is the more useful state.' },
-      { title: 'Give the public demo a firm boundary.', detail: 'The portfolio experience exposes a controlled evaluation of the console and its decision logic. Unsupported operational actions stay unavailable.', tradeoff: 'The public experience cannot represent every production integration or field condition.' }
-    ]
-  },
+  "slug": "flow",
+  "name": "Flow",
+  "category": "Voice-first personal computing",
+  "type": "Personal project",
+  "number": "04",
+  "summary": "Conversation becomes editable life state.",
+  "role": "Product design, frontend engineering and deterministic action systems",
+  "period": "Independent product · 2026",
+  "stack": [
+    "React",
+    "TypeScript",
+    "Motion",
+    "Web Speech API",
+    "Local persistence"
+  ],
+  "image": "/projects/flow/flow-loop-poster-final.jpg",
+  "video": "/projects/flow/flow-loop-web-final.mp4",
+  "alt": "Flow turning conversation into a changed schedule, a structured plan and a commitment connected to a person.",
+  "caption": "Recorded Flow UI. Deterministic speech input passes through the production action engine.",
+  "problem": "Life changes in sentences, while software asks us to update separate screens. A delayed day, a new intention and a promise to someone should remain connected without making the user translate everything into forms.",
+  "contribution": "I designed and engineered conversation as an input to shared life state. Flow resolves intent, asks for clarification or confirmation when needed, and executes a deterministic action. Calendar, Journal, Friends and Memories provide concrete places to inspect and edit the result.",
+  "outcome": "Conversation can create persistent objects and change their relationships: an intention becomes a plan, a plan step becomes scheduled time, and a commitment remains connected to a person. The visible result stays editable through ordinary controls.",
+  "limitation": "The film uses the existing deterministic recognition adapter to exercise production actions. It demonstrates product behavior, not microphone accuracy, speech latency or a general intelligence benchmark. Current release and motion acceptance remain separate checks.",
+  "decisions": [
+    {
+      "title": "Let conversation change the product.",
+      "detail": "Intent resolves to a structured action and the result appears in its working surface. Calendar, Journal, Friends and Memories share the same life model.",
+      "tradeoff": "Natural language needs explicit interpretation and ambiguity handling before it can safely change persistent state."
+    },
+    {
+      "title": "Keep consequences editable.",
+      "detail": "A voice-created object uses the same state and controls as an object created through the interface. Clarification, confirmation and correction are part of the interaction.",
+      "tradeoff": "The action engine and the interface must agree on identity, ownership and valid state across every surface."
+    },
+    {
+      "title": "Make interruption part of the system.",
+      "detail": "New commands can interrupt presentation. Undo and redo operate on action history, so motion does not become the owner of product truth.",
+      "tradeoff": "Animation cleanup and history restoration require their own tests alongside the visible journey."
+    }
+  ]
+},
 {
     slug: 'mirror-ai', name: 'Mirror AI', category: 'Visual selection', type: 'Personal project', number: '05',
     summary: 'Point to something. Keep the selected object in context.',

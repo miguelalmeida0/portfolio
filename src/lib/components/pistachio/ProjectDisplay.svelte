@@ -14,9 +14,9 @@
   {/if}
   <div class="mx-[4.4%] grid items-center gap-5 border-b border-folio-ink py-6 md:grid-cols-[auto_1fr_auto]">
     <div class="flex items-center gap-4 text-sm">
-      <button type="button" aria-label="Previous project" onclick={() => onselect((selected + 3) % 4)} class="flex min-h-11 cursor-pointer items-center gap-2 hover:text-folio-plum"><ArrowLeft size={18} /><span class="hidden lg:inline">Previous</span></button>
-      <span class="text-folio-plum tabular-nums">0{selected + 1} / 04</span>
-      <button type="button" aria-label="Next project" onclick={() => onselect((selected + 1) % 4)} class="min-h-11 cursor-pointer hover:text-folio-plum"><ArrowRight size={18} /></button>
+      <button type="button" aria-label="Previous project" onclick={() => onselect((selected + portfolioProjects.length - 1) % portfolioProjects.length)} class="flex min-h-11 cursor-pointer items-center gap-2 hover:text-folio-plum"><ArrowLeft size={18} /><span class="hidden lg:inline">Previous</span></button>
+      <span class="text-folio-plum tabular-nums">0{selected + 1} / 0{portfolioProjects.length}</span>
+      <button type="button" aria-label="Next project" onclick={() => onselect((selected + 1) % portfolioProjects.length)} class="min-h-11 cursor-pointer hover:text-folio-plum"><ArrowRight size={18} /></button>
     </div>
     <div aria-live="polite"><h2 class="text-xl font-bold tracking-tight sm:text-3xl">{project.name}</h2><p class="mt-1 text-sm sm:text-base">{project.description}</p></div>
     <div class="flex items-center gap-5 text-sm">

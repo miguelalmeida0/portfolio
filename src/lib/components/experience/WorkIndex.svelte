@@ -19,7 +19,7 @@
       leu: 'Native learning · iOS & AI systems · 2026',
       'second-voice-ai': 'Literary rewriting · design & frontend · 2026',
       f24: 'Product frontend · design engineering · 2022–2026',
-      vigia: 'Crisis intelligence · product & frontend · 2026',
+      flow: 'Voice-first computing · product & frontend · 2026',
       'mirror-ai': 'Visual selection · interaction & frontend · 2026'
     };
     return metadata[project.slug] ?? project.period;

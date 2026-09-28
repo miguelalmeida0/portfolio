@@ -1,3 +1,4 @@
+import { projects } from '$lib/experience/projects';
 import type {
   ApproachItem,
   ConversationFlow,
@@ -63,11 +64,9 @@ export const heroStats = [
   }
 ];
 
-export const selectedWork: SelectedWorkItem[] = [
-  { title: 'Second Voice AI', tagline: 'Literary rewriting with explicit request state, clear edits and budget safeguards.', meta: '2026 · Independent product', href: '/work/second-voice-ai' },
-  { title: 'VIGIA', tagline: 'An operational interface connecting incidents, infrastructure and planning context.', meta: '2026 · Independent system', href: '/work/vigia' },
-  { title: 'Mirror AI', tagline: 'An image-selection flow that keeps the chosen object visible while its details open.', meta: '2026 · Independent prototype', href: '/work/mirror-ai' }
-];
+export const selectedWork: SelectedWorkItem[] = projects.map(project => ({
+  title: project.name, tagline: project.summary, meta: project.period, href: `/work/${project.slug}`
+}));
 
 export const approach: ApproachItem[] = [
   {
