@@ -24,10 +24,10 @@ export const primaryNavigation = [
 ] as const;
 
 export const selectedWork = [
-  'Second Voice AI',
-  'VIGIA',
-  'Camera Harness',
-  'Production frontend at F24',
+  'Second Voice',
+  'F24',
+  'Leu',
+  'Flow',
   'Mirror AI'
 ] as const;
 
