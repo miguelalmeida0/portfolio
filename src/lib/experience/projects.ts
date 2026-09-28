@@ -57,47 +57,38 @@ export const projects: Project[] = [
     ]
   },
 {
-  "slug": "flow",
-  "name": "Flow",
-  "category": "Voice-first personal computing",
-  "type": "Personal project",
-  "number": "04",
-  "summary": "Conversation becomes editable life state.",
-  "role": "Product design, frontend engineering and deterministic action systems",
-  "period": "Independent product · 2026",
-  "stack": [
-    "React",
-    "TypeScript",
-    "Motion",
-    "Web Speech API",
-    "Local persistence"
-  ],
-  "image": "/projects/flow/flow-loop-poster-final.jpg",
-  "video": "/projects/flow/flow-loop-web-final.mp4",
-  "alt": "Flow turning conversation into a changed schedule, a structured plan and a commitment connected to a person.",
-  "caption": "Recorded Flow UI. Deterministic speech input passes through the production action engine.",
-  "problem": "Life changes in sentences, while software asks us to update separate screens. A delayed day, a new intention and a promise to someone should remain connected without making the user translate everything into forms.",
-  "contribution": "I designed and engineered conversation as an input to shared life state. Flow resolves intent, asks for clarification or confirmation when needed, and executes a deterministic action. Calendar, Journal, Friends and Memories provide concrete places to inspect and edit the result.",
-  "outcome": "Conversation can create persistent objects and change their relationships: an intention becomes a plan, a plan step becomes scheduled time, and a commitment remains connected to a person. The visible result stays editable through ordinary controls.",
-  "limitation": "The film uses the existing deterministic recognition adapter to exercise production actions. It demonstrates product behavior, not microphone accuracy, speech latency or a general intelligence benchmark. Current release and motion acceptance remain separate checks.",
-  "decisions": [
-    {
-      "title": "Let conversation change the product.",
-      "detail": "Intent resolves to a structured action and the result appears in its working surface. Calendar, Journal, Friends and Memories share the same life model.",
-      "tradeoff": "Natural language needs explicit interpretation and ambiguity handling before it can safely change persistent state."
-    },
-    {
-      "title": "Keep consequences editable.",
-      "detail": "A voice-created object uses the same state and controls as an object created through the interface. Clarification, confirmation and correction are part of the interaction.",
-      "tradeoff": "The action engine and the interface must agree on identity, ownership and valid state across every surface."
-    },
-    {
-      "title": "Make interruption part of the system.",
-      "detail": "New commands can interrupt presentation. Undo and redo operate on action history, so motion does not become the owner of product truth.",
-      "tradeoff": "Animation cleanup and history restoration require their own tests alongside the visible journey."
-    }
-  ]
-},
+    slug: 'flow', name: 'Flow', category: 'Voice-first personal computing', type: 'Personal project', number: '04',
+    summary: 'Tell it what changed. The product changes with you.',
+    role: 'Product design, React frontend, voice runtime & deterministic action systems', period: 'Independent product · 2026',
+    stack: ['React 19', 'TypeScript 5.9', 'Vite 7', 'Tailwind CSS', 'Motion', 'Zod', 'Web Speech API', 'Playwright'],
+    image: '/projects/flow/flow-loop-poster-final.jpg',
+    video: '/projects/flow/flow-loop-web-final.mp4',
+    alt: 'Flow turning conversation into a changed schedule, a structured plan and a commitment connected to a person.',
+    caption: 'Recorded Flow UI. Deterministic speech input passes through the production action engine.',
+    live: { href: 'https://miguelalmeida0.github.io/flow/', label: 'Open Flow' },
+    source: 'https://github.com/miguelalmeida0/flow',
+    problem: 'The hard part is not turning speech into text. It is letting a sentence change real state without making the product unpredictable. If a target is ambiguous, Flow has to ask. If dinner is protected, it has to stay put. If the result is wrong, undo has to restore the whole transaction.',
+    contribution: 'I built the path from conversation to typed product action: contextual intent resolution, clarification and confirmation, a shared LifeDocument, transaction validation, undo/redo, and the React surfaces that keep every result directly editable. Calendar, Journal, Friends and Memories all operate on that same model.',
+    outcome: 'Flow treats voice as another way to operate the product, not as a separate assistant mode. An intention can become a plan, one step can become scheduled time, a promise can stay attached to the right person, and the user can keep editing everything with ordinary controls.',
+    limitation: 'The portfolio film drives the real action pipeline with deterministic recognition. That proves the application path, not microphone accuracy or Chrome speech-service quality. The repository keeps physical microphone acceptance as a separate release gate.',
+    decisions: [
+      {
+        title: 'Speech never writes directly to state.',
+        detail: 'A transcript is resolved against the current route, selected entity, recent references and time scope. The command controller turns the result into typed actions; only the transaction layer is allowed to commit them.',
+        tradeoff: 'There is more machinery than a direct voice-to-handler shortcut, but interpretation mistakes cannot silently become arbitrary state mutations.'
+      },
+      {
+        title: 'Ambiguity is a product state, not a parser failure.',
+        detail: 'If Flow cannot identify the right event or the action is consequential, it can stop at clarification or confirmation before anything changes. Constraints such as protected time stay part of the transaction.',
+        tradeoff: 'Some requests take one extra turn. That is preferable to a confident-looking interface that changed the wrong thing.'
+      },
+      {
+        title: 'Undo restores the transaction, not the animation.',
+        detail: 'Voice and direct manipulation operate on the same shared document. Undo and redo restore domain history while presentation remains disposable, so motion never becomes a second source of truth.',
+        tradeoff: 'History, interruption and stale presentation need their own tests, but recovery stays reliable across surfaces.'
+      }
+    ]
+  },
 {
     slug: 'mirror-ai', name: 'Mirror AI', category: 'Visual selection', type: 'Personal project', number: '05',
     summary: 'Point to something. Keep the selected object in context.',

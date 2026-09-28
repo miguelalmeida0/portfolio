@@ -102,6 +102,16 @@ test('removed VIGIA route is not redirected to Flow', async ({ request }) => {
 test('Flow film loads, plays silently and restores its poster for reduced motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/work/flow');
+  const stack = page.locator('[data-flow-stack]');
+  await expect(stack).toContainText('React 19');
+  await expect(stack).toContainText('TypeScript 5.9');
+  await expect(stack).toContainText('Web Speech API');
+  await expect(stack).toContainText('Playwright');
+  await expect(page.getByRole('heading', { name: 'The hard part is not speech recognition.' })).toBeVisible();
+  await expect(page.locator('#architecture')).toContainText('typed LifeAction transactions');
+  await expect(page.locator('#proof')).toContainText('120');
+  await expect(page.locator('#proof')).toContainText('32');
+  await expect(page.locator('#proof')).toContainText('14');
   const video = page.locator('video');
   await expect(video).toHaveAttribute('src', '/projects/flow/flow-loop-web-final.mp4');
   await expect(video).toHaveAttribute('poster', '/projects/flow/flow-loop-poster-final.jpg');
