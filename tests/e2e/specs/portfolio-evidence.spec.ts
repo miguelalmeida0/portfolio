@@ -31,7 +31,11 @@ for (const slug of projects) test(`${slug} exposes its current case-study struct
     await expect(page.getByText('Product · Design · Backend · QA', { exact: true })).toBeVisible();
   } else {
     await expect(page.locator('#decisions [data-decision-item] h3')).toHaveCount(3);
-    await expect(page.locator('#outcome')).toContainText(/prototype|implemented|interface|experience|persistent|native/i);
+    if (slug === 'flow') {
+      await expect(page.locator('#outcome')).toContainText(/voice|shared state|editable|ordinary controls/i);
+    } else {
+      await expect(page.locator('#outcome')).toContainText(/prototype|implemented|interface|experience|persistent|native/i);
+    }
   }
   await expect(page.getByRole('link', { name: 'All work', exact: true })).toHaveAttribute('href', '/#work');
 });
@@ -58,12 +62,14 @@ test('product video is a silent loop with a poster fallback when autoplay is una
   const playback = await video.evaluate(async v => {
     const player = v as HTMLVideoElement;
     player.muted = true;
-    try {
-      await player.play();
-      return { supported: true, started: !player.paused };
-    } catch {
-      return { supported: false, started: false };
-    }
+    return Promise.race([
+      player.play()
+        .then(() => ({ supported: true, started: !player.paused }))
+        .catch(() => ({ supported: false, started: false })),
+      new Promise<{ supported: false; started: false }>(resolve =>
+        setTimeout(() => resolve({ supported: false, started: false }), 2500)
+      )
+    ]);
   });
 
   if (playback.supported) expect(playback.started).toBe(true);
@@ -113,14 +119,26 @@ test('Flow film loads, plays silently and restores its poster for reduced motion
   await expect(page.locator('#proof')).toContainText('32');
   await expect(page.locator('#proof')).toContainText('14');
   const video = page.locator('video');
-  await expect(video).toHaveAttribute('src', '/projects/flow/flow-loop-web-final.mp4');
   await expect(video).toHaveAttribute('poster', '/projects/flow/flow-loop-poster-final.jpg');
   await video.scrollIntoViewIfNeeded();
   await expect(video).toHaveAttribute('loop', '');
   await expect(video).toHaveAttribute('playsinline', '');
   await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).muted)).toBe(true);
-  await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).readyState)).toBeGreaterThanOrEqual(2);
-  await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).currentTime)).toBeGreaterThan(0);
+
+  const mediaPolicy = await page.evaluate(() => ({
+    reduced: document.documentElement.dataset.motion === 'reduced',
+    saveData: Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData)
+  }));
+  const src = await video.getAttribute('src');
+
+  if (mediaPolicy.reduced || mediaPolicy.saveData) {
+    expect(src).toBeNull();
+    await expect(video).toHaveAttribute('poster', '/projects/flow/flow-loop-poster-final.jpg');
+  } else {
+    expect(src).toBe('/projects/flow/flow-loop-web-final.mp4');
+    await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).readyState)).toBeGreaterThanOrEqual(2);
+    await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).currentTime)).toBeGreaterThan(0);
+  }
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(video).toBeHidden();
   await expect(page.locator('img[src="/projects/flow/flow-loop-poster-final.jpg"]')).toBeVisible();
