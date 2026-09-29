@@ -20,8 +20,8 @@ No other branch is long-lived. Temporary branches are acceptable only while a re
 5. Push to `test`; GitHub Actions must pass.
 6. Open one PR from `test` to `main`.
 7. Review the diff, screenshots/video changes and deployment risk.
-8. Merge only when the required checks are green.
-9. Keep `test` aligned with `main` after release.
+8. Merge the `test → main` PR with a merge commit only when the required checks are green.
+9. Fast-forward `test` to the resulting `main` merge commit after release so the two long-lived branches share ancestry.
 
 ## Repository settings
 
@@ -30,8 +30,8 @@ Configure GitHub with these rules:
 ### General
 
 - Default branch: `main`
-- Prefer squash merges for review PRs.
-- Do not use merge commits for routine promotion.
+- Use a merge commit for the long-lived `test → main` release PR so `test` remains an ancestor of `main` and can fast-forward after release.
+- Squash temporary review branches when they merge into `test`.
 - Keep the repository public and never store secrets or private customer material in Git history.
 
 ### `main` ruleset
@@ -40,7 +40,6 @@ Configure GitHub with these rules:
 - Require the `Static, unit and build` and `Cross-browser E2E` status checks.
 - Require branches to be up to date before merge.
 - Require conversation resolution.
-- Require linear history.
 - Block force pushes.
 - Block branch deletion.
 
