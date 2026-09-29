@@ -2,8 +2,8 @@
   import { onMount } from 'svelte';
   import { motionState } from '$lib/motion/policy';
 
-  let { src, poster, label, active = true, startAt = 0, onerror }: {
-    src: string; poster: string; label: string; active?: boolean; startAt?: number; onerror?: () => void;
+  let { src, poster, label, active = true, startAt = 0, stillForReduced = false, wide = false, onerror }: {
+    src: string; poster: string; label: string; active?: boolean; startAt?: number; stillForReduced?: boolean; wide?: boolean; onerror?: () => void;
   } = $props();
 
   let video: HTMLVideoElement;
@@ -95,9 +95,10 @@
   });
 </script>
 
+<div class="relative">
 <video
   bind:this={video}
-  src={active && !$motionState.saveData ? src : undefined}
+  src={active && !$motionState.saveData && !(stillForReduced && $motionState.reduced) ? src : undefined}
   {poster}
   autoplay={shouldPlay}
   muted
@@ -106,7 +107,13 @@
   preload={active && !$motionState.reduced && !$motionState.saveData ? 'auto' : 'none'}
   aria-label={label}
   {onerror}
-  class="block aspect-[16/10] max-h-[25rem] w-full object-contain"
+  style:visibility={stillForReduced && $motionState.reduced ? "hidden" : "visible"}
+  aria-hidden={stillForReduced && $motionState.reduced}
+  class={wide ? "block aspect-video w-full object-contain" : "block aspect-[16/10] max-h-[25rem] w-full object-contain"}
 >
   <track kind="captions" />
 </video>
+{#if stillForReduced && $motionState.reduced}
+  <img src={poster} alt={label} width="1920" height="1080" class="absolute inset-0 h-full w-full object-contain" />
+{/if}
+</div>

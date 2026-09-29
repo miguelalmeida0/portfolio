@@ -54,6 +54,22 @@ export const projectSystems: Record<string, ProjectSystem> = {
     ],
     quality: 'Provenance, stale data and uncertainty remain part of the model. The public gateway exposes a restricted evaluation surface; it does not authorize dispatch or certify safe routes.'
   },
+  flow: {
+    summary: 'Speech is only the front door. A contextual resolver interprets the request against the current route and recent references; the command controller turns that into typed actions; the transaction layer clones, applies and validates shared state before commit; React renders that same state back as ordinary editable UI.',
+    flow: [
+      { name: 'Hear', detail: 'Capture a transcript without giving the recognizer authority to mutate product state.' },
+      { name: 'Resolve', detail: 'Rank intent with route, selection, recent targets, pending context and the active time scope.' },
+      { name: 'Transact', detail: 'Apply typed actions to a draft, validate invariants and stop on clarification, confirmation or conflict.' },
+      { name: 'Keep editing', detail: 'Commit one shared document so voice and direct manipulation operate on the same objects.' }
+    ],
+    tools: [
+      { area: 'Interface', names: 'React 19 · TypeScript 5.9 · Tailwind CSS · Motion', purpose: 'Render responsive product surfaces and keep voice-created state directly editable with ordinary controls.' },
+      { area: 'Voice & intent', names: 'Web Speech API · contextual intent resolver · conversation context', purpose: 'Turn a transcript into a ranked intent using route, selection, recent references and pending conversational state.' },
+      { area: 'State & safety', names: 'Zod · typed LifeAction transactions · shared LifeDocument · local persistence', purpose: 'Apply changes to a draft, validate invariants, preserve stable identity and commit one deterministic state transition.' },
+      { area: 'Verification', names: 'Vitest · Testing Library · Playwright · command traces', purpose: 'Exercise parser behavior, state invariants, undo/redo, cross-surface journeys and the exact actions produced by a command.' }
+    ],
+    quality: 'Ambiguity can stop before mutation, protected calendar anchors remain fixed, command traces record the chosen intent and actual actions, and undo/redo restore complete transactions. Automated recognition verifies the application path; physical microphone acceptance is tracked separately.'
+  },
   'mirror-ai': {
     summary: 'Image processing runs away from the interaction thread. A versioned scene manifest keeps geometry, identity and user corrections separate, while local storage makes repeated inspection immediate.',
     flow: [

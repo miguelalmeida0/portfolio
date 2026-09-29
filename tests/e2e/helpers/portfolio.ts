@@ -11,10 +11,11 @@ export async function openPortfolioHome(page: Page) {
   await expect(page.getByRole('heading', { level: 1, name: /Frontend developer.*design engineer/i })).toBeVisible();
 }
 
-/** Leu opens first; reach the Second Voice studio through its real project control. */
+/** Second Voice opens first in the selected-work order. Keep the studio open. */
 export async function openSecondVoiceStudio(page: Page) {
   await openPortfolioHome(page);
-  await page.locator('#project-trigger-second-voice-ai').click();
+  const trigger = page.locator('#project-trigger-second-voice-ai');
+  if (await trigger.getAttribute('aria-expanded') !== 'true') await trigger.click();
   await expect(page.locator('#project-content-second-voice-ai')).toHaveAttribute('aria-hidden', 'false');
   await expect(page.locator('#project-content-second-voice-ai')).toHaveJSProperty('inert', false);
 }

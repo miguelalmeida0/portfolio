@@ -9,7 +9,7 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    slug: 'second-voice-ai', name: 'Second Voice AI', category: 'Product design & frontend', type: 'Personal project', number: '01',
+    slug: 'second-voice-ai', name: 'Second Voice', category: 'Product design & frontend', type: 'Personal project', number: '01',
     summary: 'Choose a literary voice. See exactly what changes.',
     role: 'Product design, frontend & server orchestration', period: 'Independent product · 2026',
     stack: ['Next.js', 'React', 'TypeScript', 'Supabase', 'Groq'],
@@ -57,21 +57,36 @@ export const projects: Project[] = [
     ]
   },
 {
-    slug: 'vigia', name: 'VIGIA', category: 'Crisis intelligence', type: 'Personal project', number: '04',
-    summary: 'An operational picture that connects incidents to the decisions around them.',
-    role: 'Product strategy, interaction design & frontend systems', period: 'Independent system · Portugal first',
-    stack: ['Node.js', 'PostGIS', 'MapLibre', 'OSRM', 'Docker'],
-    image: '/projects/vigia/intelligence.webp', alt: 'VIGIA’s operational intelligence workspace with incident context and a Portugal map.',
-    caption: 'VIGIA Intelligence. Captured public evaluation interface; the poster is stored with this portfolio.',
-    live: { href: 'https://vigia-public-demo.onrender.com', label: 'Explore the public demo' },
-    problem: 'A map can show an incident without explaining its consequences. An operator also needs to know which roads and facilities matter, what changed, what support is available, and what remains uncertain.',
-    contribution: 'I shaped the interaction model around incidents, facilities, route restrictions, dependencies, resource feasibility and situation history. The interface keeps an incident’s context together instead of scattering it across disconnected dashboards.',
-    outcome: 'An explorable operator interface supported by consequence and planning logic. The public portfolio scenario lets visitors inspect the product’s decisions without treating it as an operational emergency system.',
-    limitation: 'The public demo is an evaluation surface. Its scenarios do not establish current emergency conditions, safe passage or dispatch authority. Availability depends on its separate deployment.',
+    slug: 'flow', name: 'Flow', category: 'Voice-first personal computing', type: 'Personal project', number: '04',
+    summary: 'Tell it what changed. The product changes with you.',
+    role: 'Product design, React frontend, voice runtime & deterministic action systems', period: 'Independent product · 2026',
+    stack: ['React 19', 'TypeScript 5.9', 'Vite 7', 'Tailwind CSS', 'Motion', 'Zod', 'Web Speech API', 'Playwright'],
+    image: '/projects/flow/flow-loop-poster-final.jpg',
+    video: '/projects/flow/flow-loop-web-final.mp4',
+    alt: 'Flow turning conversation into a changed schedule, a structured plan and a commitment connected to a person.',
+    caption: 'Recorded Flow UI. Deterministic speech input passes through the production action engine.',
+    live: { href: 'https://miguelalmeida0.github.io/flow/', label: 'Open Flow' },
+    source: 'https://github.com/miguelalmeida0/flow',
+    problem: 'The hard part is not turning speech into text. It is letting a sentence change real state without making the product unpredictable. If a target is ambiguous, Flow has to ask. If dinner is protected, it has to stay put. If the result is wrong, undo has to restore the whole transaction.',
+    contribution: 'I built the path from conversation to typed product action: contextual intent resolution, clarification and confirmation, a shared LifeDocument, transaction validation, undo/redo, and the React surfaces that keep every result directly editable. Calendar, Journal, Friends and Memories all operate on that same model.',
+    outcome: 'Flow treats voice as another way to operate the product, not as a separate assistant mode. An intention can become a plan, one step can become scheduled time, a promise can stay attached to the right person, and the user can keep editing everything with ordinary controls.',
+    limitation: 'The portfolio film drives the real action pipeline with deterministic recognition. That proves the application path, not microphone accuracy or Chrome speech-service quality. The repository keeps physical microphone acceptance as a separate release gate.',
     decisions: [
-      { title: 'Start with what changed.', detail: 'Incident context, affected services and the next useful inspection stay close to the operational view, so the map supports the task rather than becoming the task.', tradeoff: 'A focused incident view exposes less information at once than an all-layers dashboard.' },
-      { title: 'Keep uncertainty visible.', detail: 'Observations carry provenance and freshness. Expired information cannot silently continue to look current.', tradeoff: 'A clear unknown can be less visually satisfying than a definitive answer, but it is the more useful state.' },
-      { title: 'Give the public demo a firm boundary.', detail: 'The portfolio experience exposes a controlled evaluation of the console and its decision logic. Unsupported operational actions stay unavailable.', tradeoff: 'The public experience cannot represent every production integration or field condition.' }
+      {
+        title: 'Speech never writes directly to state.',
+        detail: 'A transcript is resolved against the current route, selected entity, recent references and time scope. The command controller turns the result into typed actions; only the transaction layer is allowed to commit them.',
+        tradeoff: 'There is more machinery than a direct voice-to-handler shortcut, but interpretation mistakes cannot silently become arbitrary state mutations.'
+      },
+      {
+        title: 'Ambiguity is a product state, not a parser failure.',
+        detail: 'If Flow cannot identify the right event or the action is consequential, it can stop at clarification or confirmation before anything changes. Constraints such as protected time stay part of the transaction.',
+        tradeoff: 'Some requests take one extra turn. That is preferable to a confident-looking interface that changed the wrong thing.'
+      },
+      {
+        title: 'Undo restores the transaction, not the animation.',
+        detail: 'Voice and direct manipulation operate on the same shared document. Undo and redo restore domain history while presentation remains disposable, so motion never becomes a second source of truth.',
+        tradeoff: 'History, interruption and stale presentation need their own tests, but recovery stays reliable across surfaces.'
+      }
     ]
   },
 {
