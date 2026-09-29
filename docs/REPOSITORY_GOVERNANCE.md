@@ -67,3 +67,7 @@ Production rollback is commit-based. Revert the release commit on `main`, run th
 ## Source of truth
 
 Code and tests are authoritative. Portfolio copy must not claim capabilities that the corresponding project does not implement or verify.
+
+## Legacy branch migration
+
+The 2026-09-29 cleanup archives each removed branch head under `archive/2026-09-29/*` before deleting the branch. This keeps historical experiments recoverable without leaving them as active development lines. The former `portfolio` default branch is also tagged before the default-branch migration.

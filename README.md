@@ -17,7 +17,7 @@ Local development runs at `http://localhost:4173`.
 
 ## Quality gate
 
-Fast release verification:
+Fast release verification, including repository hygiene, Svelte/TypeScript checks, unit tests and the production build:
 
 ```bash
 npm run verify

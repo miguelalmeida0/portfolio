@@ -1,0 +1,74 @@
+name: Repository Migration
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/repository-migration.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  archive-and-prune:
+    name: Archive and prune legacy branches
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout all refs
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Archive branch heads as tags, then delete legacy branches
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch --prune origin '+refs/heads/*:refs/remotes/origin/*'
+
+          if git show-ref --verify --quiet refs/remotes/origin/portfolio; then
+            portfolio_sha="$(git rev-parse refs/remotes/origin/portfolio)"
+            portfolio_tag="archive/2026-09-29/portfolio-pre-main-default"
+            if ! git ls-remote --exit-code --tags origin "refs/tags/$portfolio_tag" >/dev/null 2>&1; then
+              git tag -a "$portfolio_tag" "$portfolio_sha" -m "Portfolio default branch before main/test migration"
+              git push origin "refs/tags/$portfolio_tag"
+            fi
+          fi
+
+          legacy_branches=(
+            "audit/typography-responsive-polish"
+            "backup/pre-v6-2026-09-27"
+            "chatgpt/vigia-ghostwriter-portfolio-2026-09-15"
+            "claude/jolly-dirac-vv68fm"
+            "dev"
+            "diagnostics/intro-entry-proof"
+            "feat/portfolio-shadergradient"
+            "fix/intro-startup-20260927"
+            "fix/intro-visible-entry-20260927"
+            "release/portfolio-vigia-ghostwriter-2026-09-15"
+            "test-animation"
+          )
+
+          for branch in "${legacy_branches[@]}"; do
+            remote_ref="refs/remotes/origin/$branch"
+            if ! git show-ref --verify --quiet "$remote_ref"; then
+              continue
+            fi
+
+            sha="$(git rev-parse "$remote_ref")"
+            safe_name="${branch//\//-}"
+            archive_tag="archive/2026-09-29/$safe_name"
+
+            if ! git ls-remote --exit-code --tags origin "refs/tags/$archive_tag" >/dev/null 2>&1; then
+              git tag -a "$archive_tag" "$sha" -m "Archive $branch before two-branch cleanup"
+              git push origin "refs/tags/$archive_tag"
+            fi
+
+            git push origin --delete "$branch"
+          done
