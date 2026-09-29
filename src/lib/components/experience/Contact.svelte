@@ -11,6 +11,12 @@
   let status = $state('');
   let timer: ReturnType<typeof setTimeout>;
 
+  const links = [
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/miguelalmeida1/' },
+    { label: 'GitHub', href: 'https://github.com/miguelalmeida0' },
+    { label: 'Résumé', href: '/cv' }
+  ];
+
   async function copyEmail() {
     status = await copyText('miguelalmeida1592@gmail.com')
       ? 'Email copied.'
@@ -22,34 +28,83 @@
   onDestroy(() => clearTimeout(timer));
 </script>
 
-<footer id="contact" class="relative isolate overflow-clip bg-forest text-paper">
-  <div class="shell relative pt-10 pb-7 sm:pt-12 min-[60rem]:pt-16 min-[60rem]:pb-8">
-    <div use:contactSignature class="relative z-10 grid content-start gap-7 sm:grid-cols-2 min-[60rem]:min-h-80 min-[60rem]:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)_minmax(0,.72fr)] min-[60rem]:gap-10">
-      <div class="min-w-0 min-[60rem]:grid min-[60rem]:auto-rows-[3.5rem] min-[60rem]:content-start min-[60rem]:pt-6">
-        <h2 class="display-type text-[clamp(3.5rem,6.8vw,6rem)] leading-[.9] min-[60rem]:whitespace-nowrap min-[60rem]:flex min-[60rem]:items-center min-[60rem]:text-5xl min-[60rem]:leading-none">Contact.</h2>
-        <div class="mt-4 flex flex-wrap items-center gap-1 min-[60rem]:mt-0 min-[60rem]:flex-nowrap">
-          <a class="min-h-11 min-w-0 content-center break-all text-sm underline-offset-4 hover:underline focus-visible:outline-paper" href="mailto:miguelalmeida1592@gmail.com">miguelalmeida1592@gmail.com</a>
-          <button class="flex size-11 shrink-0 items-center justify-center rounded-md hover:bg-paper/10 focus-visible:outline-paper" aria-label="Copy email address" onclick={copyEmail}>
-            {#if status === 'Email copied.'}<Check aria-hidden="true" size={16} />{:else}<Copy aria-hidden="true" size={16} />{/if}
-          </button>
-        </div>
-        <p class="text-sm text-paper/80 min-[60rem]:flex min-[60rem]:items-center">Berlin, Germany</p>
-        <p role="status" class="sr-only">{status}</p>
+<footer id="contact" class="relative isolate overflow-hidden border-t border-rule bg-ivory text-ink">
+  <div class="shell relative py-9 sm:py-12 min-[60rem]:py-16">
+    <div class="flex items-center justify-between gap-4 border-b border-rule pb-4">
+      <p class="label-type">Contact</p>
+      <p class="text-sm text-muted">Berlin, Germany</p>
+    </div>
+
+    <div class="relative grid justify-items-center pt-8 sm:pt-10">
+      <div aria-hidden="true" class="relative h-[clamp(18rem,42vw,31rem)] w-[min(80vw,31rem)]">
+        <ContactPortrait />
       </div>
 
-      <nav aria-label="Social and résumé links" class="grid min-w-0 grid-cols-3 gap-x-4 sm:w-full sm:max-w-56 sm:grid-cols-1 sm:justify-self-end sm:self-center min-[60rem]:col-start-3 min-[60rem]:max-w-none min-[60rem]:self-start">
-        {#each [{ label: 'LinkedIn', href: 'https://www.linkedin.com/in/miguelalmeida1/' }, { label: 'GitHub', href: 'https://github.com/miguelalmeida0' }, { label: 'Résumé', href: '/cv' }] as link}
-          <a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer" class="group flex min-h-12 items-center justify-between gap-2 border-b border-paper/40 text-sm transition-colors hover:text-white focus-visible:outline-paper sm:min-h-14 sm:text-base sm:leading-none">
-            <span>{link.label}</span>{#if link.href.startsWith('http')}<ArrowUpRight size={16} aria-hidden="true" class="shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />{:else}<ArrowRight size={16} aria-hidden="true" class="shrink-0 transition-transform group-hover:translate-x-0.5" />{/if}
-          </a>
-        {/each}
-      </nav>
+      <div use:contactSignature={true} class="relative z-10 -mt-2 text-center sm:-mt-5">
+        <h2 class="font-wordmark relative inline-block text-[clamp(2.35rem,6.2vw,5.4rem)] leading-[.9] font-bold tracking-[-.045em] whitespace-nowrap">
+          MIGUEL ALMEIDA
+          <span data-contact-rule aria-hidden="true" class="pointer-events-none absolute inset-x-0 -bottom-3 h-px origin-left bg-plum"></span>
+        </h2>
+        <p class="mt-5 text-sm text-muted sm:text-base">Frontend developer &amp; design engineer</p>
+      </div>
     </div>
 
-    <div aria-hidden="true" class="pointer-events-none relative mx-auto mt-8 h-[clamp(15rem,45vw,22rem)] w-4/5 max-w-[26rem] min-[60rem]:absolute min-[60rem]:inset-x-0 min-[60rem]:top-16 min-[60rem]:bottom-0 min-[60rem]:mt-0 min-[60rem]:h-auto min-[60rem]:w-[52%] min-[60rem]:max-w-[38rem]">
-      <ContactPortrait />
-    </div>
+    <nav aria-label="Social, résumé and contact links" class="mx-auto mt-8 grid max-w-5xl border-y border-rule min-[48rem]:grid-cols-[repeat(3,minmax(0,1fr))_minmax(14rem,1.45fr)]">
+      {#each links as link}
+        <a
+          href={link.href}
+          target={link.href.startsWith('http') ? '_blank' : undefined}
+          rel="noopener noreferrer"
+          class="group flex min-h-14 items-center justify-between gap-3 border-b border-rule px-4 text-sm transition-colors hover:bg-sage focus-visible:outline-plum min-[48rem]:border-r min-[48rem]:border-b-0 sm:text-base"
+        >
+          <span>{link.label}</span>
+          {#if link.href.startsWith('http')}
+            <ArrowUpRight
+              size={17}
+              aria-hidden="true"
+              class="shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+            />
+          {:else}
+            <ArrowRight
+              size={17}
+              aria-hidden="true"
+              class="shrink-0 transition-transform group-hover:translate-x-0.5"
+            />
+          {/if}
+        </a>
+      {/each}
+      <a
+        href="mailto:miguelalmeida1592@gmail.com"
+        class="group flex min-h-14 items-center justify-between gap-4 bg-forest px-5 text-sm font-semibold text-paper transition-colors hover:bg-ink focus-visible:outline-plum sm:text-base"
+      >
+        <span>Let’s talk</span>
+        <ArrowRight size={19} aria-hidden="true" class="transition-transform group-hover:translate-x-1" />
+      </a>
+    </nav>
 
-    <p use:contactSignature={true} class="relative z-20 -mt-16 origin-bottom text-center font-wordmark text-[clamp(1.85rem,10.8vw,8rem)] leading-[.9] font-bold tracking-[-.035em] whitespace-nowrap min-[60rem]:mt-6 min-[60rem]:text-[clamp(2.1rem,6vw,5.5rem)]">MIGUEL ALMEIDA<span data-contact-rule aria-hidden="true" class="pointer-events-none absolute inset-x-0 -bottom-3 h-px origin-left bg-paper/30"></span></p>
+    <div class="mt-5 flex flex-col gap-4 text-sm sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex min-w-0 flex-wrap items-center gap-1">
+        <a
+          class="min-h-11 min-w-0 content-center break-all underline-offset-4 hover:underline"
+          href="mailto:miguelalmeida1592@gmail.com"
+        >
+          miguelalmeida1592@gmail.com
+        </a>
+        <button
+          type="button"
+          class="flex size-11 shrink-0 items-center justify-center rounded-md hover:bg-sage focus-visible:outline-plum"
+          aria-label="Copy email address"
+          onclick={copyEmail}
+        >
+          {#if status === 'Email copied.'}
+            <Check aria-hidden="true" size={16} />
+          {:else}
+            <Copy aria-hidden="true" size={16} />
+          {/if}
+        </button>
+        <span role="status" class="text-xs text-muted">{status}</span>
+      </div>
+      <p class="shrink-0 text-xs text-muted">© {new Date().getFullYear()} Miguel Almeida</p>
+    </div>
   </div>
 </footer>
