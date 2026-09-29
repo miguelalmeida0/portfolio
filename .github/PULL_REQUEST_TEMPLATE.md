@@ -26,6 +26,6 @@ Call out anything that could affect deployment, performance, accessibility, redu
 
 ## Release
 
-Normal promotion path: **test → main**.
+Normal promotion path: **test → main** with a merge commit, followed by fast-forwarding `test` to the resulting `main` merge commit.
 
 If this bypasses the normal path, explain why and how to roll it back.
