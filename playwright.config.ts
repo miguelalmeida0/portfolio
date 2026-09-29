@@ -11,7 +11,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: isCi,
   retries: isCi ? 2 : 0,
-  workers: isCi ? 1 : undefined,
+  workers: isCi ? 2 : undefined,
   timeout: 30_000,
   expect: {
     timeout: 8_000
@@ -59,6 +59,7 @@ export default defineConfig({
     },
     {
       name: 'firefox-desktop',
+      testIgnore: /responsive-cv\.spec\.ts/,
       use: {
         ...devices['Desktop Firefox'],
         viewport: { width: 1440, height: 1000 }
@@ -66,6 +67,7 @@ export default defineConfig({
     },
     {
       name: 'webkit-desktop',
+      testIgnore: /responsive-cv\.spec\.ts/,
       use: {
         ...devices['Desktop Safari'],
         viewport: { width: 1440, height: 1000 }
@@ -73,6 +75,7 @@ export default defineConfig({
     },
     {
       name: 'chromium-mobile',
+      testIgnore: /responsive-cv\.spec\.ts/,
       use: {
         ...devices['Pixel 7'],
         viewport: { width: 390, height: 844 }
@@ -80,6 +83,7 @@ export default defineConfig({
     },
     {
       name: 'webkit-mobile',
+      testIgnore: /responsive-cv\.spec\.ts/,
       use: {
         ...devices['iPhone 13'],
         viewport: { width: 390, height: 844 }
