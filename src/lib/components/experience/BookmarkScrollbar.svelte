@@ -8,7 +8,6 @@
   let position = $state(0);
   let dragging = $state(false);
   let trails = $state([0, 0]);
-  let overFooter = $state(false);
   let startY = 0;
   let startScroll = 0;
   let travel = 1;
@@ -67,9 +66,6 @@
       });
       initialized = true;
       trails = followers.map(value => Math.abs(value - top) < .02 ? 0 : value - top);
-      const footer = document.querySelector('footer')?.getBoundingClientRect();
-      const center = 12 + top + height / 2;
-      overFooter = !!footer && center >= footer.top && center <= footer.bottom;
       if (trails.some(value => value !== 0)) schedule();
     };
     const schedule = () => { frame ||= requestAnimationFrame(update); };
@@ -105,8 +101,7 @@
     class="group fixed inset-y-3 right-0 z-40 w-6 touch-none select-none no-print focus-visible:outline-none"
     class:bookmark-dragging={dragging}>
     <div data-bookmark-thumb class="absolute inset-x-0 top-0 flex justify-center" style:height={`${height}px`} style:transform={`translateY(${top}px)`}>
-      <div data-pixel-traveller class="pointer-events-none flex h-full flex-col items-center justify-center gap-1 opacity-60 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 group-[.bookmark-dragging]:opacity-100 motion-reduce:transition-none group-focus-visible:outline group-focus-visible:outline-1 group-focus-visible:outline-offset-4"
-        class:text-paper={overFooter} class:text-forest={!overFooter}>
+      <div data-pixel-traveller class="pointer-events-none flex h-full flex-col items-center justify-center gap-1 text-forest opacity-60 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 group-[.bookmark-dragging]:opacity-100 motion-reduce:transition-none group-focus-visible:outline group-focus-visible:outline-1 group-focus-visible:outline-offset-4">
         {#each [0, ...trails] as offset, index}
           <span data-pixel={index} class="block size-1.5 shrink-0 bg-current" style:transform={`translateY(${offset}px)`}></span>
         {/each}
