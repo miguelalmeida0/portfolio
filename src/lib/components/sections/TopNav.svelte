@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   import { onMount } from 'svelte';
 
   import type { NavItem } from '$lib/types/portfolio';
@@ -44,7 +45,7 @@
 <div class={tokens.layout.nav}>
   <nav class={cn(tokens.surfaces.nav, tokens.surfaces.navShell, 'relative w-full rounded-[2rem] px-5 py-4 sm:rounded-full sm:px-5 sm:py-4')} aria-label="Primary">
     <div class="flex min-w-0 items-center justify-between gap-3 min-[1180px]:grid min-[1180px]:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] min-[1180px]:gap-5 xl:gap-6">
-      <a class="flex min-w-0 items-baseline gap-2 sm:gap-3 xl:gap-5" href="#top">
+      <a class="flex min-w-0 items-baseline gap-2 sm:gap-3 xl:gap-5" href="#top" {...destinationLink("#top")}>
         <span class={cn(tokens.typography.navBrand, 'min-w-0 whitespace-nowrap pb-[0.08em]')}>
           {siteName}
         </span>
@@ -61,7 +62,7 @@
               activeHref === link.href && 'text-[#F1F8FC]'
             )}
             href={link.href}
-            aria-current={activeHref === link.href ? 'page' : undefined}
+            aria-current={activeHref === link.href ? 'page' : undefined} {...destinationLink(link.href)}
           >
             {link.label}
           </a>
@@ -69,7 +70,7 @@
       </div>
 
       <div class="hidden min-[1480px]:flex min-w-0 justify-end">
-        <a class={tokens.surfaces.navButtonAccent} href={contactHref}>Let's talk</a>
+        <a class={tokens.surfaces.navButtonAccent} href={contactHref} {...destinationLink(contactHref)}>Let's talk</a>
       </div>
     </div>
   </nav>

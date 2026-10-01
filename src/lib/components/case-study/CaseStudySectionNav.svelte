@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   export let items: { id: string; label: string }[] = [];
 </script>
 
@@ -6,7 +7,7 @@
   <span>Jump to</span>
   <div>
     {#each items as item}
-      <a href={`#${item.id}`}>{item.label}</a>
+      <a href={`#${item.id}`} {...destinationLink(`#${item.id}`)}>{item.label}</a>
     {/each}
   </div>
 </nav>

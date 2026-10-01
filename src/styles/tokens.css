@@ -1,0 +1,174 @@
+:root {
+  --page-x: clamp(20px, 7.5vw, 108px);
+  --content-max: 1704px;
+  --gutter: 24px;
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px;
+  --s-5: 24px; --s-6: 32px; --s-7: 40px; --s-8: 48px;
+  --s-9: 64px; --s-10: 96px; --s-11: 120px; --s-12: 160px;
+  --r-card: 16px; --r-media: 12px; --r-board: 18px; --r-pill: 999px;
+  --rule-w: 1px;
+}
+@media (max-width: 767px) { :root { --page-x: 20px; } }
+/* Shared palette and geometry. The homepage keeps its portrait and stage contracts. */
+.wind-theme {
+  --page: #F0F3E4;
+  --lime: #E4EDBF;
+  --sage: #E7ECD8;
+  --paper: #F9F7EE;
+  --forest: #1C362D;
+  --ink: #142A22;
+  --plum: #59163C;
+  --plum-700: #3E0F2C;
+  --muted: #4E5C54;
+  --rule-ink: rgba(20, 42, 34, 0.18);
+  --rule-pg: rgba(20, 42, 34, 0.15);
+  --card-radius: 16px;
+  --gutter: var(--page-x);
+  --card-gap: var(--s-5);
+  --hero-font: 'Figtree', sans-serif;
+  background: var(--page);
+}
+@font-face { font-family: 'Figtree'; font-style: normal; font-weight: 300 900; font-display: swap; src: url('/fonts/figtree-latin.woff2') format('woff2'); }
+.wind-shell { width: min(calc(100% - 2 * var(--page-x)), var(--content-max)); margin-inline: auto; }
+.wind-theme :is(.wind-header, .wind-hero) :focus-visible,
+.wind-theme .wind-skip:focus-visible { outline: 3px solid var(--plum); outline-offset: 2px; }
+
+/* Homepage tidy pass. The portrait keeps its original sizing formula and radius. */
+#portfolio-content[data-homepage] {
+  --gutter: var(--s-5);
+  --hero-offset: var(--s-6);
+  --work-offset: var(--s-9);
+  --work-top: var(--s-10);
+  --work-bottom: calc(var(--s-10) + var(--s-4));
+  --stage-height: 560px;
+  --caption-height: 80px;
+  --stacked-card-height: 440px;
+  --rule: var(--rule-ink);
+  --fg-muted: var(--muted);
+  /* Baseline: viewport minus 2 × 120px margins, 640px lime card and 33px gap. */
+  --portrait-width: calc(100vw - 913px);
+}
+#portfolio-content[data-homepage] .wind-hero {
+  width: min(calc(100% - 2 * var(--page-x)), var(--content-max));
+  margin-inline: auto;
+}
+#portfolio-content[data-homepage] .wind-hero { grid-template-columns: minmax(0, 1fr) var(--portrait-width); gap: var(--gutter); margin-top: var(--hero-offset); }
+#portfolio-content[data-homepage] .content-card { padding: var(--s-7); border-radius: var(--r-card); }
+#portfolio-content[data-homepage] .top-group { gap: var(--s-4); }
+#portfolio-content[data-homepage] .bottom-group { gap: var(--s-5); }
+#portfolio-content[data-homepage] .hero-stack { font-size: 20px; line-height: 1.4; font-weight: 500; color: var(--muted); }
+#portfolio-content[data-homepage] .supporting-copy { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--s-5); border-top: var(--rule-w) solid var(--rule); padding-top: var(--s-4); }
+#portfolio-content[data-homepage] .supporting-copy p { font: 600 16px/1.4 var(--hero-font); color: var(--ink); }
+#portfolio-content[data-homepage] .hero-actions { gap: var(--s-5); }
+#portfolio-content[data-homepage] .primary:focus-visible { outline: 3px solid var(--plum); outline-offset: var(--s-1); box-shadow: none; }
+
+#portfolio-content[data-homepage] .work-section {
+  --fg: var(--work-text); --fg-muted: #4E5C54; --bar: var(--plum); --rule: var(--work-rule);
+  margin-top: var(--work-offset); padding: var(--work-top) var(--content-inset) var(--work-bottom);
+}
+#portfolio-content[data-homepage] [data-project='f24'].work-section { --fg-muted: #B9C7B4; --bar: #C9E08A; }
+#portfolio-content[data-homepage] [data-project='leu'].work-section { --fg-muted: #E3CCD8; --bar: #C9E08A; }
+#portfolio-content[data-homepage] .work-heading { padding-bottom: var(--s-5); border-bottom: var(--rule-w) solid var(--rule); }
+#portfolio-content[data-homepage] .work-heading h2 { font: 800 44px/1.08 var(--hero-font); letter-spacing: -.03em; }
+#portfolio-content[data-homepage] .work-body { display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); grid-template-rows: var(--caption-height) var(--stage-height); gap: var(--s-4) var(--gutter); margin-top: var(--s-8); }
+#portfolio-content[data-homepage] .index-column { grid-column: 1 / 5; grid-row: 1 / 3; display: grid; grid-template-columns: minmax(0,1fr); grid-template-rows: subgrid; justify-content: stretch; gap: inherit; padding-right: var(--s-5); }
+#portfolio-content[data-homepage] .index-column nav { grid-column: 1; grid-row: 1 / 3; align-self: start; }
+#portfolio-content[data-homepage] .project-index { display: grid; grid-template-columns: minmax(0,1fr); gap: var(--s-1); }
+#portfolio-content[data-homepage] .project-index button { padding: calc(var(--s-2) + var(--s-1)/2) 0 calc(var(--s-2) + var(--s-1)/2) calc(var(--s-4) + var(--s-1)); border: 0; border-radius: 0; opacity: 1; }
+html:not(.ask-on) #portfolio-content[data-homepage] .project-index button { background: transparent; color: var(--fg-muted); }
+#portfolio-content[data-homepage] .project-index button::after { inset: 10px auto 10px 0; width: 3px; border-radius: 2px; background: transparent; }
+html:not(.ask-on) #portfolio-content[data-homepage] .project-index button[aria-current='true'] { color: var(--fg); }
+#portfolio-content[data-homepage] .project-index button[aria-current='true']::after { background: var(--bar); }
+#portfolio-content[data-homepage] .project-index button:not(:focus-visible) { outline: none; }
+#portfolio-content[data-homepage] .project-index button:focus-visible { outline: 3px solid var(--fg); outline-offset: var(--s-1); }
+#portfolio-content[data-homepage] .project-name { font: 800 30px/1.05 var(--hero-font); letter-spacing: -.03em; }
+#portfolio-content[data-homepage] .subtitle { margin-top: var(--s-2); font: 500 16px/1.4 var(--hero-font); color: var(--fg-muted); }
+#portfolio-content[data-homepage] .project-meta { grid-column: 1; grid-row: 2; align-self: end; display: block; border-top: var(--rule-w) solid var(--rule); padding-top: var(--s-5); }
+#portfolio-content[data-homepage] .role { font-size: 18px; line-height: 1.45; }
+#portfolio-content[data-homepage] .stack { margin-top: var(--s-3); font: 600 14px/1.3 var(--hero-font); color: var(--fg-muted); }
+#portfolio-content[data-homepage] .links { justify-content: flex-start; margin-top: var(--s-5); gap: calc(var(--s-4) + var(--s-1)); }
+#portfolio-content[data-homepage] .primary-link { border-radius: var(--r-pill); padding-inline: calc(var(--s-4) + var(--s-1)); }
+#portfolio-content[data-homepage] .stage-region { grid-column: 5 / -1; grid-row: 1 / 3; display: grid; grid-template-rows: subgrid; }
+#portfolio-content[data-homepage] .stage { grid-row: 1 / 3; display: grid; grid-template-rows: subgrid; gap: var(--s-4); }
+#portfolio-content[data-homepage] .stage .caption { grid-row: 1; height: var(--caption-height); display: flex; align-items: baseline; gap: var(--s-5); }
+#portfolio-content[data-homepage] .stage .caption h3 { max-width: none; font-size: 25px; line-height: 1.3; }
+#portfolio-content[data-homepage] .caption [data-media-controls] { position: static; transform: none; margin-left: auto; flex-shrink: 0; padding: 0; font: 600 14px/1.3 var(--hero-font); color: var(--fg-muted); }
+#portfolio-content[data-homepage] .caption button[data-media-controls] { padding-inline: var(--s-4); color: var(--paper); }
+#portfolio-content[data-homepage] .caption .loop-controls { gap: var(--s-4); }
+#portfolio-content[data-homepage] .caption button:focus-visible { outline-color: var(--work-text); }
+#portfolio-content[data-homepage] .stage .frame { grid-row: 2; height: var(--stage-height); grid-template-rows: minmax(0,1fr); gap: var(--s-4); aspect-ratio: auto; }
+#portfolio-content[data-homepage] .frame .stage-card { padding: var(--s-6); border-radius: var(--r-card); --fg-muted: #4E5C54; }
+#portfolio-content[data-homepage] .frame .solo { padding: 0; }
+#portfolio-content[data-homepage] .stage[data-project='flow'] video { object-fit: contain !important; }
+#portfolio-content[data-homepage] .photo-link, #portfolio-content[data-homepage] .photo-link img { border-radius: var(--r-media); }
+#portfolio-content[data-homepage] .stage[data-project='f24'] .card-a { padding: var(--s-4); }
+#portfolio-content[data-homepage] .photo-caption, #portfolio-content[data-homepage] .eyebrow { font: 600 14px/1.3 var(--hero-font); color: var(--fg-muted); }
+#portfolio-content[data-homepage] .photo-caption { margin-top: var(--s-3); }
+#portfolio-content[data-homepage] .decision-title { margin-top: var(--s-3); font: 800 24px/1.15 var(--hero-font); letter-spacing: -.02em; }
+#portfolio-content[data-homepage] .decision-body { margin-top: var(--s-4); font-size: 19px; line-height: 1.55; }
+#portfolio-content[data-homepage] .tags { margin-top: calc(var(--s-4) + var(--s-1)); gap: var(--s-2); }
+#portfolio-content[data-homepage] .tags li { border-radius: var(--r-pill); }
+#portfolio-content[data-homepage] .decision-footer { display: flex; justify-content: space-between; align-items: center; gap: var(--s-2); margin-top: auto; border-top: var(--rule-w) solid var(--rule-ink); padding-top: var(--s-4); }
+#portfolio-content[data-homepage] .decision-footer a { margin-top: 0; }
+#portfolio-content[data-homepage] .controls { padding-top: var(--s-5); }
+#portfolio-content[data-homepage] .controls fieldset, #portfolio-content[data-homepage] .controls .apply { margin-top: var(--s-4); }
+#portfolio-content[data-homepage] .result-footer { margin-top: auto; padding-top: var(--s-4); }
+
+/* Line M: only outer separation and the permitted margin/head alignment moves. */
+#portfolio-content .contact { padding-top: calc(var(--contact-separation) - var(--s-8)); padding-bottom: var(--contact-bottom); background: #F0F3E5; }
+#portfolio-content [data-line-m] > div:first-child { left: var(--content-inset); right: var(--content-inset); align-items: flex-start; }
+#portfolio-content [data-contact-head] { margin-top: 0; }
+@media (min-width: 1280px) {
+  #portfolio-content [data-line] { left: calc(var(--content-inset) + 62px); right: calc(var(--content-inset) + 62px); }
+}
+@media (max-width: 1279px) {
+  #portfolio-content [data-line-m] { padding-inline: var(--page-x); }
+}
+@media (max-width: 899px) {
+  /* The existing vertical Line M layout starts at 40px, not 48px. */
+  #portfolio-content .contact { padding-top: calc(var(--contact-separation) - var(--s-7)); }
+}
+
+@media (min-width: 1600px) {
+  #portfolio-content[data-homepage] { --caption-height: 40px; }
+  #portfolio-content[data-homepage] .index-column { grid-column: 1 / 4; }
+  #portfolio-content[data-homepage] .stage-region { grid-column: 4 / -1; }
+}
+@media (min-width: 1024px) and (max-width: 1279px) {
+  #portfolio-content[data-homepage] { --caption-height: var(--s-10); }
+  #portfolio-content[data-homepage] { --hero-offset: var(--s-5); --work-offset: calc(var(--s-8) + var(--s-2)); --work-top: calc(var(--s-9) + var(--s-4)); --work-bottom: var(--s-10); --stage-height: 480px; --portrait-width: calc((100vw - 128px) * .44); }
+  #portfolio-content[data-homepage] .wind-hero { width: round(down, calc(100% - 2 * var(--page-x)), 1px); }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  #portfolio-content[data-homepage] { --caption-height: var(--s-10); }
+  #portfolio-content[data-homepage] { --hero-offset: var(--s-5); --work-offset: var(--s-8); --work-top: calc(var(--s-9) + var(--s-2)); --work-bottom: calc(var(--s-9) + var(--s-4)); --portrait-width: calc(100vw - 128px); }
+}
+@media (max-width: 1023px) {
+  #portfolio-content[data-homepage] .wind-hero { grid-template-columns: minmax(0,1fr); }
+  #portfolio-content[data-homepage] .portrait-card { width: var(--portrait-width); }
+  #portfolio-content[data-homepage] .work-body { grid-template-columns: minmax(0,1fr); grid-template-rows: auto auto; gap: var(--s-5); }
+  #portfolio-content[data-homepage] .index-column { grid-column: 1; grid-row: 1; grid-template-rows: auto auto; padding-right: 0; gap: var(--s-5); }
+  #portfolio-content[data-homepage] .index-column nav { grid-row: 1; }
+  #portfolio-content[data-homepage] .project-meta { grid-row: 2; min-height: calc(3 * var(--s-9)); display: flex; flex-direction: column; gap: 0; }
+  #portfolio-content[data-homepage] .project-meta .links { margin-top: auto; padding-top: var(--s-5); }
+  #portfolio-content[data-homepage] .stage-region { grid-column: 1; grid-row: 2; grid-template-rows: auto auto; }
+  #portfolio-content[data-homepage] .stage { grid-template-rows: var(--caption-height) auto; }
+  #portfolio-content[data-homepage] .stage .caption { height: var(--caption-height); flex-wrap: wrap; align-content: start; gap: var(--s-2); }
+  #portfolio-content[data-homepage] .stage .frame { height: calc(2 * var(--stacked-card-height) + var(--s-4)); min-height: 0; grid-template-columns: minmax(0,1fr); grid-template-rows: repeat(2,minmax(0,1fr)); }
+  #portfolio-content[data-homepage] .stage[data-kind='solo'] .frame { grid-template-rows: minmax(0,1fr); }
+  #portfolio-content[data-homepage] .project-index { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 767px) {
+  #portfolio-content[data-homepage] { --caption-height: 160px; --stacked-card-height: 480px; }
+  #portfolio-content[data-homepage] .project-meta { min-height: calc(3 * var(--s-9) + var(--s-6)); }
+  #portfolio-content[data-homepage] { --hero-offset: var(--s-4); --work-offset: var(--s-7); --work-top: calc(var(--s-8) + var(--s-2)); --work-bottom: var(--s-9); --portrait-width: calc(100vw - 2 * var(--page-x)); }
+  #portfolio-content[data-homepage] .content-card { gap: var(--s-6); }
+  #portfolio-content[data-homepage] .supporting-copy { grid-template-columns: minmax(0,1fr); gap: var(--s-3); }
+  #portfolio-content[data-homepage] .hero-actions { gap: var(--s-3); }
+  #portfolio-content[data-homepage] .hero-actions a { width: 100%; min-height: var(--s-8); }
+  #portfolio-content[data-homepage] .project-name { font-size: 30px; }
+  #portfolio-content[data-homepage] .stage .caption h3 { flex-basis: 100%; }
+}
+@media (max-width: 374px) {
+  #portfolio-content[data-homepage] { --stacked-card-height: 576px; }
+}

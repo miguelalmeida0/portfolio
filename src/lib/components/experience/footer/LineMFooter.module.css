@@ -1,0 +1,115 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Line M footer. Geometry and motion follow the handoff. Explanatory copy uses
+   regular Figtree to preserve the user's current typography preference.
+   The two breakpoints are the handoff's extension for narrower screens.
+   ───────────────────────────────────────────────────────────────────────────── */
+.root {
+  --page: #F0F3E5; --lime: #E3EDC2; --plum: #5B153C; --ink: #122A22; --forest: #0D372D;
+  --paper: #F9F7EF; --muted: #5C6B5F; --dim: #9FB39B; --spring: #C9E08A;
+  --ui: 'Figtree', 'Avenir Next', system-ui, sans-serif; --read: 'Newsreader', Georgia, serif;
+  position: relative; height: 640px; overflow: hidden;
+  background: var(--page); color: var(--ink); font-family: var(--ui);
+}
+
+/* ── header + board ─────────────────────────────────────────────────────────── */
+.top { position: absolute; left: 108px; right: 108px; top: 48px; display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; }
+.head { flex: 1 1 auto; max-width: 760px; margin-top: 8px; }
+.titleRow { display: flex; align-items: center; gap: 14px; }
+.h { font: 700 44px/1.08 var(--ui); letter-spacing: -.03em; margin: 0; }
+.sub { margin: 14px 0 0; max-width: 640px; font: 400 21px/1.4 var(--ui); color: var(--muted); }
+.rnd { width: 30px; height: 30px; border-radius: 7px; background: var(--plum); color: var(--paper); display: grid; place-items: center; font: 800 17px/1 var(--ui); flex-shrink: 0; }
+.rndL { width: 44px; height: 44px; border-radius: 10px; font-size: 24px; }
+.rndS { width: 26px; height: 26px; font-size: 13px; }
+
+.board { flex: 0 0 620px; width: 620px; box-sizing: border-box; border-radius: 18px; background: var(--forest); color: var(--paper); padding: 18px 20px 12px; box-shadow: 0 30px 50px -40px rgba(13, 55, 45, .8); }
+.hd { display: flex; align-items: center; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(249, 247, 239, .14); }
+.hd b { font: 700 17px/1 var(--ui); }
+/* matches the prototype exactly: this rule also softens the header roundel */
+.hd span { font: 500 15px/1 var(--ui); color: var(--dim); }
+.dep { display: grid; grid-template-columns: 30px 120px minmax(0, 1fr) 130px; gap: 14px; align-items: center; padding: 11px 8px; margin: 0 -8px; border-radius: 10px; text-decoration: none; color: var(--paper); transition: background .3s; }
+.n { font: 700 17px/1 var(--ui); }
+.v { font: 400 16px/1.2 var(--read); color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.s { justify-self: end; font: 600 13px/1 var(--ui); color: var(--spring); display: flex; align-items: center; gap: 8px; }
+.dep:hover, .hot { background: rgba(201, 224, 138, .12); }
+
+/* ── the line ───────────────────────────────────────────────────────────────── */
+.line { position: absolute; left: 170px; right: 170px; top: 452px; height: 12px; border-radius: 6px; background: var(--plum); }
+.start { position: absolute; left: -10px; top: -9px; width: 30px; height: 30px; border-radius: 50%; background: var(--page); border: 4px dashed var(--plum); box-sizing: border-box; }
+.startl { position: absolute; left: -34px; top: 34px; font: 600 15px/1.3 var(--ui); color: var(--muted); white-space: nowrap; }
+
+.stn { position: absolute; top: 0; left: var(--at); transform: translateX(-50%); width: 300px; display: flex; flex-direction: column; align-items: center; text-align: center; text-decoration: none; color: var(--ink); cursor: pointer; }
+.o { width: 34px; height: 34px; border-radius: 50%; background: #fff; border: 7px solid var(--plum); box-sizing: border-box; margin-top: -11px; transition: background .4s, transform .5s cubic-bezier(.34, 1.56, .64, 1); }
+.sign { margin-top: 18px; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 16px 12px; border-radius: 12px; transition: background .3s, transform .35s cubic-bezier(.22, 1, .36, 1); }
+.nm { font: 800 26px/1.1 var(--ui); letter-spacing: -.02em; transition: color .3s; }
+.vl { font: 400 18px/1.3 var(--read); color: var(--muted); white-space: nowrap; }
+.hint { font: 600 13px/1 var(--ui); color: var(--plum); max-height: 0; opacity: 0; overflow: hidden; transition: max-height .35s, opacity .3s, margin .35s; }
+.here .o { background: var(--plum); transform: scale(1.18); }
+.here .nm { color: var(--plum); }
+.stn:hover .sign, .stn:focus-visible .sign { background: var(--lime); transform: translateY(-3px); }
+.stn:hover .hint, .stn:focus-visible .hint { max-height: 20px; opacity: 1; margin-top: 2px; }
+.stn:focus-visible { outline: none; }
+.stn:focus-visible .sign { outline: 2px solid var(--plum); outline-offset: 3px; }
+
+/* ── the train ──────────────────────────────────────────────────────────────── */
+.train { position: absolute; top: -24px; left: var(--p); width: 200px; height: 58px; margin-left: -100px; z-index: 4; pointer-events: none;
+  transition-property: left, top; transition-timing-function: cubic-bezier(.65, 0, .35, 1); }
+.body { position: absolute; inset: 0; display: flex; gap: 6px; transition: transform .5s cubic-bezier(.65, 0, .35, 1); }
+.rev .body { transform: scaleX(-1); }
+.car { position: relative; flex: 1; border-radius: 14px 14px 10px 10px; background: var(--spring); box-shadow: 0 12px 20px -12px rgba(18, 42, 34, .5), inset 0 -8px 0 rgba(91, 21, 60, .9); }
+.car:last-child { border-radius: 14px 22px 10px 10px; }
+.win { position: absolute; top: 10px; width: 18px; height: 14px; border-radius: 4px; background: var(--paper); opacity: .85; }
+.door { position: absolute; left: 50%; top: 9px; width: 16px; height: 30px; margin-left: -8px; border-radius: 3px; background: rgba(18, 42, 34, .18); overflow: hidden; }
+.door::before, .door::after { content: ""; position: absolute; top: 0; bottom: 0; width: 50%; background: var(--spring); transition: transform .5s cubic-bezier(.65, 0, .35, 1); }
+.door::before { left: 0; } .door::after { right: 0; }
+.open .door::before { transform: translateX(-100%); } .open .door::after { transform: translateX(100%); }
+.rndT { position: absolute; right: 10px; top: 9px; width: 22px; height: 22px; border-radius: 5px; font-size: 13px; }
+.rev .rndT { transform: scaleX(-1); }
+
+/* ── toast ──────────────────────────────────────────────────────────────────── */
+.toast { position: absolute; left: 50%; top: 572px; transform: translate(-50%, 8px); display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 12px;
+  width: max-content; max-width: calc(100% - 48px);
+  background: var(--forest); color: var(--paper); font: 600 15px/1.3 var(--ui); opacity: 0; pointer-events: none; z-index: 30;
+  transition: opacity .3s, transform .4s cubic-bezier(.22, 1, .36, 1); }
+.on { opacity: 1; transform: translate(-50%, 0); }
+
+/* ── reduced motion: same information, nothing moves ───────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .root *, .root *::before, .root *::after { animation: none !important; transition: none !important; }
+  .train { transition: none !important; }
+}
+
+/* ═════════════ extension · 900–1279 px: the board stacks under the heading ═════════════ */
+@media (max-width: 1279px) {
+  .root { height: auto; padding: 48px 64px 72px; }
+  .top { position: static; flex-direction: column; gap: 32px; }
+  .head { margin-top: 0; }
+  .board { flex: none; width: 100%; max-width: 620px; }
+  .line { position: relative; left: auto; right: auto; top: auto; margin: 110px 106px 150px; }
+  .toast { top: auto; bottom: 20px; }
+  .stn { width: 190px; }
+  .vl { white-space: normal; font-size: 17px; }
+}
+
+@media (min-width: 900px) and (max-width: 1279px) {
+  .top { align-items: center; }
+  .head { width: 100%; max-width: 620px; }
+  .line { margin-inline: clamp(48px, calc((100% - 676px) / 2), 106px); }
+}
+
+/* ═════════════ extension · < 900 px: the line runs down the page ═════════════ */
+@media (max-width: 899px) {
+  .root { padding: 40px 24px 64px; }
+  .h { font-size: 34px; }
+  .rndL { width: 36px; height: 36px; font-size: 20px; }
+  .board { display: none; }                              /* the stops carry every detail on their own */
+  .line { width: 12px; height: auto; min-height: 560px; margin: 56px 0 32px 38px; }
+  .start { left: -9px; top: -10px; }
+  .startl { left: 34px; top: -6px; }
+  .stn { left: -11px; top: var(--at); transform: translateY(-50%); width: calc(100vw - 100px); flex-direction: row; align-items: center; text-align: left; }
+  .o { margin: 0; flex-shrink: 0; }
+  .sign { margin: 0 0 0 34px; align-items: flex-start; padding: 8px 12px 10px; }
+  .nm { font-size: 22px; }
+  .vl { font-size: 17px; white-space: normal; }
+  .train { left: 6px; top: var(--p); margin-left: -100px; margin-top: -29px; transform: rotate(90deg) scale(.6); }
+  .startl { left: 44px; top: -2px; }
+}

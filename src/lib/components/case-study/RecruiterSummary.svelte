@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   import { onMount } from 'svelte';
   import type { RecruiterBrief } from '$lib/content/recruiter-briefs';
   export let brief: RecruiterBrief;
@@ -20,7 +21,7 @@
       <div><h3>Key decision</h3><p>{brief.decision}</p></div>
     </div>
   </details>
-  <div class="proof"><a href={brief.proof.href}>{brief.proof.label} →</a><span>{brief.proof.note}</span></div>
+  <div class="proof"><a href={brief.proof.href} {...destinationLink(brief.proof.href)}>{brief.proof.label} →</a><span>{brief.proof.note}</span></div>
 </section>
 
 <style>

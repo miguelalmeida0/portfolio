@@ -21,6 +21,6 @@
   }
 
   .status-error {
-    color: #f0a8b8;
+    color: var(--llm-accent);
   }
 </style>

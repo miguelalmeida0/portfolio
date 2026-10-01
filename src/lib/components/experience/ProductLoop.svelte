@@ -7,11 +7,12 @@
   } = $props();
 
   let video: HTMLVideoElement;
+  let mounted = $state(false);
   let visible = $state(false);
   let pageVisible = $state(true);
   let mediaReady = $state(false);
   let startApplied = false;
-  const shouldPlay = $derived(active && visible && pageVisible && !$motionState.reduced && !$motionState.saveData);
+  const shouldPlay = $derived(mounted && active && visible && pageVisible && !$motionState.reduced && !$motionState.saveData);
 
   function prepareVideo() {
     if (!video) return;
@@ -50,6 +51,7 @@
   }
 
   onMount(() => {
+    mounted = true;
     prepareVideo();
 
     const syncVisibility = () => {
@@ -98,22 +100,22 @@
 <div class="relative">
 <video
   bind:this={video}
-  src={active && !$motionState.saveData && !(stillForReduced && $motionState.reduced) ? src : undefined}
+  src={mounted && active && !$motionState.saveData && !$motionState.reduced ? src : undefined}
   {poster}
   autoplay={shouldPlay}
   muted
   loop={startAt <= 0}
   playsinline
-  preload={active && !$motionState.reduced && !$motionState.saveData ? 'auto' : 'none'}
+  preload={mounted && active && !$motionState.reduced && !$motionState.saveData ? 'auto' : 'none'}
   aria-label={label}
   {onerror}
-  style:visibility={stillForReduced && $motionState.reduced ? "hidden" : "visible"}
-  aria-hidden={stillForReduced && $motionState.reduced}
+  style:visibility={!mounted || stillForReduced && $motionState.reduced ? "hidden" : "visible"}
+  aria-hidden={!mounted || stillForReduced && $motionState.reduced}
   class={wide ? "block aspect-video w-full object-contain" : "block aspect-[16/10] max-h-[25rem] w-full object-contain"}
 >
   <track kind="captions" />
 </video>
-{#if stillForReduced && $motionState.reduced}
+{#if !mounted || stillForReduced && $motionState.reduced}
   <img src={poster} alt={label} width="1920" height="1080" class="absolute inset-0 h-full w-full object-contain" />
 {/if}
 </div>

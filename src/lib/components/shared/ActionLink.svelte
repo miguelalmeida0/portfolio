@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   import { scrollToHash } from '$lib/utils/anchors';
 
   export let href: string;
@@ -6,12 +7,6 @@
   export let className = '';
   export let download: string | boolean | undefined = undefined;
   export let smoothHash = false;
-
-  const externalPattern = /^https?:\/\//;
-
-  $: isExternal = externalPattern.test(href);
-  $: target = isExternal ? '_blank' : undefined;
-  $: rel = isExternal ? 'noopener noreferrer' : undefined;
 
   $: variantClass =
     variant === 'ghost'
@@ -31,11 +26,11 @@
 
 <a
   {href}
-  {target}
-  {rel}
+
+
   {download}
   on:click={handleClick}
-  class={`inline-flex items-center gap-2 rounded-full px-5 py-3 font-sans text-[12px] font-semibold ${variantClass} ${className}`}
+  class={`inline-flex items-center gap-2 rounded-full px-5 py-3 font-sans text-[12px] font-semibold ${variantClass} ${className}`} {...destinationLink(href, download)}
 >
   <slot />
 </a>

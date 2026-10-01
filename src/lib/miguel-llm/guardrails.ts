@@ -42,7 +42,7 @@ export function validateQuestion(value: unknown): MiguelLLMValidationResult {
     return { ok: false, question, reason: 'Ask a short portfolio question.' };
   }
 
-  if (question.length < 4) {
+  if (question.length < 4 && !/^(hi|hey|oi|olá|ola)$/i.test(question)) {
     return { ok: false, question, reason: 'Add a little more detail to the question.' };
   }
 

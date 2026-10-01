@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   import { onMount } from 'svelte';
   import Sparkles from '@lucide/svelte/icons/sparkles';
 
@@ -39,8 +40,8 @@
       <span class="hero-rule" aria-hidden="true"></span>
 
       <div class="hero-actions" aria-label="Primary portfolio actions">
-        <a class="primary" href="#work">Explore my work</a>
-        <a href="/cv">View résumé</a>
+        <a class="primary" href="#work" {...destinationLink("#work")}>Explore my work</a>
+        <a href="/cv" {...destinationLink("/cv")}>View résumé</a>
         <button type="button" on:click={openMiguelLLM}>
           <Sparkles size={12} strokeWidth={1.8} aria-hidden="true" />
           <span>Ask MiguelLLM</span>

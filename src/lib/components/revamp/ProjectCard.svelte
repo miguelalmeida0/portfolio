@@ -10,6 +10,7 @@
 </script>
 
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   export let imgSrc: ProjectCardProps['imgSrc'];
   export let imageAlt: ProjectCardProps['imageAlt'];
   export let title: ProjectCardProps['title'];
@@ -19,7 +20,7 @@
 </script>
 
 <article class="project-card">
-  <a href={link} class="project-card-media" aria-label={linkText}>
+  <a href={link} class="project-card-media" aria-label={linkText} {...destinationLink(link)}>
     <img src={imgSrc} alt={imageAlt} loading="lazy" />
   </a>
 
@@ -27,7 +28,7 @@
     <h3>{title}</h3>
     <p>{description}</p>
 
-    <a href={link} class="project-card-link">
+    <a href={link} class="project-card-link" {...destinationLink(link)}>
       <span>{linkText}</span>
       <span class="project-card-arrow" aria-hidden="true">→</span>
     </a>

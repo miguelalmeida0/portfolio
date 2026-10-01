@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   import { onDestroy, onMount } from 'svelte';
   import { afterNavigate, goto } from '$app/navigation';
   import { page } from '$app/stores';
@@ -158,7 +159,7 @@
         data-nav-id={item.label.toLowerCase()}
         data-nav-target={item.href}
         data-nav-active={activeHref === item.href}
-        data-nav-selected={activeHref === item.href}
+        data-nav-selected={activeHref === item.href} {...destinationLink(item.href.startsWith('#') && $page.url.pathname !== '/' ? `/${item.href}` : item.href)}
       >
         {item.label}
       </a>
@@ -166,7 +167,7 @@
   </nav>
 
   <div class="mobile-bar">
-    <a class="mobile-wordmark" href="/" aria-label="Miguel Almeida, homepage">
+    <a class="mobile-wordmark" href="/" aria-label="Miguel Almeida, homepage" {...destinationLink("/")}>
       Miguel Almeida
     </a>
     <button
@@ -212,7 +213,7 @@
               on:click={(event) => navigate(event, item.href)}
               aria-current={activeHref === item.href ? (item.href.startsWith('#') ? 'location' : 'page') : undefined}
               class:active={activeHref === item.href}
-              style={`--menu-index: ${index}`}
+              style={`--menu-index: ${index}`} {...destinationLink(item.href.startsWith('#') && $page.url.pathname !== '/' ? `/${item.href}` : item.href)}
             >
               <span class="mobile-menu-label">{item.label}</span>
               <ArrowUpRight class="mobile-menu-arrow" size={23} strokeWidth={1.6} aria-hidden="true" />

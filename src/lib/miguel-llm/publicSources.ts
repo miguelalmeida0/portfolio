@@ -1,4 +1,5 @@
-const projectSlugs = ['camera-harness', 'ghostwriter', 'mirror-ai', 'atlas', 'creature-app'];
+const currentProjectSlugs = ['second-voice-ai', 'f24', 'flow', 'leu'];
+const projectSlugs = [...currentProjectSlugs, 'camera-harness', 'ghostwriter', 'atlas', 'creature-app'];
 const aliases: Record<string, string> = {
   'how-i-work': 'at-work',
   responsibility: 'contribution',
@@ -12,9 +13,11 @@ export function publicSource(source: string): string {
   if (rawHref) {
     const [path, fragment] = rawHref.split('#');
     const slug = path.startsWith('/work/') ? path.slice(6) : '';
-    const valid = path === '/cv' || path === '/story' || path === '/' || projectSlugs.includes(slug) || ['/evidence/camera-controller-check.json', '/evidence/mirror-replay-check.json'].includes(path);
+    const valid = path === '/cv' || path === '/story' || path === '/' || projectSlugs.includes(slug) || ['/evidence/camera-controller-check.json'].includes(path);
     if (valid) {
       let anchor = aliases[fragment] ?? fragment;
+      // Current case studies use their own section structure; link to their entry.
+      if (currentProjectSlugs.includes(slug)) anchor = '';
       if (slug && anchor && !caseAnchors.has(anchor)) anchor = '';
       if (slug && anchor === 'system-flow' && slug !== 'camera-harness') anchor = 'decisions';
       if (slug && anchor === 'incident' && slug !== 'ghostwriter') anchor = 'result';

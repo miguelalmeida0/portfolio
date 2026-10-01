@@ -12,14 +12,14 @@
       <p class="text-sm font-medium text-muted">F24 · 2022–2026 · production</p>
       <div>
         <p class="display-type text-[clamp(2.75rem,6vw,4.75rem)] leading-none text-forest">Svelte → React</p>
-        <p class="mt-4 max-w-[31ch] font-serif text-lg leading-relaxed">Built the original frontend from first mockups to production, then continued product delivery in React with the wider team.</p>
+        <p class="mt-4 max-w-[31ch] font-sans text-lg leading-relaxed">Built the original frontend from first mockups to production, then continued product delivery in React with the wider team.</p>
       </div>
     </div>
   {:else}
   <div class="min-w-0 overflow-clip rounded-xl bg-ivory">
     {#if project.slug === 'flow'}<FlowProductFilm {active} />
     {:else if project.video}<ProductLoop src={project.video} poster={project.image} label={project.alt} {active} startAt={project.slug === 'leu' ? 1.55 : 0} />
-    {:else if imageError}<div class="flex min-h-60 items-center justify-center p-8 text-center font-serif text-xl">The project image is unavailable. You can still read the full case study below.</div>
+    {:else if imageError}<div class="flex min-h-60 items-center justify-center p-8 text-center font-sans text-xl">The project image is unavailable. You can still read the full case study below.</div>
     {:else}<img src={project.image} alt={project.alt} width="1200" height="750" loading="lazy" decoding="async" onerror={() => imageError = true} class="aspect-[1.5] h-auto w-full object-cover object-top" />{/if}
   </div>
   {/if}

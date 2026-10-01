@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   import type { SiteProfile } from '$lib/types/portfolio';
 
   import { tokens } from '$lib/design/tokens';
@@ -140,9 +141,9 @@
             <a
               class={tokens.patterns.heroPanelLink}
               href={site.linkedinHref}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Miguel Almeida on LinkedIn"
+
+
+              aria-label="Miguel Almeida on LinkedIn" {...destinationLink(site.linkedinHref)}
             >
               <span class={tokens.patterns.heroPanelLinkIcon} aria-hidden="true">
                 <svg viewBox="0 0 24 24" class="h-4 w-4 fill-current">

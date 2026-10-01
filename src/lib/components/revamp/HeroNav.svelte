@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   import { page } from '$app/stores';
 
   import { navigation } from '$lib/content/folio';
@@ -26,7 +27,7 @@
 
 <header class="hero-nav" data-testid="site-header">
   <div class="hero-nav-inner">
-    <a href="/" class="brand interactive-link">
+    <a href="/" class="brand interactive-link" {...destinationLink("/")}>
       Miguel<span>.</span>
     </a>
 
@@ -35,7 +36,7 @@
         <a
           href={item.href.startsWith('#') && $page.url.pathname !== '/' ? `/${item.href}` : item.href}
           on:click={(event) => navigate(event, item.href)}
-          class:active={isActive(item.href)}
+          class:active={isActive(item.href)} {...destinationLink(item.href.startsWith('#') && $page.url.pathname !== '/' ? `/${item.href}` : item.href)}
         >
           {item.label}
         </a>
@@ -46,7 +47,7 @@
       <a
         href="#contact"
         on:click={(event) => navigate(event, '#contact')}
-        class="mobile-contact interactive-button"
+        class="mobile-contact interactive-button" {...destinationLink("#contact")}
       >
         Contact
       </a>

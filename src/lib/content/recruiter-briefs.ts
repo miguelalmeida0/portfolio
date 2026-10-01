@@ -21,13 +21,6 @@ export const recruiterBriefs: Record<string, RecruiterBrief> = {
     result: 'An implemented editing experience and tested server safeguards. Live AI remains gated pending authentication and deployment verification.',
     proof: { label: 'Explore the gateway decisions', href: '#incident', note: 'Project handoff reports 25 targeted checks with mocked dependencies; not production load testing.' }
   },
-  'mirror-ai': {
-    problem: 'A region can be correctly outlined but wrongly identified, while slow models make direct interaction wait.',
-    ownership: 'I built the image interaction, local model integration, cache, and asynchronous state—and connected user corrections to Eval Lab.',
-    decision: 'Keep the selected subject visible, read cached scene geometry for interaction, and reconcile identities separately from spatial evidence.',
-    result: 'A working local-first prototype with persistent corrections and testable evidence handling.',
-    proof: { label: 'Inspect the interface & evidence', href: '#artifact', note: 'Product screenshot; the handoff separately reports 49 unit/component tests.' }
-  },
   atlas: {
     problem: 'Model-generated explanations can blur what was actually found and which repository it belongs to.',
     ownership: 'The documented review architecture and tenant-scoped evidence boundaries.',

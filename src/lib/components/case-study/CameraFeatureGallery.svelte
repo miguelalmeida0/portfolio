@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   import { getApprovedMedia } from '$lib/content/project-media';
   export let compact = false;
 
@@ -19,7 +20,7 @@
     {#each examples as example, index}
       {#if example.media}
         <figure>
-          <a href={example.media.src} target="_blank" rel="noreferrer" aria-label={`View ${example.title.toLowerCase()} screenshot at full size (opens a new tab)`}>
+          <a href={example.media.src}   aria-label={`View ${example.title.toLowerCase()} screenshot at full size (opens a new tab)`} {...destinationLink(example.media.src)}>
             <img src={example.media.src} srcset={`${example.media.src.replace('-1600', '-720')} 720w, ${example.media.src} 1600w`} sizes={compact ? '(max-width: 900px) 92vw, min(52vw, 36rem)' : '(max-width: 760px) 92vw, 46vw'} alt={example.media.alt} width={example.width} height={example.height} loading={compact && index === 0 ? 'eager' : 'lazy'} decoding="async" />
           </a>
           <figcaption>

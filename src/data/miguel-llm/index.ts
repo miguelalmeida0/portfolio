@@ -16,8 +16,10 @@ import { tasteKnowledge } from './taste';
 import { voiceKnowledge } from './voice';
 import { workPreferencesKnowledge } from './work-preferences';
 import { recruiterUpdatesKnowledge } from './recruiter-updates';
+import { currentPortfolioKnowledge } from '$lib/miguel-llm/currentPortfolio';
 
 export const miguelKnowledgeBase = [
+  ...currentPortfolioKnowledge,
   ...recruiterUpdatesKnowledge,
   ...profileKnowledge,
   ...personalityKnowledge,

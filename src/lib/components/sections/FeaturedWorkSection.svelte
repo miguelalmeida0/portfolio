@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   import type { FeaturedProject } from '$lib/types/portfolio';
 
   import { tokens } from '$lib/design/tokens';
@@ -56,7 +57,7 @@
             <div class="flex flex-col gap-4">
               <p class={tokens.typography.workMeta}>{project.period}</p>
               <p class={tokens.typography.body}>{project.summary}</p>
-              <a class={tokens.surfaces.tag + ' w-fit'} href={project.href}>
+              <a class={tokens.surfaces.tag + ' w-fit'} href={project.href} {...destinationLink(project.href)}>
                 Read the chronicle
               </a>
             </div>

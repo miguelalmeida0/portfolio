@@ -24,7 +24,7 @@ export function installSmoothScroll() {
   const click = (event: MouseEvent) => {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     const link = (event.target as Element)?.closest<HTMLAnchorElement>('a[href]');
-    if (!link || link.download || link.target && link.target !== '_self') return;
+    if (!link || link.hasAttribute('data-mobile-route-link') || link.download || link.target && link.target !== '_self') return;
     const url = new URL(link.href, location.href);
     if (url.origin !== location.origin || url.pathname !== location.pathname || url.search !== location.search || !url.hash) return;
     let target: HTMLElement | null;

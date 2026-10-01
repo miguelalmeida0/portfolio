@@ -34,18 +34,24 @@
     return { destroy: () => animation.stop() };
   }
 </script>
-<div class="relative flex-1 py-5" data-playback-phase={phase}>
+<div class="rewrite-playback relative flex-1 py-5" data-playback-phase={phase}>
   {#if phase !== 'complete'}
     <div aria-hidden="true" class="absolute inset-x-0 bottom-2 h-px overflow-hidden bg-rule/30"><div class="h-full w-1/3 origin-left bg-plum motion-safe:animate-edit-scan"></div></div>
-    <p aria-hidden="true" class="[overflow-wrap:anywhere] whitespace-pre-wrap font-serif text-[clamp(1.5rem,1.05rem+1vw,2rem)] leading-[1.35] tracking-[-.025em]">
+    <p aria-hidden="true" class="rewrite [overflow-wrap:anywhere] whitespace-pre-wrap">
       {#each operations as operation (operation.index)}{#if operation.kind === 'equal'}{operation.text}{:else if operation.kind === 'delete'}<span class="transition-colors duration-300 {step >= operation.index ? 'text-muted line-through decoration-plum/70 decoration-2' : ''}">{operation.text}</span>{:else if step >= operation.index}<span use:arrive class="rounded-sm bg-highlight text-ink [box-decoration-break:clone]">{operation.text}</span>{/if}{/each}
     </p>
     <p class="sr-only">Animating the edits. The complete rewrite will be available shortly.</p>
   {:else}
     {#key revision}
-      <p use:arrive class="[overflow-wrap:anywhere] whitespace-pre-wrap font-serif text-[clamp(1.5rem,1.05rem+1vw,2rem)] leading-[1.35] tracking-[-.025em]">
+      <p use:arrive class="rewrite [overflow-wrap:anywhere] whitespace-pre-wrap">
         {#each showOriginal ? comparison.original : comparison.rewrite as part}{#if part.changed}<mark class="bg-highlight text-ink [box-decoration-break:clone]">{part.text}</mark>{:else}{part.text}{/if}{/each}
       </p>
     {/key}
   {/if}
 </div>
+
+<style>
+  .rewrite-playback { min-height: 0; overflow: auto; padding-block: 16px; }
+  .rewrite { font: 400 20px/1.45 var(--hero-font); }
+  @media (max-width: 767px) { .rewrite { font-size: 18px; line-height: 1.35; } }
+</style>

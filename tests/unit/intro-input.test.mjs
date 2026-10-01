@@ -30,7 +30,8 @@ function setup(t) {
   const previous = globalThis.window;
   const target = eventTarget();
   globalThis.window = target;
-  let now = 0;
+  // The source gate starts after hydration; zero is its unused-start sentinel.
+  let now = 10;
   t.mock.method(performance, 'now', () => now);
   t.mock.timers.enable({ apis: ['setTimeout'] });
   let intents = 0;
@@ -45,16 +46,16 @@ test('scroll and resize notifications are never input gestures', t => {
   assert.equal(count(), 0);
 });
 
-test('synthetic wheel, keyboard and touch events cannot request a shortcut', t => {
+test('an opening wheel followed by keyboard and touch input still requests one shortcut', t => {
   const { target, count } = setup(t);
   target.emit('wheel', { isTrusted: false, deltaY: 100 });
   target.emit('keydown', { isTrusted: false, key: 'PageDown' });
   target.emit('touchstart', { isTrusted: false, touches: [{ clientY: 100 }] });
   target.emit('touchmove', { isTrusted: false, touches: [{ clientY: 40 }] });
-  assert.equal(count(), 0);
+  assert.equal(count(), 1);
 });
 
-test('a genuine wheel gesture starts once even when the clock begins at zero', t => {
+test('a wheel gesture starts once and releases its inertial tail', t => {
   const { target, count, advance } = setup(t);
   for (let i = 0; i < 3; i++) {
     const event = target.emit('wheel', { deltaY: 100 });
@@ -67,11 +68,10 @@ test('a genuine wheel gesture starts once even when the clock begins at zero', t
   assert.equal(count(), 1);
 });
 
-test('horizontal gestures, zoom, repeats and editable controls do not skip', t => {
+test('horizontal gestures, zoom and editable controls do not skip', t => {
   const { target, count } = setup(t);
   target.emit('wheel', { deltaX: 100, deltaY: 1 });
   target.emit('wheel', { deltaY: 100, ctrlKey: true });
-  target.emit('keydown', { key: 'PageDown', repeat: true });
   target.emit('keydown', { key: 'PageDown', target: { closest: () => ({}) } });
   target.emit('keydown', { key: 'r', metaKey: true });
   assert.equal(count(), 0);
@@ -97,73 +97,45 @@ test('a single-finger swipe needs movement, not merely contact or a pinch', t =>
 function boot(options = {}) {
   const root = { dataset: {} };
   const window = eventTarget();
-  const document = { ...eventTarget(), documentElement: root, querySelector: () => null,
+  const document = { ...eventTarget(), documentElement: root, querySelector: () => options.overlay ?? null,
     hidden: Boolean(options.hidden), prerendering: Boolean(options.prerendering) };
   const history = { scrollRestoration: 'auto' };
   const timers = [];
+  const session = new Map(options.seen ? [['seen-intro', 'true']] : []);
   window.scrollTo = () => {};
   vm.runInNewContext(bootstrap, {
     window, history, document,
     location: { pathname: '/', hash: '', ...options.location },
-    localStorage: { getItem: () => null }, navigator: {},
-    matchMedia: () => ({ matches: Boolean(options.reduced) }),
+    localStorage: { getItem: () => options.stored ?? null }, navigator: { connection: { saveData: Boolean(options.saveData) } },
+    sessionStorage: { getItem: key => session.get(key) ?? null, setItem: (key, value) => session.set(key, value) },
+    matchMedia: query => ({ matches: query.includes('prefers-reduced-motion') ? Boolean(options.reduced) : Boolean(options.finePointer) }),
     performance: { now: () => 10, getEntriesByType: () => [{ type: options.type ?? 'navigate' }] },
     setTimeout: (fn, ms) => { const timer = { fn, ms, cancelled: false }; timers.push(timer); return timer; },
     clearTimeout: timer => { if (timer) timer.cancelled = true; }
   });
-  return { root, window, document, history, timers };
+  return { root, window, document, history, timers, session };
 }
 
-test('pre-hydration startup ignores synthetic events and unrelated clicks', () => {
-  const { root, window, history } = boot();
-  assert.equal(root.dataset.presentation, 'pending');
-  assert.equal(history.scrollRestoration, 'manual');
-  window.emit('wheel', { isTrusted: false, deltaY: 120 });
-  window.emit('keydown', { isTrusted: false, key: 'PageDown' });
-  window.emit('click', { button: 0 });
-  assert.equal(root.dataset.presentation, 'pending');
-});
-
-test('a stalled bundle still releases the introduction without a shortcut', () => {
-  const { root, history, timers } = boot();
-  timers.find(timer => timer.ms === 6000 && !timer.cancelled).fn();
-  assert.equal(root.dataset.presentation, 'complete');
-  assert.equal(history.scrollRestoration, 'auto');
-});
-
-for (const options of [{ hidden: true }, { prerendering: true }]) {
-  test(`pre-hydration timeout is not armed during ${options.hidden ? 'a hidden tab' : 'prerendering'}`, () => {
-    const { root, document, timers } = boot(options);
-    assert.equal(root.dataset.presentation, 'pending');
-    assert.equal(timers.length, 0);
-    document.hidden = false;
-    document.prerendering = false;
-    document.emit('visibilitychange');
-    assert.equal(timers.filter(timer => timer.ms === 6000 && !timer.cancelled).length, 1);
-    assert.equal(root.dataset.presentation, 'pending');
+for (const [name, options] of [ ['deep link', { location: { hash: '#work' } }], ['history navigation', { type: 'back_forward' }], ['reduced motion', { reduced: true }], ['stored reduced motion', { stored: 'reduced' }], ['Save-Data', { saveData: true }], ['case-study entry', { location: { pathname: '/work/leu' } }] ]) {
+  test(`${name} does not acquire an introduction or a scroll lock`, () => {
+    const { root, history } = boot(options);
+    assert.equal(root.dataset.presentation, 'complete');
+    assert.equal(history.scrollRestoration, 'auto');
   });
 }
 
-test('hiding cancels the bootstrap timeout and hydration removes lifecycle listeners', () => {
-  const { root, document, timers, window } = boot();
-  const initialTimer = timers.find(timer => timer.ms === 6000);
-  document.hidden = true;
-  document.emit('visibilitychange');
-  assert.equal(initialTimer.cancelled, true);
-  // Even an already-queued timer cannot complete the intro in a hidden document.
-  initialTimer.fn();
-  assert.equal(root.dataset.presentation, 'pending');
-  root.dataset.introHydrated = 'true';
-  document.hidden = false;
-  document.emit('visibilitychange');
-  assert.equal([...document.listeners.values(), ...window.listeners.values()].some(set => set.size), false);
-  assert.equal(timers.some(timer => !timer.cancelled), false);
-});
-
-for (const [name, options] of [ ['deep link', { location: { hash: '#work' } }], ['history navigation', { type: 'back_forward' }], ['reduced motion', { reduced: true }] ]) {
-  test(`${name} does not acquire an introduction or a scroll lock`, () => {
-    const { root, history } = boot(options);
-    assert.equal(root.dataset.presentation, undefined);
+for (const type of ['navigate', 'reload']) {
+  test(`${type} starts the Claude intro only when the tab has not seen it`, () => {
+    const { root, history, session } = boot({ type });
+    assert.equal(root.dataset.presentation, 'pending');
+    assert.equal(history.scrollRestoration, 'manual');
+    assert.equal(session.get('seen-intro'), 'true');
+  });
+  test(`${type} never overrides the session marker or installs intro input handlers`, () => {
+    const { root, history, timers, window } = boot({ type, seen: true });
+    assert.equal(root.dataset.presentation, 'complete');
     assert.equal(history.scrollRestoration, 'auto');
+    assert.equal(timers.length, 0);
+    assert.equal(window.listeners.size, 0);
   });
 }

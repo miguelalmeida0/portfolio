@@ -7,12 +7,13 @@ import { recruiterBriefs } from '../content/recruiter-briefs';
 import { projectChecks } from '../content/project-checks';
 import { cvExperience, professionalRecommendation, site } from '../content/folio';
 import { findMiguelInterviewAnswer } from '../../data/miguel-llm/interview-answers';
+import { currentGuideProjects } from './currentPortfolio';
 import type { MiguelLLMAnswer, MiguelLLMMode } from './types';
 
 const suggestions: Record<MiguelLLMMode, string[]> = {
   recruiter: ['What did Miguel personally build?', 'What kind of role fits Miguel?', 'Which project should I start with?'],
-  engineer: ['What did Miguel build in Camera Harness?', 'What evidence supports Camera Harness?', 'How does Ghostwriter control paid requests?'],
-  design: ['How does Miguel combine design and engineering?', 'What did Miguel build in Mirror AI?', 'What did Miguel build at F24?'],
+  engineer: ['What did Miguel build in Flow?', 'What evidence supports Leu?', 'How does Second Voice handle failure?'],
+  design: ['How does Miguel combine design and engineering?', 'What did Miguel build in Second Voice AI?', 'What did Miguel build at F24?'],
   curious: ['Tell me about Miguel.', 'Why AI products?', 'How can I contact Miguel?']
 };
 export function suggestedQuestionsForMode(mode: MiguelLLMMode) { return suggestions[mode]; }
@@ -32,14 +33,33 @@ export function buildFallbackAnswer(question: string, mode: MiguelLLMMode, _rece
     return make('Miguel worked in aviation before tech. The public notes do not establish a specific role or detailed lessons from that period, so I would leave those questions to him.',
       [], ['About Miguel|/story', 'Contact Miguel|/#contact'], ['How did Miguel move into frontend?', 'What kind of role fits Miguel?'], 'medium');
   }
-  if (/\b(contact|email|linkedin|reach miguel|download|resume|résumé|cv)\b/.test(q) && !/\b(project|camera|ghostwriter|mirror)\b/.test(q)) {
+  const currentProject = currentGuideProjects.find(project => project.slug === resolveProject(question, projectSlug));
+  if (currentProject) {
+    const p = currentProject;
+    const sources = [`${p.name}|/work/${p.slug}`, 'Résumé|/cv'];
+    const followups = projectQuestions(p.slug);
+    if (/\b(evidence|proof|tests?|results?|metrics|latency|accuracy|performance|limitations?|limits|release|ready)\b/.test(q)) {
+      return make(p.outcome, [p.limitation], sources, followups, 'medium');
+    }
+    if (/\b(stack|tools|technolog\w*|frameworks?)\b/.test(q)) {
+      return make(`${p.name}: ${p.stack.join(', ')}.`, [p.role, p.ownership], sources, followups);
+    }
+    if (/\b(decision|tradeoff|architecture|how|failure)\b/.test(q) && p.decisions.length) {
+      const decision = /failure|recover/.test(q)
+        ? p.decisions.find(item => /fail|recover|interrupt/.test(`${item.title} ${item.detail}`)) ?? p.decisions[0]
+        : p.decisions[0];
+      return make(decision.detail, [decision.tradeoff, p.limitation], sources, followups);
+    }
+    return make(p.problem, [p.ownership, p.limitation], sources, followups);
+  }
+  if (/\b(contact|email|linkedin|reach miguel|download|resume|résumé|cv)\b/.test(q) && !/\b(project|camera|ghostwriter)\b/.test(q)) {
     return make('Email Miguel directly, or read the résumé for experience, selected projects, and contact links.',
       [site.email], ['Résumé & download|/cv', 'Contact Miguel|/#contact'], ['What did Miguel personally build?', 'What kind of role fits Miguel?']);
   }
   if (/connectivity|\bf24\b|production (frontend |work |experience)|\b(current employer|work history|professional experience)\b/.test(q)) {
-    return make('At F24, the original Svelte frontend moved from initial mockups through production as part of the wider product team. Miguel’s frontend contribution later continued in the React application. The application is now used by hundreds of companies.',
+    return make('At F24, the original Svelte frontend moved from initial mockups through production as part of the wider product team. Miguel’s frontend contribution later continued in the React application. The application is now used by thousands of companies.',
       [cvExperience[0].bullets[2], 'The company-adoption figure describes the application, not a claim that Miguel alone created its business impact.'],
-      ['Production experience|/cv#experience', 'F24 work|/story#at-work'], ['What did Miguel personally build?', 'What does his previous team lead say?', 'What kind of role fits Miguel?']);
+      ['Production experience|/cv#experience', 'F24 work|/work/f24'], ['What did Miguel personally build?', 'What does his previous team lead say?', 'What kind of role fits Miguel?']);
   }
   if (/richard|recommendation|testimonial|team lead|supervision/.test(q)) {
     return make('Richard Nespithal, Miguel’s previous team lead, describes him as independently reliable and responsible for delivery from start to finish.',
@@ -51,18 +71,18 @@ export function buildFallbackAnswer(question: string, mode: MiguelLLMMode, _rece
       ['Résumé & experience|/cv', 'Selected work|/#work'], ['What did Miguel personally build?', 'Which project should I start with?']);
   }
   if (/\b(personally|ownership|own|built|build)\b/.test(q) && !resolveProject(question, projectSlug)) {
-    return make('At F24, Miguel’s frontend contribution spans the original Svelte implementation and later React delivery with product, design, backend and QA. His independent projects cover camera lifecycle, a writing interface, and image-selection interactions.',
+    return make('At F24, Miguel’s frontend contribution spans the original Svelte implementation and later React delivery with product, design, backend and QA. His current independent projects are Second Voice AI, Flow and Leu.',
       ['At F24, he worked with product, design, backend, and QA; frontend ownership is distinct from sole ownership of the whole product.'],
-      ['Experience|/cv#experience', 'Camera contribution|/work/camera-harness#contribution', 'Mirror contribution|/work/mirror-ai#contribution']);
+      ['Experience|/cv#experience', 'Second Voice AI|/work/second-voice-ai', 'Flow|/work/flow', 'Leu|/work/leu']);
   }
   if (/\b(start with|strongest|inspect first|best project|which project)\b/.test(q)) {
-    return make('Start with Camera Harness for asynchronous browser systems, then Mirror AI for interaction design. The résumé shows Miguel’s production delivery and React migration experience.',
-      ['Camera’s controller check is a synthetic invariant test; Mirror’s figures come from a historical saved-scene replay.'],
-      ['Camera Harness|/work/camera-harness', 'Mirror AI|/work/mirror-ai', 'Résumé|/cv']);
+    return make('Start with Second Voice AI for product design and frontend engineering, then F24 for production Svelte and React experience. Flow explores editable voice actions; Leu explores native, source-linked learning.',
+      currentGuideProjects.slice(0, 3).map(project => project.ownership),
+      currentGuideProjects.map(project => `${project.name}|/work/${project.slug}`));
   }
   if (/\b(compare|comparison|difference between)\b/.test(q)) {
-    return make('Camera Harness explores lifecycle and asynchronous camera work; Mirror AI focuses on keeping image selection and explanation connected; Ghostwriter combines expressive rewriting with private-text and paid-request safeguards.',
-      [], ['Camera Harness|/work/camera-harness', 'Mirror AI|/work/mirror-ai', 'Ghostwriter|/work/ghostwriter'], suggestions[mode], 'medium');
+    return make(currentGuideProjects.map(project => `${project.name}: ${project.summary}`).join(' '),
+      [], currentGuideProjects.map(project => `${project.name}|/work/${project.slug}`), suggestions[mode], 'medium');
   }
 
   const slug = resolveProject(question, projectSlug);
@@ -72,7 +92,6 @@ export function buildFallbackAnswer(question: string, mode: MiguelLLMMode, _rece
     const source = (label: string, anchor: string) => `${label}|/work/${slug}#${anchor}`;
     const followups = projectQuestions(slug);
     if (/\b(proof|evidence|tests?|measured|measurements?|performance|latency|accuracy|benchmarks?|metrics|results)\b/.test(q)) {
-      if (slug === 'mirror-ai') return make('The supplied Mirror AI handoff reports 49 passing unit/component tests. A separate historical saved-scene replay recorded 630 samples with no popup gaps, duplicates, or hover-label overflow—not live-model accuracy.', [study.conditions], [source('Verification & limits', 'result')], followups, 'medium');
       const check = projectChecks[slug];
       if (check) return make(`${check.value} — ${check.label}. ${check.description}`, [], [source('Evidence & conditions', 'evidence'), `Source record|${check.source}`], followups, 'medium');
       if (slug === 'ghostwriter') return make('The September project handoff reports 25 passing checks across financial controls, provider response handling, and sharing privacy. A synthetic 100-request race against a two-operation budget admitted at most two operations.',
@@ -101,11 +120,11 @@ export function buildFallbackAnswer(question: string, mode: MiguelLLMMode, _rece
     return make(brief.problem, [`My ownership: ${brief.ownership}`, brief.result], [source('Personal contribution', 'contribution'), source('Result', 'result')], followups, slug === 'ghostwriter' || slug === 'atlas' ? 'medium' : 'high');
   }
 
-  if (/who|tell me about|summarize|summary|30 seconds/.test(q)) return make('Miguel is a Portuguese frontend engineer in Berlin with a product-design background. He works with React, TypeScript, and Svelte, and builds interfaces around camera input, image selection, and AI workflows.',
+  if (/who|tell me about|summarize|summary|30 seconds/.test(q)) return make('Miguel is a Portuguese frontend developer and design engineer in Berlin with a product-design background. He works with React, TypeScript, and Svelte. His current portfolio covers F24, Second Voice AI, Flow and Leu.',
     [], ['Résumé|/cv', 'About Miguel|/story'], suggestions[mode]);
   if (/design|ux|frontend|react|typescript|svelte|stack|skills/.test(q)) return make('Miguel combines product-design judgment with frontend implementation: shaping flows, building reusable UI, and making loading, failure, and recovery understandable.',
-    ['Core tools: React, TypeScript, and Svelte.', 'His production work at F24 connects that background to production delivery; Mirror AI shows it in an independent interaction.'],
-    ['Résumé & tools|/cv', 'Mirror AI|/work/mirror-ai'], suggestions[mode]);
+    ['Core tools: React, TypeScript, and Svelte.', 'His production work at F24 connects that background to production delivery; Second Voice AI shows it in an independent writing interface.'],
+    ['Résumé & tools|/cv', 'Second Voice AI|/work/second-voice-ai'], suggestions[mode]);
 
   const interview = findMiguelInterviewAnswer(q);
   if (interview) return make(interview.shortAnswer, [], interview.sources, interview.suggestedNextQuestions, 'medium');

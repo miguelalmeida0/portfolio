@@ -10,6 +10,7 @@
 </script>
 
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   export let items: ProjectCard[] = [];
   export let initialIndex = 0;
 
@@ -63,7 +64,7 @@
       <div class="project-summary">
         <span>{String(active + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}</span>
         <strong>{activeItem.title}</strong>
-        <a href={activeItem.href} class="project-link">View project</a>
+        <a href={activeItem.href} class="project-link" {...destinationLink(activeItem.href)}>View project</a>
       </div>
     </div>
   </div>
