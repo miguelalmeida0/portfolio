@@ -1,20 +1,20 @@
 import { expect, test } from '@playwright/test';
 import { openPortfolioHome, openSecondVoiceStudio } from '../helpers/portfolio';
 
-const projects = ['second-voice-ai', 'f24', 'leu', 'flow', 'mirror-ai'];
+const projects = ['second-voice-ai', 'f24', 'leu', 'flow'];
 
-test('recruiter sees role, production experience and skills immediately', async ({ page }) => {
+test('recruiter sees identity and exactly four real projects without an accordion', async ({ page }) => {
   await openPortfolioHome(page);
   await expect(page.getByRole('heading', { level: 1, name: /Frontend developer.*design engineer/i })).toBeVisible();
-  await expect(page.getByText('F24 · 4 years in product delivery', { exact: true })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'From scratch to hundreds of companies.' })).toBeVisible();
-  await expect(page.getByLabel('Core skills')).toContainText('TypeScript');
-  await expect(page.locator('main img[src*="miguel"]')).toHaveCount(0);
-  await expect(page.locator('#work > article')).toHaveCount(5);
-  await expect(page.locator('#project-trigger-second-voice-ai')).toHaveAttribute('aria-expanded', 'true');
-  await expect(page.locator('#project-trigger-f24')).toHaveAttribute('aria-expanded', 'false');
-  await expect(page.locator('#project-trigger-leu')).toHaveAttribute('aria-expanded', 'false');
-  await expect(page.locator('[aria-label="Project overview"] button')).toHaveText(['Second Voice','F24','Leu','Flow','Mirror AI']);
+  await expect(page.locator('[data-identity-name]')).toHaveText('MIGUEL ALMEIDA');
+  await expect(page.locator('[data-identity-location]')).toHaveText('Berlin');
+  await expect(page.locator('main img[src*="miguel"]')).toHaveCount(1);
+  await expect(page.locator('.project-index button')).toHaveCount(4);
+  await expect(page.locator('.project-index button').nth(0)).toContainText('Second Voice AI');
+  await expect(page.locator('#work [aria-expanded], #work [data-project-panel]')).toHaveCount(0);
+  await expect(page.locator('#work a[href="/work/mirror-ai"], #work a[href="/work/vigia"]')).toHaveCount(0);
+  await page.locator('.project-index button').nth(1).click();
+  await expect(page.locator('#work img')).toHaveAttribute('src', '/projects/f24/hackathon.webp');
   await expect(page.getByText('Camera Harness', { exact: true })).toHaveCount(0);
 });
 
@@ -22,13 +22,13 @@ for (const slug of projects) test(`${slug} exposes its current case-study struct
   const response = await page.goto('/work/' + slug);
   expect(response?.status()).toBe(200);
   const required = slug === 'f24'
-    ? ['context', 'contribution', 'outcome']
+    ? ['architecture', 'production-decision', 'activity-history', 'dry-run', 'engineering-proof']
     : ['architecture', 'context', 'decisions', 'outcome'];
   for (const id of required) await expect(page.locator('#' + id)).toBeAttached();
   if (slug === 'f24') {
     await expect(page.locator('#decisions')).toHaveCount(0);
-    await expect(page.locator('#outcome')).toContainText('hundreds of companies');
-    await expect(page.getByText('Product · Design · Backend · QA', { exact: true })).toBeVisible();
+    await expect(page.locator('#production-decision')).toContainText('Svelte product work and React implementation continued alongside each other');
+    await expect(page.locator('.team-context')).toContainText('backend colleagues owned services; QA helped verify behavior');
   } else {
     await expect(page.locator('#decisions [data-decision-item] h3')).toHaveCount(3);
     await expect(page.locator('#outcome')).toContainText(/prototype|implemented|interface|experience|persistent|native/i);
@@ -38,7 +38,7 @@ for (const slug of projects) test(`${slug} exposes its current case-study struct
 
 test('case study navigation completes without a full reload', async ({ page }) => {
   await openSecondVoiceStudio(page);
-  await page.locator('#project-content-second-voice-ai').getByRole('link', { name: 'Case study', exact: true }).click();
+  await page.locator('#work').getByRole('link', { name: 'Case study' }).click();
   await expect(page).toHaveURL(/\/work\/second-voice-ai$/);
   await page.getByRole('link', { name: 'Next case study F24' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'F24' })).toBeVisible();

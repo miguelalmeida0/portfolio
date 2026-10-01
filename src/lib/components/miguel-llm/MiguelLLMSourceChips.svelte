@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   export let sources: string[] = [];
   export let onNavigate: () => void = () => {};
 </script>
@@ -9,7 +10,7 @@
       {@const [label, href] = source.split('|')}
       <li>
         {#if href}
-          <a href={href} on:click={onNavigate}>{label} →</a>
+          <a href={href} on:click={onNavigate} {...destinationLink(href)}>{label} →</a>
         {:else}
           <span>{label}</span>
         {/if}
@@ -37,11 +38,11 @@
     display: inline-flex;
     min-height: 2.35rem;
     align-items: center;
-    border: 1px solid rgb(194 218 233 / 0.14);
+    border: 1px solid var(--llm-border);
     border-radius: 999px;
-    background: rgb(194 218 233 / 0.07);
+    background: var(--llm-surface-raised);
     padding: 0.36rem 0.52rem;
-    color: rgb(241 248 252 / 0.7);
+    color: var(--llm-ink);
     font-family: var(--font-display);
     font-size: 0.78rem;
     font-weight: 540;

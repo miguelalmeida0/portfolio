@@ -2,28 +2,26 @@ import { expect, test } from '@playwright/test';
 import { installClipboardStub, openSecondVoiceStudio } from '../helpers/portfolio';
 
 async function chooseAuthor(page: import('@playwright/test').Page, name: string) {
-  await page.getByText(name, { exact: true }).first().click();
-  await expect(page.getByRole('radio', { name, exact: true })).toBeChecked();
+  await page.getByRole('tab', { name, exact: true }).click();
+  await expect(page.getByRole('tab', { name, exact: true })).toHaveAttribute('aria-selected', 'true');
 }
 
 test('author choice remains readable and selected', async ({ page }) => {
   await openSecondVoiceStudio(page);
   await chooseAuthor(page, 'Tolstoy');
-  const choice = page.locator('input[value="Tolstoy"] + span');
-  await expect(choice).toHaveClass(/text-plum/);
-  await expect(choice).toHaveClass(/font-semibold/);
-  await page.getByRole('radio', { name: 'Tolstoy', exact: true }).focus();
-  await page.getByRole('radio', { name: 'Tolstoy', exact: true }).press('ArrowRight');
-  await expect(page.getByRole('radio', { name: 'Hemingway', exact: true })).toBeChecked();
+  const choice = page.getByRole('tab', { name: 'Tolstoy', exact: true });
+  await expect(choice).toHaveCSS('border-bottom-color', 'rgb(89, 22, 60)');
+  await choice.press('ArrowRight');
+  await expect(page.getByRole('tab', { name: 'Hemingway', exact: true })).toHaveAttribute('aria-selected', 'true');
 });
 
 test('prepared author and strength controls update a clearly labelled result', async ({ page }) => {
   await openSecondVoiceStudio(page);
   await chooseAuthor(page, 'Hemingway');
-  await page.getByText('Strong', { exact: true }).first().click();
+  await page.getByRole('radio', { name: 'Strong', exact: true }).check();
   await expect(page.getByRole('radio', { name: 'Strong', exact: true })).toBeChecked();
   await page.getByRole('button', { name: 'Show Hemingway example' }).click();
-  const result = page.getByRole('region', { name: 'Result' });
+  const result = page.getByRole('tabpanel');
   await expect(result).toContainText('Prepared rewrite');
   await expect(result).toContainText('Hemingway · Strong');
   await expect(result).not.toContainText('Darkness took');
@@ -32,37 +30,30 @@ test('prepared author and strength controls update a clearly labelled result', a
 test('prepared sample preserves the source while switching voices', async ({ page }) => {
   await openSecondVoiceStudio(page);
   const source = 'Every winter, the harbor lights went dark. Elias kept the last lamp burning, though no ship had returned in twenty years.';
-  const draft = page.getByRole('region', { name: 'Draft' });
-  await expect(draft.getByText(source, { exact: true })).toBeVisible();
+  await expect(page.locator('.draft')).toHaveText(source);
   await chooseAuthor(page, 'King');
   await page.getByRole('button', { name: 'Show King example' }).click();
-  await expect(draft.getByText(source, { exact: true })).toBeVisible();
-  await expect(page.getByRole('region', { name: 'Result' })).toContainText('King · Balanced');
+  await expect(page.locator('.draft')).toHaveText(source);
+  await expect(page.getByRole('tabpanel')).toContainText('King · Balanced');
 });
 
-test('opening another project preserves the Second Voice selection', async ({ page }) => {
+test('focusing another project preserves the Second Voice selection', async ({ page }) => {
   await openSecondVoiceStudio(page);
   await chooseAuthor(page, 'Hemingway');
-  const f24 = page.locator('#project-trigger-f24');
-  await f24.scrollIntoViewIfNeeded();
-  await f24.click();
-  await expect(page.locator('#project-content-f24')).toHaveAttribute('aria-hidden', 'false');
-  await page.locator('#project-trigger-second-voice-ai').click();
-  await expect(page.locator('#project-content-second-voice-ai')).toHaveAttribute('aria-hidden', 'false');
-  await expect(page.getByRole('radio', { name: 'Hemingway', exact: true })).toBeChecked();
+  await page.locator('.project-index button').nth(1).focus();
+  await page.locator('#work').getByRole('link', { name: 'Case study' }).focus();
+  await expect(page.getByRole('tab', { name: 'Hemingway', exact: true })).toHaveAttribute('aria-selected', 'true');
 });
 
-test('mobile studio keeps draft and result visible in reading order', async ({ page }) => {
+test('mobile studio exposes the source comparison and keeps all controls within the surface', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openSecondVoiceStudio(page);
-  const draft = page.getByRole('region', { name: 'Draft' });
-  const result = page.getByRole('region', { name: 'Result' });
-  await expect(draft).toBeVisible();
+  const result = page.getByRole('tabpanel');
   await expect(result).toBeVisible();
-  const [draftBox, resultBox] = await Promise.all([draft.boundingBox(), result.boundingBox()]);
-  expect(draftBox).not.toBeNull();
-  expect(resultBox).not.toBeNull();
-  expect(resultBox!.y).toBeGreaterThan(draftBox!.y);
+  await expect(page.locator('.draft')).toContainText('Every winter, the harbor lights went dark.');
+  const surface = await page.locator('.frame').boundingBox();
+  const submit = await page.getByRole('button', { name: 'Show Tolkien example' }).boundingBox();
+  expect(submit!.y + submit!.height).toBeLessThan(surface!.y + surface!.height);
   expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
 });
 
@@ -70,7 +61,10 @@ test('copy result and contact provide feedback without browser-specific clipboar
   await installClipboardStub(page);
   await openSecondVoiceStudio(page);
   await page.getByRole('button', { name: 'Copy rewrite', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Copied', exact: true })).toBeVisible();
-  await page.getByRole('button', { name: 'Copy email address' }).click();
-  await expect(page.locator('footer [role="status"]')).toHaveText('Email copied.');
+  await expect(page.locator('.card-b [role="status"]').filter({ hasText: /^Copied$/ })).toHaveCount(1);
+  const email = page.locator('footer [data-stop="0"]');
+  await expect(email).toHaveAttribute('href', 'mailto:miguelalmeida1592@gmail.com');
+  await email.evaluate(el => el.addEventListener('click', event => event.preventDefault()));
+  await email.click();
+  await expect(page.locator('footer [role="status"]')).toHaveText('Address copied — and opening your mail app. If nothing opens, just paste it.');
 });

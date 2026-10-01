@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   import Mail from '@lucide/svelte/icons/mail';
   import CopyEmailAction from '$lib/components/shared/CopyEmailAction.svelte';
   import MotionToggle from '$lib/components/shared/MotionToggle.svelte';
@@ -14,14 +15,14 @@
       <div class="details">
         <div class="identity"><img src="/images/avatar.webp" alt="Pixel portrait of Miguel Almeida" width="140" height="140" loading="lazy" decoding="async" /><div><h3>Miguel Almeida</h3><p>Frontend Engineer<br />Berlin, Germany</p></div></div>
         <nav aria-label="Contact Miguel">
-          <div class="email-row"><a href={'mailto:' + site.email}><Mail size={26} aria-hidden="true" /><span>{site.email}</span></a><CopyEmailAction email={site.email} label="email" variant="button" responsiveIcon testId="direct-email-copy" /></div>
-          <a href={site.linkedin} target="_blank" rel="noopener noreferrer"><img class="brand-icon" src="/images/linkedin.svg" alt="LinkedIn" width="26" height="26" loading="lazy" /><span>linkedin.com/in/miguelalmeida1/</span></a>
-          <a href={site.github} target="_blank" rel="noopener noreferrer"><img class="brand-icon" src="/images/github.svg" alt="GitHub" width="26" height="26" loading="lazy" /><span>github.com/miguelalmeida0</span></a>
+          <div class="email-row"><a href={'mailto:' + site.email} {...destinationLink('mailto:' + site.email)}><Mail size={26} aria-hidden="true" /><span>{site.email}</span></a><CopyEmailAction email={site.email} label="email" variant="button" responsiveIcon testId="direct-email-copy" /></div>
+          <a href={site.linkedin}   {...destinationLink(site.linkedin)}><img class="brand-icon" src="/images/linkedin.svg" alt="LinkedIn" width="26" height="26" loading="lazy" /><span>linkedin.com/in/miguelalmeida1/</span></a>
+          <a href={site.github}   {...destinationLink(site.github)}><img class="brand-icon" src="/images/github.svg" alt="GitHub" width="26" height="26" loading="lazy" /><span>github.com/miguelalmeida0</span></a>
         </nav>
       </div>
     </div>
     <footer>
-      <a href="/portfolio.pdf" download="miguel-almeida-cv.pdf">Download résumé <span class="motion-arrow" aria-hidden="true">↗</span></a>
+      <a href="/portfolio.pdf" {...destinationLink("/portfolio.pdf")}>Open résumé <span class="motion-arrow" aria-hidden="true">↗</span></a>
       <span class="build-note">Built with Svelte 5 · SvelteKit · TypeScript · Tailwind</span>
       <MotionToggle />
       <span>Miguel Almeida · Berlin</span>

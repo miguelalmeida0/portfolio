@@ -79,12 +79,4 @@ export const projectKnowledge = [
     content:
       'Creature App is an exploratory body-to-character correspondence prototype. Miguel built the interaction and feedback layer around a tracked 3D character so landmark availability and tracking loss remain visible. The recorded state demonstrates the interface, not tracking accuracy across bodies or environments.'
   },
-  {
-    id: 'project-mirror-ai',
-    title: 'Mirror AI',
-    source: 'Mirror AI project note|/work/mirror-ai',
-    tags: ['project', 'mirror ai', 'segmentation', 'selection', 'contour', 'inspector'],
-    content:
-      'Mirror AI is an independent local-first image and text assistant. Miguel’s scope spans product design, image selection, contextual inspection, keyboard/mobile interaction, local model integration, versioned scene caching, corrections, and Eval Lab. Cached geometry keeps hover and selection independent of fresh inference. Evidence arbitration separates spatial and semantic identity and preserves stronger evidence and user corrections. Failure capture saves question, answer, correction, and compressed display image locally; it does not retrain models. The supplied handoff reports 49 passing unit/component tests. The separate 630-sample cinematic report is historical saved-scene evidence, not model accuracy or cold-start speed. Recognition and latency vary by image, model, and hardware; some backend work remains scaffolded.'
-  }
 ] as const;

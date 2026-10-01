@@ -1,10 +1,12 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   import { onDestroy, onMount, tick } from 'svelte';
   import ArrowUpRight from '@lucide/svelte/icons/arrow-up-right';
   import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
   import X from '@lucide/svelte/icons/x';
   import { projectQuestions, projectTitles, resolveProject } from '$lib/miguel-llm/projectContext';
   import { recruiterBriefs } from '$lib/content/recruiter-briefs';
+  import { currentGuideProjects } from '$lib/miguel-llm/currentPortfolio';
 
   import { MIGUEL_LLM_MAX_QUESTION_LENGTH } from '$lib/miguel-llm/guardrails';
   import type { MiguelLLMAnswer as MiguelAnswer, MiguelLLMMode } from '$lib/miguel-llm/types';
@@ -30,19 +32,18 @@
       'What production frontend experience does he have?'
     ],
     engineer: [
-      'What is Camera Harness’s biggest architectural lesson?',
-      'How does Ask choose visual evidence?',
-      'What does Microscope actually do?',
-      'How does Ghostwriter handle failure?'
+      'What was the key decision in Flow?',
+      'What did Miguel build in Leu?',
+      'How does Second Voice handle failure?'
     ],
     design: [
       'How does Miguel combine design and engineering?',
-      'How is uncertainty shown in Camera Harness?',
-      'Why use floating labels instead of boxes?',
+      'How does Second Voice make edits inspectable?',
+      'How does Leu keep the source connected?',
       'What should I inspect first?'
     ],
     curious: [
-      'Does Camera Harness run fully locally?',
+      'What is Flow?',
       'Why AI products?',
       'What is the integration drift lesson?',
       'Give me the non-corporate version.'
@@ -64,6 +65,8 @@
   let chatScroll: HTMLElement;
   let activeProject: string | undefined = projectSlug;
   let savedBodyOverflow: string | undefined;
+  let viewportHeight: number | undefined;
+  let viewportTop = 0;
 
   $: suggestedQuestions = projectQuestions(activeProject).length ? projectQuestions(activeProject) : questionsByMode[mode];
   $: questionsRemaining = Math.max(0, MAX_SESSION_QUESTIONS - questionCount);
@@ -75,6 +78,19 @@
 
   onMount(() => {
     questionCount = readQuestionCount();
+    // Mobile keyboards resize the visual viewport without always resizing 100dvh.
+    const viewport = window.visualViewport;
+    const syncViewport = () => {
+      viewportHeight = viewport?.height;
+      viewportTop = viewport?.offsetTop ?? 0;
+    };
+    syncViewport();
+    viewport?.addEventListener('resize', syncViewport);
+    viewport?.addEventListener('scroll', syncViewport);
+    return () => {
+      viewport?.removeEventListener('resize', syncViewport);
+      viewport?.removeEventListener('scroll', syncViewport);
+    };
   });
 
   function cancelRequest() { requestVersion += 1; requestController?.abort(); loading = false; }
@@ -118,7 +134,8 @@
     lastOpenState = false;
     cancelRequest();
     restoreScroll();
-    previousActiveElement?.focus?.();
+    // Wait for the layout to remove inert before restoring the original trigger.
+    tick().then(() => { if (!open && previousActiveElement?.isConnected) previousActiveElement.focus(); });
   }
 
   const closeDrawer = () => {
@@ -202,10 +219,11 @@
     } catch {
       if (version !== requestVersion) return;
       const brief = activeProject ? recruiterBriefs[activeProject] : undefined;
+      const current = currentGuideProjects.find(project => project.slug === activeProject);
       const offlineAnswer: MiguelAnswer = {
         runtime: 'local-fallback', provider: 'local-fallback', model: 'saved-portfolio-notes', questionMode: mode,
-        shortAnswer: brief ? `Saved project overview: ${brief.problem}` : 'The live guide is unavailable. You can still read Miguel’s work, résumé, and contact details directly.',
-        bullets: brief ? [brief.ownership] : [],
+        shortAnswer: current ? `Saved project overview: ${current.problem}` : brief ? `Saved project overview: ${brief.problem}` : 'The live guide is unavailable. You can still read Miguel’s work, résumé, and contact details directly.',
+        bullets: current ? [current.ownership] : brief ? [brief.ownership] : [],
         sources: activeProject ? [`${projectTitles[activeProject]}|/work/${activeProject}`, 'Résumé|/cv'] : ['Selected work|/#work', 'Résumé|/cv', 'Contact Miguel|/#contact'],
         suggestedNextQuestions: [], confidence: 'medium'
       };
@@ -278,8 +296,8 @@
 <svelte:window on:keydown={handleKeydown} />
 
 {#if open}
-  <div class="drawer-shell" role="presentation">
-    <button class="drawer-backdrop" type="button" aria-label="Close portfolio guide" on:click={closeDrawer}></button>
+  <div class="drawer-shell" role="presentation" style:height={viewportHeight ? `${viewportHeight}px` : undefined} style:top={`${viewportTop}px`}>
+    <button class="drawer-backdrop" type="button" tabindex="-1" aria-label="Close portfolio guide" on:click={closeDrawer}></button>
 
     <div
       bind:this={dialogElement}
@@ -288,6 +306,8 @@
       aria-modal="true"
       aria-labelledby="miguel-llm-drawer-title"
       tabindex="-1"
+      data-scroll-native
+      data-lenis-prevent
     >
       <div class="drawer-header">
         <div class="drawer-brand">
@@ -359,64 +379,66 @@
         />
         <MiguelLLMStatus error={usageError} />
         {#if error && lastQuestion && !questionLimitReached}<button type="button" class="retry-question" disabled={loading} on:click={() => ask(lastQuestion)}>Try the live guide again</button>{/if}
-        {#if questionLimitReached}<nav class="guide-exit" aria-label="Continue without the guide"><a href="/cv" on:click={closeDrawer}>Read résumé</a><a href="/#contact" on:click={closeDrawer}>Contact Miguel</a></nav>{/if}
+        {#if questionLimitReached}<nav class="guide-exit" aria-label="Continue without the guide"><a href="/cv" on:click={closeDrawer} {...destinationLink("/cv")}>Read résumé</a><a href="/#contact" on:click={closeDrawer} {...destinationLink("/#contact")}>Contact Miguel</a></nav>{/if}
       </div>
     </div>
   </div>
 {/if}
 
 <style>
-  .project-context { font-size: 13px; color: #aaa29b; margin: 12px 0 0; }
+  .project-context { font-size: 13px; color: var(--llm-muted); margin: 12px 0 0; }
   .followup-questions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
-  .followup-questions button, .retry-question { padding: 10px 12px; border: 1px solid #474039; border-radius: 8px; background: transparent; color: #e9dfd5; text-align: left; cursor: pointer; font-size: 12px; line-height: 1.5; }
+  .followup-questions button, .retry-question { padding: 10px 12px; border: 1px solid var(--llm-border); border-radius: 8px; background: transparent; color: var(--llm-ink); text-align: left; cursor: pointer; font-size: 12px; line-height: 1.5; }
   .retry-question { margin-top: 8px; }
   .guide-exit { display: flex; gap: 20px; font-size: 13px; padding-top: 12px; }
   .guide-exit a { text-decoration: underline; text-underline-offset: 4px; }
-  .followup-questions button:focus-visible, .retry-question:focus-visible, .guide-exit a:focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
+  .followup-questions button:focus-visible, .retry-question:focus-visible, .guide-exit a:focus-visible { outline: 2px solid var(--llm-ring); outline-offset: 3px; }
   .drawer-shell {
     position: fixed;
     inset: 0;
+    bottom: auto;
+    height: 100dvh;
     z-index: 80;
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    color: #f5eee8;
+    color: #142a22;
+    font-family: 'Figtree', var(--font-sans);
+    --font-display: 'Figtree', sans-serif;
   }
 
   .drawer-backdrop {
     position: absolute;
     inset: 0;
     border: 0;
-    background: rgb(6 3 2 / 0.5);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    background: rgb(20 42 34 / 0.32);
     cursor: pointer;
   }
 
   .drawer-panel {
-    --llm-accent: #f5eee8;
-    --llm-border: rgb(245 238 232 / 0.105);
-    --llm-ink: #f5eee8;
-    --llm-ink-strong: #fff8f0;
-    --llm-input-border: #2b2521;
-    --llm-muted: #a9a19a;
-    --llm-muted-soft: #716a64;
-    --llm-ring: rgb(245 238 232 / 0.36);
-    --llm-shadow: rgb(0 0 0 / 0.46);
-    --llm-surface: #15100d;
-    --llm-surface-raised: #211c18;
-    --llm-surface-soft: #120e0b;
+    --llm-accent: #59163c;
+    --llm-border: rgb(20 42 34 / 0.18);
+    --llm-ink: #142a22;
+    --llm-ink-strong: #1c362d;
+    --llm-input-border: #4e5c54;
+    --llm-muted: #4e5c54;
+    --llm-muted-soft: #4e5c54;
+    --llm-ring: #59163c;
+    --llm-shadow: rgb(20 42 34 / 0.16);
+    --llm-surface: #f9f7ee;
+    --llm-surface-raised: #e7ecd8;
+    --llm-surface-soft: #f0f3e4;
 
     position: relative;
     z-index: 1;
     display: grid;
     grid-template-rows: auto minmax(0, 1fr) auto;
     width: min(100%, 28rem);
-    height: 100svh;
+    height: 100%;
     max-height: none;
     margin-right: 0;
     overflow: hidden;
-    border: 1px solid rgb(245 238 232 / 0.11);
+    border: 1px solid var(--llm-border);
     border-right: 0;
     border-radius: 0 0 0 0.55rem;
     background: var(--llm-surface-soft);
@@ -477,13 +499,13 @@
 
   .icon-button {
     display: grid;
-    width: 1.75rem;
-    height: 1.75rem;
+    width: 2.75rem;
+    height: 2.75rem;
     place-items: center;
     border: 0;
     border-radius: 999px;
     background: transparent;
-    color: #b6aea7;
+    color: var(--llm-muted);
     cursor: pointer;
     font-family: var(--font-display);
     font-size: 1.45rem;
@@ -502,7 +524,10 @@
     display: grid;
     gap: 1rem;
     overflow: auto;
-    align-content: end;
+    align-content: start;
+    min-width: 0;
+    overscroll-behavior: contain;
+    overflow-wrap: anywhere;
     background: transparent;
     padding: 1.55rem 1.75rem 2.35rem;
   }
@@ -547,7 +572,7 @@
     border: 0;
     border-radius: 1rem;
     background: transparent;
-    color: #aaa29b;
+    color: var(--llm-muted);
     cursor: pointer;
     font-family: var(--font-display);
     font-size: 1.05rem;
@@ -564,9 +589,10 @@
 
   .starter-questions button:hover,
   .starter-questions button:focus-visible {
-    background: #1a1512;
+    background: var(--llm-surface-raised);
     color: var(--llm-ink-strong);
-    outline: none;
+    outline: 2px solid var(--llm-ring);
+    outline-offset: 2px;
   }
 
   .starter-questions button :global(svg) {
@@ -633,7 +659,7 @@
 
     .drawer-panel {
       width: 100%;
-      height: 100dvh;
+      height: 100%;
       margin: 0;
       border-radius: 0;
       border-inline: 0;

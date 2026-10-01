@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   import { caseStudies } from '$lib/content/case-studies';
 
   const cameraHarness = caseStudies.find((project) => project.slug === 'camera-harness')!;
@@ -15,7 +16,7 @@
 
     <div class="work-layout">
       <article class="project flagship" data-testid="camera-harness-card">
-        <a class="project-link" href={`/work/${cameraHarness.slug}`}>
+        <a class="project-link" href={`/work/${cameraHarness.slug}`} {...destinationLink(`/work/${cameraHarness.slug}`)}>
           <div class="project-visual camera-visual" aria-hidden="true">
             <span class="signal signal-a">frame</span>
             <span class="signal signal-b">track</span>
@@ -40,7 +41,7 @@
       <div class="supporting-work">
         {#each [atlas, ghostwriter] as project, index}
           <article class="project supporting">
-            <a class="project-link" href={`/work/${project.slug}`}>
+            <a class="project-link" href={`/work/${project.slug}`} {...destinationLink(`/work/${project.slug}`)}>
               <div
                 class:atlas-visual={project.slug === 'atlas'}
                 class:ghostwriter-visual={project.slug === 'ghostwriter'}

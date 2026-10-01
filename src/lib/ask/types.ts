@@ -1,0 +1,10 @@
+import { pageAreas, type PageAreaId } from './page-areas';
+export const areaIds = ['hi', 'role', 'f24', 'stack', 'quality', 'cv', 'touch', 'nav-work', 'nav-story', 'nav-cv', 'nav-contact', 'selwork', 'w-sv', 'w-f24', 'try', 'draft', 'rewrite', 'city', 'w-flow', 'w-leu', ...pageAreas.map(a => a.id as PageAreaId)] as const;
+export type AreaId = typeof areaIds[number];
+export type Step = { lead: string; source: AreaId; quote: string };
+export type KnowledgeAnswer = { paragraphs: string[]; bullets: string[]; sources: string[]; factIds?: string[]; followups?: string[]; conversational?: boolean };
+export type Plan = { question: string; steps: Step[]; knowledge?: KnowledgeAnswer | null };
+export type Area = Plan & { id: AreaId; label: string; group: number };
+export type AskState = 'idle' | 'opening' | 'ready' | 'answering' | 'closing';
+export type Fragment = { step: Step; number: number; quoted: boolean };
+export type AskView = { state: AskState; question: string; fragments: Fragment[]; complete: boolean; refusal: boolean; loading: boolean; knowledge: KnowledgeAnswer | null; error?: string };

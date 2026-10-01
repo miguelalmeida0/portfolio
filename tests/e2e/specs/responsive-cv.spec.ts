@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { openPortfolioHome } from '../helpers/portfolio';
 
-const routes = ['/', '/cv', '/story', '/work/second-voice-ai', '/work/f24', '/work/leu', '/work/flow', '/work/mirror-ai'];
+const routes = ['/', '/cv', '/story', '/work/second-voice-ai', '/work/f24', '/work/leu', '/work/flow'];
 
 for (const width of [320, 390, 600, 768, 820, 1024, 1440, 1920, 2560]) {
   test(`all public layouts fit ${width}px`, async ({ page }) => {

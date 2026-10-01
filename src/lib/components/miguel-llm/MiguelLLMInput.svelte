@@ -25,7 +25,7 @@
       {placeholder}
       disabled={loading || disabled}
     />
-    <button type="submit" disabled={loading || disabled || value.trim().length < 4}>
+    <button type="submit" aria-label={loading ? 'Reading' : 'Ask'} disabled={loading || disabled || value.trim().length < 4}>
       {loading ? 'Reading' : 'Ask'}
     </button>
   </div>
@@ -52,7 +52,7 @@
     min-height: 2.78rem;
     border: 1px solid var(--llm-input-border, #2b2521);
     border-radius: 999px;
-    background: #030303;
+    background: var(--llm-surface);
     box-shadow: inset 0 1px 0 rgb(255 247 236 / 0.035);
   }
 
@@ -75,7 +75,7 @@
   }
 
   input::placeholder {
-    color: #69625d;
+    color: var(--llm-muted);
     opacity: 1;
   }
 
@@ -95,7 +95,7 @@
     transform: translateY(-50%);
     border: 0;
     border-radius: 999px;
-    background: #625d58;
+    background: var(--llm-surface-raised);
     color: transparent;
     cursor: pointer;
     font-family: var(--font-mono);
@@ -106,7 +106,7 @@
   }
 
   button::before {
-    color: #050505;
+    color: var(--llm-ink);
     content: "↑";
     font-family: var(--font-display);
     font-size: 1.36rem;
@@ -116,12 +116,12 @@
 
   button:hover,
   button:focus-visible {
-    outline: 2px solid rgb(245 238 232 / 0.34);
+    outline: 2px solid var(--llm-ring);
     outline-offset: 2px;
   }
 
   button:not(:disabled) {
-    background: #f4f2ef;
+    background: var(--llm-surface-raised);
     cursor: pointer;
     opacity: 1;
   }

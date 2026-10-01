@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   import type { CaseStudy } from '$lib/content/case-studies';
   import { getApprovedMedia } from '$lib/content/project-media';
 
@@ -10,7 +11,7 @@
 
 <header class="case-hero">
   <div class="hero-copy">
-    <a class="back-link" href="/#work">← Selected work</a>
+    <a class="back-link" href="/#work" {...destinationLink("/#work")}>← Selected work</a>
     <p class="eyebrow">{study.type}</p>
     <h1>{study.title}</h1>
     <h2>{headline}</h2>

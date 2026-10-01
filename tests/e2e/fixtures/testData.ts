@@ -24,11 +24,10 @@ export const primaryNavigation = [
 ] as const;
 
 export const selectedWork = [
-  'Second Voice',
+  'Second Voice AI',
   'F24',
   'Leu',
-  'Flow',
-  'Mirror AI'
+  'Flow'
 ] as const;
 
 export const visitorFlows = {

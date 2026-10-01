@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   import type { ProjectLink } from '$lib/content/case-studies';
 
   export let links: ProjectLink[] = [];
@@ -9,8 +10,8 @@
     {#if link.href}
       <a
         href={link.href}
-        target={link.external ? '_blank' : undefined}
-        rel={link.external ? 'noopener noreferrer' : undefined}
+
+         {...destinationLink(link.href)}
       >
         {link.label}{link.external ? ' ↗' : ''}
       </a>

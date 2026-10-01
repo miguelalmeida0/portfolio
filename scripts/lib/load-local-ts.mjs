@@ -18,6 +18,11 @@ export async function loadLocalTs(entry, { stubs = {} } = {}) {
     if (seen.has(file)) return seen.get(file);
     const target = path.join(out, path.relative(root, file).replace(/\.ts$/, '.mjs'));
     seen.set(file, target);
+    if (file.endsWith('.json')) {
+      await mkdir(path.dirname(target), { recursive: true });
+      await writeFile(target, await readFile(file, 'utf8'));
+      return target;
+    }
     let output = ts.transpileModule(await readFile(file, 'utf8'), {
       compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 }
     }).outputText;

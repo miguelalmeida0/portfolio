@@ -21,6 +21,7 @@ try {
     await page.goto('http://127.0.0.1:4173/');
     await page.locator('[data-ask-trigger]').first().waitFor({ state: 'attached' });
     await page.waitForFunction(() => !document.querySelector('[data-ask-trigger]')?.disabled);
+    if (process.argv.includes('--legacy-geometry')) await page.evaluate(()=>document.querySelector('[data-homepage]').removeAttribute('data-homepage'));
     await page.evaluate(() => document.fonts.ready);
     await page.evaluate(async () => { await Promise.all([...document.images].map(i => i.decode().catch(() => {}))); });
     // Attribute-only hooks, injected for measurement so source remains untouched.

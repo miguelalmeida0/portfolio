@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   import { projectChecks } from '$lib/content/project-checks';
   export let slug: string;
   $: check = projectChecks[slug];
@@ -7,7 +8,7 @@
 {#if check}
   <section id="evidence" class="checks" aria-label="Engineering evidence">
     <div><span class="status">{check.status}</span><strong>{check.value}</strong><h2>{check.label}</h2></div>
-    <div class="method"><p>{check.description}</p><a href={check.source}>Read conditions & source record →</a></div>
+    <div class="method"><p>{check.description}</p><a href={check.source} {...destinationLink(check.source)}>Read conditions & source record →</a></div>
   </section>
 {/if}
 

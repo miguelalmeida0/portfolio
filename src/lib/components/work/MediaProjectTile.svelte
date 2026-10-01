@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   import type { ProjectTile } from '$lib/content/project-media';
   import { mediaResponse } from '$lib/motion/actions/mediaResponse';
   import { reveal } from '$lib/motion/actions/reveal';
@@ -49,7 +50,7 @@
       class="surface-link"
       href={project.href}
       aria-label={`Open ${project.title}`}
-      on:click={carryFrame}
+      on:click={carryFrame} {...destinationLink(project.href)}
     >
       <span class="sr-only">Open {project.title}</span>
     </a>
@@ -64,7 +65,7 @@
       class="title-link"
       href={project.href}
       aria-label={`${project.title}. ${project.shortDescription}`}
-      on:click={carryFrame}
+      on:click={carryFrame} {...destinationLink(project.href)}
     >
       <h3>{project.title}</h3>
       <span class="motion-arrow" aria-hidden="true">↗</span>
@@ -76,12 +77,12 @@
 
     {#if isSecondVoice}
       <div class="project-actions" aria-label="Second Voice AI links">
-        <a class="action action-secondary" href={project.href}>Case study</a>
+        <a class="action action-secondary" href={project.href} {...destinationLink(project.href)}>Case study</a>
         <a
           class="action action-primary"
           href="https://secondvoice-ai.vercel.app/second-voice"
-          target="_blank"
-          rel="noopener noreferrer"
+
+           {...destinationLink("https://secondvoice-ai.vercel.app/second-voice")}
         >
           Open live app <span aria-hidden="true">↗</span>
         </a>

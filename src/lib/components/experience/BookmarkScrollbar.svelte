@@ -98,6 +98,7 @@
 </script>
 
 {#if enabled && maximum > 0}
+  <aside aria-label="Page scrolling">
   <div data-bookmark-rail role="scrollbar" aria-label="Scroll page" aria-controls="portfolio-content"
     aria-orientation="vertical" aria-valuemin={0} aria-valuemax={Math.round(maximum)} aria-valuenow={Math.round(position)}
     tabindex="0" onpointerdown={pointerdown} onpointermove={pointermove} onpointerup={release}
@@ -113,4 +114,5 @@
       </div>
     </div>
   </div>
+  </aside>
 {/if}

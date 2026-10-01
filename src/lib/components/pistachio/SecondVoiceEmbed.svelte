@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   import { onMount } from 'svelte';
   import ArrowUpRight from '@lucide/svelte/icons/arrow-up-right';
   const appUrl = 'https://secondvoice-ai.vercel.app/second-voice';
@@ -36,7 +37,7 @@
         <h2 class="max-w-xl text-3xl font-semibold tracking-tight sm:text-5xl">Your words.<br />Another voice.</h2>
         {#if unavailable}
           <p role="status" class="max-w-sm text-sm text-white/85">The embedded studio isn’t available yet. You can use Second Voice in the full app.</p>
-          <a href={appUrl} target="_blank" rel="noopener noreferrer" class="inline-flex min-h-[48px] items-center gap-3 rounded-md bg-folio-blue px-6 font-semibold text-black">Open Second Voice <ArrowUpRight size={18} /></a>
+          <a href={appUrl}   class="inline-flex min-h-[48px] items-center gap-3 rounded-md bg-folio-blue px-6 font-semibold text-black" {...destinationLink(appUrl)}>Open Second Voice <ArrowUpRight size={18} /></a>
         {:else}
           <button type="button" onclick={launch} disabled={loading} class="min-h-[48px] cursor-pointer rounded-md bg-folio-blue px-6 font-semibold text-black disabled:cursor-wait disabled:opacity-70">{loading ? 'Opening the studio…' : 'Try Second Voice here'}</button>
           <p class="max-w-sm text-xs text-white/75" role="status">{loading ? 'Connecting to Second Voice.' : 'Write a passage, pick an author, and run a real rewrite.'}</p>

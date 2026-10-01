@@ -1,0 +1,361 @@
+{
+  "$comment": "Content for the Story page (Split · Try it). Every visible string lives here; the component renders it. Edit copy here, not in components.",
+  "questions": [
+    {
+      "id": "hi",
+      "question": "So, who are you?",
+      "lead": "I’m Miguel.",
+      "answer": "A frontend developer in Berlin who started out in UX. I like interfaces that stay calm when things go wrong.",
+      "scene": {
+        "caption": "Two views of the same person",
+        "actions": [
+          "For a recruiter",
+          "For an engineer"
+        ]
+      }
+    },
+    {
+      "id": "ux",
+      "question": "Where did you start?",
+      "lead": "I started in UX.",
+      "answer": "Studying it taught me to ask what someone needs to understand — and what they’ll do next.",
+      "scene": {
+        "caption": "Questions before pixels",
+        "actions": [
+          "Ask what they need",
+          "Clear"
+        ]
+      }
+    },
+    {
+      "id": "build",
+      "question": "How did you end up in frontend?",
+      "lead": "I learned to build what I drew.",
+      "answer": "The states, the interactions, the implementation. I stopped handing designs over and started finishing them.",
+      "scene": {
+        "caption": "Every state, designed",
+        "actions": [
+          "Loading",
+          "Empty",
+          "Couldn’t refresh",
+          "Loaded"
+        ]
+      }
+    },
+    {
+      "id": "f24",
+      "question": "What do you do at F24?",
+      "lead": "Four years at F24.",
+      "answer": "Crisis-management software, used when things are already going wrong. I built the original Svelte frontend and I’ve kept delivering in React since.",
+      "scene": {
+        "caption": "Software for the worst day",
+        "actions": [
+          "Trigger an alarm",
+          "All clear"
+        ]
+      }
+    },
+    {
+      "id": "fail",
+      "question": "What did four years there teach you?",
+      "lead": "Design for the bad moment.",
+      "answer": "Keep the rows on screen when a request fails. Ignore answers that arrive out of date. Put keyboard focus back where it was. Small promises, big difference.",
+      "scene": {
+        "caption": "Built for the bad moment",
+        "actions": [
+          "Drop the connection",
+          "Race two filters",
+          "Close details by keyboard"
+        ]
+      }
+    },
+    {
+      "id": "own",
+      "question": "What do you build for yourself?",
+      "lead": "I build my own tools.",
+      "answer": "Second Voice rewrites your writing and shows exactly what changed. Flow turns spoken requests into calendar actions you can still edit.",
+      "scene": {
+        "caption": "My own products, end to end",
+        "actions": [
+          "Rewrite a sentence",
+          "Say something to Flow"
+        ]
+      }
+    },
+    {
+      "id": "love",
+      "question": "What do you love doing?",
+      "lead": "Making complicated things simple to see.",
+      "answer": "DNS, TLS, containers, a single web request — drawn so they finally click, and useful enough to come back to.",
+      "scene": {
+        "caption": "One request, drawn",
+        "actions": [
+          "Send a request",
+          "Explain each stop"
+        ]
+      }
+    },
+    {
+      "id": "care",
+      "question": "What do you care about in code?",
+      "lead": "Things that actually work.",
+      "answer": "Typed contracts, real tests, accessibility, performance. No portfolio theatre.",
+      "scene": {
+        "caption": "Contracts at the boundary",
+        "actions": [
+          "Send a bad field",
+          "Send a good response"
+        ]
+      }
+    }
+  ],
+  "tools": [
+    "TypeScript",
+    "React",
+    "Svelte",
+    "Vite",
+    "Playwright",
+    "Node.js",
+    "Docker"
+  ],
+  "ending": {
+    "label": "And finally",
+    "question": "Can we talk?",
+    "answer": "If you’re building something people rely on when things go wrong, I’d love to hear about it.",
+    "ctas": [
+      {
+        "label": "Get in touch",
+        "href": "#contact",
+        "primary": true
+      },
+      {
+        "label": "View my CV",
+        "href": "/cv"
+      },
+      {
+        "label": "See the work",
+        "href": "/#work"
+      }
+    ]
+  },
+  "shortVersion": {
+    "kicker": "You read all eight — here’s the short version",
+    "title": "Miguel Almeida",
+    "lines": [
+      "Frontend developer in Berlin, with a UX background",
+      "Four years at F24 — built the original Svelte frontend, now delivering in React",
+      "Designs every state, not just the happy path",
+      "Keeps data on failed requests, rejects stale responses, restores focus",
+      "Builds crisis-management software, where clarity matters most",
+      "Validates data at the boundary — typed contracts, real end-to-end tests",
+      "Builds his own products end to end: Second Voice and Flow",
+      "Explains complicated systems simply — DNS, TLS, a single request"
+    ],
+    "copyLabel": "Copy the short version",
+    "copyText": "Miguel Almeida — the short version\n01. Frontend developer in Berlin, with a UX background\n02. Four years at F24 — built the original Svelte frontend, now delivering in React\n03. Designs every state, not just the happy path\n04. Keeps data on failed requests, rejects stale responses, restores focus\n05. Builds crisis-management software, where clarity matters most\n06. Validates data at the boundary — typed contracts, real end-to-end tests\n07. Builds his own products end to end: Second Voice and Flow\n08. Explains complicated systems simply — DNS, TLS, a single request\nmiguelalmeida1592@gmail.com"
+  },
+  "progress": {
+    "format": "Question {n} of {total} · {left} left",
+    "last": "Question {total} of {total} · last one",
+    "done": "All {total} answered"
+  },
+  "ui": {
+    "title": "Story",
+    "tryIt": "Try it",
+    "illustration": "Illustration for: {question}",
+    "example": "Illustrative example · fictional data",
+    "question": "Question {n} of {total}",
+    "next": "Next · {left} left",
+    "last": "That was the last one",
+    "seeEnd": "See the end",
+    "back": "Back to: {question}",
+    "backTip": "Back: {question}",
+    "keys": "or press",
+    "copied": "Copied",
+    "copyFailed": "Couldn’t copy — select the text",
+    "nextLabel": "Next: {question}"
+  },
+  "scenes": {
+    "hi": {
+      "title": "At a glance",
+      "recruiter": [
+        [
+          "Role",
+          "Frontend developer"
+        ],
+        [
+          "Based in",
+          "Berlin"
+        ],
+        [
+          "Experience",
+          "Four years at F24, since 2022"
+        ],
+        [
+          "Background",
+          "UX, 2020–2022"
+        ]
+      ],
+      "engineer": [
+        [
+          "Stack",
+          "TypeScript · React · Svelte"
+        ],
+        [
+          "Built",
+          "F24’s original Svelte frontend"
+        ],
+        [
+          "Testing",
+          "Playwright, end to end"
+        ],
+        [
+          "Cares about",
+          "Types, accessibility, performance"
+        ]
+      ]
+    },
+    "ux": {
+      "notes": [
+        "What changed, and who did it?",
+        "What will they do next?",
+        "What happens if this fails?"
+      ]
+    },
+    "rows": [
+      [
+        "09:42",
+        "Fire alarm · Hall B",
+        "Alarm"
+      ],
+      [
+        "09:31",
+        "Rule “Door sensor offline”",
+        "Rule"
+      ],
+      [
+        "09:18",
+        "Template “Evacuation”",
+        "Template"
+      ],
+      [
+        "08:57",
+        "Power failure · Server room",
+        "Alarm"
+      ]
+    ],
+    "build": {
+      "states": [
+        "Loaded",
+        "Loading",
+        "Empty",
+        "Couldn’t refresh"
+      ],
+      "empty": "Nothing yet. New activity will appear here.",
+      "error": "Couldn’t refresh. Showing what you had.",
+      "retry": "Retry"
+    },
+    "f24": {
+      "title": "Live incident",
+      "clear": "All clear",
+      "active": "1 active",
+      "empty": "No active alarms.",
+      "alarm": "Fire alarm · Hall B",
+      "triggered": "Triggered 09:42 · 18 people notified",
+      "acknowledged": "Acknowledged by the duty officer · just now",
+      "handled": "Handled",
+      "alarmActive": "Active",
+      "coordinator": "Second coordinator",
+      "reply": "“They have it. I’ll take the next one.”",
+      "message": "Evacuation message",
+      "phone": "Evacuate Hall B",
+      "sent": "Sent once, to everyone who needed it"
+    },
+    "fail": {
+      "title": "Activity history",
+      "weak": "Weak connection",
+      "online": "Online",
+      "error": "Couldn’t refresh. Showing the rows you already had.",
+      "stale": "Ignored an out-of-date answer (#1).",
+      "requests": "Requests:",
+      "none": "none yet",
+      "refresh": "#1 refresh",
+      "alarms": "#1 alarms",
+      "templates": "#2 templates",
+      "close": "Close details",
+      "escape": "Press Escape to close",
+      "returned": "Focus returned to the row",
+      "details": "Template details"
+    },
+    "own": {
+      "tabs": [
+        "Second Voice",
+        "Flow"
+      ],
+      "original": "Every winter, the harbor lights went dark.",
+      "rewrite": "Each winter, darkness settled over the harbor.",
+      "kept": "Every change is marked. Your draft is kept.",
+      "before": "A draft, before the rewrite",
+      "listening": "Listening…",
+      "transcript": "“Lunch with Ana, Friday at one.”",
+      "event": "Lunch with Ana · Friday 13:00",
+      "draft": "Draft — nothing booked until you confirm"
+    },
+    "love": {
+      "title": "One web request",
+      "ready": "ready",
+      "flight": "in flight",
+      "intro": "One web request, drawn so it finally clicks. Hover a stop.",
+      "stops": [
+        [
+          "You",
+          "browser",
+          "Your browser asks for a page."
+        ],
+        [
+          "DNS",
+          "where is it?",
+          "DNS turns a name into an address — like looking up a phone number."
+        ],
+        [
+          "TLS",
+          "is it really them?",
+          "TLS checks the server is who it claims to be, then encrypts the line."
+        ],
+        [
+          "Server",
+          "here you go",
+          "The server finally answers, and the page travels back to you."
+        ]
+      ]
+    },
+    "care": {
+      "title": "Alarm details",
+      "handled": "Handled",
+      "ok": "OK",
+      "fields": [
+        [
+          "title",
+          "“Fire alarm · Hall B”"
+        ],
+        [
+          "acknowledgedAt",
+          "“2026-09-30T09:43Z”"
+        ],
+        [
+          "by",
+          "“Tomás R.”"
+        ]
+      ],
+      "invalid": "“yesterday-ish”",
+      "acknowledged": "Acknowledged by Tomás R.",
+      "unavailable": "Time unavailable — reported, rest of the page works",
+      "time": "at 09:43",
+      "checks": [
+        "Response checked against the contract",
+        "Bad fields never reach the UI",
+        "Page stays usable"
+      ]
+    }
+  }
+}

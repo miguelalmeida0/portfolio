@@ -164,48 +164,6 @@ export const portfolioMediaAssets: PortfolioMediaAsset[] = [
     note: 'Published at the user’s explicit direction on 2026-07-29.'
   },
   {
-    id: 'mirror-ai-home',
-    projectId: 'mirror-ai',
-    kind: 'poster',
-    src: '/projects/mirror-ai/interface-1600.webp',
-    alt: 'Mirror AI home interface with image upload, text input, a question field, and Eval Lab navigation.',
-    status: 'current',
-    publicStatus: 'approved',
-    containsPerson: false,
-    containsPrivateEnvironment: false
-  },
-  {
-    id: 'mirror-ai-aquarium-selection',
-    projectId: 'mirror-ai',
-    kind: 'poster',
-    src: '/projects/mirror-ai/aquarium-selection.png',
-    alt:
-      'Mirror AI prototype with an outlined aquarium subject and a side panel for inspecting and asking questions about the selection.',
-    status: 'current',
-    publicStatus: 'approved',
-    containsPerson: true,
-    containsPrivateEnvironment: false,
-    capturedAt: '2026-07',
-    note: 'Published at the user’s explicit direction on 2026-07-29.'
-  },
-  {
-    id: 'mirror-ai-active-image-demo',
-    projectId: 'mirror-ai',
-    kind: 'video',
-    src: '/projects/mirror-ai/active-image-demo.webm',
-    fallbackSrc: '/projects/mirror-ai/active-image-demo.mp4',
-    poster: '/projects/mirror-ai/active-image-demo-poster.jpg',
-    alt:
-      'A 9.8 second Active Image product film selecting a giraffe and then an ostrich, preserving each contour in the source image before the ostrich inspector pushes smoothly into focus.',
-    status: 'current',
-    publicStatus: 'approved',
-    containsPerson: false,
-    containsPrivateEnvironment: false,
-    capturedAt: '2026-07',
-    note:
-      'Deterministic capture of two recorded local-model states. It demonstrates the interaction and evidence layout, not generalized model performance.'
-  },
-  {
     id: 'f24-hackathon-presentation-room',
     projectId: 'f24-ai-hackathon',
     kind: 'photo',
@@ -353,8 +311,6 @@ const cameraResultPoster = getApprovedMedia('camera-harness-microscope-live');
 const f24Poster = getApprovedMedia('f24-hackathon-presentation-room');
 const ghostwriterPoster = getApprovedMedia('ghostwriter-home');
 const ghostwriterFilm = getApprovedMedia('ghostwriter-portfolio-film');
-const mirrorAiPoster = getApprovedMedia('mirror-ai-aquarium-selection');
-const mirrorAiFilm = getApprovedMedia('mirror-ai-active-image-demo');
 
 export const homepageProjectTiles: ProjectTile[] = [
   {
@@ -433,34 +389,4 @@ export const homepageProjectTiles: ProjectTile[] = [
     sequence: ['Passage', 'Tolkien', 'Visible edit', 'User confirm'],
     sequenceLabel: 'Ghostwriter editorial control sequence'
   },
-  {
-    id: 'mirror-ai',
-    title: 'Mirror AI',
-    category: 'Visual selection interface',
-    shortDescription:
-      'I built an image-selection flow that keeps the chosen object visible while its contour and explanation open.',
-    valueLine: 'The selected subject stays visible while its details open.',
-    href: '/work/mirror-ai',
-    media: mirrorAiFilm
-      ? {
-          poster: mirrorAiFilm.poster ?? mirrorAiPoster?.src ?? mirrorAiFilm.src,
-          webm: mirrorAiFilm.src,
-          mp4: mirrorAiFilm.fallbackSrc,
-          alt: mirrorAiFilm.alt,
-          aspectRatio: '16 / 10',
-          focalPoint: { x: 50, y: 50 },
-          duration: 9.8,
-          publicSafe: true
-        }
-      : mirrorAiPoster
-        ? {
-            poster: mirrorAiPoster.src,
-            alt: mirrorAiPoster.alt,
-            aspectRatio: '16 / 10',
-            focalPoint: { x: 50, y: 50 },
-            publicSafe: true
-          }
-        : undefined,
-    size: 'standard'
-  }
 ];

@@ -130,6 +130,7 @@ export function retrieveMiguelContext(
     );
 
     let score = 0;
+    if (chunk.id.endsWith('-current') && (projectSlug || /\b(project|portfolio|build|built|ownership|stack|frontend|production)\b/.test(normalizedQuestion))) score += 20;
     if (projectSlug && chunk.id.includes(`project-${projectSlug}`)) score += 30;
 
     for (const token of tokens) {

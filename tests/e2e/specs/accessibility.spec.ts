@@ -5,7 +5,7 @@ test('mobile menu closes on Escape and restores focus', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openPortfolioHome(page);
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
-  await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', { name: 'My story' }).focus();
+  await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', { name: 'Story' }).focus();
   await page.keyboard.press('Escape');
   await expect(page.getByRole('button', { name: 'Menu', exact: true })).toBeFocused();
   await expect(page.getByRole('navigation', { name: 'Mobile navigation' })).toHaveCount(0);
@@ -13,10 +13,10 @@ test('mobile menu closes on Escape and restores focus', async ({ page }) => {
 
 test('intro is decorative, skippable and never creates a second page heading', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('[data-pixel-intro] h1')).toHaveCount(0);
-  const intro = page.locator('[data-pixel-intro]');
+  await expect(page.locator('[data-landing-overlay] h1')).toHaveCount(0);
+  const intro = page.locator('[data-landing-overlay]');
   if (await intro.isVisible().catch(() => false)) {
-    await expect(intro.getByRole('link', { name: 'View work' })).toBeVisible();
+    await expect(intro).toHaveAttribute('aria-hidden', 'true');
     await page.keyboard.press('Escape');
     await expect(intro).toBeHidden({ timeout: 3_000 });
   }

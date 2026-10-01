@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   import { experienceTeaser } from '$lib/content/folio';
   import { chapterProgress } from '$lib/motion/actions/chapterProgress';
   import { reveal } from '$lib/motion/actions/reveal';
@@ -11,7 +12,7 @@
   <div class="experience-inner">
     <div class="section-title">
       <p use:reveal={{ threshold: 0.1 }}>Production experience</p>
-      <h2 id="experience-title" use:reveal={{ threshold: 0.1, delay: 60 }}>Built from scratch.<br />Used by hundreds of companies.</h2>
+      <h2 id="experience-title" use:reveal={{ threshold: 0.1, delay: 60 }}>Built from scratch.<br />Used by thousands of companies.</h2>
     </div>
 
     <div>
@@ -31,7 +32,7 @@
           </li>
         {/each}
       </ol>
-      <a href="/cv">Read the full résumé <span class="motion-arrow" aria-hidden="true">→</span></a>
+      <a href="/cv" {...destinationLink("/cv")}>Read the full résumé <span class="motion-arrow" aria-hidden="true">→</span></a>
     </div>
   </div>
 </section>

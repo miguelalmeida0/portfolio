@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { destinationLink } from '$lib/navigation/destination-link';
   import { tokens } from '$lib/design/tokens';
   import { cn } from '$lib/utils/cn';
 
@@ -14,8 +15,6 @@
     secondary: tokens.surfaces.heroButtonSecondary
   } as const;
 
-  $: isExternal = /^(https?:)?\/\//.test(href);
-  $: shouldOpenNewTab = isExternal && !href.startsWith('mailto:');
 </script>
 
 <a
@@ -23,8 +22,8 @@
   href={href}
   aria-label={ariaLabel}
   download={download}
-  rel={shouldOpenNewTab ? 'noreferrer' : undefined}
-  target={shouldOpenNewTab ? '_blank' : undefined}
+
+   {...destinationLink(href, download)}
 >
   <span>{label}</span>
   <span aria-hidden="true">↗</span>

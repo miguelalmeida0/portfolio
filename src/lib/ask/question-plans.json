@@ -1,0 +1,495 @@
+{
+  "$comment": "Adapted to the current homepage. Quotes are validated again against live rendered source text before every answer.",
+  "version": 1,
+  "areas": [
+    {
+      "id": "hi",
+      "label": "the greeting",
+      "group": 0,
+      "question": "Who is Miguel?",
+      "steps": [
+        {
+          "lead": "He introduces himself:",
+          "source": "hi",
+          "quote": "Hi, I'm Miguel."
+        },
+        {
+          "lead": "a",
+          "source": "role",
+          "quote": "Frontend developer & design engineer."
+        },
+        {
+          "lead": "in",
+          "source": "city",
+          "quote": "Berlin"
+        }
+      ]
+    },
+    {
+      "id": "role",
+      "label": "his role",
+      "group": 0,
+      "question": "What does he do?",
+      "steps": [
+        {
+          "lead": "He describes himself as a",
+          "source": "role",
+          "quote": "Frontend developer & design engineer."
+        },
+        {
+          "lead": "His production work:",
+          "source": "f24",
+          "quote": "Built a product used by thousands of companies."
+        },
+        {
+          "lead": "and his own work opens with",
+          "source": "w-sv",
+          "quote": "Second Voice AI"
+        }
+      ]
+    },
+    {
+      "id": "f24",
+      "label": "product delivery",
+      "group": 1,
+      "question": "What production experience does he have?",
+      "steps": [
+        {
+          "lead": "His production experience:",
+          "source": "f24",
+          "quote": "Built a product used by thousands of companies."
+        },
+        {
+          "lead": "listed in his work as",
+          "source": "w-f24",
+          "quote": "F24"
+        },
+        {
+          "lead": "built with",
+          "source": "stack",
+          "quote": "React · TypeScript · Svelte"
+        }
+      ]
+    },
+    {
+      "id": "stack",
+      "label": "his stack",
+      "group": 1,
+      "question": "What does he build with?",
+      "steps": [
+        {
+          "lead": "His stack is",
+          "source": "stack",
+          "quote": "React · TypeScript · Svelte · JavaScript"
+        },
+        {
+          "lead": "with a product used by",
+          "source": "f24",
+          "quote": "thousands of companies."
+        },
+        {
+          "lead": "held to",
+          "source": "quality",
+          "quote": "Playwright · accessibility"
+        }
+      ]
+    },
+    {
+      "id": "quality",
+      "label": "testing and accessibility",
+      "group": 1,
+      "question": "How does he make sure it works?",
+      "steps": [
+        {
+          "lead": "His quality bar:",
+          "source": "quality",
+          "quote": "Playwright · accessibility"
+        },
+        {
+          "lead": "His production work:",
+          "source": "f24",
+          "quote": "Built a product used by thousands of companies."
+        }
+      ]
+    },
+    {
+      "id": "cv",
+      "label": "View CV",
+      "group": 2,
+      "question": "Can I see his CV?",
+      "steps": [
+        {
+          "lead": "Yes —",
+          "source": "cv",
+          "quote": "View CV →"
+        },
+        {
+          "lead": "it's also in the menu:",
+          "source": "nav-cv",
+          "quote": "CV →"
+        }
+      ]
+    },
+    {
+      "id": "touch",
+      "label": "Get in touch",
+      "group": 2,
+      "question": "How do I contact him?",
+      "steps": [
+        {
+          "lead": "Right here:",
+          "source": "touch",
+          "quote": "Get in touch →"
+        },
+        {
+          "lead": "or through",
+          "source": "nav-contact",
+          "quote": "Contact"
+        }
+      ]
+    },
+    {
+      "id": "nav-work",
+      "label": "Work",
+      "group": 3,
+      "question": "What has he worked on?",
+      "steps": [
+        {
+          "lead": "His selected work:",
+          "source": "w-sv",
+          "quote": "Second Voice AI"
+        },
+        {
+          "lead": "",
+          "source": "w-f24",
+          "quote": "F24"
+        },
+        {
+          "lead": "",
+          "source": "w-flow",
+          "quote": "Flow"
+        },
+        {
+          "lead": "and",
+          "source": "w-leu",
+          "quote": "Leu"
+        }
+      ]
+    },
+    {
+      "id": "nav-story",
+      "label": "Story",
+      "group": 3,
+      "question": "What's his story?",
+      "steps": [
+        {
+          "lead": "That's",
+          "source": "nav-story",
+          "quote": "Story"
+        },
+        {
+          "lead": "— the longer version of",
+          "source": "role",
+          "quote": "Frontend developer & design engineer."
+        }
+      ]
+    },
+    {
+      "id": "nav-cv",
+      "label": "CV",
+      "group": 3,
+      "question": "Can I see his CV?",
+      "steps": [
+        {
+          "lead": "Yes —",
+          "source": "nav-cv",
+          "quote": "CV →"
+        },
+        {
+          "lead": "also on the page as",
+          "source": "cv",
+          "quote": "View CV →"
+        }
+      ]
+    },
+    {
+      "id": "nav-contact",
+      "label": "Contact",
+      "group": 3,
+      "question": "How do I contact him?",
+      "steps": [
+        {
+          "lead": "Through",
+          "source": "nav-contact",
+          "quote": "Contact"
+        },
+        {
+          "lead": "or",
+          "source": "touch",
+          "quote": "Get in touch →"
+        }
+      ]
+    },
+    {
+      "id": "selwork",
+      "label": "Selected Work",
+      "group": 4,
+      "question": "What has he worked on?",
+      "steps": [
+        {
+          "lead": "His",
+          "source": "selwork",
+          "quote": "Selected Work"
+        },
+        {
+          "lead": "starts with",
+          "source": "w-sv",
+          "quote": "Second Voice AI"
+        },
+        {
+          "lead": "and",
+          "source": "w-f24",
+          "quote": "F24"
+        }
+      ]
+    },
+    {
+      "id": "w-sv",
+      "label": "Second Voice AI",
+      "group": 4,
+      "question": "What is Second Voice?",
+      "steps": [
+        {
+          "lead": "It's",
+          "source": "w-sv",
+          "quote": "Second Voice AI"
+        },
+        {
+          "lead": "and you can use it right here:",
+          "source": "try",
+          "quote": "Choose a literary voice. See exactly what changes."
+        }
+      ]
+    },
+    {
+      "id": "w-f24",
+      "label": "F24",
+      "group": 4,
+      "question": "What's the F24 story?",
+      "steps": [
+        {
+          "lead": "The production story:",
+          "source": "w-f24",
+          "quote": "F24"
+        },
+        {
+          "lead": "His contribution:",
+          "source": "f24",
+          "quote": "Built a product used by thousands of companies."
+        }
+      ]
+    },
+    {
+      "id": "try",
+      "label": "the Second Voice demo",
+      "group": 5,
+      "question": "Can I try something here?",
+      "steps": [
+        {
+          "lead": "Yes — it's the live demo of",
+          "source": "w-sv",
+          "quote": "Second Voice AI"
+        },
+        {
+          "lead": "",
+          "source": "try",
+          "quote": "Choose a literary voice. See exactly what changes."
+        }
+      ]
+    },
+    {
+      "id": "draft",
+      "label": "Your draft",
+      "group": 5,
+      "question": "What is this demo?",
+      "steps": [
+        {
+          "lead": "It's",
+          "source": "w-sv",
+          "quote": "Second Voice AI"
+        },
+        {
+          "lead": "— you start from",
+          "source": "draft",
+          "quote": "Your draft"
+        },
+        {
+          "lead": "and get a",
+          "source": "rewrite",
+          "quote": "Prepared rewrite"
+        },
+        {
+          "lead": "so you",
+          "source": "try",
+          "quote": "See exactly what changes."
+        }
+      ]
+    },
+    {
+      "id": "rewrite",
+      "label": "Prepared rewrite",
+      "group": 5,
+      "question": "What is this demo?",
+      "steps": [
+        {
+          "lead": "It's",
+          "source": "w-sv",
+          "quote": "Second Voice AI"
+        },
+        {
+          "lead": "— you start from",
+          "source": "draft",
+          "quote": "Your draft"
+        },
+        {
+          "lead": "and get a",
+          "source": "rewrite",
+          "quote": "Prepared rewrite"
+        }
+      ]
+    },
+    {
+      "id": "city",
+      "label": "Berlin",
+      "group": 6,
+      "question": "Where is he based?",
+      "steps": [
+        {
+          "lead": "He's based in",
+          "source": "city",
+          "quote": "Berlin"
+        }
+      ]
+    },
+    {
+      "id": "w-flow",
+      "label": "Flow",
+      "group": 6,
+      "question": "What is Flow?",
+      "steps": [
+        {
+          "lead": "He describes it as",
+          "source": "w-flow",
+          "quote": "Flow"
+        },
+        {
+          "lead": "one of his own projects, next to",
+          "source": "w-leu",
+          "quote": "Leu"
+        }
+      ]
+    },
+    {
+      "id": "w-leu",
+      "label": "Leu",
+      "group": 6,
+      "question": "What is Leu?",
+      "steps": [
+        {
+          "lead": "He describes it as",
+          "source": "w-leu",
+          "quote": "Leu"
+        },
+        {
+          "lead": "built alongside",
+          "source": "w-flow",
+          "quote": "Flow"
+        }
+      ]
+    }
+  ],
+  "groups": [
+    [
+      "hi",
+      "role"
+    ],
+    [
+      "f24",
+      "stack",
+      "quality"
+    ],
+    [
+      "cv",
+      "touch"
+    ],
+    [
+      "nav-work",
+      "nav-story",
+      "nav-cv",
+      "nav-contact"
+    ],
+    [
+      "selwork",
+      "w-sv",
+      "w-f24"
+    ],
+    [
+      "try",
+      "draft",
+      "rewrite"
+    ],
+    [
+      "city",
+      "w-flow",
+      "w-leu"
+    ]
+  ],
+  "freeQuestionPlans": {
+    "start": [
+      {
+        "lead": "For production work:",
+        "source": "f24",
+        "quote": "Built a product used by thousands of companies."
+      },
+      {
+        "lead": "then the one you can use right here:",
+        "source": "try",
+        "quote": "Choose a literary voice. See exactly what changes."
+      }
+    ],
+    "exp": [
+      {
+        "lead": "Production frontend for",
+        "source": "f24",
+        "quote": "thousands of companies."
+      },
+      {
+        "lead": "in",
+        "source": "stack",
+        "quote": "React · TypeScript · Svelte"
+      },
+      {
+        "lead": "with a quality bar of",
+        "source": "quality",
+        "quote": "Playwright · accessibility"
+      }
+    ],
+    "built": [
+      {
+        "lead": "He calls himself a",
+        "source": "role",
+        "quote": "Frontend developer & design engineer."
+      },
+      {
+        "lead": "and his own projects start with",
+        "source": "w-sv",
+        "quote": "Second Voice AI"
+      }
+    ],
+    "unknown": []
+  },
+  "refusal": {
+    "heading": "Not on this page",
+    "body": "Nothing on this page says that — so nothing lights up, and nothing is invented. Ask him directly: miguelalmeida1592@gmail.com"
+  }
+}
