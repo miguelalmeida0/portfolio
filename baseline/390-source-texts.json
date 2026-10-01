@@ -1,0 +1,22 @@
+{
+  "city": "Berlin",
+  "nav-work": "Work",
+  "nav-story": "Story",
+  "nav-cv": "CV",
+  "nav-contact": "Contact",
+  "hi": "Hi, I’m Miguel.",
+  "role": "Frontend developer\n& design engineer.",
+  "stack": "React · TypeScript · Svelte · JavaScript",
+  "f24": "4 years of product delivery",
+  "quality": "Playwright · accessibility",
+  "cv": "View CV\n→",
+  "touch": "Get in touch\n→",
+  "selwork": "Selected Work",
+  "w-sv": "Second Voice AI",
+  "w-f24": "F24",
+  "w-flow": "Flow",
+  "w-leu": "Leu",
+  "try": "Choose a literary voice. See exactly what changes.",
+  "draft": "Your draft",
+  "rewrite": "Prepared rewrite"
+}
