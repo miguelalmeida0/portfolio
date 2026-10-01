@@ -1,0 +1,155 @@
+[
+  {
+    "sel": "header",
+    "top": 0,
+    "left": 120,
+    "right": 1160,
+    "bottom": 84,
+    "w": 1040,
+    "h": 84
+  },
+  {
+    "sel": "header",
+    "top": 744,
+    "left": 120,
+    "right": 1160,
+    "bottom": 779.5,
+    "w": 1040,
+    "h": 35.5
+  },
+  {
+    "sel": "[data-hero-card]",
+    "top": 140,
+    "left": 120,
+    "right": 760,
+    "bottom": 640,
+    "w": 640,
+    "h": 500
+  },
+  {
+    "sel": "[data-portrait-card]",
+    "top": 140,
+    "left": 793,
+    "right": 1160,
+    "bottom": 640,
+    "w": 367,
+    "h": 500
+  },
+  {
+    "sel": "#work",
+    "top": 700,
+    "left": 0,
+    "right": 1280,
+    "bottom": 1481.5,
+    "w": 1280,
+    "h": 781.5
+  },
+  {
+    "sel": "#work h2",
+    "top": 744,
+    "left": 120,
+    "right": 218.140625,
+    "bottom": 766.5,
+    "w": 98.140625,
+    "h": 22.5
+  },
+  {
+    "sel": "[data-project-row]",
+    "top": 839,
+    "left": 120,
+    "right": 450,
+    "bottom": 941.75,
+    "w": 330,
+    "h": 102.75
+  },
+  {
+    "sel": "[data-project-row]",
+    "top": 941.75,
+    "left": 120,
+    "right": 450,
+    "bottom": 1044.5,
+    "w": 330,
+    "h": 102.75
+  },
+  {
+    "sel": "[data-project-row]",
+    "top": 1044.5,
+    "left": 120,
+    "right": 450,
+    "bottom": 1147.25,
+    "w": 330,
+    "h": 102.75
+  },
+  {
+    "sel": "[data-project-row]",
+    "top": 1147.25,
+    "left": 120,
+    "right": 450,
+    "bottom": 1250,
+    "w": 330,
+    "h": 102.75
+  },
+  {
+    "sel": "[data-stage-caption]",
+    "top": 807.5,
+    "left": 494,
+    "right": 1160,
+    "bottom": 867.5,
+    "w": 666,
+    "h": 60
+  },
+  {
+    "sel": "[data-stage-frame]",
+    "top": 881.5,
+    "left": 494,
+    "right": 1160,
+    "bottom": 1441.5,
+    "w": 666,
+    "h": 560
+  },
+  {
+    "sel": "[data-index-meta]",
+    "top": 1282,
+    "left": 120,
+    "right": 450,
+    "bottom": 1409.984375,
+    "w": 330,
+    "h": 127.984375
+  },
+  {
+    "sel": "footer",
+    "top": 1481.5,
+    "left": 0,
+    "right": 1280,
+    "bottom": 2121.5,
+    "w": 1280,
+    "h": 640
+  },
+  {
+    "sel": "footer h2",
+    "top": 1537.5,
+    "left": 166,
+    "right": 512,
+    "bottom": 1632.53125,
+    "w": 346,
+    "h": 95.03125
+  },
+  {
+    "sel": "[data-board]",
+    "top": 1529.5,
+    "left": 552,
+    "right": 1172,
+    "bottom": 1794.5,
+    "w": 620,
+    "h": 265
+  },
+  {
+    "sel": "[data-line]",
+    "top": 1933.5,
+    "left": 170,
+    "right": 1110,
+    "bottom": 1945.5,
+    "w": 940,
+    "h": 12
+  }
+]
