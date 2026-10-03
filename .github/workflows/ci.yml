@@ -2,9 +2,10 @@ name: CI
 
 on:
   push:
-    branches: [portfolio]
+    branches: [main, dev, test]
   pull_request:
-    branches: [portfolio]
+    branches: [main, dev, test]
+  workflow_dispatch:
 
 permissions:
   contents: read
