@@ -3,7 +3,7 @@ import { projects } from '$lib/experience/projects';
 // The same September records rendered by Selected Work and the current case studies.
 // Keep ownership, evidence qualifications and stack connected to their source.
 export const currentGuideProjects = projects.filter(project =>
-  ['second-voice-ai', 'f24', 'flow', 'leu'].includes(project.slug)
+  ['needle', 'second-voice-ai', 'f24', 'flow', 'leu'].includes(project.slug)
 );
 
 export const currentPortfolioKnowledge = currentGuideProjects.map(project => ({
