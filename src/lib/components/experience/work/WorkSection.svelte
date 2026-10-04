@@ -6,7 +6,7 @@
   let project = $state(workProjects[0]);
 </script>
 
-<section id="work" aria-labelledby="work-title" class="work-section" data-project={project.id}>
+<section id="work" aria-labelledby="work-title" class="work-section data-[project=needle]:[--work-bg:var(--paper)]!" data-project={project.id}>
   <header class="work-heading" data-align="left"><h2 id="work-title" data-ask-id="selwork">Selected Work</h2></header>
   <!-- SSR and hydration share the current work interface from the first paint. -->
     <div class="work-body">
