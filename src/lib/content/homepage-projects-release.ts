@@ -2,7 +2,7 @@ import { projects } from '$lib/experience/projects';
 import type { ProjectTile } from './project-media';
 
 // Homepage selection is independent of the complete case-study archive.
-export const homepageProjects = ['second-voice-ai', 'f24', 'flow', 'leu'].map(slug => {
+export const homepageProjects = ['needle', 'second-voice-ai', 'f24', 'flow', 'leu'].map(slug => {
   const project = projects.find(project => project.slug === slug)!;
   return slug === 'second-voice-ai' ? { ...project, name: 'Second Voice AI' } : project;
 });

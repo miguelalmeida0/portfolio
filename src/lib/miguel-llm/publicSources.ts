@@ -1,4 +1,4 @@
-const currentProjectSlugs = ['second-voice-ai', 'f24', 'flow', 'leu'];
+const currentProjectSlugs = ['needle', 'second-voice-ai', 'f24', 'flow', 'leu'];
 const projectSlugs = [...currentProjectSlugs, 'camera-harness', 'ghostwriter', 'atlas', 'creature-app'];
 const aliases: Record<string, string> = {
   'how-i-work': 'at-work',
