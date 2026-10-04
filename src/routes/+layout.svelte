@@ -70,7 +70,7 @@
       if (current.url.pathname === scrollPath) return;
       scrollPath = current.url.pathname;
       disposeScroll?.();
-      disposeScroll = ['/','/work/flow','/work/leu','/work/f24','/work/second-voice'].includes(current.url.pathname) ? undefined : installSmoothScroll();
+      disposeScroll = ['/','/work/flow','/work/leu','/work/f24','/work/second-voice','/work/needle'].includes(current.url.pathname) ? undefined : installSmoothScroll();
     });
     return () => { controller.destroy(); askController.set(undefined); window.removeEventListener('miguel-llm:open', openGuide); presentation.disconnect(); disposePage(); disposeScroll?.(); disposePolicy(); };
   });
@@ -98,7 +98,7 @@
 <div class="wind-theme" data-homepage={$page.url.pathname === '/' ? '' : undefined} id="portfolio-content" inert={$mobileState !== 'idle'}>
   <a href="#main" class="wind-skip sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded focus:bg-plum focus:px-5 focus:py-3 focus:text-white" {...destinationLink("#main")}>Skip to content</a>
   <Header guideOpen={$askView.state !== 'idle'} {guideReady} homepage={$page.url.pathname === '/'} askActive={$askView.state !== 'idle'} {navigateFromMenu} navigationTransitionActive={$mobileState !== 'idle'} />
-  {#if ['/work/flow','/work/leu','/work/f24','/work/second-voice'].includes($page.url.pathname)}<slot />{:else}<main id="main"><slot /></main>{/if}
+  {#if ['/work/flow','/work/leu','/work/f24','/work/second-voice','/work/needle'].includes($page.url.pathname)}<slot />{:else}<main id="main"><slot /></main>{/if}
   <section class="contact" aria-label="Contact"><Contact /></section>
 </div>
 

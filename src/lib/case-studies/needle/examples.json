@@ -1,0 +1,250 @@
+{
+  "corpusSha256": "c52bdc345b74c48c8a5e51ecb0df66ff11d7baa8c2acfc0a983b08131f99674c",
+  "recordCount": 10000,
+  "encoderVersion": 1,
+  "examples": [
+    {
+      "query": "Queen Louise",
+      "artworks": [
+        {
+          "id": "met-921212",
+          "title": "Queen Louise",
+          "artist": "Elizabeth S. Tucker",
+          "date": "ca. 1895",
+          "medium": "Color lithography",
+          "department": "Drawings and Prints",
+          "objectUrl": "https://www.metmuseum.org/art/collection/search/921212",
+          "image": "/projects/needle/examples/921212.webp",
+          "imageSource": "https://images.metmuseum.org/CRDImages/dp/web-large/DP-38004-001.jpg",
+          "tags": [
+            "paper",
+            "doll",
+            "prints",
+            "color",
+            "lithography",
+            "drawings"
+          ]
+        },
+        {
+          "id": "met-195480",
+          "title": "Erection of the Church of Laeken, 1854 (Church of St. Mary, Notre Dame), in Memory of Queen Louise d'Orleans",
+          "artist": "Jakob Wiener",
+          "date": "1854",
+          "medium": "Bronze",
+          "department": "European Sculpture and Decorative Arts",
+          "objectUrl": "https://www.metmuseum.org/art/collection/search/195480",
+          "image": "/projects/needle/examples/195480.webp",
+          "imageSource": "https://images.metmuseum.org/CRDImages/es/web-large/64584.jpg",
+          "tags": [
+            "profiles",
+            "women",
+            "medal",
+            "medals",
+            "and",
+            "plaquettes"
+          ]
+        },
+        {
+          "id": "met-551385",
+          "title": "Ring Inscribed for Queen Tiye",
+          "artist": "Unknown maker",
+          "date": "ca. 1390–1352 B.C.",
+          "medium": "Faience",
+          "department": "Egyptian Art",
+          "objectUrl": "https://www.metmuseum.org/art/collection/search/551385",
+          "image": "/projects/needle/examples/551385.webp",
+          "imageSource": "https://images.metmuseum.org/CRDImages/eg/web-large/11.215.83_view_2.jpg",
+          "tags": [
+            "hieroglyphs",
+            "ring",
+            "tiye",
+            "king",
+            "wife",
+            "faience"
+          ]
+        },
+        {
+          "id": "met-464373",
+          "title": "Prince, from a group of Donor Figures including a King, Queen, and Prince",
+          "artist": "Unknown maker",
+          "date": "ca. 1350",
+          "medium": "Marble, traces of paint & gilding",
+          "department": "Medieval Art",
+          "objectUrl": "https://www.metmuseum.org/art/collection/search/464373",
+          "image": "/projects/needle/examples/464373.webp",
+          "imageSource": "https://images.metmuseum.org/CRDImages/md/web-large/sf17-190-392s1.jpg",
+          "tags": [
+            "princes",
+            "men",
+            "praying",
+            "statuette",
+            "sculpture",
+            "stone"
+          ]
+        }
+      ]
+    },
+    {
+      "query": "a blue scarab",
+      "artworks": [
+        {
+          "id": "met-562015",
+          "title": "Scarab Decorated with Scrolls",
+          "artist": "Unknown maker",
+          "date": "ca. 1850–1640 B.C.",
+          "medium": "Steatite, traces of blue glaze",
+          "department": "Egyptian Art",
+          "objectUrl": "https://www.metmuseum.org/art/collection/search/562015",
+          "image": "/projects/needle/examples/562015.webp",
+          "imageSource": "https://images.metmuseum.org/CRDImages/eg/web-large/20.1.126_EGDP020212.jpg",
+          "tags": [
+            "scarabs",
+            "scarab",
+            "scrolls",
+            "steatite",
+            "traces",
+            "blue"
+          ]
+        },
+        {
+          "id": "met-557072",
+          "title": "Scarab Decorated with Papyrus and Winged Beetles",
+          "artist": "Unknown maker",
+          "date": "ca. 1295–1070 B.C.",
+          "medium": "Blue glazed steatite",
+          "department": "Egyptian Art",
+          "objectUrl": "https://www.metmuseum.org/art/collection/search/557072",
+          "image": "/projects/needle/examples/557072.webp",
+          "imageSource": "https://images.metmuseum.org/CRDImages/eg/web-large/22.1.1401_EGDP021078.jpg",
+          "tags": [
+            "scarabs",
+            "scarab",
+            "winged",
+            "beetles",
+            "papyrus",
+            "flowers"
+          ]
+        },
+        {
+          "id": "met-545233",
+          "title": "Scarab of an Official",
+          "artist": "Unknown maker",
+          "date": "ca. 1740–1640 B.C.",
+          "medium": "Bright blue glazed steatite",
+          "department": "Egyptian Art",
+          "objectUrl": "https://www.metmuseum.org/art/collection/search/545233",
+          "image": "/projects/needle/examples/545233.webp",
+          "imageSource": "https://images.metmuseum.org/CRDImages/eg/web-large/22.1.347_EGDP018564.jpg",
+          "tags": [
+            "scarabs",
+            "scarab",
+            "official",
+            "private",
+            "name",
+            "and"
+          ]
+        },
+        {
+          "id": "met-552610",
+          "title": "Scarab of Sebekhotep V",
+          "artist": "Unknown maker",
+          "date": "ca. 1720–1717 B.C.",
+          "medium": "Blue glazed steatite",
+          "department": "Egyptian Art",
+          "objectUrl": "https://www.metmuseum.org/art/collection/search/552610",
+          "image": "/projects/needle/examples/552610.webp",
+          "imageSource": "https://images.metmuseum.org/CRDImages/eg/web-large/26.7.94_2.66M.jpg",
+          "tags": [
+            "hieroglyphs",
+            "scarabs",
+            "scarab",
+            "sebekhotep",
+            "genealogical",
+            "royal"
+          ]
+        }
+      ]
+    },
+    {
+      "query": "a landscape with trees",
+      "artworks": [
+        {
+          "id": "met-14868",
+          "title": "Landscape with Trees Framing a Stream (from Sketchbook)",
+          "artist": "Francis William Edmonds",
+          "date": "ca. 1838 and after",
+          "medium": "Graphite on off-white wove paper",
+          "department": "The American Wing",
+          "objectUrl": "https://www.metmuseum.org/art/collection/search/14868",
+          "image": "/projects/needle/examples/14868.webp",
+          "imageSource": "https://images.metmuseum.org/CRDImages/ad/web-large/246925.jpg",
+          "tags": [
+            "rivers",
+            "landscapes",
+            "trees",
+            "drawing",
+            "graphite",
+            "off"
+          ]
+        },
+        {
+          "id": "met-15350",
+          "title": "Landscape with Trees, Mountains, and Country Lane (from Sketchbook VII)",
+          "artist": "William Trost Richards",
+          "date": "1886",
+          "medium": "Graphite on off-white wove paper",
+          "department": "The American Wing",
+          "objectUrl": "https://www.metmuseum.org/art/collection/search/15350",
+          "image": "/projects/needle/examples/15350.webp",
+          "imageSource": "https://images.metmuseum.org/CRDImages/ad/web-large/257762.jpg",
+          "tags": [
+            "mountains",
+            "landscapes",
+            "drawing",
+            "graphite",
+            "off",
+            "white"
+          ]
+        },
+        {
+          "id": "met-382731",
+          "title": "Mountainous Landscape with the Rest on the Flight into Egypt",
+          "artist": "Aegidius Sadeler II",
+          "date": "n.d.",
+          "medium": "Engraving; first state",
+          "department": "Drawings and Prints",
+          "objectUrl": "https://www.metmuseum.org/art/collection/search/382731",
+          "image": "/projects/needle/examples/382731.webp",
+          "imageSource": "https://images.metmuseum.org/CRDImages/dp/web-large/DP825798.jpg",
+          "tags": [
+            "men",
+            "women",
+            "mountains",
+            "landscapes",
+            "trees",
+            "print"
+          ]
+        },
+        {
+          "id": "met-39626",
+          "title": "Incense holder with scholars in a landscape",
+          "artist": "Zhu Sansong",
+          "date": "late 16th–early 17th century",
+          "medium": "Bamboo",
+          "department": "Asian Art",
+          "objectUrl": "https://www.metmuseum.org/art/collection/search/39626",
+          "image": "/projects/needle/examples/39626.webp",
+          "imageSource": "https://images.metmuseum.org/CRDImages/as/web-large/DP323467.jpg",
+          "tags": [
+            "men",
+            "incense",
+            "holder",
+            "bamboo",
+            "asian",
+            "art"
+          ]
+        }
+      ]
+    }
+  ]
+}
