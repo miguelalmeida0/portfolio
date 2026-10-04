@@ -12,7 +12,7 @@ function position(html, marker) {
   return index;
 }
 
-test('homepage provides the current hero, four project choices and canonical CTAs', async () => {
+test('homepage provides the current hero, five project choices and canonical CTAs', async () => {
   const response = await fetch(base);
   assert.equal(response.status, 200);
   const html = await response.text();
@@ -22,14 +22,15 @@ test('homepage provides the current hero, four project choices and canonical CTA
   assert.ok(hero, 'The current homepage hero must render');
   for (const href of ['/cv', '#contact']) assert.ok(hero.includes(`href="${href}"`), href);
   const work = html.slice(position(html, 'id="work"'), position(html, '</main>'));
-  assert.ok(work.includes(`href="${liveURL}"`));
+  assert.ok(work.includes('href="https://needle.miguelalmeida.xyz"'));
+  assert.ok(work.includes('Search 10,000 artworks. A semantic search engine.'));
   assert.ok(work.includes('Open app'));
-  assert.equal((work.match(/<button\b[^>]*data-project-row/g) || []).length, 4, 'Four selectable projects');
+  assert.equal((work.match(/<button\b[^>]*data-project-row/g) || []).length, 5, 'Five selectable projects');
   const fallback = work.match(/<noscript>([\s\S]*?)<\/noscript>/)?.[1];
   assert.ok(fallback, 'Projects remain available without JavaScript');
-  assert.equal((fallback.match(/<article\b/g) || []).length, 4);
-  for (const slug of ['second-voice-ai', 'f24', 'flow', 'leu']) assert.ok(fallback.includes(`href="/work/${slug}"`), slug);
-  for (const text of ['Second Voice AI', 'F24', 'Flow', 'Leu', 'React', 'Svelte', 'TypeScript', 'Playwright']) assert.ok(work.includes(text), text);
+  assert.equal((fallback.match(/<article\b/g) || []).length, 5);
+  for (const slug of ['needle', 'second-voice-ai', 'f24', 'flow', 'leu']) assert.ok(fallback.includes(`href="/work/${slug}"`), slug);
+  for (const text of ['Needle', 'Second Voice AI', 'F24', 'Flow', 'Leu', 'React', 'Svelte', 'TypeScript', 'Playwright']) assert.ok(work.includes(text), text);
   assert.ok(!html.includes('id="experience"'));
   // The current first paint intentionally includes the body-of-name landing.
   assert.ok(html.includes('data-pixel-intro'));
