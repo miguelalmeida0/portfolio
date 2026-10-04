@@ -65,11 +65,11 @@ test('Back sits beside Next, names the previous question, and goes back', async 
   await back(page); expect(await currentIndex(page)).toBe(2);
 });
 
-test('arrow keys retain normal page scrolling without skipping answers', async ({ page }) => {
+test('arrow keys retain normal page scrolling without skipping answers', async ({ page, browserName, isMobile }) => {
   await page.keyboard.press('ArrowDown');
   await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(0);
   expect(await currentIndex(page)).toBe(0);
-  await page.keyboard.press('Home');
+  await page.keyboard.press(browserName === 'webkit' && isMobile ? 'Meta+ArrowUp' : 'Home');
   await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
 });
 
@@ -111,8 +111,12 @@ test('each scene plays itself once when first reached', async ({ page }) => {
   expect(await page.locator(S.sceneOn).innerText()).toContain('Ignored an out-of-date answer');
 });
 
-test('reaching the end reveals the short version and completes the ring', async ({ page, context }) => {
-  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+test('reaching the end reveals the short version and completes the ring', async ({ page, context, browserName }) => {
+  if (browserName === 'chromium') await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  else await page.evaluate(() => {
+    let text = '';
+    Object.defineProperty(navigator, 'clipboard', { configurable:true, value:{ writeText:async(value:string)=>{text=value;}, readText:async()=>text } });
+  });
   await goTo(page, N); await page.waitForTimeout(2200);
   await expect(page.locator(S.panelDone)).toHaveCount(1); await expect(page.locator(S.ringDone)).toHaveCount(1);
   for (const line of data.shortVersion.lines) await expect(page.locator(S.panel)).toContainText(line);

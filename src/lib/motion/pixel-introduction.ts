@@ -168,9 +168,14 @@ export function pixelIntroduction(node: HTMLElement) {
   };
   async function syncSource() {
     const version = ++sourceVersion;
-    const src = livePhoto!.currentSrc || livePhoto!.src;
-    await photo.decode();
+    // Responsive <picture> selection settles after layout. Decode both current
+    // images, then compare their current sources instead of a pre-resize URL.
+    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
     if (done || version !== sourceVersion) return;
+    try { await Promise.all([livePhoto!.decode(), photo.decode()]); }
+    catch (error) { if (done || version !== sourceVersion) return; throw error; }
+    if (done || version !== sourceVersion) return;
+    const src = livePhoto!.currentSrc || livePhoto!.src;
     if (photo.currentSrc !== src) throw new Error('Portrait source selection differs');
     type.style.maskImage = 'url("' + src + '")';
     node.querySelector('[data-intro-type]')?.removeAttribute('clip-path');

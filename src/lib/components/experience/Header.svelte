@@ -18,14 +18,21 @@
     const restoreAsk = async () => { open = true; await tick(); document.querySelector<HTMLButtonElement>('.mobile-guide-trigger')?.focus({ preventScroll: true }); };
     window.addEventListener('ask:restore-trigger', restoreAsk);
     const desktop = matchMedia('(min-width: 1024px)');
+    // A breakpoint can hide the focused menu before matchMedia fires. Remember
+    // the last focus destination so keyboard focus is not lost to the body.
+    let menuHadFocus = false;
+    const rememberFocus = (event: FocusEvent) => {
+      menuHadFocus = Boolean(document.querySelector('#mobile-navigation')?.contains(event.target as Node)) || event.target === trigger;
+    };
+    document.addEventListener('focusin', rememberFocus);
     const closeOnDesktop = () => {
       if (!desktop.matches || !open) return;
-      const menuHadFocus = document.querySelector('#mobile-navigation')?.contains(document.activeElement);
+      const restoreFocus = menuHadFocus || document.querySelector('#mobile-navigation')?.contains(document.activeElement);
       open = false;
-      if (menuHadFocus || document.activeElement === trigger) document.querySelector<HTMLAnchorElement>('[data-identity-home]')?.focus();
+      if (restoreFocus || document.activeElement === trigger) document.querySelector<HTMLAnchorElement>('[data-identity-home]')?.focus();
     };
     desktop.addEventListener('change', closeOnDesktop);
-    return () => { desktop.removeEventListener('change', closeOnDesktop); window.removeEventListener('ask:restore-trigger', restoreAsk); };
+    return () => { document.removeEventListener('focusin', rememberFocus); desktop.removeEventListener('change', closeOnDesktop); window.removeEventListener('ask:restore-trigger', restoreAsk); };
   });
   function escape(event: KeyboardEvent) { if (event.key === 'Escape' && open && !guideOpen && !navigationTransitionActive) { open = false; trigger?.focus(); } }
   function openGuide() {
