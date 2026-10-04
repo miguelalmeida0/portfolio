@@ -1,12 +1,15 @@
 import ts from 'typescript';
-import { readFile, mkdir, writeFile, stat } from 'node:fs/promises';
+import { readFile, mkdir, mkdtemp, rm, writeFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 // Compile source modules for isolated Node checks; never start a browser or HTTP server.
 export async function loadLocalTs(entry, { stubs = {} } = {}) {
   const root = process.cwd();
-  const out = path.join(root, '.cache/recruiter-check');
+  const cache = path.join(root, '.cache/recruiter-check');
+  await mkdir(cache, { recursive: true });
+  // Each load owns its files and module URLs, including when its stubs differ.
+  const out = await mkdtemp(path.join(cache, 'load-'));
   const seen = new Map();
   async function resolveFile(base) {
     for (const candidate of [base, `${base}.ts`, path.join(base, 'index.ts')]) {
@@ -41,5 +44,9 @@ export async function loadLocalTs(entry, { stubs = {} } = {}) {
     await writeFile(target, output);
     return target;
   }
-  return import(pathToFileURL(await compile(await resolveFile(path.resolve(entry)))).href);
+  try {
+    return await import(pathToFileURL(await compile(await resolveFile(path.resolve(entry)))).href);
+  } finally {
+    await rm(out, { recursive: true, force: true });
+  }
 }
