@@ -10,9 +10,9 @@
   import { destinationLink } from '$lib/navigation/destination-link';
   import './needle.css';
   const captures = [
-    { label: 'Collection wall', src: needleMedia.wall, alt: 'The real Needle collection wall with Queen Louise ranked first and the artwork inspector open.', width: 1440, height: 1000 },
-    { label: 'Search view', src: needleMedia.search, alt: 'The real Needle search interface and its artwork results.', width: 1440, height: 1000 },
-    { label: 'Mobile', src: needleMedia.mobile, alt: 'The real Needle collection wall in a 390-pixel mobile viewport.', width: 390, height: 844 }
+    { label: 'Collection wall', src: needleMedia.wall, alt: 'The live Needle collection wall with the Monolith mark, green selection and Hercules and the Hydra ranked first beside the artwork inspector.', width: 1440, height: 1000 },
+    { label: 'Search view', src: needleMedia.search, alt: 'The live Needle semantic map with the Monolith mark and Hercules and the Hydra framed by the lighter forest-green best-match border.', width: 1440, height: 1000 },
+    { label: 'Mobile', src: needleMedia.mobile, alt: 'The live Needle collection wall with the Monolith mark and green selection in a 390-pixel mobile viewport.', width: 390, height: 844 }
   ];
   let capture = $state(0);
 </script>

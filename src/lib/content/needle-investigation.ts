@@ -28,8 +28,8 @@ export const needleCachePolicies = [
   ['Other modules', 'File size / mtime ETag', 'Five minutes unless filename is hashed']
 ] as const;
 export const needleMedia = {
-  wall: '/projects/needle/wall.webp', search: '/projects/needle/search.webp', mobile: '/projects/needle/mobile.webp',
-  caption: 'Actual Needle release captured locally, 4 October 2026 · revision baa50f2 · query: Queen Louise. This capture does not measure the public host.'
+  wall: '/projects/needle/wall-monolith.webp', search: '/projects/needle/search-monolith.webp', mobile: '/projects/needle/mobile-monolith.webp',
+  caption: 'Live Needle captured with Playwright, 4 October 2026 · revision 2546fb1 · query: a dramatic landscape under a restless sky. Hercules and the Hydra ranks first.'
 };
 export const needleImageSample = {
   title: 'Queen Louise', artist: 'Elizabeth S. Tucker', objectId: 921212,
