@@ -44,7 +44,7 @@
   @media (max-width: 1099px) {
     .index-column { display: contents; }
     nav { order: 0; }
-    .project-index { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; }
+    .project-index { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 12px; }
     button { grid-template-columns: minmax(0,1fr); gap: 4px; padding: 12px 8px; border-bottom: 2px solid transparent; }
     button::after { inset: 4px 0; }
     .project-name { font-size: 24px; }

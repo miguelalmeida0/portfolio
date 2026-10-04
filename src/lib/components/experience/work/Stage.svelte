@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import type { WorkProject } from '$lib/content/work-projects';
+  import NeedlePreview from './stages/NeedlePreview.svelte';
   import SecondVoice from './stages/SecondVoice.svelte';
   import F24 from './stages/F24.svelte';
   import VideoLoop from './stages/VideoLoop.svelte';
@@ -16,7 +17,10 @@
     {@render caption(controls)}
   {/snippet}
   {#if project.stage.kind === 'solo'}<p class="sr-only">{project.stage.video.caption}</p>{/if}
-  {#if project.stage.kind === 'solo'}
+  {#if project.stage.kind === 'image'}
+    <NeedlePreview src={project.stage.src} alt={project.alt} />
+    {@render caption()}
+  {:else if project.stage.kind === 'solo'}
     {#if project.id === 'leu'}<LeuFlowLoop href="/work/leu" layout={solo} />
     {:else}<VideoLoop video={project.stage.video} href={`/work/${project.id}`} linkLabel={`View ${project.name} case study`} layout={solo} />{/if}
   {:else}

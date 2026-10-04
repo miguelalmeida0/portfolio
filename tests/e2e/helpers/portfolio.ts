@@ -14,9 +14,10 @@ export async function openPortfolioHome(page: Page) {
   await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
 }
 
-/** The prepared Second Voice pair is the initial active work stage. */
+/** Select the prepared Second Voice pair from the work index. */
 export async function openSecondVoiceStudio(page: Page) {
   await openPortfolioHome(page);
+  await page.locator('[data-project-row][data-ask-id="w-sv"]').click();
   await expect(page.locator('#work')).toHaveAttribute('data-project', 'second-voice');
   await expect(page.getByRole('tabpanel')).toBeVisible();
 }
