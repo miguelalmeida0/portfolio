@@ -9,7 +9,7 @@ for (const width of [1920, 1440, 1280, 1024, 834, 390, 320]) {
     const errors: string[] = [];
     page.on('pageerror', error=>errors.push(error.message));
     await openPortfolioHome(page);
-    await expect(page.locator('.experience')).toHaveText('Built a product used by thousands of companies.');
+    await expect(page.locator('.experience')).toHaveText('Built a product used by hundreds of companies.');
     const hero = await page.locator('.content-card').evaluate(el=> {
       const card=el.getBoundingClientRect(), top=el.querySelector('.top-group')!.getBoundingClientRect(), bottom=el.querySelector('.bottom-group')!.getBoundingClientRect();
       return {overlap:top.bottom-bottom.top, clipped:bottom.bottom-card.bottom};
@@ -19,7 +19,7 @@ for (const width of [1920, 1440, 1280, 1024, 834, 390, 320]) {
     await page.screenshot({path:testInfo.outputPath(`home-${width}.png`)});
     await page.locator('.project-index button').filter({hasText:'F24'}).click();
     const stage=page.locator('.stage[data-project="f24"]');
-    await expect(stage).toContainText('Built a product used by thousands of companies.');
+    await expect(stage).toContainText('Built a product used by hundreds of companies.');
     await expect(stage.locator('.decision-body')).toContainText('Built modular frontend architecture');
     const card=stage.locator('.card-b');
     expect(await card.evaluate(el=>el.scrollHeight-el.clientHeight)).toBeLessThanOrEqual(1);
@@ -28,7 +28,7 @@ for (const width of [1920, 1440, 1280, 1024, 834, 390, 320]) {
     await stage.screenshot({path:testInfo.outputPath(`f24-stage-${width}.png`)});
     await page.getByRole('link',{name:'Explore my work',exact:true}).click();
     await expect(page).toHaveURL(/\/work\/f24#product-impact$/);
-    await expect(page.getByRole('heading',{name:'From the first mockups to thousands of companies.'})).toBeVisible();
+    await expect(page.getByRole('heading',{name:'From the first mockups to hundreds of companies.'})).toBeVisible();
     await expect(page.locator('#backend-integration')).toContainText('data connections between backend services and the frontend');
     await expect(page.locator('#performance')).toContainText('improved application performance');
     const impact=(await page.locator('#product-impact').boundingBox())!, detail=(await page.locator('#activity-history').boundingBox())!;

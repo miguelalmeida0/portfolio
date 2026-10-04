@@ -5,7 +5,7 @@ import { findProject } from '$lib/experience/projects';
 import { redirect } from '@sveltejs/kit';
 
 export const load: PageLoad = ({ params }) => {
-  if (params.slug === 'ghostwriter') redirect(308, '/work/second-voice-ai');
+  if (['ghostwriter', 'second-voice-ai'].includes(params.slug)) redirect(308, '/work/second-voice');
   const project = findProject(params.slug);
 
   if (!project) {

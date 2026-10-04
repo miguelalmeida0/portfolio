@@ -177,7 +177,7 @@ export const conversationFlows: ConversationFlow[] = [
 ];
 
 export const cvBio =
-  'Frontend engineer with a product-design background. Built a business application’s original production frontend in Svelte from initial mockups through production, then continued product delivery in React with the wider team. The application is now used by thousands of companies. I work across product design, TypeScript, reusable UI, and AI interfaces.';
+  'Frontend engineer with a product-design background. Built a business application’s original production frontend in Svelte from initial mockups through production, then continued product delivery in React with the wider team. The application is now used by hundreds of companies. I work across product design, TypeScript, reusable UI, and AI interfaces.';
 
 export const professionalRecommendation = {
   name: 'Richard Nespithal',
@@ -223,7 +223,7 @@ export const cvExperience: CvExperienceEntry[] = [
     company: 'F24',
     location: 'Berlin',
     bullets: [
-      'Built the original production frontend in Svelte from scratch, taking initial mockups and product design through to production. The application is now used by thousands of companies.',
+      'Built the original production frontend in Svelte from scratch, taking initial mockups and product design through to production. The application is now used by hundreds of companies.',
       'Contributed to the progressive React evolution while Svelte product delivery continued, including activity-history filters, detail views and failure recovery.',
       'Worked with product, design, backend and QA from interaction requirements through implementation, testing and release.',
       'Led the frontend for F24’s first shared AI service during an internal hackathon, connecting the service to its first end-to-end interface.'

@@ -47,7 +47,7 @@ for(const [width,height] of sizes) {
     const copy=await page.locator('[data-ask-id]').evaluateAll(nodes=>Object.fromEntries(nodes.map(e=>[(e as HTMLElement).dataset.askId,(e as HTMLElement).innerText])));
     const expectedCopy=JSON.parse(fs.readFileSync(`baseline/${width}-source-texts.json`,'utf8'));
     // Approved F24 ownership update; preserve every other original source string.
-    expectedCopy.f24='Built a product used by thousands of companies.';
+    expectedCopy.f24='Built a product used by hundreds of companies.';
     expect(copy).toEqual(expectedCopy);
   });
   test(`portrait zero-pixel contract at ${width}`,async({page})=>{

@@ -5,7 +5,7 @@ test('recruiter hero and four projects have the locked desktop hierarchy', async
   await page.setViewportSize({ width: 1440, height: 1000 });
   await openPortfolioHome(page);
   await expect(page.getByText('F24 · 4 years in product delivery', { exact: true })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'From scratch to thousands of companies.', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'From scratch to hundreds of companies.', exact: true })).toBeVisible();
   await expect(page.locator('[aria-labelledby="intro-heading"]').getByRole('link', { name: 'View CV', exact: true })).toBeVisible();
   const layout = await page.evaluate(() => {
     const rect = (s: string) => document.querySelector(s)!.getBoundingClientRect().toJSON();
