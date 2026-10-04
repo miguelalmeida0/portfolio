@@ -42,3 +42,10 @@ Each portrait, hero and project state was visually reviewed before adoption.
 These freeze the existing WebKit presentation, including its viewport-unit
 resolution under desktop CSS zoom. Intro handoff assertions remain separate
 and are not relaxed by accepting resting screenshots.
+
+After incorporating production commit `d2c55d1e8da6dc4bf1f24fcd800fce9f3e51246e`
+(the live Needle Monolith captures), the repair candidate again matched that
+production source with zero differing pixels on the homepage and Needle case
+study at both 1440px and 390px. The same controlled capture conditions described
+above were used. The two intentional case-study diagram contrast changes remain
+separately documented; the new Needle assets were preserved without alteration.

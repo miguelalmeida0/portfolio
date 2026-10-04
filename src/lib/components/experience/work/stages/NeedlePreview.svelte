@@ -7,7 +7,7 @@
   {#if failed}
     <div class="flex aspect-[36/25] items-center justify-center p-8 text-center text-[var(--ink)]"><p>Needle · Explore the search and image delivery case study</p></div>
   {:else}
-    <picture><source media="(max-width: 599px)" srcset="/projects/needle/mobile.webp" width="390" height="844" /><img {src} {alt} width="1440" height="1000" loading="lazy" onerror={() => failed = true} class="block h-auto w-full" /></picture>
+    <picture><source media="(max-width: 599px)" srcset="/projects/needle/mobile-monolith.webp" width="390" height="844" /><img {src} {alt} width="1440" height="1000" loading="lazy" onerror={() => failed = true} class="block h-auto w-full" /></picture>
   {/if}
   <span class="absolute right-4 bottom-4 rounded-full bg-[var(--ink)] px-5 py-3 text-sm font-semibold text-[var(--paper)] group-hover:underline">Explore the engineering</span>
 </a>

@@ -74,7 +74,9 @@ test('Leu starts promptly, has product motion in the first second, and returns f
     const poster = new Image(); poster.src = video.poster; await poster.decode();
     ctx.drawImage(poster, 0, 0, 360, 750);
     const posterPixels = ctx.getImageData(0, 0, 360, 750).data;
-    video.currentTime = 0;
+    // Reset after synthetic seeks to the final frame before testing normal
+    // playback/navigation again. Do not carry end-of-stream state into that flow.
+    video.load();
     await video.play();
     return { duration: video.duration, src: video.currentSrc, poster: video.poster,
       tap: difference(first, tap), opening: difference(first, opening),
@@ -151,24 +153,35 @@ test('reduced motion preserves the poster, explicit Play works, and inactive med
 });
 
 test('WebM failure uses MP4 and retains playback after case-study navigation', async ({ page }) => {
-  await page.route('**/leu-loop-v2.webm', route => route.abort());
+  // Trigger and count the actual error path, then remove each interceptor.
+  let failedRequests = 0;
+  const failWebM = () => page.route('**/leu-loop-v2.webm', route => {
+    failedRequests++;
+    return route.abort();
+  }, { times: 1 });
+  // Exercise runtime failure even on engines that normally choose MP4 directly.
+  await page.evaluate(() => {
+    const canPlayType = HTMLMediaElement.prototype.canPlayType;
+    HTMLMediaElement.prototype.canPlayType = function (type) {
+      return type.includes('video/webm') ? 'probably' : canPlayType.call(this, type);
+    };
+  });
+  await failWebM();
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.getByRole('button', { name: /^Leu/ }).click();
   await page.locator('.leu-flow-loop video').scrollIntoViewIfNeeded();
   await expect(page.locator('.leu-flow-loop video')).toHaveAttribute('src', leuMedia.src);
   await expect(page.locator('.leu-flow-loop video')).toHaveJSProperty('paused', false);
-  await page.evaluate(() => {
-    (window as any).leuClickEvidence = [];
-    for (const type of ['pointerdown', 'pointerup', 'click']) document.addEventListener(type, event => {
-      const mouse = event as MouseEvent;
-      (window as any).leuClickEvidence.push({ type, x: mouse.clientX, y: mouse.clientY,
-        target: (event.target as Element)?.outerHTML.slice(0, 500), prevented: event.defaultPrevented });
-    }, { capture: true });
-  });
-  await page.getByRole('link', { name: 'View Leu case study', exact: true }).click();
-  console.log('Leu navigation click', await page.evaluate(() => ({ url: location.href,
-    events: (window as any).leuClickEvidence, state: document.documentElement.dataset })));
+  expect(failedRequests).toBe(1);
+  await page.unroute('**/leu-loop-v2.webm');
+  const navigationStarted = Date.now();
+  await Promise.all([
+    page.waitForURL(/\/work\/leu$/),
+    page.getByRole('link', { name: 'View Leu case study', exact: true }).click()
+  ]);
   await expect(page.locator('.cs-leu #try')).toBeVisible();
+  expect(Date.now() - navigationStarted, 'Media teardown must not freeze navigation').toBeLessThan(8000);
+  await failWebM();
   await page.goBack();
   await ready(page);
   await page.getByRole('button', { name: /^Leu/ }).click();
@@ -176,6 +189,7 @@ test('WebM failure uses MP4 and retains playback after case-study navigation', a
   await film.scrollIntoViewIfNeeded();
   await expect(film).toHaveAttribute('src', leuMedia.src);
   await expect(film).toHaveJSProperty('paused', false);
+  expect(failedRequests).toBe(2);
 });
 
 test('a reduced-motion Leu selection can play and pause after hydration', async ({ page }) => {
