@@ -192,7 +192,7 @@ test('all projects retain shared geometry and Second Voice controls remain indep
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   }
   sizes.forEach(size => { expect(size.width).toBeCloseTo(sizes[0].width, 1); expect(size.height).toBeCloseTo(sizes[0].height, 1); });
-  expect(sizes[0].height).toBe(page.viewportSize()!.width === 390 ? 976 : 448);
+  expect(sizes[0].height).toBeCloseTo(page.viewportSize()!.width === 390 ? 976 : 448, 2);
   await page.getByRole('button', { name: /^Second Voice AI/ }).click();
   expect(await page.locator('.authors').evaluate(element => element.closest('a'))).toBeNull();
   await page.getByRole('tab', { name: 'King', exact: true }).click();

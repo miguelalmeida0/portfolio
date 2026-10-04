@@ -51,6 +51,7 @@ for (const [path, heading] of routes) {
       await page.goBack();
       await expect(page.locator('main h1')).toHaveText(routes[0][1]);
       await expect(page.locator('[data-pixel-intro]')).toBeHidden();
+      await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
       await page.goForward();
       await expect(page).toHaveURL(new RegExp(`${path.replace('second-voice-ai', 'second-voice')}$`));
       await expect(page.locator('main h1')).toHaveText(heading);

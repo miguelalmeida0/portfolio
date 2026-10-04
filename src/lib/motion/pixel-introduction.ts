@@ -170,23 +170,30 @@ export function pixelIntroduction(node: HTMLElement) {
 
   const resize = () => {
     if (done || dismissing || !clock) return;
-    try { measure(); render(time()); void syncSource().catch(finish); } catch { finish(); }
+    // A responsive source swap temporarily clears naturalWidth on high-density
+    // mobile screens. Retarget after both pictures decode, not in that gap.
+    void syncSource().then(ready => {
+      if (!ready || done || dismissing) return;
+      measure();
+      render(time());
+    }).catch(finish);
   };
   async function syncSource() {
     const version = ++sourceVersion;
     // Responsive <picture> selection settles after layout. Decode both current
     // images, then compare their current sources instead of a pre-resize URL.
     await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
-    if (done || version !== sourceVersion) return;
+    if (done || version !== sourceVersion) return false;
     try { await Promise.all([livePhoto!.decode(), photo.decode()]); }
-    catch (error) { if (done || version !== sourceVersion) return; throw error; }
-    if (done || version !== sourceVersion) return;
+    catch (error) { if (done || version !== sourceVersion) return false; throw error; }
+    if (done || version !== sourceVersion) return false;
     const src = livePhoto!.currentSrc || livePhoto!.src;
     if (photo.currentSrc !== src) throw new Error('Portrait source selection differs');
     type.style.maskImage = 'url("' + src + '")';
     node.querySelector('[data-intro-type]')?.removeAttribute('clip-path');
+    return true;
   }
-  const sourceChanged = () => { void syncSource().then(resize).catch(finish); };
+  const sourceChanged = () => resize();
 
   const dismiss = () => {
     if (done || dismissing) return;

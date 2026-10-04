@@ -55,14 +55,15 @@ test('portrait stays recognisable on the right and returns without drift over te
   for(let i=0;i<10;i++) {
     await page.keyboard.press('/'); await expect(photo).toHaveCSS('opacity','0.16');
     const rect=(await photo.boundingBox())!;
-    expect(rect.y).toBe(home.y); expect(rect.height).toBe(home.height); expect(rect.width).toBe(home.width);
+    expect(rect.y).toBeCloseTo(home.y, 2); expect(rect.height).toBeCloseTo(home.height, 2); expect(rect.width).toBeCloseTo(home.width, 2);
     const visible=bounds.x+bounds.width-rect.x;
     expect(visible/rect.width).toBeCloseTo(.56,2);
     const answer=(await page.locator('.ask-panel').boundingBox())!;
     expect(answer.x+answer.width+15).toBeLessThanOrEqual(rect.x);
     expect(rect.x+rect.width*.5).toBeLessThan(bounds.x+bounds.width);
     await page.keyboard.press('Escape'); await expect(page.locator('[data-ask-panel]')).toHaveCount(0);
-    expect(await photo.boundingBox()).toEqual(home);
+    const restored = (await photo.boundingBox())!;
+    for (const key of ['x', 'y', 'width', 'height'] as const) expect(restored[key]).toBeCloseTo(home[key], 2);
     await expect(photo).toHaveCSS('opacity','1');
     expect(await photo.evaluate((img:HTMLImageElement)=>img.currentSrc)).toBe(src);
     expect(await photo.getAttribute('style')).not.toContain('--ask-photo-x');

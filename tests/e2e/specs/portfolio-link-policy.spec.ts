@@ -83,12 +83,10 @@ for (const width of [1440, 390]) test(`project images and case-study links stay 
 test('live app and contact profiles open a new tab while the portfolio remains open', async ({ page, context }) => {
   await openPortfolioHome(page);
   await context.route('https://**/*', route => route.fulfill({ contentType: 'text/html', body: '<h1>External destination</h1>' }));
-  for (const link of [page.locator('#work .links').getByRole('link', { name: 'Open app', exact: true }), page.locator('#contact a[href*="linkedin.com"]').first(), page.locator('#contact a[href*="github.com"]').first()]) {
+  for (const link of [page.locator('#work .links').getByRole('link', { name: 'Open app', exact: true }), page.locator('#contact a[href*="linkedin.com"]:visible').first(), page.locator('#contact a[href*="github.com"]:visible').first()]) {
     const href = await link.getAttribute('href');
     const original = page.url();
-    const next = page.waitForEvent('popup');
-    await link.click();
-    const popup = await next;
+    const [popup] = await Promise.all([page.waitForEvent('popup'), link.click()]);
     await popup.waitForLoadState();
     expect(popup.url()).toBe(new URL(href!).href);
     expect(page.url()).toBe(original);
