@@ -4,7 +4,7 @@ Production source is this checkout, `.cache/leu-flow-pages` under the portfolio
 workspace. The workspace root is an older checkout and must never be deployed.
 
 On 4 October 2026 this checkout was recovered from GitHub `main` at `6ffe791`.
-It retains the Needle release and restores the four Claude case studies from
+It retains the Needle release, including the later palette update `1a32264`, and restores the four Claude case studies from
 the 1 October handoffs and their reviewed integration. The comparison deployment
 for the case studies and desktop sizing is `1ed04fb5`; the Needle baseline is
 `52a1008d`.

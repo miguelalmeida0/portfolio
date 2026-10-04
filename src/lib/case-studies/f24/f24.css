@@ -2,7 +2,7 @@
 .cs-f24{display:block;text-rendering:auto;font-kerning:auto}
 
 .cs-f24{
-  --paper:var(--color-paper); --ink:var(--color-ink); --forest:var(--color-forest); --plum:var(--color-plum); --sage:var(--color-sage); --ivory:var(--color-ivory); --rule:var(--color-rule); --muted:var(--color-muted); --hl:var(--color-highlight);
+  --paper:#EFF3E3; --ink:#0B2B22; --forest:#12372D; --plum:#610D3D; --sage:#E4EAD3; --ivory:#FAF7ED; --rule:#9FAE9B; --muted:#506353; --hl:#E2EDBA;
   --plum-tint:#F1E3E8; --plum-wash:#F6EEF0; --fail:#8F2D2D; --fail-tint:#F2DEDB; --amber:#7A5410; --amber-tint:#F0E6C8; --anchor:#D5E0C6;
   --line:rgba(159,174,155,var(--cs-alpha-55));
   --shadow:0 1px 2px rgba(11,43,34,var(--cs-alpha-06)),0 14px 34px -14px rgba(11,43,34,var(--cs-alpha-22));
