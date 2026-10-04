@@ -2,7 +2,7 @@
 
 Frontend developer and design engineer portfolio built with Svelte 5, SvelteKit, TypeScript and Tailwind CSS.
 
-The homepage pairs an inspectable Second Voice writing demo with F24 production work and Flow’s validated calendar actions. Leu adds native work; Mirror remains in the case-study archive. The demo uses labelled prepared examples and preserves the original draft. The F24 case explains a progressive Svelte-to-React evolution and a bounded activity-history contribution.
+Needle leads Selected Work with a 10,000-artwork semantic search engine and an eight-part engineering case study. The homepage also pairs an inspectable Second Voice writing demo with F24 production work and Flow’s validated calendar actions. Leu adds native work; Mirror remains in the case-study archive. The demo uses labelled prepared examples and preserves the original draft. The F24 case explains a progressive Svelte-to-React evolution and a bounded activity-history contribution.
 
 ## Run locally
 
@@ -41,6 +41,7 @@ The public Second Voice app opened during this pass, but its sample generation r
 ## Main routes
 
 - `/`
+- `/work/needle`
 - `/work/second-voice-ai`
 - `/work/f24`
 - `/work/flow`

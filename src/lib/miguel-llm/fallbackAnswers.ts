@@ -71,12 +71,12 @@ export function buildFallbackAnswer(question: string, mode: MiguelLLMMode, _rece
       ['Résumé & experience|/cv', 'Selected work|/#work'], ['What did Miguel personally build?', 'Which project should I start with?']);
   }
   if (/\b(personally|ownership|own|built|build)\b/.test(q) && !resolveProject(question, projectSlug)) {
-    return make('At F24, Miguel’s frontend contribution spans the original Svelte implementation and later React delivery with product, design, backend and QA. His current independent projects are Second Voice AI, Flow and Leu.',
+    return make('At F24, Miguel’s frontend contribution spans the original Svelte implementation and later React delivery with product, design, backend and QA. Needle covers visual search and performance engineering; his other independent projects are Second Voice AI, Flow and Leu.',
       ['At F24, he worked with product, design, backend, and QA; frontend ownership is distinct from sole ownership of the whole product.'],
       ['Experience|/cv#experience', 'Second Voice AI|/work/second-voice-ai', 'Flow|/work/flow', 'Leu|/work/leu']);
   }
   if (/\b(start with|strongest|inspect first|best project|which project)\b/.test(q)) {
-    return make('Start with Second Voice AI for product design and frontend engineering, then F24 for production Svelte and React experience. Flow explores editable voice actions; Leu explores native, source-linked learning.',
+    return make('Start with Needle for search and performance engineering. Second Voice AI shows product design and frontend engineering; F24 shows for production Svelte and React experience. Flow explores editable voice actions; Leu explores native, source-linked learning.',
       currentGuideProjects.slice(0, 3).map(project => project.ownership),
       currentGuideProjects.map(project => `${project.name}|/work/${project.slug}`));
   }
@@ -120,7 +120,7 @@ export function buildFallbackAnswer(question: string, mode: MiguelLLMMode, _rece
     return make(brief.problem, [`My ownership: ${brief.ownership}`, brief.result], [source('Personal contribution', 'contribution'), source('Result', 'result')], followups, slug === 'ghostwriter' || slug === 'atlas' ? 'medium' : 'high');
   }
 
-  if (/who|tell me about|summarize|summary|30 seconds/.test(q)) return make('Miguel is a Portuguese frontend developer and design engineer in Berlin with a product-design background. He works with React, TypeScript, and Svelte. His current portfolio covers F24, Second Voice AI, Flow and Leu.',
+  if (/who|tell me about|summarize|summary|30 seconds/.test(q)) return make('Miguel is a Portuguese frontend developer and design engineer in Berlin with a product-design background. He works with React, TypeScript, and Svelte. His current portfolio covers Needle, F24, Second Voice AI, Flow and Leu.',
     [], ['Résumé|/cv', 'About Miguel|/story'], suggestions[mode]);
   if (/design|ux|frontend|react|typescript|svelte|stack|skills/.test(q)) return make('Miguel combines product-design judgment with frontend implementation: shaping flows, building reusable UI, and making loading, failure, and recovery understandable.',
     ['Core tools: React, TypeScript, and Svelte.', 'His production work at F24 connects that background to production delivery; Second Voice AI shows it in an independent writing interface.'],

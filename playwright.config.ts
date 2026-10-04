@@ -19,6 +19,7 @@ export default defineConfig({
   reporter: isCi
     ? [
         ['list'],
+        ['./tests/e2e/failure-reporter.ts'],
         ['html', { open: 'never' }],
         ['json', { outputFile: 'test-results/e2e-results.json' }]
       ]
