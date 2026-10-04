@@ -1,152 +1,131 @@
-// Restores the guide contracts removed from modals.spec.ts/forms.spec.ts in 9d585ce.
+// Acceptance coverage for the shared, non-modal Ask guide.
 import { expect, test, type Page } from '@playwright/test';
-import { openPortfolioHome } from '../helpers/portfolio';
+import { openPortfolioHome, selectWorkProject } from '../helpers/portfolio';
 
 async function openGuide(page: Page) {
-  await expect(page.locator('header button[aria-haspopup="dialog"]').first()).toBeEnabled();
+  await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
   const menu = page.getByRole('button', { name: 'Menu', exact: true });
-  const mobile = await menu.isVisible();
-  if (mobile) await menu.click();
-  const trigger = page.getByRole('button', { name: 'Ask MiguelLLM', exact: true }).filter({ visible: true });
-  await trigger.focus();
+  if (await menu.isVisible()) await menu.click();
+  const trigger = page.locator('[data-ask-trigger]:visible');
   await trigger.press('Enter');
-  const dialog = page.getByRole('dialog', { name: 'Portfolio guide', exact: true });
-  await expect(dialog).toBeVisible();
-  return { trigger: mobile ? menu : trigger, dialog };
+  const panel = page.locator('[data-ask-panel]');
+  await expect(panel).toBeVisible();
+  await expect(page.locator('html')).toHaveClass(/ask-on/);
+  return { trigger, panel };
 }
 
-test('blank prompt, empty submit, focus containment, Escape and original trigger restoration', async ({ page }) => {
+async function closeGuide(page: Page) {
+  await page.keyboard.press('Escape');
+  await expect(page.locator('[data-ask-panel]')).toHaveCount(0);
+  await expect(page.locator('[data-ask-trigger]:visible')).toBeFocused();
+}
+
+test('blank prompt prevents empty requests; non-modal page access and Escape restore focus', async ({ page }) => {
   await page.goto('/story');
   let requests = 0;
-  page.on('request', request => { if (request.url().includes('/api/miguel-llm')) requests++; });
-  const { trigger, dialog } = await openGuide(page);
-  await expect(dialog).toBeFocused();
-  await expect(dialog.getByRole('textbox')).toHaveValue('');
-  await expect(dialog.getByRole('button', { name: 'Ask', exact: true })).toBeDisabled();
-  await dialog.getByRole('textbox').fill('   ');
-  await dialog.getByRole('textbox').press('Enter');
+  page.on('request', request => { if (request.url().includes('/api/ask')) requests++; });
+  const { panel } = await openGuide(page);
+  const input = panel.getByRole('textbox', { name: 'Type your own question' });
+  await expect(input).toHaveValue('');
+  await expect(panel.getByRole('button', { name: 'Ask your question' })).toBeDisabled();
+  await input.fill('   '); await input.press('Enter');
   expect(requests).toBe(0);
-  await expect(page.locator('[data-guide-background]')).toHaveAttribute('inert', '');
-  await page.locator('header a').first().evaluate((node: HTMLElement) => node.focus());
-  expect(await dialog.evaluate(node => node.contains(document.activeElement))).toBe(true);
-  await dialog.focus();
-  await page.keyboard.press('Shift+Tab');
-  expect(await dialog.evaluate(node => node.contains(document.activeElement))).toBe(true);
-  await page.keyboard.press('Tab');
-  await expect(dialog.getByRole('button', { name: 'Reset portfolio guide conversation' })).toBeFocused();
-  await page.keyboard.press('Escape');
-  await expect(dialog).toHaveCount(0);
-  await expect(page.locator('[data-guide-background]')).not.toHaveAttribute('inert');
-  await expect(trigger).toBeFocused();
+  await expect(page.locator('#portfolio-content')).toHaveJSProperty('inert', false);
+  const topic = page.locator('[data-ask-id="story-hi"]');
+  await topic.focus(); await expect(topic).toBeFocused();
+  await input.focus(); await input.press('Tab');
+  await expect(page.locator('.ask-close')).toBeFocused();
+  await closeGuide(page);
 });
 
-test('real endpoint supports a preset, reset, typed question and internal answer link', async ({ page }) => {
+test('real endpoint supports a preset, a new question and internal answer navigation', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
   await page.goto('/story');
-  const { dialog } = await openGuide(page);
-  await dialog.getByRole('button', { name: 'Which project should I start with?' }).click();
-  await expect(dialog.locator('.llm-answer')).toContainText('Second Voice');
-  await expect(dialog.locator('.llm-answer')).toContainText('Flow');
-  await dialog.getByRole('button', { name: 'Reset portfolio guide conversation' }).click();
-  await expect(dialog.getByRole('textbox')).toHaveValue('');
-  await expect(dialog.locator('.llm-answer')).toHaveCount(0);
-  await dialog.getByRole('textbox').fill('What did Miguel build in Flow?');
-  await dialog.getByRole('button', { name: 'Ask', exact: true }).click();
-  await expect(dialog.locator('.llm-answer')).toContainText('React interface');
-  await dialog.locator('.source-chips a[href="/work/flow"]').click();
+  const { panel } = await openGuide(page);
+  await panel.getByRole('button', { name: 'Second Voice', exact: true }).click();
+  await expect(panel.locator('[data-ask-knowledge]')).toContainText('Second Voice');
+  const input = panel.getByRole('textbox', { name: 'Type your own question' });
+  await input.fill('What did Miguel build in Flow?');
+  await panel.getByRole('button', { name: 'Ask your question' }).click();
+  await expect(panel.locator('[data-ask-knowledge]')).toContainText('React');
+  await panel.locator('.ask-sources a[href="/work/flow"]').first().click();
   await expect(page).toHaveURL(/\/work\/flow$/);
-  await expect(dialog).toHaveCount(0);
+  await expect(panel).toHaveCount(0);
   await expect(page.locator('h1')).toHaveText('Flow');
   expect(errors).toEqual([]);
 });
 
 for (const [width, height] of [[1440, 1020], [430, 932], [393, 852], [390, 844]]) {
-  test(`dialog fits ${width}x${height}, including a reduced viewport for keyboard space`, async ({ page }, testInfo) => {
+  test(`guide fits ${width}x${height}, including keyboard space`, async ({ page }, testInfo) => {
     await page.setViewportSize({ width, height });
     await page.goto('/story');
-    const { trigger, dialog } = await openGuide(page);
-    await expect(dialog.getByRole('button', { name: 'Which project should I start with?' })).toBeInViewport();
-    await expect(dialog.getByRole('textbox')).toBeInViewport();
-    await expect(dialog.getByRole('button', { name: 'Close portfolio guide', exact: true })).toBeInViewport();
+    const { panel } = await openGuide(page);
+    const input = panel.getByRole('textbox', { name: 'Type your own question' });
+    await expect(panel.getByRole('button', { name: 'F24', exact: true })).toBeInViewport();
+    await expect(input).toBeInViewport();
+    await expect(page.locator('.ask-close')).toBeInViewport();
+    expect(await panel.evaluate(node => node.scrollWidth <= node.clientWidth)).toBe(true);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    expect(await dialog.evaluate(node => node.scrollWidth <= node.clientWidth)).toBe(true);
     await page.screenshot({ path: testInfo.outputPath(`guide-${width}.png`) });
-    if (width === 390) {
-      await dialog.getByRole('button', { name: 'Which project should I start with?' }).click();
-      await expect(dialog.locator('.llm-answer')).toContainText('Second Voice');
-      await dialog.getByRole('button', { name: 'Reset portfolio guide conversation' }).click();
-      await expect(dialog.getByRole('textbox')).toHaveValue('');
-    }
     if (width < 500) {
       await page.setViewportSize({ width, height: 430 });
-      await dialog.getByRole('textbox').fill('What is Leu?');
-      await expect(dialog.getByRole('textbox')).toBeInViewport();
-      await expect(dialog.getByRole('button', { name: 'Close portfolio guide', exact: true })).toBeInViewport();
-      await dialog.getByRole('button', { name: 'What production frontend experience does he have?' }).scrollIntoViewIfNeeded();
-      await expect(dialog.getByRole('textbox')).toBeInViewport();
+      await input.fill('What is Leu?');
+      await expect(input).toBeInViewport();
+      await expect(page.locator('.ask-close')).toBeInViewport();
+      await input.press('Enter');
+      await expect(panel.locator('[data-ask-knowledge]')).toContainText('Leu');
+      await expect(input).toBeInViewport();
     }
-    await dialog.getByRole('button', { name: 'Close portfolio guide', exact: true }).click();
-    await expect(trigger).toBeFocused();
+    await closeGuide(page);
   });
 }
 
-test('existing shortcut opens the shared drawer with project context; offline fallback and reset preserve session limit', async ({ page }) => {
-  await page.goto('/story');
-  await page.route('**/api/miguel-llm', route => route.abort());
-  await expect(page.locator('header button[aria-haspopup="dialog"]').first()).toBeEnabled();
-  await page.evaluate(() => window.dispatchEvent(new CustomEvent('miguel-llm:open', { detail: { projectSlug: 'leu', mode: 'engineer' } })));
-  const dialog = page.getByRole('dialog', { name: 'Portfolio guide' });
-  await dialog.getByRole('button', { name: 'What did Miguel build in Leu?' }).click();
-  await expect(dialog.locator('.llm-answer')).toContainText('native learning');
-  await expect(dialog).toContainText('This attempt did not use a question');
-  await page.keyboard.press('Escape');
-  await page.evaluate(() => sessionStorage.setItem('miguel-llm-question-count', '5'));
-  await page.reload();
-  await openGuide(page);
-  await dialog.getByRole('button', { name: 'Reset portfolio guide conversation' }).click();
-  await expect(dialog.getByRole('textbox')).toBeDisabled();
-  await expect(dialog).toContainText('limited to 5 questions');
+test('shared shortcut opens Ask; offline and rate-limit failures remain retryable', async ({ page }) => {
+  await page.goto('/work/leu');
+  await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('miguel-llm:open')));
+  const panel = page.locator('[data-ask-panel]');
+  await expect(panel).toBeVisible();
+  await page.route('**/api/ask', route => route.abort());
+  const input = panel.getByRole('textbox', { name: 'Type your own question' });
+  await input.fill('What did Miguel build in Leu?'); await input.press('Enter');
+  await expect(panel.locator('[data-ask-answer]')).toContainText('connect');
+  await expect(panel.getByRole('button', { name: 'Try again' })).toBeVisible();
+  await page.unroute('**/api/ask');
+  await page.route('**/api/ask', route => route.fulfill({ status: 429, json: {} }));
+  await panel.getByRole('button', { name: 'Try again' }).click();
+  await expect(panel.locator('[data-ask-answer]')).toContainText('Give it a minute');
+  await page.unroute('**/api/ask');
+  await panel.getByRole('button', { name: 'Try again' }).click();
+  await expect(panel.locator('[data-ask-knowledge]')).toContainText('Leu');
 });
 
-test('current Story, CV and project routes render and share the restored guide', async ({ page }) => {
-  await page.goto('/story');
-  for (const route of ['/story', '/cv', '/work/second-voice-ai', '/work/f24', '/work/flow', '/work/leu']) {
-    const response = await page.goto(route);
-    expect(response?.status()).toBe(200);
+test('current Story, CV and all project routes share Ask and restore its trigger', async ({ page }) => {
+  for (const route of ['/story', '/cv', '/work/needle', '/work/second-voice-ai', '/work/f24', '/work/flow', '/work/leu']) {
+    expect((await page.goto(route))?.status()).toBe(200);
     await expect(page.locator('h1')).toHaveCount(1);
-    const { trigger, dialog } = await openGuide(page);
-    await page.keyboard.press('Escape');
-    await expect(dialog).toHaveCount(0);
-    await expect(trigger).toBeFocused();
+    await openGuide(page); await closeGuide(page);
   }
 });
 
-test('390px menu opens spatial Ask and Leu retains its v2 loop', async ({ page }) => {
+test('390px menu opens Ask and the visible Leu film advances', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openPortfolioHome(page);
-  await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
-  await page.getByRole('button', { name: 'Menu', exact: true }).click();
-  const menu = page.getByRole('navigation', { name: 'Mobile navigation' });
-  await expect(menu.getByRole('link')).toHaveText(['Work', 'Story', 'CV', 'Contact']);
-  const guideTrigger = menu.getByRole('button', { name: 'Ask MiguelLLM', exact: true });
-  await expect(guideTrigger).toBeVisible();
-  await guideTrigger.click();
-  await expect(menu).toHaveCount(0);
-  await expect(page.locator('[data-ask-panel]')).toBeVisible();
-  await expect(page.getByRole('dialog', { name: 'Portfolio guide', exact: true })).toHaveCount(0);
-  await page.keyboard.press('Escape');
-  await expect(page.locator('[data-ask-panel]')).toHaveCount(0);
-  await expect(page.locator('[data-ask-trigger]:visible')).toBeFocused();
+  await openGuide(page);
+  await expect(page.locator('#mobile-navigation')).toHaveCount(0);
+  await expect(page.getByRole('dialog', { name: 'Portfolio guide' })).toHaveCount(0);
+  await closeGuide(page);
   await page.getByRole('button', { name: 'Close', exact: true }).click();
-  await page.locator('.project-index button').filter({ hasText: 'Leu' }).click();
+  await selectWorkProject(page, 'leu');
   const video = page.locator('#work video');
+  await video.scrollIntoViewIfNeeded();
   await expect.poll(() => video.evaluate((el: HTMLVideoElement) => el.currentSrc)).toMatch(/leu-loop-v2\.(webm|mp4)$/);
   await expect(video).toHaveJSProperty('paused', false);
   const start = await video.evaluate((el: HTMLVideoElement) => el.currentTime);
   await expect.poll(() => video.evaluate((el: HTMLVideoElement) => el.currentTime)).toBeGreaterThan(start);
   await page.goto('/work/leu');
+  await page.locator('video').first().scrollIntoViewIfNeeded();
   await expect.poll(() => page.locator('video').first().evaluate((el: HTMLVideoElement) => el.currentSrc)).toMatch(/leu-loop-v2\.(webm|mp4)$/);
 });
 

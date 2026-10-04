@@ -1,42 +1,41 @@
 import { expect, test } from '@playwright/test';
-import { openPortfolioHome } from '../helpers/portfolio';
+import { openSecondVoiceStudio } from '../helpers/portfolio';
 import { SECOND_VOICE_URL } from '../../../src/lib/experience/voice-bridge';
 
-test('flagship app CTA precedes the demo and closing links navigate', async ({ page }) => {
-  await openPortfolioHome(page);
-  const app = page.locator('.featured-actions').getByRole('link', { name: /Open full app/ });
+test('selected app CTA accompanies the demo and header links navigate', async ({ page }) => {
+  await openSecondVoiceStudio(page);
+  const app = page.locator('#work .links').getByRole('link', { name: 'Open app', exact: true });
   await expect(app).toHaveAttribute('href', SECOND_VOICE_URL);
-  const button = await app.boundingBox();
-  const demo = await page.locator('#project-second-voice-ai .surface').boundingBox();
-  expect(button!.y + button!.height).toBeLessThan(demo!.y);
-  await expect(page.locator('#experience')).toContainText('activity history into React');
-  await page.locator('#experience').getByRole('link', { name: 'Read my story' }).click();
-  await expect(page).toHaveURL(/\/story$/);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('I started in UX. Then built the frontend.', { useInnerText: true });
-  await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
-  await page.goBack();
-  await expect(page.locator('#intro-heading')).toBeVisible();
-  await page.locator('#experience').getByRole('link', { name: 'View CV' }).click();
-  await expect(page).toHaveURL(/\/cv$/);
+  await expect(app).toHaveAttribute('target', '_blank');
+  await expect(page.getByRole('tabpanel')).toBeVisible();
+  for (const [name, route, heading] of [['Story', '/story', 'Story'], ['CV', '/cv', 'Miguel Almeida.']]) {
+    const menu = page.getByRole('button', { name: 'Menu', exact: true });
+    if (await menu.isVisible()) await menu.click();
+    await page.locator('header').getByRole('link', { name, exact: true }).filter({ visible: true }).click();
+    await expect(page).toHaveURL(new RegExp(`${route}$`));
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(heading);
+    await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+  }
 });
 
 for (const slug of ['second-voice-ai', 'f24', 'leu', 'flow']) {
-  test(`${slug} exposes one architecture section immediately after project context`, async ({ page }) => {
-    const response = await page.goto('/work/' + slug);
-    expect(response!.status()).toBe(200);
+  test(`${slug} exposes one architecture section after its project introduction`, async ({ page }) => {
+    expect((await page.goto('/work/' + slug))!.status()).toBe(200);
     const architecture = page.locator('#architecture');
     await expect(architecture).toHaveCount(1);
-    await expect(architecture).toContainText('Architecture & tools');
-    expect(await architecture.evaluate(el => el.previousElementSibling?.tagName)).toBe('HEADER');
+    await expect(architecture.locator('h2')).toHaveText(slug === 'leu' ? 'Change who is allowed to decide.' : slug === 'flow' ? /Interpret first\.\s*Earn the right to commit\./ : 'Architecture & tools.');
+    expect(await architecture.evaluate(el => Boolean(el.compareDocumentPosition(document.querySelector('main h1')!) & Node.DOCUMENT_POSITION_PRECEDING))).toBe(true);
     if (slug === 'f24') {
       await expect(page.locator('#production-decision')).toContainText('Tradeoff');
       expect(await architecture.evaluate(el => el.nextElementSibling?.id)).toBe('activity-history');
       await expect(page.locator('#engineering-proof + figure img')).toHaveAttribute('src', '/projects/f24/hackathon.webp');
-      return;
+    } else if (slug === 'leu') {
+      await expect(architecture.getByRole('list', { name: 'V37 processing order' })).toContainText('Deterministic checks');
+    } else if (slug === 'flow') {
+      await expect(architecture).toContainText('Interpretation proposes operations');
+      await expect(architecture.getByRole('link', { name: 'Inspect applyLifeTransaction' })).toHaveAttribute('target', '_blank');
+    } else {
+      await expect(architecture.getByRole('list', { name: 'System flow' }).locator('li')).toHaveCount(4);
     }
-    expect(await architecture.evaluate(el => {
-      const media = document.querySelector('main header [data-hero-media]');
-      return !!media && !!(el.compareDocumentPosition(media) & Node.DOCUMENT_POSITION_PRECEDING);
-    })).toBe(true);
   });
 }

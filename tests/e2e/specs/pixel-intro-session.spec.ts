@@ -87,7 +87,7 @@ for (const input of ['click', 'wheel', 'letter', 'touch', 'reduced']) {
     if (input === 'click') await page.mouse.click(30, 30);
     if (input === 'wheel') await page.mouse.wheel(0, 100);
     if (input === 'letter') await page.keyboard.press('a');
-    if (input === 'touch') await page.locator(intro).dispatchEvent('touchstart');
+    if (input === 'touch') await page.locator(intro).evaluate(el => el.dispatchEvent(new Event('touchstart', { bubbles: true })));
     if (input === 'reduced') await page.emulateMedia({ reducedMotion: 'reduce' });
     await expect(page.locator(intro)).toHaveCount(0);
     await expect(page.locator('#portfolio-content')).toHaveJSProperty('inert', false);
@@ -125,7 +125,7 @@ test('internal navigation does not replay the intro', async ({ page }) => {
   await page.locator('a[href="/story"]').first().evaluate((el: HTMLAnchorElement) => el.click());
   await page.waitForURL('**/story');
   await page.locator('[data-identity-home]').click();
-  await page.waitForURL(/\/$/);
+  await page.waitForURL(/\/#top$/);
   await expect(page.locator(intro)).toHaveCount(0);
 });
 

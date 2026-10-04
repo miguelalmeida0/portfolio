@@ -44,7 +44,8 @@ test('network errors and rate limits are retryable errors, never knowledge refus
   await expect(page.getByRole('button', { name: 'Try again', exact: true })).toBeVisible();
   await page.unroute('**/api/ask');
   await page.getByRole('button', { name: 'Try again', exact: true }).click();
-  await expect(page.locator('[data-ask-knowledge]')).toContainText('migration');
+  await expect(page.locator('[data-ask-knowledge]')).toContainText('original frontend');
+  await expect(page.locator('[data-ask-knowledge]')).toContainText('React feature delivery');
   await page.route('**/api/ask', route => route.fulfill({ status: 429, json: {} }));
   await ask(page, 'Tell me about Flow');
   await expect(page.locator('[data-ask-answer]')).toContainText('Give it a minute');

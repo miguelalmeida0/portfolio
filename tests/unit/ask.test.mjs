@@ -9,9 +9,20 @@ const stubs = {
   './question-plans.json': `export default ${JSON.stringify(plans)}`,
   '$env/dynamic/private': 'export const env = { MIGUEL_LLM_PROVIDER: "local-fallback" };'
 };
-const { validateStep, filterSteps } = await loadLocalTs('src/lib/ask/plan.ts', { stubs });
+const { validateStep, filterSteps, areaPlan } = await loadLocalTs('src/lib/ask/plan.ts', { stubs });
 const { POST } = await loadLocalTs('src/routes/api/ask/+server.ts', { stubs });
 const step = quote => ({ lead: 'The page says:', source: 'stack', quote });
+
+test('every current project has a grounded plan when selected in Ask mode', async () => {
+  const { workProjects } = await loadLocalTs('src/lib/content/work-projects.ts');
+  for (const project of workProjects) {
+    const id = `w-${project.id === 'second-voice' ? 'sv' : project.id}`;
+    const plan = areaPlan(id);
+    assert.ok(plan, `Missing Ask plan for ${project.name}`);
+    assert.ok(plan.question.length > 0);
+    assert.ok(plan.steps.some(step => step.source === id && validateStep(step, `${project.name} ${project.sub}`)));
+  }
+});
 
 test('ordered words, apostrophes, punctuation and empty quotes obey the contract', () => {
   assert.equal(validateStep(step('React · Svelte'), 'React · TypeScript · Svelte · JavaScript'), true);

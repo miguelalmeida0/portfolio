@@ -46,7 +46,7 @@
   --rule: var(--rule-ink);
   --fg-muted: var(--muted);
   /* Baseline: viewport minus 2 × 120px margins, 640px lime card and 33px gap. */
-  --portrait-width: calc(100vw - 913px);
+  --portrait-width: calc(min(100vw, 1920px) - 913px);
 }
 #portfolio-content[data-homepage] .wind-hero {
   width: min(calc(100% - 2 * var(--page-x)), var(--content-max));

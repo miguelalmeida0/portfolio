@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { openPortfolioHome } from '../helpers/portfolio';
+import { openPortfolioHome, openSecondVoiceStudio } from '../helpers/portfolio';
 
 test('mobile menu closes on Escape and restores focus', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -25,7 +25,7 @@ test('intro is decorative, skippable and never creates a second page heading', a
 
 test('reduced motion keeps content visible and disables decorative transitions', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/');
+  await openSecondVoiceStudio(page);
   await expect(page.getByRole('heading', { level: 1, name: /Frontend developer.*design engineer/i })).toBeVisible();
   const mark = page.locator('mark').first();
   await expect(mark).toBeVisible();
@@ -41,7 +41,9 @@ test('public controls have accessible names and content has one main landmark an
     else await page.goto(route);
     await expect(page.getByRole('main')).toHaveCount(1);
     await expect(page.locator('h1')).toHaveCount(1);
-    const controls = page.locator('button:not([inert] button), a:not([inert] a)');
+    // Decorative departure-board clones are aria-hidden. Audit the controls
+    // actually exposed to assistive technology, including their visible names.
+    const controls = page.getByRole('button').or(page.getByRole('link'));
     for (const control of await controls.all()) {
       if (await control.isVisible()) await expect(control).toHaveAccessibleName(/\S/);
     }

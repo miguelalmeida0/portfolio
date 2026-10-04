@@ -1,19 +1,19 @@
 import { expect, test } from '@playwright/test';
-import { openPortfolioHome, openSecondVoiceStudio } from '../helpers/portfolio';
+import { openPortfolioHome, openSecondVoiceStudio, selectWorkProject } from '../helpers/portfolio';
 
-const projects = ['second-voice-ai', 'f24', 'leu', 'flow'];
+const projects = ['needle', 'second-voice-ai', 'f24', 'leu', 'flow'];
 
-test('recruiter sees identity and exactly four real projects without an accordion', async ({ page }) => {
+test('recruiter sees identity and the five current projects without an accordion', async ({ page }) => {
   await openPortfolioHome(page);
   await expect(page.getByRole('heading', { level: 1, name: /Frontend developer.*design engineer/i })).toBeVisible();
   await expect(page.locator('[data-identity-name]')).toHaveText('MIGUEL ALMEIDA');
   await expect(page.locator('[data-identity-location]')).toHaveText('Berlin');
   await expect(page.locator('main img[src*="miguel"]')).toHaveCount(1);
-  await expect(page.locator('.project-index button')).toHaveCount(4);
-  await expect(page.locator('.project-index button').nth(0)).toContainText('Second Voice AI');
+  await expect(page.locator('.project-index button')).toHaveCount(5);
+  await expect(page.locator('.project-index button').nth(0)).toContainText('Needle');
   await expect(page.locator('#work [aria-expanded], #work [data-project-panel]')).toHaveCount(0);
   await expect(page.locator('#work a[href="/work/mirror-ai"], #work a[href="/work/vigia"]')).toHaveCount(0);
-  await page.locator('.project-index button').nth(1).click();
+  await selectWorkProject(page, 'f24');
   await expect(page.locator('#work img')).toHaveAttribute('src', '/projects/f24/hackathon.webp');
   await expect(page.getByText('Camera Harness', { exact: true })).toHaveCount(0);
 });
@@ -21,17 +21,30 @@ test('recruiter sees identity and exactly four real projects without an accordio
 for (const slug of projects) test(`${slug} exposes its current case-study structure and limits`, async ({ page }) => {
   const response = await page.goto('/work/' + slug);
   expect(response?.status()).toBe(200);
-  const required = slug === 'f24'
-    ? ['architecture', 'production-decision', 'activity-history', 'dry-run', 'engineering-proof']
-    : ['architecture', 'context', 'decisions', 'outcome'];
-  for (const id of required) await expect(page.locator('#' + id)).toBeAttached();
+  const required: Record<string, string[]> = {
+    needle: ['boundaries'],
+    f24: ['architecture', 'production-decision', 'activity-history', 'dry-run', 'engineering-proof'],
+    'second-voice-ai': ['writing-demo', 'ownership-title', 'decisions-title', 'outcome-title'],
+    leu: ['pipeline', 'architecture', 'failure-log', 'benchmark', 'evidence-boundaries', 'product-trace'],
+    flow: ['architecture', 'investigations', 'verification']
+  };
+  for (const id of required[slug]) await expect(page.locator('#' + id)).toBeAttached();
   if (slug === 'f24') {
     await expect(page.locator('#decisions')).toHaveCount(0);
     await expect(page.locator('#production-decision')).toContainText('Svelte product work and React implementation continued alongside each other');
-    await expect(page.locator('.team-context')).toContainText('backend colleagues owned services; QA helped verify behavior');
+    await expect(page.locator('.team-context')).toContainText('backend engineers owned service contracts; QA supported verification and releases');
+  } else if (slug === 'second-voice-ai') {
+    await expect(page.locator('.second-voice-study .limitation')).toContainText(/live|generation|prepared/i);
+    await expect(page.getByRole('tablist', { name: 'Author voice' })).toBeVisible();
+  } else if (slug === 'leu') {
+    await expect(page.locator('#failure-log .incident')).toHaveCount(7);
+    await expect(page.locator('#evidence-boundaries')).toContainText('actual hardware');
+  } else if (slug === 'flow') {
+    await expect(page.locator('#investigations .incident')).toHaveCount(4);
+    await expect(page.locator('#verification')).toContainText('Physical microphone acceptance');
   } else {
-    await expect(page.locator('#decisions [data-decision-item] h3')).toHaveCount(3);
-    await expect(page.locator('#outcome')).toContainText(/prototype|implemented|interface|experience|persistent|native/i);
+    await expect(page.locator('[data-needle-study] section')).toHaveCount(8);
+    await expect(page.locator('#boundaries')).toContainText('not quantified here');
   }
   await expect(page.getByRole('link', { name: 'All work', exact: true })).toHaveAttribute('href', '/#work');
 });
@@ -46,13 +59,13 @@ test('case study navigation completes without a full reload', async ({ page }) =
 
 test('product video is a silent loop with a poster fallback when autoplay is unavailable', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await page.goto('/work/second-voice-ai');
+  await page.goto('/work/leu');
   const video = page.locator('video');
   await video.scrollIntoViewIfNeeded();
   await expect(video).toHaveAttribute('loop', '');
   await expect(video).toHaveAttribute('playsinline', '');
   await expect(video).not.toHaveAttribute('controls');
-  await expect(video).toHaveAttribute('poster', /ghostwriter-demo-poster\.webp$/);
+  await expect(video).toHaveAttribute('poster', '/projects/leu/leu-loop-v2-poster.jpg');
   await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).muted)).toBe(true);
 
   const playback = await video.evaluate(async v => {
@@ -67,7 +80,7 @@ test('product video is a silent loop with a poster fallback when autoplay is una
   });
 
   if (playback.supported) expect(playback.started).toBe(true);
-  else await expect(video).toHaveAttribute('poster', /\.webp$/);
+  else await expect(video).toHaveAttribute('poster', '/projects/leu/leu-loop-v2-poster.jpg');
 
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).paused)).toBe(true);

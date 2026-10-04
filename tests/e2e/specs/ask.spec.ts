@@ -6,6 +6,7 @@
  */
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { selectWorkProject } from '../helpers/portfolio';
 import plans from '../../../src/lib/ask/question-plans.json' with { type: 'json' };
 
 const PROD = true;
@@ -14,7 +15,7 @@ const N = PROD
       open: '[data-ask-trigger]:visible', close: '.ask-close', heading: '.ask-heading', answer: '[data-ask-answer]', chip: '.ask-chip', chipOn: 'is-on' }
   : { root: '.root', attr: 'data-pt', lit: 'lit', quoted: 'hl', sway: 'sway', flag: '.flag', on: 'asking',
       open: '[data-ask]', close: '[data-close]', heading: '[data-qlabel]', answer: '[data-a]', chip: '[data-chipq]', chipOn: 'on' };
-const TARGET = process.env.ASK_URL ?? 'http://localhost:4173';
+const TARGET = process.env.ASK_URL ?? process.env.PLAYWRIGHT_BASE_URL ?? 'http://127.0.0.1:4173';
 test.describe.configure({ mode: 'serial' });
 const area = (id: string) => `[${N.attr}="${id}"]`;
 
@@ -48,11 +49,11 @@ const beats = (log: [number, string][]) => {
   return out;
 };
 
-test.beforeEach(async ({ page }) => { await page.setViewportSize({ width: 1920, height: 963 }); await page.addInitScript(() => sessionStorage.setItem('seen-intro', 'true')); await page.goto(TARGET); await page.evaluate(() => document.fonts.ready); });
+test.beforeEach(async ({ page }) => { await page.setViewportSize({ width: 1920, height: 963 }); await page.addInitScript(() => sessionStorage.setItem('seen-intro', 'true')); await page.goto(TARGET); await page.evaluate(() => document.fonts.ready); await selectWorkProject(page, 'second-voice'); await page.evaluate(() => scrollTo(0, 0)); });
 
-test('every one of the 20 areas carries the attribute and has a plan', async ({ page }) => {
+test('every current area carries the attribute and has a plan', async ({ page }) => {
   const onPage = await page.$$eval(`[${N.attr}]`, (els, a) => els.map(e => e.getAttribute(a)!), N.attr);
-  expect(onPage.length).toBe(20);
+  expect(onPage.sort()).toEqual(plans.areas.map(area => area.id).sort());
   for (const a of plans.areas) expect(onPage).toContain(a.id);
 });
 

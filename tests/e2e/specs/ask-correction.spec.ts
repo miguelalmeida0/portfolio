@@ -8,7 +8,7 @@ test.beforeEach(async ({page}) => {
 for(const [id,words] of [
   ['role',['product-design','F24','Second Voice','recovery']],
   ['stack',['2022','2026','React','Svelte','Second Voice','Flow','architecture']],
-  ['f24',['product, design, backend and QA','migration','production']],
+  ['f24',['product, design, backend and QA','original frontend','React feature delivery']],
   ['quality',['Playwright','focus','keyboard','pagination','retry']],
   ['w-sv',['author','strength','React','TypeScript','request','designed']],
   ['w-leu',['SwiftUI','PDFKit','Teach It Back','on the device','source']],
@@ -25,7 +25,7 @@ for(const [id,words] of [
 });
 test('typed questions use knowledge beyond visible sources and reject invented explanation',async({page})=>{
   for(const [question,expected] of [
-    ['What did Miguel do at F24?','migration'],
+    ['What did Miguel do at F24?','original frontend'],
     ['What is his strongest frontend experience?','product, design, backend and QA'],
     ['How much React experience does he have?','not four years of React'],
     ['What did he own in Second Voice?','request'],

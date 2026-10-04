@@ -1,44 +1,43 @@
 import { expect, test } from '@playwright/test';
-import { openPortfolioHome } from '../helpers/portfolio';
+import { openPortfolioHome, selectWorkProject } from '../helpers/portfolio';
 
 const projects = ['second-voice-ai', 'f24', 'flow', 'leu'];
 
-test('homepage projects put the stack immediately after the title and before ownership', async ({ page }) => {
+test('selected homepage projects expose ownership, stack and working actions', async ({ page }) => {
   await openPortfolioHome(page);
-  for (const slug of projects) {
-    const entry = page.locator('#project-' + slug);
-    const projectTitle = entry.locator('h3').filter({ has: page.locator('.project-link') });
-    expect(await projectTitle.evaluate(el => el.nextElementSibling?.hasAttribute('data-project-stack'))).toBe(true);
-    const stack = await entry.locator('[data-project-stack]').boundingBox();
-    const role = await entry.locator('.project-role').boundingBox();
-    expect(stack!.y + stack!.height).toBeLessThan(role!.y);
-    if (page.viewportSize()!.width <= 430) {
-      const title = await projectTitle.boundingBox();
-      const media = await entry.locator('.surface').boundingBox();
-      expect(media!.y - title!.y).toBeLessThan(520);
-    }
+  for (const id of ['needle', 'second-voice', 'f24', 'flow', 'leu'] as const) {
+    await selectWorkProject(page, id);
+    const meta = page.locator('[data-index-meta]');
+    await expect(meta.locator('.role')).toBeVisible();
+    await expect(meta.locator('.role')).toHaveText(/\S/);
+    await expect(meta.locator('.stack')).toHaveText(/\S/);
+    expect(await meta.locator('.role').evaluate(el => el.nextElementSibling?.classList.contains('stack'))).toBe(true);
+    const slug = id === 'second-voice' ? 'second-voice-ai' : id;
+    await expect(meta.getByRole('link', { name: 'Case study', exact: true })).toHaveAttribute('href', `/work/${slug}`);
+    await expect(page.locator('[data-project-row][aria-current="true"]')).toHaveCount(1);
   }
 });
 
-for (const slug of projects) test(`${slug}: stack, ownership, actions and architecture are immediate`, async ({ page }) => {
+for (const slug of projects) test(`${slug}: context, stack, actions and architecture are accessible`, async ({ page }) => {
   await page.goto('/work/' + slug);
-  expect(await page.locator('main h1').evaluate(el => el.nextElementSibling?.hasAttribute('data-project-stack'))).toBe(true);
-  const header = page.locator('main header');
-  await expect(header.locator('.project-role')).toBeVisible();
-  await expect(header.locator('.project-actions')).toBeVisible();
-  expect(await page.locator('#architecture').evaluate(el => el.previousElementSibling?.tagName)).toBe('HEADER');
+  await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
+  await expect(page.locator('main h1')).toBeVisible();
+  const header = page.locator('main header').first();
+  await expect(header.locator('[data-project-stack], .stack')).toHaveText(/\S/);
+  await expect(header.locator('a[href]').first()).toBeVisible();
+  const architecture = page.locator('#architecture');
+  await expect(architecture.locator('h2')).toHaveText(/\S/);
   if (slug === 'flow' || slug === 'leu') {
     await expect(header.getByRole('link', { name: /View source/ })).toHaveAttribute('href', `https://github.com/miguelalmeida0/${slug}`);
+    await expect(architecture.locator('ol').first()).toBeVisible();
+  } else {
+    const details = architecture.locator('details');
+    await details.locator('summary').focus();
+    await page.keyboard.press('Enter');
+    await expect(details).toHaveAttribute('open', '');
+    await expect(details.locator('dl')).toBeVisible();
+    await page.keyboard.press('Enter');
+    await expect(details).not.toHaveAttribute('open');
   }
-  if (page.viewportSize()!.width <= 430) {
-    const actions = await header.locator('.project-actions').boundingBox();
-    expect(actions!.y + actions!.height).toBeLessThan(720);
-    const architecture = await page.locator('#architecture').boundingBox();
-    expect(architecture!.y).toBeLessThan(1500);
-  }
-  const details = page.locator('#architecture details');
-  await details.locator('summary').focus();
-  await page.keyboard.press('Enter');
-  await expect(details).toHaveAttribute('open', '');
-  await expect(details.locator('dl')).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });

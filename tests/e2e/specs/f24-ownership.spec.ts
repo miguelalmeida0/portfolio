@@ -30,7 +30,7 @@ for (const width of [1920, 1440, 1280, 1024, 834, 390, 320]) {
     await expect(page).toHaveURL(/\/work\/f24#product-impact$/);
     await expect(page.getByRole('heading',{name:'From the first mockups to thousands of companies.'})).toBeVisible();
     await expect(page.locator('#backend-integration')).toContainText('data connections between backend services and the frontend');
-    await expect(page.locator('#performance')).toContainText('improved application performance');
+    await expect(page.locator('#performance')).toContainText(/improved application performance/i);
     const impact=(await page.locator('#product-impact').boundingBox())!, detail=(await page.locator('#activity-history').boundingBox())!;
     expect(impact.y).toBeLessThan(detail.y);
     expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBe(0);

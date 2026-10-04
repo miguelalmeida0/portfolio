@@ -15,14 +15,10 @@ async function select(page: Page, label: string) {
   await page.evaluate(() => scrollTo(0, 0));
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
   const link = page.locator('#mobile-navigation').getByRole('link', { name: label, exact: true });
-  const popup = await link.getAttribute('target') === '_blank' ? page.waitForEvent('popup') : undefined;
+  await expect(link).not.toHaveAttribute('target', '_blank');
   await link.click();
   await idle(page);
-  if (!popup) return page;
-  const destination = await popup;
-  await destination.setViewportSize(page.viewportSize()!);
-  await expect(destination.locator('[data-ask-trigger]').first()).toBeEnabled();
-  return destination;
+  return page;
 }
 
 for (const [width, height] of sizes) {
@@ -58,38 +54,30 @@ for (const [width, height] of sizes) {
   });
 }
 
-test('390px destinations preserve the original tab; contact stays in the current page', async ({ page }) => {
+test('390px destinations navigate in one tab and history closes the menu', async ({ page, context }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openPortfolioHome(page);
-  const story = await select(page, 'Story');
-  await expect(story).toHaveURL(/\/story$/);
-  await expect(story.locator('.profile-page')).toBeVisible();
-  await expect(story.locator('h1')).toContainText('I started in UX.');
-  await story.close();
-  await expect(page).toHaveURL(/\/$/);
-  await idle(page);
-  await expect(page.locator('#intro-heading')).toBeVisible();
-  const cv = await select(page, 'CV');
-  await expect(cv).toHaveURL(/\/cv$/);
-  await expect(cv.locator('.profile-page')).toBeVisible();
-  await expect(cv.locator('h1')).toHaveText('Miguel Almeida.');
-  await select(cv, 'Contact');
-  await expect(cv).toHaveURL(/\/cv#contact$/);
-  await expect(cv.locator('#contact')).toBeFocused();
-  const work = await select(cv, 'Work');
-  await expect(work).toHaveURL(/\/#work$/);
-  await expect(work.locator('#work')).toBeVisible();
-  await work.close();
-  await cv.close();
+  await select(page, 'Story');
+  await expect(page).toHaveURL(/\/story$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Story', exact: true })).toBeVisible();
+  await select(page, 'CV');
+  await expect(page).toHaveURL(/\/cv$/);
+  await expect(page.locator('h1')).toHaveText('Miguel Almeida.');
+  await select(page, 'Contact');
+  await expect(page).toHaveURL(/\/cv#contact$/);
+  await expect(page.locator('#contact')).toBeFocused();
+  await select(page, 'Work');
+  await expect(page).toHaveURL(/\/#work$/);
+  await expect(page.locator('#work')).toBeVisible();
   await select(page, 'Contact');
   await expect(page).toHaveURL(/\/#contact$/);
   await expect(page.locator('#contact')).toBeFocused();
   expect(await page.locator('#contact').evaluate(el => el.getBoundingClientRect().top)).toBeLessThan(844);
-  // Back while the menu is open closes it on the history navigation too.
+  expect(context.pages()).toHaveLength(1);
   await page.evaluate(() => scrollTo(0, 0));
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
   await page.goBack();
-  await expect(page).toHaveURL(/\/$/);
+  await expect(page).toHaveURL(/\/#work$/);
   await idle(page);
 });
 
