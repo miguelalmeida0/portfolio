@@ -7,6 +7,7 @@ const routes = [
   ['/', /^Frontend developer & design engineer\b/],
   ['/cv', /^Miguel Almeida\b/],
   ['/story', /^Story$/],
+  ['/work/needle', /^Needle$/],
   ['/work/second-voice-ai', /^Second Voice\b/],
   ['/work/f24', /^F24\b/],
   ['/work/leu', /^Leu\b/],
