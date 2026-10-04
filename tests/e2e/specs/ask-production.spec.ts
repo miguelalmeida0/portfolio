@@ -103,8 +103,13 @@ test('backend steps are validated individually against live text and older reque
 });
 
 test('sources changing before a phrase appears cannot produce a stale quote', async ({ page }) => {
-  await open(page); await page.getByRole('button', { name: 'His stack', exact: true }).click();
-  await page.locator('[data-ask-id="stack"]').evaluate(el => el.textContent = 'Changed source');
+  await open(page);
+  // Keep the click and source mutation in one task, before the scheduled quote.
+  // A separate browser round trip can arrive after the quote has already appeared.
+  await page.getByRole('button', { name: 'His stack', exact: true }).evaluate(button => {
+    (button as HTMLButtonElement).click();
+    document.querySelector('[data-ask-id="stack"]')!.textContent = 'Changed source';
+  });
   await expect(page.locator('[data-ask-answer]')).toContainText('Grounded in Miguel', { timeout: 7000 });
   await expect(page.locator('[data-ask-answer] mark')).toHaveCount(0);
   await expect(page.locator('[data-ask-knowledge]')).toContainText('React');

@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // Local test server for the compiled Pages worker. Production uses wrangler.jsonc.
+  "name": "portfolio-local-e2e",
+  "main": "./.svelte-kit/cloudflare/_worker.js",
+  "compatibility_date": "2026-09-04",
+  "assets": {
+    "directory": "./.svelte-kit/cloudflare",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  }
+}
