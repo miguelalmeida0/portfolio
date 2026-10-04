@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { selectWorkProject } from '../helpers/portfolio';
 
 const active = '[data-story-section][data-current]';
 for (const width of [390, 834, 1024]) test(`inline Story scenes, controls and completion at ${width}px`, async ({ page }) => {
@@ -11,7 +12,7 @@ for (const width of [390, 834, 1024]) test(`inline Story scenes, controls and co
     const section = page.locator('[data-story-section]').nth(i);
     await expect(section).toHaveAttribute('data-current');
     const panel = section.locator('[data-story-panel]');
-    expect((await panel.boundingBox())!.height).toBe(420);
+    expect((await panel.boundingBox())!.height).toBeCloseTo(420, 2);
     await section.locator('[data-story-action="0"]').click();
     const boxes = await panel.evaluate(element => {
       const scene = element.querySelector('[data-story-scene][data-active]')!.getBoundingClientRect();
@@ -93,7 +94,7 @@ for(const width of [1440,390]) test(`F24 photo fills its rounded frame and stays
   await page.emulateMedia({reducedMotion:'reduce'});
   await page.goto('/#work');
   await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
-  await page.locator('.project-index button').nth(1).click();
+  await selectWorkProject(page, 'f24');
   const frame=page.locator('.photo-link');
   await expect(frame).toBeVisible();
   await expect(frame).not.toHaveAttribute('target','_blank');

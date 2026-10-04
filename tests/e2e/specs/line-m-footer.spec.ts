@@ -1,11 +1,18 @@
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-test.use({ viewport: { width: 1920, height: 963 }, permissions: ['clipboard-read','clipboard-write'] });
+test.use({ viewport: { width: 1920, height: 963 } });
 const footer = '[data-line-m]';
 const stop = (i: number) => `[data-stop="${i}"]`;
 const here = (page: Page) => page.locator('[data-stop] > span:first-child').evaluateAll(nodes => nodes.findIndex(n => getComputedStyle(n).backgroundColor === 'rgb(91, 21, 60)'));
-test.beforeEach(async ({ page }) => {
+test.beforeEach(async ({ page, context, browserName }) => {
+  if (browserName === 'chromium') await context.grantPermissions(['clipboard-read','clipboard-write']);
+  else await page.addInitScript(() => {
+    // Playwright cannot grant clipboard permissions in Firefox/WebKit.
+    // Capture the clipboard adapter contract while Chromium verifies the native API.
+    let text = '';
+    Object.defineProperty(navigator, 'clipboard', { configurable:true, value:{ writeText:async(value:string)=>{text=value;}, readText:async()=>text } });
+  });
   await page.addInitScript(() => sessionStorage.setItem('seen-intro','true'));
   await page.goto('/#contact');
   await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();

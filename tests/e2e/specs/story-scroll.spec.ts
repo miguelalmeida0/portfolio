@@ -1,5 +1,9 @@
 import { expect, test } from '@playwright/test';
 
+// This suite tests wheel and keyboard input at desktop and narrow layouts.
+// Mobile WebKit has no wheel API; touch gestures have separate acceptance coverage.
+test.use({ isMobile: false, hasTouch: false });
+
 test('fast downward scrolling lands on the complete reward before a new gesture continues', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto('/story');
