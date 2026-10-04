@@ -54,7 +54,10 @@ test('cache walkthrough changes by keyboard with reduced motion', async ({ page 
   await expect(journey).toContainText('304');
   await journey.getByRole('button', { name: 'New corpus' }).click();
   await expect(journey).toContainText('old graph cannot be reused');
-  expect(await journey.evaluate(el => el.getAnimations({ subtree: true }).length)).toBe(0);
+  // WebKit retains completed transition objects. Reduced motion must leave
+  // no running animation, and every retained effect is bounded to 0.01ms.
+  await expect.poll(() => journey.evaluate(el => el.getAnimations({ subtree:true }).filter(a => a.playState === 'running' || a.pending).length)).toBe(0);
+  expect(await journey.evaluate(el => el.getAnimations({ subtree:true }).every(a => Number(a.effect?.getTiming().duration ?? 0) <= .01))).toBe(true);
 });
 
 test('missing product media has a readable fallback', async ({ page }) => {

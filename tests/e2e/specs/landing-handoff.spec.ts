@@ -16,7 +16,7 @@ async function holdIntro(page: import('@playwright/test').Page) {
       return animation;
     };
   });
-  await page.goto('/');
+  await page.goto('/', { waitUntil:'domcontentloaded' });
   await expect(page.locator('[data-pixel-intro]')).toHaveAttribute('data-stage', 'approach');
 }
 async function seek(page: import('@playwright/test').Page, ms: number) {

@@ -16,7 +16,10 @@ const N = PROD
   : { root: '.root', attr: 'data-pt', lit: 'lit', quoted: 'hl', sway: 'sway', flag: '.flag', on: 'asking',
       open: '[data-ask]', close: '[data-close]', heading: '[data-qlabel]', answer: '[data-a]', chip: '[data-chipq]', chipOn: 'on' };
 const TARGET = process.env.ASK_URL ?? process.env.PLAYWRIGHT_BASE_URL ?? 'http://127.0.0.1:4173';
-test.describe.configure({ mode: 'serial' });
+// These acceptance tests exercise the desktop pointer choreography. Mobile
+// sheet/touch behavior is covered in ask-production and ask-global.
+test.use({ isMobile:false, hasTouch:false });
+// Each test owns a fresh page; keep failures independent so every contract runs.
 const area = (id: string) => `[${N.attr}="${id}"]`;
 
 const norm = (s: string) => s.toLowerCase().replace(/’/g, "'").replace(/[^\w&'+.]+/g, ' ').trim().split(/\s+/);
