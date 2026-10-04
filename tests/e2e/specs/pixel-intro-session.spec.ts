@@ -5,7 +5,7 @@ const intro = '[data-pixel-intro]';
 
 test('SSR shows the pale typographic body before application JavaScript arrives', async ({ page }) => {
   await page.route('**/*', r => r.request().resourceType() === 'script' ? r.abort() : r.continue());
-  const response = await page.goto('/');
+  const response = await page.goto('/', { waitUntil:'domcontentloaded' });
   expect(await response!.text()).toContain('data-pixel-intro');
   await expect(page.locator('html')).toHaveAttribute('data-presentation', 'pending');
   await expect(page.locator(intro)).toBeVisible();
@@ -17,7 +17,7 @@ test('SSR shows the pale typographic body before application JavaScript arrives'
 });
 
 test('a completed session skips six refreshes; a new tab runs once', async ({ page, context }) => {
-  await page.goto('/');
+  await page.goto('/', { waitUntil:'domcontentloaded' });
   await expect(page.locator(intro)).toBeVisible();
   await expect(page.locator('[data-pixel-intro][data-stage="approach"]')).toBeVisible();
   await expect(page.locator(intro)).toHaveCount(0);
@@ -35,7 +35,7 @@ test('a completed session skips six refreshes; a new tab runs once', async ({ pa
 });
 
 test('refresh during the intro keeps the session claimed and exposes the current page', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/', { waitUntil:'domcontentloaded' });
   await expect(page.locator(intro)).toBeVisible();
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-presentation', 'complete');
@@ -47,7 +47,7 @@ test('refresh during the intro keeps the session claimed and exposes the current
 test('a seen session paints the styled homepage even with hydration blocked', async ({ page }) => {
   await page.addInitScript(() => sessionStorage.setItem('seen-intro', 'true'));
   await page.route('**/*', r => r.request().resourceType() === 'script' ? r.abort() : r.continue());
-  await page.goto('/');
+  await page.goto('/', { waitUntil:'domcontentloaded' });
   await expect(page.locator(intro)).toBeHidden();
   await expect(page.locator('#portfolio-content')).toHaveCSS('visibility', 'visible');
   await expect(page.locator('.wind-hero')).toHaveCSS('display', 'grid');
@@ -67,7 +67,7 @@ for (const reason of ['hash', 'reduced', 'stored-reduced', 'seen']) {
 }
 
 test('the type body opens alone and uses the exact live photograph for the 3.6 second handoff', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/', { waitUntil:'domcontentloaded' });
   await expect(page.locator('[data-pixel-intro][data-stage="approach"]')).toBeVisible();
   await expect(page.locator('[data-intro-body] text')).toHaveCount(63);
   await expect(page.locator('[data-intro-body] text').first()).toContainText('MIGUEL ALMEIDA ·');
@@ -81,11 +81,14 @@ test('the type body opens alone and uses the exact live photograph for the 3.6 s
 });
 
 for (const input of ['click', 'wheel', 'letter', 'touch', 'reduced']) {
-  test(`${input} dismisses and fully cleans up the intro`, async ({ page }) => {
-    await page.goto('/');
+  test(`${input} dismisses and fully cleans up the intro`, async ({ page, browserName, isMobile }) => {
+    await page.goto('/', { waitUntil:'domcontentloaded' });
     await expect(page.locator('[data-pixel-intro][data-stage="approach"]')).toBeVisible();
     if (input === 'click') await page.mouse.click(30, 30);
-    if (input === 'wheel') await page.mouse.wheel(0, 100);
+    if (input === 'wheel') {
+      if (browserName === 'webkit' && isMobile) await page.evaluate(() => window.dispatchEvent(new WheelEvent('wheel', { deltaY:100, bubbles:true, cancelable:true })));
+      else await page.mouse.wheel(0, 100);
+    }
     if (input === 'letter') await page.keyboard.press('a');
     if (input === 'touch') await page.locator(intro).evaluate(el => el.dispatchEvent(new Event('touchstart', { bubbles: true })));
     if (input === 'reduced') await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -97,14 +100,14 @@ for (const input of ['click', 'wheel', 'letter', 'touch', 'reduced']) {
 
 test('a stalled application fails open', async ({ page }) => {
   await page.route('**/*', r => r.request().resourceType() === 'script' ? r.abort() : r.continue());
-  await page.goto('/');
+  await page.goto('/', { waitUntil:'domcontentloaded' });
   await expect(page.locator(intro)).toBeVisible();
   await expect(page.locator(intro)).toBeHidden({ timeout: 8000 });
   await expect(page.locator('.wind-hero')).toBeVisible();
 });
 
 test('type and photo crossfade in one shared person rectangle', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/', { waitUntil:'domcontentloaded' });
   await expect(page.locator('[data-pixel-intro][data-stage="approach"]')).toBeVisible();
   await page.locator(intro).evaluate(el => el.getAnimations({ subtree: true }).forEach(a => { a.pause(); a.currentTime = 3200; }));
   await expect(page.locator(intro)).toHaveAttribute('data-stage', 'transfer');
@@ -119,7 +122,7 @@ test('type and photo crossfade in one shared person rectangle', async ({ page })
 });
 
 test('internal navigation does not replay the intro', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/', { waitUntil:'domcontentloaded' });
   await page.keyboard.press('Escape');
   await expect(page.locator(intro)).toHaveCount(0);
   await page.locator('a[href="/story"]').first().evaluate((el: HTMLAnchorElement) => el.click());

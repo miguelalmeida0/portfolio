@@ -14,9 +14,15 @@ test('one accessible headline and exact desktop geometry', async ({ page }) => {
   await expect(page.locator('h1')).toHaveCount(1);
   await expect(page.locator('h1')).toHaveAccessibleName('Frontend developer & design engineer.');
   await expect(page.locator('h1')).toBeInViewport();
-  expect(await page.locator('.wind-hero').boundingBox()).toEqual({ x: 108, y: 128, width: 1224, height: 500 });
-  expect(await page.locator('.content-card').boundingBox()).toEqual({ x: 108, y: 128, width: 673, height: 500 });
-  expect(await page.locator('.portrait-card').boundingBox()).toEqual({ x: 805, y: 128, width: 527, height: 500 });
+  for (const [selector, expected] of [
+    ['.wind-hero', { x:108,y:128,width:1224,height:500 }],
+    ['.content-card', { x:108,y:128,width:673,height:500 }],
+    ['.portrait-card', { x:805,y:128,width:527,height:500 }]
+  ] as const) {
+    const actual = (await page.locator(selector).boundingBox())!;
+    // WebKit rounds grid tracks to 1/64px; keep the geometry within 0.05px.
+    for (const key of ['x','y','width','height'] as const) expect(actual[key], `${selector} ${key}`).toBeCloseTo(expected[key], 1);
+  }
   expect((await page.locator('#work').boundingBox())!.y).toBe(692);
 });
 
@@ -131,7 +137,8 @@ test('320px and 200 percent layout have no clipped headline or horizontal scroll
   for (const width of [320, 720]) {
     await page.setViewportSize({ width, height: 900 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    expect(await page.locator('h1').evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
+    const heading = await page.locator('h1').evaluate(el => ({ scroll:el.scrollWidth, client:el.clientWidth }));
+    expect(heading.scroll, `headline at ${width}px: ${JSON.stringify(heading)}`).toBeLessThanOrEqual(heading.client);
   }
 });
 

@@ -23,7 +23,9 @@ for (const [path, heading] of routes) {
     expect(serverHeading).toMatch(heading);
     expect((await page.goto(path))?.status()).toBe(200);
     await expect(page.locator('main h1')).toHaveText(heading);
-    expect((await page.reload())?.status()).toBe(200);
+    // Firefox exposes a successful conditional reload as 304; the rendered
+    // heading and subsequent navigation still verify the cached document.
+    expect([200, 304]).toContain((await page.reload())?.status());
     await expect(page.locator('main h1')).toHaveText(heading);
     if (path !== '/') {
       await openPortfolioHome(page);
