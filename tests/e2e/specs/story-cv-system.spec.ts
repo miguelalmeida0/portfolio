@@ -17,10 +17,11 @@ for (const [width,height] of sizes) {
       await expect(page.locator('[data-identity-avatar]')).toHaveCount(0);
       const header=page.locator('#portfolio-content > header');
       await expect(header).toHaveClass(/wind-header/);
-      const gutter=width<768?20:Math.min(108,width*.075);
+      const zoom=width>=1024?.8:1;
+      const gutter=width>=1024?Math.min(108,width*.09375)*zoom:width<768?20:Math.min(108,width*.075);
       const box=await header.boundingBox();
       expect(box!.x).toBeCloseTo(gutter, 1);
-      expect(box!.height).toBe(width>=1280?96:width>=1024?88:width>=768?80:72);
+      expect(box!.height).toBeCloseTo((width>=1280?96:width>=1024?88:width>=768?80:72)*zoom,1);
       expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(0);
       const article=await page.locator(route==='/story'?'.story-split':'.profile-page').boundingBox();
       expect(article!.x).toBeCloseTo(route==='/story'?0:gutter, 1);

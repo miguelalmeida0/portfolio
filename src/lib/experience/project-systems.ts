@@ -7,7 +7,7 @@ export type ProjectSystem = {
 
 export const projectSystems: Record<string, ProjectSystem> = {
   f24: {
-    summary: 'Built the original frontend’s modular architecture within the product team: reusable UI, feature logic and backend data connections with separate responsibilities. It became part of the product delivered together, now used by thousands of companies.',
+    summary: 'Built the original frontend’s modular architecture within the product team: reusable UI, feature logic and backend data connections with separate responsibilities. It became part of the product delivered together, now used by hundreds of companies.',
     flow: [
       { name: 'Reusable interface', detail: 'Shared components provide consistent building blocks across product workflows.' },
       { name: 'Feature modules', detail: 'Independent modules organise application behaviour and keep changes local to the feature.' },

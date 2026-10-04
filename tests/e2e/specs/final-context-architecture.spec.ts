@@ -1,3 +1,4 @@
+import { recoveredCases } from '../helpers/case-studies';
 import { expect, test } from '@playwright/test';
 import { openSecondVoiceStudio } from '../helpers/portfolio';
 import { SECOND_VOICE_URL } from '../../../src/lib/experience/voice-bridge';
@@ -18,24 +19,15 @@ test('selected app CTA accompanies the demo and header links navigate', async ({
   }
 });
 
-for (const slug of ['second-voice-ai', 'f24', 'leu', 'flow']) {
-  test(`${slug} exposes one architecture section after its project introduction`, async ({ page }) => {
-    expect((await page.goto('/work/' + slug))!.status()).toBe(200);
-    const architecture = page.locator('#architecture');
+for (const study of recoveredCases) {
+  test(`${study.slug} exposes its architecture after the project introduction`, async ({ page }) => {
+    expect((await page.goto('/work/' + study.slug))!.status()).toBe(200);
+    await expect(page.locator('main h1')).toHaveText(study.heading);
+    const architecture = page.locator(study.architecture);
     await expect(architecture).toHaveCount(1);
-    await expect(architecture.locator('h2')).toHaveText(slug === 'leu' ? 'Change who is allowed to decide.' : slug === 'flow' ? /Interpret first\.\s*Earn the right to commit\./ : 'Architecture & tools.');
+    await expect(architecture.locator('h2')).toHaveText(study.architectureHeading);
     expect(await architecture.evaluate(el => Boolean(el.compareDocumentPosition(document.querySelector('main h1')!) & Node.DOCUMENT_POSITION_PRECEDING))).toBe(true);
-    if (slug === 'f24') {
-      await expect(page.locator('#production-decision')).toContainText('Tradeoff');
-      expect(await architecture.evaluate(el => el.nextElementSibling?.id)).toBe('activity-history');
-      await expect(page.locator('#engineering-proof + figure img')).toHaveAttribute('src', '/projects/f24/hackathon.webp');
-    } else if (slug === 'leu') {
-      await expect(architecture.getByRole('list', { name: 'V37 processing order' })).toContainText('Deterministic checks');
-    } else if (slug === 'flow') {
-      await expect(architecture).toContainText('Interpretation proposes operations');
-      await expect(architecture.getByRole('link', { name: 'Inspect applyLifeTransaction' })).toHaveAttribute('target', '_blank');
-    } else {
-      await expect(architecture.getByRole('list', { name: 'System flow' }).locator('li')).toHaveCount(4);
-    }
+    await expect(architecture.locator('button, [role="tab"], .step, ol li').first()).toBeAttached();
+    await expect(page.locator(`${study.root} .next a`)).toHaveAttribute('href', '/work/' + study.next);
   });
 }

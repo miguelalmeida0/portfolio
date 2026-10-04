@@ -4,8 +4,8 @@
 
 <section id="product-impact" class="section-space border-b border-rule" aria-labelledby="impact-title">
   <p class="label-type text-plum">Product ownership · Connectivity Hub</p>
-  <h2 id="impact-title" class="section-title">From the first mockups to thousands of companies.</h2>
-  <p class="impact-lead">Built Connectivity Hub’s original frontend as part of F24’s product team. Translated shared product and design decisions into modular architecture, backend integrations and a responsive production interface. A shared effort that took the product from mockups to use by thousands of companies.</p>
+  <h2 id="impact-title" class="section-title">From the first mockups to hundreds of companies.</h2>
+  <p class="impact-lead">Built Connectivity Hub’s original frontend as part of F24’s product team. Translated shared product and design decisions into modular architecture, backend integrations and a responsive production interface. A shared effort that took the product from mockups to use by hundreds of companies.</p>
   <div class="impact-grid">
     <section aria-labelledby="modular-title">
       <p class="impact-number" aria-hidden="true">01</p>

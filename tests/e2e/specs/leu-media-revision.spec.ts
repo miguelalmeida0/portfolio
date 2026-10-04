@@ -21,7 +21,7 @@ test.beforeEach(async ({ page }, testInfo) => {
   await ready(page);
 });
 
-test('Leu starts promptly, has product motion in the first second, and shares exact media with its case study', async ({ page }, testInfo) => {
+test('Leu starts promptly, has product motion in the first second, and returns from its interactive case study', async ({ page }, testInfo) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.locator('#work').scrollIntoViewIfNeeded();
   await page.evaluate(() => {
@@ -90,19 +90,8 @@ test('Leu starts promptly, has product motion in the first second, and shares ex
 
   await page.getByRole('link', { name: 'View Leu case study', exact: true }).click();
   await expect(page).toHaveURL(/\/work\/leu$/);
-  const projectFilm = page.locator('article .leu-film .leu-flow-loop video');
-  await projectFilm.scrollIntoViewIfNeeded();
-  await expect(projectFilm).toHaveJSProperty('currentSrc', metrics.src);
-  await expect(projectFilm).toHaveAttribute('poster', leuMedia.posterFallback);
-  await expect(projectFilm).toHaveJSProperty('paused', false);
-  expect(await projectFilm.evaluate(video => (video as HTMLVideoElement).poster)).toBe(metrics.poster);
-  await expect(page.locator('.loop-controls')).toHaveCSS('font-size', '12px');
-  const pause = page.getByRole('button', { name: 'Pause Leu film', exact: true });
-  expect(await pause.evaluate(button => getComputedStyle(button).backgroundColor)).not.toBe('rgba(0, 0, 0, 0)');
-  // Exercise the native loop boundary as well as comparing its decoded frames.
-  await projectFilm.evaluate(video => { (video as HTMLVideoElement).currentTime = (video as HTMLVideoElement).duration - .1; });
-  await expect.poll(() => projectFilm.evaluate(video => (video as HTMLVideoElement).currentTime)).toBeLessThan(1);
-  await expect(projectFilm).toHaveJSProperty('paused', false);
+  await expect(page.locator('.cs-leu #try')).toBeVisible();
+  await expect(page.locator('.cs-leu .cap')).toContainText('prepared answers');
   await page.goBack();
   await expect(page.locator('.project-index button')).toHaveCount(5);
   await page.getByRole('button', { name: /^Leu/ }).click();
@@ -161,7 +150,7 @@ test('reduced motion preserves the poster, explicit Play works, and inactive med
   await expect(page.locator('#work video')).toHaveJSProperty('paused', true);
 });
 
-test('WebM failure uses the same MP4 fallback on both pages', async ({ page }) => {
+test('WebM failure uses MP4 and retains playback after case-study navigation', async ({ page }) => {
   await page.route('**/leu-loop-v2.webm', route => route.abort());
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.getByRole('button', { name: /^Leu/ }).click();
@@ -169,16 +158,20 @@ test('WebM failure uses the same MP4 fallback on both pages', async ({ page }) =
   await expect(page.locator('.leu-flow-loop video')).toHaveAttribute('src', leuMedia.src);
   await expect(page.locator('.leu-flow-loop video')).toHaveJSProperty('paused', false);
   await page.getByRole('link', { name: 'View Leu case study', exact: true }).click();
-  const film = page.locator('article .leu-film .leu-flow-loop video');
+  await expect(page.locator('.cs-leu #try')).toBeVisible();
+  await page.goBack();
+  await ready(page);
+  await page.getByRole('button', { name: /^Leu/ }).click();
+  const film = page.locator('#work .leu-flow-loop video');
   await film.scrollIntoViewIfNeeded();
   await expect(film).toHaveAttribute('src', leuMedia.src);
   await expect(film).toHaveJSProperty('paused', false);
 });
 
-test('a direct reduced-motion case-study visit can play and pause after hydration', async ({ page }) => {
+test('a reduced-motion Leu selection can play and pause after hydration', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/work/leu');
-  const film = page.locator('article .leu-flow-loop video');
+  await page.getByRole('button', { name: /^Leu/ }).click();
+  const film = page.locator('#work .leu-flow-loop video');
   await film.scrollIntoViewIfNeeded();
   await expect(film).not.toHaveAttribute('src');
   await film.scrollIntoViewIfNeeded();
@@ -199,7 +192,7 @@ test('all projects retain shared geometry and Second Voice controls remain indep
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   }
   sizes.forEach(size => { expect(size.width).toBeCloseTo(sizes[0].width, 1); expect(size.height).toBeCloseTo(sizes[0].height, 1); });
-  expect(sizes[0].height).toBe(page.viewportSize()!.width === 390 ? 976 : 560);
+  expect(sizes[0].height).toBe(page.viewportSize()!.width === 390 ? 976 : 448);
   await page.getByRole('button', { name: /^Second Voice AI/ }).click();
   expect(await page.locator('.authors').evaluate(element => element.closest('a'))).toBeNull();
   await page.getByRole('tab', { name: 'King', exact: true }).click();

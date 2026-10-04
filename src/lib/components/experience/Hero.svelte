@@ -14,7 +14,7 @@
     </div>
     <div class="bottom-group">
       <div class="supporting-copy">
-        <p class="experience" data-ask-id="f24">Built a product used by thousands of companies.</p>
+        <p class="experience" data-ask-id="f24">Built a product used by hundreds of companies.</p>
         <p class="quality" data-ask-id="quality">Playwright · accessibility</p>
       </div>
       <div class="hero-actions">

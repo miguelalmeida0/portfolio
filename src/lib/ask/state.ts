@@ -30,7 +30,8 @@ export function createAskController() {
     if (view.state === 'closing') { queued = true; return; }
     if (view.state !== 'idle') return;
     if (!history.length) {
-      const project = location.pathname.match(/^\/work\/([^/]+)\/?$/)?.[1];
+      const routeProject = location.pathname.match(/^\/work\/([^/]+)\/?$/)?.[1];
+      const project = routeProject === 'second-voice' ? 'second-voice-ai' : routeProject;
       const context = project && areaPlan(`project-${project}`);
       if (context) history = [context.question];
     }

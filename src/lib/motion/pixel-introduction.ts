@@ -57,10 +57,12 @@ export function pixelIntroduction(node: HTMLElement) {
   window.scrollTo({ top: 0, behavior: 'instant' });
   resetScrollMotion();
   let done = false;
+  let dismissing = false;
   let gestureOwned = false;
   let releaseScroll = () => {};
   let unsubscribe = () => {};
   let clock: Animation | undefined;
+  let exit: Animation | undefined;
   let request = 0;
   let deadline: ReturnType<typeof setTimeout> | undefined;
   let observer: ResizeObserver | undefined;
@@ -79,6 +81,7 @@ export function pixelIntroduction(node: HTMLElement) {
     root.dataset.presentation = 'complete';
     delete root.dataset.introHydrated;
     clock?.cancel();
+    exit?.cancel();
     site.inert = hadInert;
     cancelAnimationFrame(request);
     clearTimeout(deadline);
@@ -86,8 +89,9 @@ export function pixelIntroduction(node: HTMLElement) {
     restoreScroll();
     if (!gestureOwned || prefersReducedMotion()) releaseScroll();
     window.removeEventListener('keydown', keydown, true);
-    window.removeEventListener('pointerdown', finish, true);
-    window.removeEventListener('touchstart', finish, true);
+    window.removeEventListener('pointerdown', pointerdown, true);
+    window.removeEventListener('touchend', touchend, true);
+    window.removeEventListener('touchcancel', touchend, true);
     window.removeEventListener('resize', resize);
     window.removeEventListener('scroll', scroll);
     window.removeEventListener('popstate', finish, true);
@@ -97,8 +101,10 @@ export function pixelIntroduction(node: HTMLElement) {
     unsubscribe();
   };
   const keydown = () => finish();
+  const pointerdown = (event: PointerEvent) => { if (event.pointerType !== 'touch') finish(); };
+  const touchend = () => { if (!dismissing) finish(); };
   const visibility = () => { if (document.hidden) finish(); };
-  const scroll = () => { if (scrollY > 4) finish(); };
+  const scroll = () => { if (scrollY > 4) dismiss(); };
   const time = () => Number(clock?.currentTime || 0);
 
   function pose(t: number): Rect {
@@ -163,7 +169,7 @@ export function pixelIntroduction(node: HTMLElement) {
   }
 
   const resize = () => {
-    if (done || !clock) return;
+    if (done || dismissing || !clock) return;
     try { measure(); render(time()); void syncSource().catch(finish); } catch { finish(); }
   };
   async function syncSource() {
@@ -182,10 +188,33 @@ export function pixelIntroduction(node: HTMLElement) {
   }
   const sourceChanged = () => { void syncSource().then(resize).catch(finish); };
 
-  releaseScroll = introScrollGate(() => { gestureOwned = true; finish(); });
+  const dismiss = () => {
+    if (done || dismissing) return;
+    gestureOwned = true;
+    dismissing = true;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    resetScrollMotion();
+    root.dataset.introShortcut = String(Date.now());
+    // Reveal the live page immediately; the welcome never owns input or focus.
+    clock?.pause();
+    cancelAnimationFrame(request);
+    livePhoto.style.visibility = originalVisibility;
+    site.inert = hadInert;
+    node.dataset.stage = 'dismissing';
+    root.dataset.presentation = 'exiting';
+    node.style.pointerEvents = 'none';
+    exit = node.animate([{ opacity: 1 }, { opacity: 0 }], {
+      duration: 320, easing: 'cubic-bezier(.22, 1, .36, 1)', fill: 'forwards'
+    });
+    exit.onfinish = finish;
+    clearTimeout(deadline);
+    deadline = setTimeout(finish, 500);
+  };
+  releaseScroll = introScrollGate(dismiss);
   window.addEventListener('keydown', keydown, true);
-  window.addEventListener('pointerdown', finish, { capture: true, passive: true });
-  window.addEventListener('touchstart', finish, { capture: true, passive: true });
+  window.addEventListener('pointerdown', pointerdown, { capture: true, passive: true });
+  window.addEventListener('touchend', touchend, { capture: true, passive: true });
+  window.addEventListener('touchcancel', touchend, { capture: true, passive: true });
   window.addEventListener('resize', resize, { passive: true });
   window.addEventListener('scroll', scroll, { passive: true });
   window.addEventListener('popstate', finish, { capture: true, passive: true });
@@ -199,7 +228,7 @@ export function pixelIntroduction(node: HTMLElement) {
     try {
       await livePhoto!.decode();
       await syncSource();
-      if (done) return;
+      if (done || dismissing) return;
       measure();
       livePhoto!.style.visibility = 'hidden';
       site!.inert = true;
@@ -213,7 +242,7 @@ export function pixelIntroduction(node: HTMLElement) {
       ], { duration: 3600, fill: 'forwards' });
       clock.onfinish = finish;
       const advance = () => {
-        if (done) return;
+        if (done || dismissing) return;
         render(time());
         request = requestAnimationFrame(advance);
       };

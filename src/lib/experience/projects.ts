@@ -47,7 +47,7 @@ export const projects: Project[] = [
   },
 {
     slug: 'f24', name: 'F24', category: 'Production frontend', type: 'Professional work', number: '03',
-    summary: 'Built a product used by thousands of companies.',
+    summary: 'Built a product used by hundreds of companies.',
     role: 'Frontend architecture & product delivery', period: 'F24 · 2022–now',
     ownership: 'Built Connectivity Hub’s original frontend alongside product, design, backend and QA. Modular architecture, reusable components, service integrations and performance, with continued delivery as the product evolves from Svelte toward React.',
     stack: ['Svelte', 'React', 'TypeScript', 'Playwright'],
@@ -55,7 +55,7 @@ export const projects: Project[] = [
     caption: 'F24 hackathon. A team working session.',
     problem: 'The first challenge was turning product mockups into a dependable Svelte application that could support real production workflows and keep evolving with the product.',
     contribution: 'Built Connectivity Hub’s original frontend within F24’s product team. Designed modular, reusable architecture, connected backend services to product workflows and improved application performance, collaborating with product, design, backend and QA through delivery.',
-    outcome: 'A product used by thousands of companies, delivered together. Frontend contributions span the original Svelte application and continued React feature delivery.',
+    outcome: 'A product used by hundreds of companies, delivered together. Frontend contributions span the original Svelte application and continued React feature delivery.',
     limitation: 'Internal product screens and customer data stay private. Adoption reflects the wider team’s work; this case study focuses on the frontend contribution and collaboration model.',
     decisions: []
   },

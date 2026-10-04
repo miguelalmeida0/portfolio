@@ -1,3 +1,4 @@
+import { recoveredCases } from '../helpers/case-studies';
 import { expect, test } from '@playwright/test';
 import { openPortfolioHome, openSecondVoiceStudio, selectWorkProject } from '../helpers/portfolio';
 
@@ -21,45 +22,43 @@ test('recruiter sees identity and the five current projects without an accordion
 for (const slug of projects) test(`${slug} exposes its current case-study structure and limits`, async ({ page }) => {
   const response = await page.goto('/work/' + slug);
   expect(response?.status()).toBe(200);
-  const required: Record<string, string[]> = {
-    needle: ['boundaries'],
-    f24: ['architecture', 'production-decision', 'activity-history', 'dry-run', 'engineering-proof'],
-    'second-voice-ai': ['writing-demo', 'ownership-title', 'decisions-title', 'outcome-title'],
-    leu: ['pipeline', 'architecture', 'failure-log', 'benchmark', 'evidence-boundaries', 'product-trace'],
-    flow: ['architecture', 'investigations', 'verification']
-  };
-  for (const id of required[slug]) await expect(page.locator('#' + id)).toBeAttached();
-  if (slug === 'f24') {
-    await expect(page.locator('#decisions')).toHaveCount(0);
-    await expect(page.locator('#production-decision')).toContainText('Svelte product work and React implementation continued alongside each other');
-    await expect(page.locator('.team-context')).toContainText('backend engineers owned service contracts; QA supported verification and releases');
-  } else if (slug === 'second-voice-ai') {
-    await expect(page.locator('.second-voice-study .limitation')).toContainText(/live|generation|prepared/i);
-    await expect(page.getByRole('tablist', { name: 'Author voice' })).toBeVisible();
-  } else if (slug === 'leu') {
-    await expect(page.locator('#failure-log .incident')).toHaveCount(7);
-    await expect(page.locator('#evidence-boundaries')).toContainText('actual hardware');
-  } else if (slug === 'flow') {
-    await expect(page.locator('#investigations .incident')).toHaveCount(4);
-    await expect(page.locator('#verification')).toContainText('Physical microphone acceptance');
-  } else {
+  if (slug === 'needle') {
     await expect(page.locator('[data-needle-study] section')).toHaveCount(8);
     await expect(page.locator('#boundaries')).toContainText('not quantified here');
+    await expect(page.getByRole('link', { name: 'All work', exact: true })).toHaveAttribute('href', '/#work');
+  } else {
+    const study = recoveredCases.find(s => s.slug === slug)!;
+    await expect(page.locator('main h1')).toHaveText(study.heading);
+    for (const id of study.sections) await expect(page.locator(`${study.root} #${id}`)).toBeAttached();
+    await expect(page.locator(`${study.root} .next a`)).toHaveAttribute('href', '/work/' + study.next);
+    if (slug === 'f24') {
+      await expect(page.locator('#team')).toContainText('backend');
+      await expect(page.locator('.facts')).toContainText('synthetic recreation');
+    } else if (slug === 'second-voice-ai') {
+      await expect(page.locator('.facts')).toContainText('No anonymous generation');
+      await expect(page.locator('#try')).toContainText('Rewrite');
+    } else if (slug === 'leu') {
+      await expect(page.locator('#results')).toContainText('2/58');
+      await expect(page.locator('.cap')).toContainText('prepared answers');
+    } else {
+      await expect(page.locator('#engineering')).toContainText('Atomic rejection');
+      await expect(page.locator('#specs')).toContainText('630/630');
+    }
   }
-  await expect(page.getByRole('link', { name: 'All work', exact: true })).toHaveAttribute('href', '/#work');
 });
 
 test('case study navigation completes without a full reload', async ({ page }) => {
   await openSecondVoiceStudio(page);
   await page.locator('#work').getByRole('link', { name: 'Case study' }).click();
-  await expect(page).toHaveURL(/\/work\/second-voice-ai$/);
-  await page.getByRole('link', { name: 'Next case study F24' }).click();
-  await expect(page.getByRole('heading', { level: 1, name: 'F24' })).toBeVisible();
+  await expect(page).toHaveURL(/\/work\/second-voice$/);
+  await page.getByRole('navigation', { name: 'Next project' }).getByRole('link', { name: 'F24' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'From mockup to production system.' })).toBeVisible();
 });
 
 test('product video is a silent loop with a poster fallback when autoplay is unavailable', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await page.goto('/work/leu');
+  await openPortfolioHome(page);
+  await selectWorkProject(page, 'leu');
   const video = page.locator('video');
   await video.scrollIntoViewIfNeeded();
   await expect(video).toHaveAttribute('loop', '');
@@ -89,7 +88,7 @@ test('product video is a silent loop with a poster fallback when autoplay is una
 test('legacy product URL redirects and removed projects return an honest 404', async ({ page, request }) => {
   const old = await request.get('/work/ghostwriter', { maxRedirects: 0 });
   expect(old.status()).toBe(308);
-  expect(old.headers().location).toBe('/work/second-voice-ai');
+  expect(old.headers().location).toBe('/work/second-voice');
   const missing = await page.goto('/work/camera-harness');
   expect(missing?.status()).toBe(404);
   await page.getByRole('link', { name: 'Back to the work' }).click();
@@ -114,7 +113,8 @@ test('removed VIGIA route is not redirected to Flow', async ({ request }) => {
 
 test('Flow film loads, plays silently and restores its poster for reduced motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await page.goto('/work/flow');
+  await openPortfolioHome(page);
+  await selectWorkProject(page, 'flow');
   const video = page.locator('video');
   await expect(video).toHaveAttribute('src', '/projects/flow/flow-loop-web-final.mp4');
   await expect(video).toHaveAttribute('poster', '/projects/flow/flow-loop-poster-final.jpg');

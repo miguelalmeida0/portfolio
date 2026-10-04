@@ -88,7 +88,7 @@ test('desktop Flow and the other project frame dimensions are preserved',async({
   await page.setViewportSize({width:1440,height:1020});
   await page.emulateMedia({reducedMotion:'reduce'});await openPortfolioHome(page);
   await selectWorkProject(page, 'flow');
-  expect((await page.locator('.stage .frame').boundingBox())!.height).toBe(560);
+  expect((await page.locator('.stage .frame').boundingBox())!.height).toBeCloseTo(448, 1);
   expect(await page.locator('.stage video').evaluate(element=>getComputedStyle(element).objectFit)).toBe('contain');
   await page.setViewportSize({width:390,height:844});
   for(const id of ['second-voice', 'f24', 'leu'] as const){

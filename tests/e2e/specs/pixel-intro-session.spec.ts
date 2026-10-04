@@ -28,7 +28,7 @@ test('a completed session skips six refreshes; a new tab runs once', async ({ pa
     await expect(page.locator('.wind-hero')).toBeVisible();
   }
   const tab = await context.newPage();
-  await tab.goto('/');
+  await tab.goto('/', { waitUntil: 'domcontentloaded' });
   await expect(tab.locator(intro)).toBeVisible();
   await expect(tab.locator(intro)).toHaveCount(0);
   await tab.close();
@@ -90,7 +90,7 @@ for (const input of ['click', 'wheel', 'letter', 'touch', 'reduced']) {
       else await page.mouse.wheel(0, 100);
     }
     if (input === 'letter') await page.keyboard.press('a');
-    if (input === 'touch') await page.locator(intro).evaluate(el => el.dispatchEvent(new Event('touchstart', { bubbles: true })));
+    if (input === 'touch') await page.locator(intro).evaluate(el => el.dispatchEvent(new Event('touchend', { bubbles: true })));
     if (input === 'reduced') await page.emulateMedia({ reducedMotion: 'reduce' });
     await expect(page.locator(intro)).toHaveCount(0);
     await expect(page.locator('#portfolio-content')).toHaveJSProperty('inert', false);
