@@ -1,3 +1,4 @@
+import { recoveredCases } from '../helpers/case-studies';
 import { expect, test } from '@playwright/test';
 import { openPortfolioHome, selectWorkProject } from '../helpers/portfolio';
 
@@ -18,26 +19,17 @@ test('selected homepage projects expose ownership, stack and working actions', a
   }
 });
 
-for (const slug of projects) test(`${slug}: context, stack, actions and architecture are accessible`, async ({ page }) => {
-  await page.goto('/work/' + slug);
+for (const study of recoveredCases) test(`${study.slug}: context, stack, actions and architecture are accessible`, async ({ page }) => {
+  await page.goto('/work/' + study.slug);
   await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
-  await expect(page.locator('main h1')).toBeVisible();
-  const header = page.locator('main header').first();
-  await expect(header.locator('[data-project-stack], .stack')).toHaveText(/\S/);
-  await expect(header.locator('a[href]').first()).toBeVisible();
-  const architecture = page.locator('#architecture');
-  await expect(architecture.locator('h2')).toHaveText(/\S/);
-  if (slug === 'flow' || slug === 'leu') {
-    await expect(header.getByRole('link', { name: /View source/ })).toHaveAttribute('href', `https://github.com/miguelalmeida0/${slug}`);
-    await expect(architecture.locator('ol').first()).toBeVisible();
-  } else {
-    const details = architecture.locator('details');
-    await details.locator('summary').focus();
-    await page.keyboard.press('Enter');
-    await expect(details).toHaveAttribute('open', '');
-    await expect(details.locator('dl')).toBeVisible();
-    await page.keyboard.press('Enter');
-    await expect(details).not.toHaveAttribute('open');
-  }
+  await expect(page.locator('main h1')).toHaveText(study.heading);
+  const hero = page.locator(`${study.root} #overview`);
+  await expect(hero.locator('.kicker')).toHaveText(/\S/);
+  await expect(hero.locator('.sub')).toHaveText(/\S/);
+  await hero.getByRole('link', { name: 'Try it', exact: true }).click();
+  await expect(page.locator('#try')).toBeInViewport();
+  await expect(page.locator(study.architecture).locator('h2')).toHaveText(study.architectureHeading);
+  if (study.stack) await expect(page.locator(`${study.root} .facts`)).toContainText(study.stack);
+  else await expect(page.locator('#overview .kicker')).toContainText('native Swift');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });

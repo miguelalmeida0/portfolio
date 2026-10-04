@@ -66,9 +66,9 @@ test('project route supplies the subject, and investigation headings explain the
   const input = page.getByRole('textbox', { name: 'Type your own question' });
   await input.fill('What went wrong here?'); await input.press('Enter');
   await expect(page.locator('[data-ask-knowledge]')).toContainText('rollback');
-  const heading = page.locator('[data-ask-id="project-flow-incident-wake-reliability"]');
+  const heading = page.locator('[data-ask-id="project-flow-incident-event-loss"]');
   await heading.evaluate(el => scrollTo(0, scrollY + el.getBoundingClientRect().top - 100));
   await heading.click({ position:{x:20,y:20} });
-  await expect(page.locator('[data-ask-knowledge]')).toContainText('42.1');
-  await expect(page.locator('[data-ask-knowledge]')).toContainText('not ASR');
+  await expect(page.locator('[data-ask-knowledge]')).toContainText('rollback');
+  await expect(page.locator('[data-ask-knowledge]')).toContainText('Atomic rejection');
 });

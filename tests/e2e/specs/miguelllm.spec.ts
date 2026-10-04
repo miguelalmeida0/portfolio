@@ -125,8 +125,8 @@ test('390px menu opens Ask and the visible Leu film advances', async ({ page }) 
   const start = await video.evaluate((el: HTMLVideoElement) => el.currentTime);
   await expect.poll(() => video.evaluate((el: HTMLVideoElement) => el.currentTime)).toBeGreaterThan(start);
   await page.goto('/work/leu');
-  await page.locator('video').first().scrollIntoViewIfNeeded();
-  await expect.poll(() => page.locator('video').first().evaluate((el: HTMLVideoElement) => el.currentSrc)).toMatch(/leu-loop-v2\.(webm|mp4)$/);
+  await expect(page.locator('.cs-leu #try')).toBeVisible();
+  await expect(page.locator('.cs-leu .cap')).toContainText('prepared answers');
 });
 
 test('uncached refresh preserves current first paint across all seven routes', async ({ page, context, browserName }) => {

@@ -7,22 +7,24 @@ for (const width of [1440, 834, 390]) test(`current Second Voice case study at $
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/work/second-voice-ai');
   await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
-  await expect(page.getByRole('heading', { name: 'Second Voice', exact: true })).toBeVisible();
-  await expect(page.locator('.second-voice-study video')).toHaveCount(0);
+  await expect(page.locator('main h1')).toHaveText('Choose a literary voice. See exactly what changes.');
+  await expect(page).toHaveURL(/\/work\/second-voice$/);
+  await expect(page.locator('.cs-sv video')).toHaveCount(0);
   await expect(page.locator('video[src*="ghostwriter"], img[src*="ghostwriter-demo"]')).toHaveCount(0);
-  await expect(page.getByRole('tab', { name: 'Tolkien', exact: true })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.screenshot({ path: `/tmp/second-voice-current-${width}.png`, fullPage: true });
-  for (const author of ['King', 'Tolstoy', 'Hemingway']) {
-    await page.getByRole('tab', { name: author, exact: true }).click();
-    await page.getByRole('radio', { name: 'Strong', exact: true }).check();
-    await page.getByRole('button', { name: `Show ${author} example`, exact: true }).click();
-    const skip = page.getByRole('button', { name: 'Skip animation', exact: true });
-    if (await skip.isVisible()) await skip.click();
-    await expect(page.locator('.submitted')).toHaveText(`${author} · Strong`);
-    await page.getByRole('button', { name: 'Compare original', exact: true }).click();
-    await expect(page.getByRole('button', { name: 'Show rewrite', exact: true })).toHaveAttribute('aria-pressed', 'true');
-    await page.getByRole('button', { name: 'Show rewrite', exact: true }).click();
+  const workspace = page.locator('#try');
+  const draft = await workspace.locator('#draftText').innerText();
+  for (const author of ['Spare', 'Lyrical', 'Noir']) {
+    await workspace.getByRole('radio', { name: author, exact: true }).check();
+    await workspace.getByRole('radio', { name: 'Strong', exact: true }).check();
+    await workspace.getByRole('button', { name: 'Rewrite', exact: true }).click();
+    await expect(workspace.locator('#resultTag')).toContainText(author);
+    await expect(workspace.locator('#resultTag')).toContainText('Strong');
+    await workspace.getByRole('radio', { name: 'Original', exact: true }).check();
+    await expect(workspace.locator('#mv')).toHaveAttribute('data-mode', 'original');
+    await workspace.getByRole('radio', { name: 'Rewrite', exact: true }).check();
+    await expect(workspace.locator('#mv')).toHaveAttribute('data-mode', 'rewrite');
+    await expect(workspace.locator('#draftText')).toHaveText(draft);
   }
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   expect(errors).toEqual([]);

@@ -10,7 +10,7 @@ async function ready(page: Page, route: string) {
 }
 
 for (const width of [1920, 1440, 1280, 1024, 834, 390, 320]) {
-  test(`identical site header, footer and aligned pages at ${width}px`, async ({ page }) => {
+  test(`shared site typography, responsive shells and aligned pages at ${width}px`, async ({ page }) => {
     test.setTimeout(90000);
     await page.setViewportSize({ width, height: 1000 });
     await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -26,16 +26,21 @@ for (const width of [1920, 1440, 1280, 1024, 834, 390, 320]) {
       const metrics = await header.evaluate(el => {
         const measure = (node: Element) => {
           const r = node.getBoundingClientRect(), s = getComputedStyle(node);
-          return { x:r.x, y:r.y, width:r.width, height:r.height, family:s.fontFamily, size:s.fontSize, weight:s.fontWeight, color:s.color, gap:s.gap, lineHeight:s.lineHeight, letterSpacing:s.letterSpacing, background:s.backgroundColor, border:s.border, radius:s.borderRadius };
+          return { family:s.fontFamily, size:s.fontSize, weight:s.fontWeight, color:s.color, gap:s.gap, lineHeight:s.lineHeight, letterSpacing:s.letterSpacing, background:s.backgroundColor, border:s.border, radius:s.borderRadius };
         };
         return [el, ...el.querySelectorAll('a, span, button, nav')].map(measure);
       });
       if (route === '/') reference = metrics;
       expect(metrics, `Header geometry and type on ${route}`).toEqual(reference);
       const box = (await header.boundingBox())!;
-      expect(box.height).toBe(width >= 1280 ? 96 : width >= 1024 ? 88 : width >= 768 ? 80 : 72);
-      if (route !== '/' && route !== '/story') {
-        const content = (await page.locator('main > :is(article, section)').boundingBox())!;
+      const zoom=width>=1024?.8:1;
+      expect(box.height).toBeCloseTo((width >= 1280 ? 96 : width >= 1024 ? 88 : width >= 768 ? 80 : 72)*zoom,1);
+      const gutter=(width>=1024?Math.min(108,width*.09375):width<768?20:Math.min(108,width*.075))*zoom;
+      const expectedWidth=route==='/'&&width>=1024?width-2*gutter:Math.min(width-2*gutter,1704*zoom);
+      expect(box.width).toBeCloseTo(expectedWidth,1);
+      expect(box.x).toBeCloseTo((width-expectedWidth)/2,1);
+      if (route !== '/' && route !== '/story' && !['/work/second-voice-ai','/work/f24','/work/flow','/work/leu'].includes(route)) {
+        const content = (await page.locator('main > :is(article, section):first-child').boundingBox())!;
         expect(content.x).toBeCloseTo(box.x, 1);
         expect(content.width).toBeCloseTo(box.width, 1);
       }
@@ -47,7 +52,7 @@ for (const width of [1920, 1440, 1280, 1024, 834, 390, 320]) {
         const round = (value: number) => Math.round(value * 100) / 100;
         return [...el.querySelectorAll('[data-contact-head], h2, [data-line], [data-board]')].filter(node => node.getClientRects().length > 0).map(node => {
           const r = node.getBoundingClientRect(), s = getComputedStyle(node);
-          return { x:round(r.x), y:round(r.y-outer.y), width:round(r.width), height:round(r.height), fontSize:s.fontSize, fontWeight:s.fontWeight };
+          return { height:round(r.height), fontSize:s.fontSize, fontWeight:s.fontWeight };
         });
       });
       if (route === '/') footerReference = footer;

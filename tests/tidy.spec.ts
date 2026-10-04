@@ -29,13 +29,13 @@ for (const [width,height] of [...sizes,[768,1024],[320,844]]) {
     await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
     const result=await page.evaluate(()=>{
       const rect=(s:string)=>document.querySelector(s)!.getBoundingClientRect();
-      const margin=innerWidth<768?20:Math.min(108,innerWidth*.075);
+      const margin=innerWidth>=1024?Math.min(108,innerWidth*.09375)*.8:innerWidth<768?20:Math.min(108,innerWidth*.075);
       const work=rect('#work'),title=rect('footer h2'),board=rect('[data-board]');
       return {margin, lefts:[...document.querySelectorAll('[data-align="left"]')].map(e=>e.getBoundingClientRect().left),overflow:document.documentElement.scrollWidth-innerWidth,gap:title.top-work.bottom,boardRight:board.right,titleBoard:title.top-board.top,rowCaption:rect('[data-project-row]').top-rect('[data-stage-caption]').top,metaFrame:rect('[data-index-meta]').bottom-rect('[data-stage-frame]').bottom};
     });
     for(const left of result.lefts) expect(Math.abs(left-result.margin)).toBeLessThanOrEqual(.5);
     expect(result.overflow).toBe(0);
-    expect(Math.abs(result.gap-(width>=1280?160:width>=1024?128:width>=768?96:72))).toBeLessThanOrEqual(1);
+    expect(Math.abs(result.gap-(width>=1280?128:width>=1024?102.4:width>=768?96:72))).toBeLessThanOrEqual(1);
     if(width>=1280) { expect(result.boardRight).toBeCloseTo(width-result.margin,0); expect(Math.abs(result.titleBoard)).toBeLessThanOrEqual(1); }
     if(width>=1024) { expect(Math.abs(result.rowCaption)).toBeLessThanOrEqual(1); expect(Math.abs(result.metaFrame)).toBeLessThanOrEqual(1); }
   });
@@ -46,11 +46,13 @@ for(const [width,height] of sizes) {
     await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
     const before=JSON.parse(fs.readFileSync(`baseline/${width}.json`,'utf8')).find((b:any)=>b.sel==='[data-portrait-card]');
     const portrait=(await page.locator('[data-portrait-card]').boundingBox())!;
-    expect(portrait.width).toBe(before.w); expect(portrait.height).toBe(before.h);
+    const zoom=width>=1024?.8:1;
+    const expectedWidth=width>=1280?Math.min(width*1.25-913,(width*1.25-216)*.56)*zoom:width>=1024?(width*1.25-128)*.44*zoom:before.w;
+    expect(portrait.width).toBeCloseTo(expectedWidth,1); expect(portrait.height).toBeCloseTo(before.h*zoom,1);
     const copy=await page.locator('[data-ask-id]').evaluateAll(nodes=>Object.fromEntries(nodes.map(e=>[(e as HTMLElement).dataset.askId,(e as HTMLElement).innerText])));
     const expectedCopy=JSON.parse(fs.readFileSync(`baseline/${width}-source-texts.json`,'utf8'));
     // Approved F24 ownership update; preserve every other original source string.
-    expectedCopy.f24='Built a product used by thousands of companies.';
+    expectedCopy.f24='Built a product used by hundreds of companies.';
     const needle=workProjects.find(p=>p.id==='needle')!;
     expectedCopy['w-needle']=`${needle.name}\n${needle.sub}`;
     expect(copy).toEqual(expectedCopy);

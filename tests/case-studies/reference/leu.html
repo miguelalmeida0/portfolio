@@ -1,0 +1,1005 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Leu, a native learning reader | Miguel Almeida</title>
+<meta name="description" content="Case study: Leu turns PDF passages into a learner model where models interpret, code checks and a judge decides, with every judgement traced to its source.">
+<link rel="stylesheet" href="./fonts/fonts.css">
+<style>
+:root{
+  --paper:#EFF3E3; --ink:#0B2B22; --forest:#12372D; --plum:#610D3D; --sagebg:#E4EAD3; --ivory:#FAF7ED; --rulec:#9FAE9B; --mutedc:#506353; --highlight:#E2EDBA;
+  --plum-tint:#F1E3E8; --plum-wash:#F6EEF0; --fail:#8F2D2D; --fail-tint:#F2DEDB; --amber:#7A5410; --amber-tint:#F0E6C8;
+  --shadow:0 1px 2px rgba(11,43,34,.06),0 14px 34px -14px rgba(11,43,34,.22);
+  --ease:cubic-bezier(.2,0,0,1); --rewind:cubic-bezier(.65,0,.35,1);
+  --sans:Figtree,"Helvetica Neue",Arial,system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  color-scheme:light;
+  --canvas:#EFF3E3; --stage:var(--sagebg); --sheet:#EFF3E3; --line:rgba(159,174,155,.55); --paper:var(--ivory);
+  --ink-2:var(--forest); --muted:var(--mutedc);
+  --indigo:var(--plum); --indigo-ink:var(--plum); --indigo-tint:var(--plum-tint); --indigo-wash:var(--plum-wash);
+  --peach:var(--highlight); --peach-ink:var(--ink); --peach-muted:var(--mutedc); --peach-tint:#F3F6E1;
+  --ok:#24603A; --ok-tint:var(--highlight); --warn:var(--amber); --warn-tint:var(--amber-tint); --err:var(--fail); --err-tint:var(--fail-tint); --unseen:var(--rulec);
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);background:var(--canvas);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--canvas);color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--indigo);outline-offset:3px;border-radius:6px}
+.wrap{width:min(1312px,100% - clamp(32px,6vw,96px));margin-inline:auto}
+sup a{text-decoration:none;color:var(--indigo-ink);font-weight:700;font-size:.7em;padding:0 1px}
+
+.top{display:flex;justify-content:space-between;align-items:center;padding-block:18px;font-size:14.5px}
+.top .me{font-weight:600;text-decoration:none}
+.top nav{display:flex;gap:26px}
+.top nav a{text-decoration:none;color:var(--ink-2)}
+.top nav a:hover{color:var(--ink)}
+@media (max-width:720px){.top nav a:not(.keep){display:none}}
+
+.pnav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--canvas);border-bottom:1px solid transparent;transition:border-color .2s}
+.pnav.stuck{border-bottom-color:var(--line)}
+.pnav .wrap{display:flex;align-items:center;gap:28px;height:64px}
+.pname{font-weight:800;font-size:22px;letter-spacing:-.03em;text-decoration:none;display:flex;align-items:center;gap:10px}
+.mark{width:28px;height:28px;border-radius:8px;background:var(--peach);position:relative;overflow:hidden;flex:none}
+.mark::before{content:"";position:absolute;left:6px;top:5px;width:16px;height:18px;border-radius:3px;background:var(--paper);box-shadow:0 1px 2px rgba(11,43,34,.12)}
+.mark::after{content:"";position:absolute;left:9px;top:10px;width:10px;height:3px;border-radius:2px;background:var(--indigo);box-shadow:0 5px 0 var(--indigo-tint)}
+.pnav ul{display:flex;gap:6px;list-style:none;margin:0 auto 0 0;padding:0}
+.pnav ul a{display:block;text-decoration:none;font-size:14.5px;color:var(--ink-2);padding:8px 14px;border-radius:999px;transition:background .2s,color .2s}
+.pnav ul a:hover{background:var(--sheet);color:var(--ink)}
+.pnav ul a[aria-current="true"]{background:var(--indigo-wash);color:var(--indigo-ink)}
+@media (max-width:900px){.pnav ul{display:none}.pnav .wrap{justify-content:space-between}}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:13px 24px;font-weight:700;font-size:15.5px;text-decoration:none;border:0;cursor:pointer;transition:transform .2s var(--ease),box-shadow .2s,background .2s}
+.btn.primary{background:var(--indigo);color:var(--ivory)}
+.btn.primary:hover{box-shadow:0 8px 20px -8px var(--indigo)}
+.btn.primary:active{transform:scale(.98)}
+.btn.outline{background:var(--paper);color:var(--ink);box-shadow:0 0 0 1px var(--line)}
+.btn.outline:hover{background:var(--sheet)}
+.btn.sm{padding:9px 18px;font-size:14.5px}
+
+.hero{text-align:center;padding:clamp(40px,6vw,88px) 0 clamp(36px,4vw,56px)}
+.kicker{font-weight:600;font-size:15px;color:var(--muted);margin:0 0 20px}
+.hero h1{font-weight:800;font-size:clamp(46px,6.8vw,96px);line-height:1;letter-spacing:-.045em;margin:0 auto;max-width:14ch;text-wrap:balance}
+.hero .sub{font-size:clamp(18px,1.6vw,21px);line-height:1.5;color:var(--ink-2);max-width:48ch;margin:24px auto 32px;text-wrap:balance}
+.ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.cap{font-size:14px;color:var(--muted);text-align:center;margin:18px auto 0;max-width:76ch}
+
+.frame{background:var(--stage);border-radius:clamp(20px,3vw,36px);padding:clamp(16px,3.2vw,48px);position:relative}
+
+/* reader */
+.reader{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(16px,2.4vw,32px);align-items:start}
+.paper{background:var(--paper);box-shadow:var(--shadow);border-radius:clamp(16px,2vw,24px);padding:clamp(24px,3.6vw,52px);font-family:var(--serif)}
+.paper .run{display:flex;justify-content:space-between;font:12px/1 var(--mono);color:var(--muted);letter-spacing:.02em;margin-bottom:clamp(20px,2.6vw,32px)}
+.paper h3{font:700 clamp(26px,2.4vw,34px)/1.1 var(--sans);letter-spacing:-.035em;margin:0 0 18px}
+.psg{display:block;text-align:left;font:400 clamp(17px,1.3vw,19.5px)/1.62 var(--serif);background:transparent;border:0;border-radius:12px;padding:10px 14px;margin:0 -14px 8px;width:calc(100% + 28px);cursor:pointer;position:relative;transition:background .3s var(--ease),transform .35s var(--ease),box-shadow .35s var(--ease)}
+.psg:hover{background:var(--indigo-wash)}
+.psg[aria-pressed="true"]{background:var(--peach-tint);box-shadow:0 0 0 1.5px var(--peach),0 10px 24px -14px rgba(11,43,34,.25);transform:translateY(-2px)}
+.psg .pid{font:600 11.5px/1 var(--mono);color:var(--muted);display:block;margin-bottom:6px}
+.psg[aria-pressed="true"] .pid{color:var(--peach-muted)}
+.psg.flash{animation:flash 1.2s var(--ease)}
+@keyframes flash{0%,40%{background:var(--peach)}100%{background:var(--peach-tint)}}
+.paper pre{font:13px/1.6 var(--mono);background:var(--sheet);border-radius:12px;padding:12px 14px;margin:12px 0 0;overflow-x:auto;color:var(--ink-2)}
+.sheet{background:var(--sheet);border-radius:clamp(16px,2vw,24px);padding:18px clamp(18px,2.4vw,28px) 22px;box-shadow:0 0 0 1px var(--line)}
+.trace-h{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin:0 0 18px}
+.trace-h h3{grid-column:2;font-size:16px;font-weight:700;margin:0;text-align:center}
+.trace-h button{grid-column:3;justify-self:end;border:0;background:var(--paper);color:var(--indigo);font-weight:700;font-size:14.5px;padding:8px 16px;border-radius:999px;cursor:pointer;box-shadow:0 1px 3px rgba(11,43,34,.08)}
+.trace{list-style:none;margin:0;padding:0}
+.node{position:relative;padding:0 0 16px 38px}
+.node::before{content:attr(data-n);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:var(--paper);color:var(--muted);box-shadow:0 0 0 1px var(--line);z-index:1;transition:all .35s var(--ease)}
+.node::after{content:"";position:absolute;left:12px;top:26px;bottom:0;width:2px;background:var(--line)}
+.node .ribbon{position:absolute;left:12px;top:26px;bottom:0;width:2px;background:var(--indigo);transform:scaleY(0);transform-origin:top;transition:transform .5s var(--ease);z-index:1}
+.node:last-child::after,.node:last-child .ribbon{display:none}
+.node.on::before{background:var(--indigo);color:var(--ivory);box-shadow:none}
+.node.on .ribbon{transform:scaleY(1)}
+.node .k{font-weight:700;font-size:15.5px;line-height:26px;display:flex;justify-content:space-between;gap:12px;color:var(--muted)}
+.node.on .k{color:var(--ink)}
+.node .k .src{border:0;background:transparent;color:var(--indigo-ink);font-size:13.5px;font-weight:600;cursor:pointer;padding:0;visibility:hidden}
+.node.on .k .src{visibility:visible}
+.node .hint{color:var(--muted);font-size:14px;margin:0}
+.node.on .hint{display:none}
+.node .v{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s var(--ease)}
+.node.on .v{grid-template-rows:1fr}
+.node .v>div{overflow:hidden;min-height:0}
+.node .v>div>*:first-child{margin-top:6px}
+.quote{font:400 16px/1.55 var(--serif);margin:0;color:var(--ink-2)}
+.claim{margin:8px 0 0;color:var(--muted);font-size:14.5px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0}
+.cpt{font-size:13.5px;font-weight:600;padding:4px 11px;border-radius:999px;background:var(--indigo-tint);color:var(--indigo-ink)}
+.edge{font-size:15px;margin:0;font-weight:600}
+.edge i{font-style:normal;color:var(--indigo-ink);padding:0 8px;font-weight:500}
+.act{margin:0;font-size:15px}
+.act b{display:block;font-size:13px;color:var(--muted);font-weight:600}
+.answers{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.ans{display:block;width:100%;text-align:left;border:0;background:var(--paper);border-radius:14px;padding:11px 14px;cursor:pointer;font-size:14.5px;line-height:1.45;box-shadow:0 0 0 1px var(--line);transition:box-shadow .2s}
+.ans:hover{box-shadow:0 0 0 1.5px var(--indigo)}
+.ans[aria-pressed="true"]{box-shadow:0 0 0 2px var(--indigo)}
+.ans small{display:inline-block;margin-top:6px;font-size:12px;font-weight:600;color:var(--indigo-ink);background:var(--indigo-wash);padding:2px 8px;border-radius:999px}
+.node[data-i="5"] .v>div,.node[data-i="6"] .v>div{}
+.judge{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font-size:14.5px;background:var(--peach);color:var(--peach-ink);border-radius:18px;padding:16px 18px}
+.judge dt{color:var(--peach-muted);font-size:12.5px;font-weight:700;padding-top:2px}
+.judge dd{margin:0;font-family:var(--serif);font-size:15.5px}
+.judge ul{list-style:none;margin:0;padding:0;font-family:var(--sans);font-size:14px}
+.judge li{padding-left:20px;position:relative}
+.judge li::before{position:absolute;left:0;font-weight:800}
+.judge li.p::before{content:"✓";color:var(--ok)}
+.judge li.f::before{content:"✕";color:var(--err)}
+.verdict{font-family:var(--sans)!important;font-weight:700;font-size:14.5px!important}
+.verdict.credit{color:var(--ok)}.verdict.ask{color:var(--warn)}.verdict.none{color:var(--err)}
+.case .judge .verdict.ask{color:var(--warn)}
+.state{list-style:none;margin:0;padding:0;font-size:14.5px;background:var(--paper);border-radius:14px;box-shadow:0 0 0 1px var(--line)}
+.state li{display:flex;justify-content:space-between;gap:12px;padding:8px 12px;border-bottom:1px solid var(--line)}
+.state li:last-child{border-bottom:0}
+.st{font-weight:600;text-align:right}
+.st.evidence{color:var(--ok)}.st.weak{color:var(--warn)}.st.missed{color:var(--err)}.st.unseen{color:var(--muted)}
+.trace-note{font-size:13.5px;color:var(--muted);margin:4px 0 0 38px}
+@media (max-width:960px){.reader{grid-template-columns:1fr}}
+
+.chapter{padding-top:clamp(88px,11vw,168px)}
+.head{text-align:center;max-width:860px;margin:0 auto clamp(36px,4.5vw,64px)}
+.head .eyebrow{font-weight:600;font-size:15px;color:var(--indigo-ink);margin:0 0 14px}
+.head h2{font-weight:800;font-size:clamp(36px,4.8vw,64px);line-height:1.04;letter-spacing:-.04em;margin:0;text-wrap:balance}
+.head p{font-size:clamp(17px,1.4vw,19px);color:var(--ink-2);margin:20px auto 0;max-width:58ch}
+
+/* extraction */
+.segwrap{display:flex;justify-content:center}
+.seg{display:inline-flex;background:var(--paper);border-radius:999px;padding:4px;margin:0 0 clamp(20px,2.6vw,32px);flex-wrap:wrap;box-shadow:0 0 0 1px var(--line)}
+.seg button{border:0;background:transparent;border-radius:999px;padding:9px 18px;cursor:pointer;font-weight:600;font-size:14.5px;color:var(--ink-2)}
+.seg button[aria-checked="true"]{background:var(--indigo);color:var(--ivory)}
+.extract{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(20px,3.5vw,56px);align-items:start}
+.view{min-height:320px}
+.mini{background:var(--paper);box-shadow:var(--shadow);border-radius:20px;padding:28px 32px;font-family:var(--serif)}
+.mini .lbl{font:700 11.5px/1 var(--sans);letter-spacing:.42em;color:var(--indigo-ink);margin:0 0 8px}
+.mini .rh{display:flex;justify-content:space-between;font:12px/1 var(--mono);color:var(--muted);margin:0 0 18px}
+.mini h4{font:700 24px/1.15 var(--sans);letter-spacing:-.03em;margin:0 0 14px}
+.mini .cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;font-size:15px;line-height:1.55}
+.mini .cols p{margin:0}
+.raw{font:13.5px/1.75 var(--mono);background:var(--paper);box-shadow:var(--shadow);border-radius:20px;padding:24px 26px;white-space:pre-wrap;word-break:break-word;margin:0;color:var(--ink-2)}
+.raw mark{background:var(--err-tint);color:var(--err);border-radius:4px;padding:0 2px}
+.raw sup{font:700 10.5px/1 var(--sans);color:var(--ivory);background:var(--err);border-radius:999px;padding:2px 5px;margin-left:3px}
+.blocks{list-style:none;margin:0;background:var(--paper);box-shadow:var(--shadow);border-radius:20px;padding:10px 26px}
+.blocks li{display:grid;grid-template-columns:84px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px}
+.blocks li:last-child{border-bottom:0}
+.blocks code{font:600 12px/1.6 var(--mono);color:var(--indigo-ink)}
+.blocks .x{color:var(--muted);text-decoration:line-through}
+.blocks small{display:block;color:var(--muted);font-size:12.5px}
+.notes{list-style:none;margin:0;padding:0}
+.notes li{padding:14px 0;border-top:1px solid var(--line);color:var(--ink-2);font-size:15.5px}
+.notes li:first-child{border-top:0;padding-top:4px}
+.notes li b{color:var(--ink)}
+.notes .tagn{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--err);color:var(--ivory);font-weight:700;font-size:11.5px;margin-right:10px;vertical-align:1px}
+.fineprint{font-size:13.5px;color:var(--muted);margin:14px 0 0}
+@media (max-width:900px){.extract{grid-template-columns:1fr}.mini .cols{grid-template-columns:1fr}}
+
+/* chain */
+.chain{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(28px,6vw,112px)}
+.steps{padding-bottom:18vh}
+.step{min-height:62vh;display:flex;flex-direction:column;justify-content:center;padding-block:4vh}
+.step:first-child{min-height:40vh;justify-content:flex-start}
+.step h3{font-weight:800;font-size:clamp(28px,2.8vw,40px);letter-spacing:-.04em;line-height:1.05;margin:0 0 12px}
+.step .tag{font-weight:600;color:var(--indigo-ink);font-size:14.5px;margin:0 0 10px}
+.step p{margin:0 0 12px;color:var(--ink-2);max-width:50ch}
+.step .warn{color:var(--peach-ink);background:var(--peach);display:inline-block;padding:8px 14px;border-radius:12px;font-weight:600;font-size:15px}
+.diagram{position:sticky;top:12vh;align-self:start;background:var(--stage);border-radius:32px;padding:clamp(20px,2.6vw,34px)}
+.dstages{list-style:none;margin:0;padding:0}
+.dst{display:grid;grid-template-columns:34px 1fr;gap:12px;padding:10px 12px;border-radius:16px;opacity:.32;transition:opacity .45s var(--ease),background .3s}
+.dst.on{opacity:1}
+.dst.cur{background:var(--paper);box-shadow:var(--shadow)}
+.dst .n{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:12.5px;background:var(--paper);color:var(--muted);margin-top:1px}
+.dst.on .n{background:var(--indigo-tint);color:var(--indigo-ink)}
+.dst.cur .n{background:var(--indigo);color:var(--ivory)}
+.dst .nm{font-weight:700;font-size:clamp(16px,1.4vw,19px);letter-spacing:-.02em}
+.dst .ds{color:var(--muted);font-size:14px}
+.dgraph{display:grid;grid-template-rows:0fr;transition:grid-template-rows .55s var(--ease)}
+.dgraph>div{overflow:hidden;min-height:0}
+.dst.on .dgraph{grid-template-rows:1fr}
+.graph{width:100%;max-width:400px;height:auto;display:block;margin-top:10px}
+.graph .e{stroke:var(--unseen);stroke-width:1.2;fill:none}
+.graph .el{font:600 10.5px var(--sans);fill:var(--indigo-ink)}
+.graph .nb{fill:var(--paper);stroke:var(--line)}
+.graph .nt{font:700 12px var(--sans);fill:var(--ink)}
+.graph g.evidence .nb{fill:var(--ok-tint);stroke:var(--ok);stroke-width:1.5}
+.graph g.weak .nb{fill:var(--warn-tint);stroke:var(--warn);stroke-width:1.5;stroke-dasharray:4 3}
+.graph g.missed .nb{fill:var(--err-tint);stroke:var(--err);stroke-width:1.5}
+.strip{display:none}
+.inline-graph{display:none}
+@media (max-width:900px){
+  .chain{grid-template-columns:1fr}
+  .diagram{display:none}
+  .strip{display:block;position:sticky;top:64px;z-index:5;background:var(--canvas);padding:12px 0 10px;border-bottom:1px solid var(--line)}
+  .strip .bars{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px}
+  .strip .bars i{height:4px;border-radius:2px;background:var(--line);transition:background .3s}
+  .strip .bars i.on{background:var(--indigo)}
+  .strip p{margin:0;font-weight:700;font-size:15px}
+  .strip p span{color:var(--muted);font-weight:500}
+  .step,.step:first-child{min-height:0;padding-block:36px}
+  .inline-graph{display:block}
+}
+
+/* versions */
+.tabs{display:flex;justify-content:center;gap:4px;background:var(--paper);border-radius:999px;padding:4px;margin:0 auto clamp(20px,2.6vw,32px);width:max-content;max-width:100%;overflow-x:auto;box-shadow:0 0 0 1px var(--line)}
+.tab{border:0;background:transparent;padding:9px 20px;cursor:pointer;font-weight:700;font-size:15px;color:var(--ink-2);border-radius:999px;white-space:nowrap}
+.tab small{font-weight:500;font-size:13px;margin-left:6px;opacity:.75}
+.tab[aria-selected="true"]{background:var(--indigo);color:var(--ivory)}
+.vpanel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(16px,2.4vw,32px)}
+.vpanel[hidden]{display:none}
+.vpanel>div{background:var(--paper);border-radius:24px;padding:clamp(22px,2.6vw,36px);box-shadow:var(--shadow)}
+.vpath{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 18px;padding:0;list-style:none}
+.vpath{font-weight:700;font-size:14.5px}
+.vpath .pp{background:var(--indigo-wash);color:var(--indigo-ink);padding:6px 12px;border-radius:999px}
+.vpath i{font-style:normal;color:var(--unseen)}
+.vpanel p{color:var(--ink-2);margin:0 0 14px;max-width:56ch}
+.case .who{font-size:13px;font-weight:700;color:var(--muted);margin:0 0 6px}
+.case .said{font:400 19px/1.5 var(--serif);margin:0 0 16px}
+.outcome{font-weight:700;display:inline-block;padding:7px 14px;border-radius:999px;margin:4px 0 0;font-size:14.5px}
+.outcome.bad{color:var(--err);background:var(--err-tint)}.outcome.mid{color:var(--warn);background:var(--warn-tint)}
+.nums{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0 14px}
+.nums div{background:var(--sheet);border-radius:16px;padding:14px 16px}
+.nums b{display:block;font-size:clamp(28px,2.6vw,38px);letter-spacing:-.04em;line-height:1.1;font-weight:800}
+.nums span{font-size:13.5px;color:var(--ink-2)}
+.big{font-size:clamp(48px,5vw,76px);font-weight:800;letter-spacing:-.05em;margin:0 0 6px;line-height:1}
+.pull{font:400 clamp(18px,1.5vw,21px)/1.45 var(--serif);margin:20px 0 0;max-width:46ch;color:var(--ink)}
+.small{font-size:13.5px;color:var(--muted)}
+.case .judge{margin-top:4px}
+@media (max-width:900px){.vpanel{grid-template-columns:1fr}}
+
+/* results bento */
+.bento{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px}
+.tile{border-radius:28px;padding:clamp(24px,2.6vw,36px);display:flex;flex-direction:column;position:relative;overflow:hidden;background:var(--sheet)}
+.tile.w3{grid-column:span 3}.tile.w2{grid-column:span 2}.tile.w6{grid-column:span 6}.tile.w4{grid-column:span 4}
+.tile h3{font-weight:800;font-size:clamp(22px,2vw,28px);letter-spacing:-.035em;line-height:1.1;margin:0 0 10px;max-width:22ch}
+.tile p{margin:0;color:var(--ink-2);font-size:15.5px;max-width:46ch}
+.tile.indigo{background:var(--indigo);color:var(--ivory)}.tile.indigo p,.tile.indigo .small{color:rgba(250,247,237,.82)}
+.tile.peach{background:var(--peach);color:var(--peach-ink)}.tile.peach p{color:var(--peach-ink)}
+.tile.plain{background:var(--paper);box-shadow:0 0 0 1px var(--line)}
+.tile.indigo .hn{color:var(--ivory)}
+.tile .hn{font-size:clamp(40px,4.4vw,64px);font-weight:800;letter-spacing:-.05em;line-height:1;margin:0 0 6px;font-variant-numeric:tabular-nums}
+.pbars{display:grid;gap:10px;margin:22px 0 18px}
+.pb{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:center}
+.pb span{font-size:12.5px;font-weight:700;opacity:.75}
+.track{position:relative;height:28px}
+.fill{position:absolute;left:0;top:0;bottom:0;border-radius:8px;width:0;transition:width 1.1s var(--ease);background:rgba(250,247,237,.28)}
+.pb.after .fill{background:#fff;min-width:4px}
+.tile.peach .fill{background:rgba(11,43,34,.14)}
+.tile.peach .pb.after .fill{background:var(--peach-ink)}
+.val{position:absolute;top:0;line-height:28px;font-weight:800;font-size:15px;white-space:nowrap;padding-left:10px;transition:left 1.1s var(--ease);font-variant-numeric:tabular-nums}
+.pb.before .val.in{padding-left:0;transform:translateX(calc(-100% - 10px))}
+@media (max-width:960px){.bento{grid-template-columns:repeat(2,minmax(0,1fr))}.tile.w3,.tile.w2,.tile.w4,.tile.w6{grid-column:span 2}}
+@media (max-width:600px){.bento{grid-template-columns:1fr}.tile.w3,.tile.w2,.tile.w4,.tile.w6{grid-column:span 1}}
+
+/* native */
+.native{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.native figure{margin:0;background:var(--stage);border-radius:32px;padding:clamp(24px,3vw,40px) clamp(24px,3vw,40px) 0;display:flex;flex-direction:column;overflow:hidden}
+.native figcaption{order:-1;margin-bottom:22px}
+.native figcaption b{display:block;font-size:clamp(20px,1.8vw,26px);letter-spacing:-.035em;font-weight:800}
+.native figcaption span{color:var(--ink-2);font-size:15px}
+.slot{background:var(--sheet);border-radius:28px 28px 0 0;box-shadow:0 0 0 1px var(--line);height:clamp(380px,46vw,620px);display:grid;place-items:center;text-align:center;padding:24px;color:var(--muted);font-size:14.5px}
+@media (max-width:760px){.native{grid-template-columns:1fr}}
+
+/* investigations */
+.inv-tile details{margin-top:auto;padding-top:22px}
+.inv-tile summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14.5px;background:var(--paper);border-radius:999px;padding:9px 16px;box-shadow:0 0 0 1px var(--line)}
+.inv-tile summary::-webkit-details-marker{display:none}
+.inv-tile summary::after{content:"";width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .2s}
+.inv-tile details[open] summary::after{transform:rotate(-135deg) translateY(-2px)}
+.inv-tile dl{margin:18px 0 0}
+.inv-tile dt{font-weight:700;font-size:13.5px;color:var(--indigo-ink);margin-top:14px}
+.inv-tile dd{margin:4px 0 0;color:var(--ink-2);font-size:15px}
+
+/* closing */
+.close{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,64px);align-items:center}
+.close .paper{padding:clamp(24px,3vw,40px)}
+.close .psg-static{font:400 16px/1.55 var(--serif);margin:0 0 12px;padding:10px 14px;border-radius:12px;background:var(--sheet)}
+.close .psg-static.evidence{background:var(--ok-tint)}.close .psg-static.weak{background:var(--warn-tint)}.close .psg-static.missed{background:var(--err-tint)}
+.summary{font-size:clamp(17px,1.4vw,20px);line-height:1.5;margin:0 0 14px;color:var(--ink-2)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13.5px;color:var(--ink-2);margin:12px 0 0;padding:0;list-style:none}
+.legend li::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;border:2px solid var(--unseen);vertical-align:-1px}
+.legend .evidence::before{border-color:var(--ok);background:var(--ok-tint)}.legend .weak::before{border-color:var(--warn);background:var(--warn-tint)}.legend .missed::before{border-color:var(--err);background:var(--err-tint)}
+@media (max-width:900px){.close{grid-template-columns:1fr}}
+
+.foot{margin-top:clamp(88px,10vw,140px);padding-top:28px;border-top:1px solid var(--line);font-size:13.5px;color:var(--muted)}
+.foot ol{margin:0;padding-left:20px;display:grid;gap:8px;max-width:110ch}
+.next{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:44px 0 64px;margin-top:40px;border-top:1px solid var(--line)}
+.next .lbl{color:var(--muted);font-size:14.5px}
+.next a{font-weight:800;font-size:clamp(34px,4vw,56px);letter-spacing:-.045em;text-decoration:none}
+.next a:hover{color:var(--indigo-ink)}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:0s!important;animation-duration:0s!important;transition-delay:0s!important}
+  .psg[aria-pressed="true"]{transform:none}
+}
+
+/* portfolio identity */
+.top{display:flex;align-items:baseline;gap:18px;padding-block:26px 14px}
+.top .me{font:700 20px/1 Arial,Helvetica,sans-serif;text-transform:uppercase;color:var(--ink);border-bottom:2px solid var(--plum);padding-bottom:4px;text-decoration:none}
+.top .city{color:var(--forest);font-size:15px}
+.top nav{margin-left:auto;display:flex;gap:clamp(16px,2.4vw,40px)}
+.top nav a{color:var(--ink);text-decoration:none;font-size:15.5px}
+.top nav a.ask{color:var(--plum)}
+@media (max-width:720px){.top .city{display:none}}
+::selection{background:var(--plum);color:var(--ivory)}
+:focus-visible{outline:2px solid var(--plum)!important}
+.btn.primary{background:var(--plum)!important;color:var(--ivory)!important}
+.btn.primary:hover{box-shadow:0 8px 20px -8px rgba(97,13,61,.6)!important}
+.btn.outline{background:transparent!important;box-shadow:inset 0 0 0 1.5px var(--rulec)!important;color:var(--ink)!important}
+.btn.outline:hover{background:var(--sagebg)!important}
+.hero h1,.head h2,.tile h3,.stat .n,.next a,.tile .hn,.big,.nums b,.step h3,.paper h3,.mini h4{font-family:var(--sans)!important;font-weight:800!important;letter-spacing:-.045em!important}
+.kicker,.head .eyebrow,.eyebrow{color:var(--plum)!important}
+
+/* leu on portfolio palette */
+.tile.indigo{background:var(--forest)!important}
+.tile.indigo .hn,.tile.indigo h3{color:var(--ivory)!important}
+.tile.indigo .fill{background:rgba(250,247,237,.22)!important}
+.tile.indigo .pb.after .fill{background:var(--highlight)!important}
+.tile.peach{background:var(--highlight)!important}
+.tile.peach .fill{background:rgba(11,43,34,.14)!important}
+.tile.peach .pb.after .fill{background:var(--plum)!important}
+.tile.plain{background:var(--ivory)!important}
+.mark{background:var(--plum)!important}
+.mark::before{background:var(--ivory)!important}
+.mark::after{background:var(--plum)!important;box-shadow:0 5px 0 var(--rulec)!important}
+.node.on::before{background:var(--plum)!important;color:var(--ivory)!important}
+.psg[aria-pressed="true"]{box-shadow:0 0 0 1.5px var(--rulec),0 10px 24px -14px rgba(11,43,34,.35)!important}
+.judge{background:var(--highlight)!important}
+.dst.cur .n{background:var(--plum)!important;color:var(--ivory)!important}
+.tab[aria-selected="true"],.seg button[aria-checked="true"]{background:var(--plum)!important;color:var(--ivory)!important}
+.pnav ul a[aria-current="true"]{background:var(--sagebg)!important;color:var(--ink)!important}
+.sheet{background:#EFF3E3!important}
+.diagram{background:var(--sagebg)!important}
+.step .warn{background:var(--plum-tint)!important;color:var(--plum)!important}
+.native figure{background:var(--sagebg)!important}
+.slot{background:#EFF3E3!important}
+
+/* taste audit */
+#perf .val{opacity:0}
+#perf.on .val{opacity:1;transition:transform 1.1s var(--ease),opacity .3s .5s!important}
+.skip{position:absolute;left:12px;top:-60px;z-index:100;background:var(--plum);color:var(--ivory);padding:10px 16px;border-radius:10px;font-weight:600;text-decoration:none}
+.skip:focus{top:12px}
+p,dd,li{text-wrap:pretty}
+h1,h2,h3{text-wrap:balance}
+.hero{text-align:left!important;padding-bottom:clamp(28px,3vw,44px)!important}
+.hero h1{font-size:clamp(44px,5.8vw,84px)!important;max-width:17ch!important;margin:0!important}
+.hero .sub{margin:22px 0 28px!important;max-width:44ch!important}
+.ctas{justify-content:flex-start!important;align-items:center;gap:22px!important}
+.tlink{color:var(--plum);font-weight:600;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px}
+.tlink:hover{text-decoration-thickness:2.5px}
+.cap{text-align:left!important;margin:14px 0 0!important}
+.head{text-align:left!important;margin:0 0 clamp(28px,3.5vw,48px)!important;max-width:none!important}
+.head h2{font-size:clamp(32px,3.6vw,52px)!important;max-width:20ch}
+.head p{margin:16px 0 0!important;max-width:60ch!important}
+.segwrap{justify-content:flex-start!important}
+.tabs{margin-left:0!important}
+.big{font-size:clamp(40px,4.2vw,64px)!important}
+.tile .hn{font-size:clamp(36px,3.8vw,56px)!important}
+.track{container-type:inline-size}
+.fill{width:100%!important;transform-origin:left;transform:scaleX(calc(var(--p,0) / 100));transition:transform 1.1s var(--ease)!important}
+.val{left:0!important;transform:translateX(calc(var(--p,0) * 1cqw));transition:transform 1.1s var(--ease)!important}
+.pb.before .val.in{transform:translateX(calc(var(--p,0) * 1cqw - 100% - 10px))!important;padding-left:0}
+.md{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(24px,5vw,88px);align-items:start}
+.md-list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.md-tab{border:0;background:transparent;text-align:left;padding:18px 16px 18px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:clamp(17px,1.4vw,20px);letter-spacing:-.02em;color:var(--mutedc);cursor:pointer;position:relative;transition:color .2s,padding .3s var(--ease)}
+.md-tab:hover{color:var(--ink)}
+.md-tab[aria-selected="true"]{color:var(--ink);padding-left:18px}
+.md-tab[aria-selected="true"]::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:3px;border-radius:2px;background:var(--plum)}
+.md-panel{background:var(--sagebg);border-radius:28px;padding:clamp(24px,3vw,44px);position:sticky;top:96px}
+.md-panel h3{font-weight:800;font-size:clamp(24px,2.4vw,34px);letter-spacing:-.04em;line-height:1.1;margin:0 0 20px}
+.md-panel dl{margin:0}
+.md-panel dt{font-weight:700;font-size:14px;color:var(--plum);margin-top:18px}
+.md-panel dt:first-child{margin-top:0}
+.md-panel dd{margin:4px 0 0;color:var(--forest)}
+@media (max-width:860px){.md{grid-template-columns:1fr}.md-panel{position:static}}
+.close{padding-top:8px}
+.close .paper{box-shadow:var(--shadow)}
+
+/* diagrams v2 */
+.flowline{flex-direction:column!important;align-items:flex-start!important;row-gap:22px!important}
+.flowline li{margin-right:0!important;flex-direction:row!important;align-items:baseline!important;gap:10px}
+.flowline li small{margin-top:0!important}
+.flowline li:not(:last-child)::after{right:auto!important;left:22px!important;top:auto!important;bottom:-18px!important;width:2px!important;height:12px!important}
+.flowline li:not(:last-child)::before{right:auto!important;left:18px!important;top:auto!important;bottom:-22px!important;border-left:5px solid transparent!important;border-right:5px solid transparent!important;border-top:6px solid var(--rulec)!important;border-bottom:0!important}
+.inline-graph{display:none!important}
+@media (max-width:900px){.inline-graph{display:block!important}}
+.dst .graph{--gbg:var(--sagebg)}
+.dst.cur .graph{--gbg:var(--ivory)}
+.dtable{width:100%;border-collapse:collapse;font:14.5px/1.5 var(--sans);margin-top:18px}
+.dtable caption{text-align:left;font-weight:700;font-size:13px;color:var(--mutedc);padding-bottom:6px}
+.dtable td{padding:9px 0;border-top:1px solid var(--line)}
+.dtable td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.graph{width:100%;max-width:520px;height:auto;display:block;overflow:visible;--gbg:var(--canvas)}
+.diagram .graph{--gbg:var(--sagebg)}
+.graph .e{fill:none!important;stroke:var(--rulec)!important;stroke-width:1.8!important;stroke-dasharray:1;stroke-dashoffset:1;opacity:0;transition:stroke-dashoffset .9s var(--ease) calc(var(--i) * .12s),opacity .2s calc(var(--i) * .12s),stroke .25s}
+.graph.drawn .e{stroke-dashoffset:0;opacity:1}
+.graph .e.neg{stroke:var(--plum)!important;stroke-dasharray:.016 .012;stroke-dashoffset:0;transition:opacity .5s .9s}
+.graph .mk path{fill:var(--rulec)}
+.graph .mk.neg path{fill:var(--plum)}
+.graph .lab{opacity:0;transition:opacity .4s calc(.45s + var(--i) * .12s)}
+.graph.drawn .lab{opacity:1}
+.graph .lab rect{fill:var(--gbg)}
+.graph .lab text{font:600 12px var(--sans);fill:var(--forest)}
+.graph .lab.neg rect{fill:var(--plum-tint)}
+.graph .lab.neg text{fill:var(--plum)}
+.graph g.node{transition:opacity .25s;outline:none}
+.graph .nb{fill:var(--ivory)!important;stroke:var(--rulec)!important;stroke-width:1.3!important;stroke-dasharray:none!important;filter:drop-shadow(0 6px 10px rgba(11,43,34,.08))}
+.graph .nt{font:700 15px var(--sans)!important;fill:var(--ink)!important;letter-spacing:-.01em}
+.graph .ns{font:500 11.5px var(--sans);fill:var(--mutedc)}
+.graph g.evidence .nb{fill:var(--highlight)!important;stroke:#24603A!important;stroke-width:2!important}
+.graph g.weak .nb{fill:var(--amber-tint)!important;stroke:var(--amber)!important;stroke-width:2!important;stroke-dasharray:5 3!important}
+.graph g.missed .nb{fill:var(--fail-tint)!important;stroke:var(--fail)!important;stroke-width:2!important}
+.graph g.node:focus-visible .nb{stroke:var(--plum)!important;stroke-width:2.6!important}
+.graph.focus .e:not(.hl),.graph.focus .lab:not(.hl),.graph.focus g.node:not(.hl){opacity:.18}
+.graph.focus .e.hl:not(.neg){stroke:var(--forest)!important}
+.dstages{position:relative;--prog:0}
+.dstages::before,.dstages::after{content:"";position:absolute;left:17px;top:30px;bottom:30px;width:2px;border-radius:2px}
+.dstages::before{background:var(--rulec);opacity:.55}
+.dstages::after{background:var(--plum);transform-origin:top;transform:scaleY(var(--prog));transition:transform .6s var(--ease)}
+.dst{position:relative;display:grid!important;grid-template-columns:36px minmax(0,1fr)!important;gap:16px!important;padding:12px 14px 12px 0!important;opacity:1!important;border-radius:18px;transition:background .3s,box-shadow .3s}
+.dst .n{width:36px!important;height:36px!important;border-radius:50%;display:grid;place-items:center;font-weight:800!important;font-size:13px!important;background:var(--sagebg)!important;color:var(--mutedc)!important;box-shadow:inset 0 0 0 1.5px var(--rulec);position:relative;z-index:1;transition:background .35s,color .35s,box-shadow .35s;margin:0!important}
+.dst.on .n{background:var(--forest)!important;color:var(--ivory)!important;box-shadow:none}
+.dst.cur .n{background:var(--plum)!important;color:var(--ivory)!important;box-shadow:0 0 0 6px rgba(97,13,61,.14)}
+.dst.cur{background:var(--ivory)!important;box-shadow:var(--shadow)!important}
+.dst .body{padding-top:6px;min-width:0}
+.dst .nm{font-weight:800!important;font-size:clamp(17px,1.5vw,20px)!important;letter-spacing:-.025em;color:var(--mutedc)!important;transition:color .3s}
+.dst.on .nm{color:var(--ink)!important}
+.dst.cur .nm{color:var(--plum)!important}
+.dst .ds{color:var(--mutedc);font-size:14.5px;margin-top:2px}
+.dst .out{display:none;align-items:center;gap:8px;margin-top:10px;font-size:13px;font-weight:600;color:var(--forest);background:var(--highlight);border-radius:8px;padding:5px 10px}
+.dst .out::before{content:"Passes on";font-weight:500;color:var(--mutedc)}
+.dst.on .out{display:inline-flex}
+.dst .dgraph .graph{margin-top:16px}
+.flowline{list-style:none;margin:0 0 22px;padding:0;display:flex;flex-wrap:wrap;align-items:stretch;row-gap:14px}
+.flowline li{position:relative;display:flex;flex-direction:column;justify-content:center;font-weight:700;font-size:14px;line-height:1.25;background:var(--canvas);border-radius:12px;padding:9px 13px;margin-right:30px;box-shadow:inset 0 0 0 1px var(--line)}
+.flowline li:last-child{margin-right:0}
+.flowline li:not(:last-child)::after{content:"";position:absolute;right:-24px;top:50%;width:18px;height:2px;background:var(--rulec)}
+.flowline li:not(:last-child)::before{content:"";position:absolute;right:-25px;top:calc(50% - 4px);border-left:6px solid var(--rulec);border-top:5px solid transparent;border-bottom:5px solid transparent}
+.flowline li small{font-weight:600;font-size:11.5px;color:var(--mutedc);margin-top:3px}
+.flowline li.auth{background:var(--plum);color:var(--ivory);box-shadow:none}
+.flowline li.auth small{color:rgba(250,247,237,.8)}
+.flowline li.gate{background:var(--highlight);box-shadow:none}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap top">
+  <a class="me" href="https://miguelalmeida.is-a.dev/">Miguel Almeida</a><span class="city">Berlin</span>
+  <nav aria-label="Portfolio"><a class="keep" href="https://miguelalmeida.is-a.dev/work">Work</a><a href="https://miguelalmeida.is-a.dev/story">Story</a><a href="https://miguelalmeida.is-a.dev/cv">CV</a><a href="https://miguelalmeida.is-a.dev/contact">Contact</a><a class="keep ask" href="https://miguelalmeida.is-a.dev/ask">Ask MiguelLLM</a></nav>
+</div>
+<div id="sentinel"></div>
+<header class="pnav" id="pnav">
+  <div class="wrap">
+    <a class="pname" href="#overview">Leu</a>
+    <ul>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#source">Source</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#native">Native app</a></li>
+      <li><a href="#engineering">Engineering</a></li>
+    </ul>
+    <a class="btn primary sm" href="#try">Try it</a>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <section class="hero" id="overview" aria-labelledby="hero-h">
+    <p class="kicker">Leu, a native SwiftUI and PDFKit learning reader</p>
+    <h1 id="hero-h">From PDF text to learner state.</h1>
+    <p class="sub">The document stays the source of truth. Leu models what you understand, and every judgement points back to its passage.</p>
+    <div class="ctas"><a class="btn primary" href="#try">Try it</a><a class="tlink" href="#architecture">How it's built</a></div>
+  </section>
+
+  <section class="frame" id="try" aria-label="Interactive reading loop">
+    <div class="reader" id="reader">
+      <article class="paper" aria-labelledby="doc-h">
+        <div class="run" aria-hidden="true"><span>Earth Science Notes</span><span>p. 12</span></div>
+        <h3 id="doc-h">Why seasons happen</h3>
+        <div id="passages"></div>
+        <table class="dtable"><caption>Earth to Sun distance</caption><tbody><tr><td>Early January</td><td>147.1 million km</td></tr><tr><td>Early July</td><td>152.1 million km</td></tr></tbody></table>
+      </article>
+      <div class="sheet">
+        <div class="trace-h"><h3 id="trace-h" tabindex="-1">What Leu builds from it</h3><button type="button" id="clearTrace" hidden>Clear</button></div>
+        <ol class="trace" id="trace" aria-labelledby="trace-h"></ol>
+        <p class="trace-note" id="traceNote">Every step keeps a link to the passage it came from.</p>
+      </div>
+    </div>
+  </section>
+  <p class="cap">A web model of Leu's loop with prepared answers. The native app is recorded further down.</p>
+
+  <section class="chapter" id="source" aria-labelledby="pdf-h">
+    <div class="head">
+      <h2 id="pdf-h">A readable PDF is not readable text.</h2>
+      <p>On screen the page looked fine. Extraction dropped characters from titles, split letter-spaced labels and pulled running headers into the text, and every question, explanation and provenance link consumed that damaged text.</p>
+    </div>
+    <div class="unframed">
+      <div class="segwrap"><div class="seg" role="radiogroup" aria-label="Representation">
+        <button type="button" role="radio" aria-checked="true" data-v="page">What you see</button>
+        <button type="button" role="radio" aria-checked="false" data-v="raw">What extraction returned</button>
+        <button type="button" role="radio" aria-checked="false" data-v="canon">Canonical source</button>
+      </div></div>
+      <div class="extract">
+        <div class="view" id="xview" aria-live="polite"></div>
+        <ul class="notes" id="xnotes"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" id="architecture" aria-labelledby="chain-h">
+    <div class="head">
+      <h2 id="chain-h">One source, seven places to lose trust.</h2>
+      <p>Corruption did not stay in the extractor. Every later stage could look consistent while reasoning about the wrong text.</p>
+    </div>
+    <div class="strip" aria-hidden="true"><p id="stripLabel">PDF</p><div class="bars" id="stripBars"></div></div>
+    <div class="chain">
+      <div class="steps" id="steps"></div>
+      <div class="diagram" aria-hidden="true"><ol class="dstages" id="dstages"></ol></div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="who-h">
+    <div class="head">
+      <h2 id="who-h">Change who is allowed to decide.</h2>
+      <p>V36's sealed evaluation ended the assumption that more matching rules would become reasoning. V37 kept the judge and changed what fed it: structured model observations, checked before they can influence learning credit.</p>
+    </div>
+    <div class="frame">
+      <div class="tabs" role="tablist" aria-label="Architecture versions">
+        <button class="tab" role="tab" id="t-early" aria-controls="p-early" aria-selected="false" tabindex="-1">Early<small>Heuristics</small></button>
+        <button class="tab" role="tab" id="t-v36" aria-controls="p-v36" aria-selected="false" tabindex="-1">V36<small>Vectors</small></button>
+        <button class="tab" role="tab" id="t-v37" aria-controls="p-v37" aria-selected="true" tabindex="0">V37<small>Structured read</small></button>
+      </div>
+      <div class="vpanel" role="tabpanel" id="p-early" aria-labelledby="t-early" hidden>
+        <div>
+          <ol class="flowline" aria-label="Early pipeline"><li>PDF text</li><li class="auth">Heuristics<small>holds the authority</small></li><li>Question</li></ol>
+          <p>Raw extraction and local context carried too much authority. A question that references the source is not automatically a useful learning question.</p>
+          <p class="pull">Grounded and still bad: it tests whether you remember the sentence, not whether you understand it.</p>
+        </div>
+        <div class="case">
+          <p class="who">Generated from ¶2, example</p>
+          <p class="said">“When a hemisphere leans toward the Sun, sunlight arrives at a steeper ________.”</p>
+          <p class="outcome mid">Answerable from wording alone</p>
+          <p class="small" style="margin-top:16px">This pushed generation towards structured knowledge and a deterministic learning intent, with language generation last.</p>
+        </div>
+      </div>
+      <div class="vpanel" role="tabpanel" id="p-v36" aria-labelledby="t-v36" hidden>
+        <div>
+          <ol class="flowline" aria-label="V36 pipeline"><li>PDF</li><li class="auth">Semantic / vector logic<small>sets correctness</small></li><li>Judge</li></ol>
+          <p class="big">52% → 51%</p>
+          <p>V35 to V36 coarse accuracy on the same sealed 160-case set. Fewer harmful writes, but weak-reasoning detection stayed at 0/16 in both versions. This result ended the vector-only direction.</p>
+        </div>
+        <div class="case">
+          <p class="who">Example learner answer to ¶2</p>
+          <p class="said">“It's warmer in July because Earth is closer to the Sun then.”</p>
+          <p>It sits close to the passage in meaning, so similarity treats it as right. The reason contradicts ¶3: Earth is closest to the Sun in January.</p>
+          <p class="outcome bad">Credited. False mastery written.</p>
+        </div>
+      </div>
+      <div class="vpanel" role="tabpanel" id="p-v37" aria-labelledby="t-v37">
+        <div>
+          <ol class="flowline" aria-label="V37 pipeline"><li>Canonical source</li><li>Structured read<small>proposes</small></li><li class="gate">Deterministic checks<small>can only downgrade</small></li><li class="auth">Judge<small>decides</small></li><li>Learner model</li></ol>
+          <p>Interpretation is a proposal. The judge still owns the state decision.</p>
+          <div class="nums">
+            <div><b>75%</b><span>Coarse accuracy</span></div>
+            <div><b>91.4%</b><span>Commit accuracy</span></div>
+            <div><b>2/58</b><span>False mastery</span></div>
+            <div><b>3/80</b><span>Harmful writes</span></div>
+          </div>
+          <p class="small">V37 dev14, three fresh Mac runs, 80 development answers.</p>
+        </div>
+        <div class="case">
+          <p class="who">The same example answer, read in parts</p>
+          <dl class="judge">
+            <dt>Conclusion</dt><dd>the north is warmer in July</dd>
+            <dt>Reason</dt><dd>Earth is closer to the Sun</dd>
+            <dt>Checks</dt><dd><ul><li class="p">Conclusion supported by ¶2</li><li class="f">Reason contradicts ¶3: closest in January</li></ul></dd>
+            <dt>Judge</dt><dd class="verdict ask">Ask a follow-up. No mastery.</dd>
+          </dl>
+          <p class="pull">The model reads. Code checks. The judge decides. Checks may downgrade, ask or reject; they cannot manufacture mastery.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" id="results" aria-labelledby="res-h">
+    <div class="head">
+      <h2 id="res-h">Persist the work, then stop redoing it.</h2>
+      <p>Both speed gains came from one move: separating incremental work from persisted work, so reopening a document reads what was already established instead of rebuilding it.</p>
+    </div>
+    <div class="bento" id="perf">
+      <article class="tile indigo w3">
+        <p class="hn">25.90 s → 2.03 s</p><h3>Intelligence generation</h3>
+        <div class="pbars">
+          <div class="pb before"><span>Before</span><div class="track"><div class="fill" data-w="100"></div><div class="val in" data-l="100">25.90 s</div></div></div>
+          <div class="pb after"><span>After</span><div class="track"><div class="fill" data-w="7.84"></div><div class="val" data-l="7.84">2.03 s</div></div></div>
+        </div>
+        <p class="small">Recorded V28.1 measurement after separating incremental and persisted work.</p>
+      </article>
+      <article class="tile peach w3">
+        <p class="hn">10.34 s → 64 ms</p><h3>Reopen, p50</h3>
+        <div class="pbars">
+          <div class="pb before"><span>Before</span><div class="track"><div class="fill" data-w="100"></div><div class="val in" data-l="100">10.34 s</div></div></div>
+          <div class="pb after"><span>After</span><div class="track"><div class="fill" data-w="0.62"></div><div class="val" data-l="0.62">64 ms</div></div></div>
+        </div>
+        <p>Previously processed material. This measures reuse, not a cold model request.</p>
+      </article>
+      <article class="tile plain w4"><p class="hn">2/58</p><h3>False mastery in V37 dev14</h3><p>Answers that should not have earned mastery and still did, out of the 58 that should not.</p></article>
+      <article class="tile plain w2"><p class="hn">0/16</p><h3>Weak reasoning caught by V35 and V36</h3><p>The number that ended the vector-only direction.</p></article>
+    </div>
+  </section>
+
+  <section class="chapter" id="native" aria-labelledby="nat-h">
+    <div class="head">
+      <h2 id="nat-h">Recorded in the Simulator.</h2>
+      <p>Everything above is a web explanation. These are recordings of the SwiftUI app itself.</p>
+    </div>
+    <div class="native">
+      <figure><figcaption><b>Explain like I'm 10.</b><span>Simulator recording, native SwiftUI</span></figcaption><div class="slot" data-asset="leu-explain-like-10">Existing Simulator recording: Explain like I'm 10</div></figure>
+      <figure><figcaption><b>Reader to explanation and back.</b><span>Simulator recording, native SwiftUI</span></figcaption><div class="slot" data-asset="leu-reader-loop">Existing Simulator recording: Reader and source return</div></figure>
+    </div>
+  </section>
+
+  <section class="chapter" id="engineering" aria-labelledby="inv-h">
+    <div class="head">
+      <h2 id="inv-h">Native problems that shaped the architecture.</h2>
+    </div>
+    <div class="md" id="invs"></div>
+  </section>
+
+  <section class="chapter" aria-labelledby="close-h">
+    <div class="close">
+      <div class="paper" aria-hidden="true" id="closePaper"></div>
+      <div>
+        <div class="head" style="text-align:left;margin:0 0 18px"><h2 id="close-h" style="font-size:clamp(32px,3.4vw,48px)">The source did not change. What is known about it did.</h2></div>
+        <p class="summary" id="summary"></p>
+        <svg class="graph" id="closeGraph" viewBox="0 0 520 462" role="img" aria-label="Concept graph coloured by learner state"></svg>
+        <ul class="legend"><li class="evidence">Credited</li><li class="weak">Weak reasoning</li><li class="missed">Not credited</li><li>Not studied</li></ul>
+      </div>
+    </div>
+  </section>
+  <nav class="next" aria-label="Next project"><span class="lbl">Next project</span><a href="https://miguelalmeida.is-a.dev/work/flow">Flow</a></nav>
+</main>
+<script>
+
+(() => {
+const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- data ---------- */
+const CONCEPTS = {
+  tilt:{name:'axial tilt'}, angle:{name:'sun angle'}, daylength:{name:'day length'},
+  energy:{name:'energy per m²'}, seasons:{name:'seasons'}, distance:{name:'orbital distance'}
+};
+const PASSAGES = [
+  {id:'p1', n:'¶1', text:"Earth's axis is tilted about 23.4° relative to its orbit and keeps pointing the same way in space all year, so each hemisphere spends half the orbit leaning toward the Sun.",
+   concepts:['tilt','seasons'], claim:'A fixed axial tilt makes each hemisphere lean sunward for half the year.',
+   edge:['axial tilt','changes','sun angle and day length'],
+   act:{type:'Recall', prompt:"What stays the same about Earth's axis through the year?"},
+   answers:[
+     {t:'Its tilt and the direction it points in space, so each hemisphere leans toward the Sun for half the orbit.', read:['the axis keeps its tilt and direction','each hemisphere leans sunward for half the year'], checks:[[1,'Conclusion supported by ¶1'],[1,'Reason supported by ¶1']], v:'credit'},
+     {t:"It always points the same way, because the Sun's gravity holds it in place.", tag:'Right conclusion, unsupported reason', read:['the axis keeps pointing the same way',"the Sun's gravity holds it in place"], checks:[[1,'Conclusion supported by ¶1'],[0,'Reason not found in the source']], v:'ask'},
+     {t:'Nothing. The axis flips between summer and winter.', read:['the axis flips','none given'], checks:[[0,'Conclusion contradicts ¶1'],[0,'No reason given']], v:'none'}
+   ]},
+  {id:'p2', n:'¶2', text:'When a hemisphere leans toward the Sun, sunlight arrives at a steeper angle and days are longer, so each square metre receives more energy. That is summer.',
+   concepts:['angle','daylength','energy'], claim:'Steeper sunlight and longer days raise the energy each square metre receives.',
+   edge:['sun angle','concentrates','energy per m²'],
+   act:{type:'Teach it back', prompt:'In your own words: why is it summer in the northern hemisphere in July?'},
+   answers:[
+     {t:'The north leans toward the Sun, so light hits more directly and days are longer, which delivers more energy per square metre.', read:['the north gets more energy in July','steeper light and longer days'], checks:[[1,'Conclusion supported by ¶2'],[1,'Reason consistent with the claim']], v:'credit'},
+     {t:"It's warmer in July because Earth is closer to the Sun then.", tag:'Right conclusion, wrong reason', read:['the north is warmer in July','Earth is closer to the Sun'], checks:[[1,'Conclusion supported by ¶2'],[0,'Reason contradicts ¶3: Earth is closest to the Sun in January']], v:'ask'},
+     {t:'The Sun burns hotter in summer.', read:['the Sun itself gets hotter','none given'], checks:[[0,'Conclusion not in the source'],[0,'No reason given']], v:'none'}
+   ]},
+  {id:'p3', n:'¶3', text:"Earth's distance from the Sun changes only slightly over the year, and Earth is closest to the Sun in early January, during northern winter.",
+   concepts:['distance','seasons'], claim:'Orbital distance does not explain the seasons.',
+   edge:['orbital distance','does not drive','seasons'],
+   act:{type:'Predict', prompt:'If distance caused the seasons, what would both hemispheres experience in January?'},
+   answers:[
+     {t:"Summer at the same time, because both would be closest to the Sun. They don't, so distance isn't the cause.", read:['both hemispheres would have summer together','both are closest to the Sun at once'], checks:[[1,'Conclusion follows from ¶3'],[1,'Reason consistent with the claim']], v:'credit'},
+     {t:'Both would get summer, because January is when the Sun is most active.', tag:'Right conclusion, unsupported reason', read:['both hemispheres would get summer','the Sun is most active in January'], checks:[[1,'Conclusion follows from ¶3'],[0,'Reason not found in the source']], v:'ask'},
+     {t:'The northern hemisphere would be colder.', read:['the north would be colder','none given'], checks:[[0,'Conclusion contradicts the premise'],[0,'No reason given']], v:'none'}
+   ]}
+];
+const VERDICT = {
+  credit:{cls:'credit', text:'Credit. Evidence recorded.', state:'evidence', label:'credited'},
+  ask:{cls:'ask', text:'Ask a follow-up. No mastery.', state:'weak', label:'weak reasoning'},
+  none:{cls:'none', text:'No credit. Return to the passage.', state:'missed', label:'not credited'}
+};
+const STATE_LABEL = {unseen:'not studied', evidence:'credited', weak:'weak reasoning, follow-up queued', missed:'not credited'};
+const model = {}; Object.keys(CONCEPTS).forEach(k => model[k] = 'unseen');
+const passageResult = {};
+
+/* ---------- concept graph ---------- */
+const NW = 172, NH = 54;
+const GN = {
+  tilt:{x:180,y:50,src:'¶1'}, distance:{x:430,y:50,src:'¶3'},
+  angle:{x:100,y:172,src:'¶2'}, daylength:{x:300,y:172,src:'¶2'},
+  energy:{x:200,y:294,src:'¶2'}, seasons:{x:200,y:408,src:'¶1'}
+};
+const GE = [
+  {a:'tilt', b:'angle', l:'changes'},
+  {a:'tilt', b:'daylength', l:'changes'},
+  {a:'angle', b:'energy', l:'concentrates', bx:-22},
+  {a:'daylength', b:'energy', l:'adds hours to', bx:22},
+  {a:'energy', b:'seasons', l:'drives'},
+  {a:'distance', b:'seasons', l:'does not drive', neg:true}
+];
+const STATE_SHORT = {evidence:'credited', weak:'weak reasoning', missed:'not credited'};
+function graphSVG(states, id){
+  let d = `<defs><marker id="${id}-ah" class="mk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker><marker id="${id}-ahn" class="mk neg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>`;
+  let edges = '', labels = '';
+  GE.forEach((e, i) => {
+    const A = GN[e.a], B = GN[e.b];
+    let path, mx, my;
+    if (e.neg){
+      const x0 = A.x, y0 = A.y + NH/2, x3 = B.x + NW/2 + 4, y3 = B.y;
+      path = `M${x0},${y0} C${x0},${y0+253} ${x3+128},${y3} ${x3},${y3}`;
+      mx = (x0 + 3*x0 + 3*(x3+128) + x3) / 8; my = (y0 + 3*(y0+253) + 3*y3 + y3) / 8;
+    } else {
+      const x0 = A.x, y0 = A.y + NH/2, x3 = B.x + (e.bx || 0), y3 = B.y - NH/2 - 3, cy = (y0 + y3) / 2;
+      path = `M${x0},${y0} C${x0},${cy} ${x3},${cy} ${x3},${y3}`;
+      mx = (x0 + x3) / 2; my = cy;
+    }
+    const w = e.l.length * 6.9 + 18;
+    edges += `<path class="e${e.neg ? ' neg' : ''}" data-a="${e.a}" data-b="${e.b}" d="${path}" pathLength="1" marker-end="url(#${id}-ah${e.neg ? 'n' : ''})" style="--i:${i}"/>`;
+    labels += `<g class="lab${e.neg ? ' neg' : ''}" data-a="${e.a}" data-b="${e.b}" style="--i:${i}"><rect x="${mx - w/2}" y="${my - 11}" width="${w}" height="22" rx="11"/><text x="${mx}" y="${my + 4}" text-anchor="middle">${e.l}</text></g>`;
+  });
+  let nodes = '';
+  Object.entries(GN).forEach(([k, n]) => {
+    const st = states ? states[k] : 'unseen';
+    const sub = `from ${n.src}` + (st !== 'unseen' ? ` · ${STATE_SHORT[st]}` : '');
+    nodes += `<g class="node ${st}" data-k="${k}" tabindex="0" role="img" aria-label="${CONCEPTS[k].name}, ${sub}"><rect class="nb" x="${n.x - NW/2}" y="${n.y - NH/2}" width="${NW}" height="${NH}" rx="16"/><text class="nt" x="${n.x}" y="${n.y - 2}" text-anchor="middle">${CONCEPTS[k].name}</text><text class="ns" x="${n.x}" y="${n.y + 16}" text-anchor="middle">${sub}</text></g>`;
+  });
+  return d + edges + labels + nodes;
+}
+function wireGraph(svg){
+  svg.querySelectorAll('g.node').forEach(n => {
+    const k = n.dataset.k;
+    const on = () => {
+      const near = new Set([k]);
+      svg.querySelectorAll('.e').forEach(e => { if (e.dataset.a === k || e.dataset.b === k){ near.add(e.dataset.a); near.add(e.dataset.b); } });
+      svg.classList.add('focus');
+      svg.querySelectorAll('.e,.lab').forEach(e => e.classList.toggle('hl', e.dataset.a === k || e.dataset.b === k));
+      svg.querySelectorAll('g.node').forEach(g => g.classList.toggle('hl', near.has(g.dataset.k)));
+    };
+    const off = () => { svg.classList.remove('focus'); svg.querySelectorAll('.hl').forEach(e => e.classList.remove('hl')); };
+    n.addEventListener('mouseenter', on); n.addEventListener('mouseleave', off);
+    n.addEventListener('focus', on); n.addEventListener('blur', off);
+  });
+}
+function renderGraphs(){
+  document.querySelectorAll('svg.graph').forEach((svg, i) => { svg.innerHTML = graphSVG(model, 'g' + i); wireGraph(svg); });
+}
+const gio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ e.target.classList.add('drawn'); gio.unobserve(e.target); } }), {threshold:.3});
+
+/* ---------- hero: passages + trace ---------- */
+const passEl = $('#passages'), trace = $('#trace');
+PASSAGES.forEach(p => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'psg'; b.id = 'psg-' + p.id; b.dataset.p = p.id; b.setAttribute('aria-pressed', 'false');
+  b.innerHTML = `<span class="pid">${p.n}</span>${esc(p.text)}`;
+  b.addEventListener('click', () => select(p.id));
+  passEl.appendChild(b);
+});
+const NODES = [
+  ['Source passage', 'The exact text, page and passage identity.'],
+  ['Concepts and claims', 'What the passage defines and asserts.'],
+  ['Relationship', 'A typed edge in the concept graph.'],
+  ['Learning activity', 'Chosen from structure, then worded.'],
+  ['Learner response', 'An answer to judge.'],
+  ['Judgement', 'Model reads, code checks, judge decides.'],
+  ['Learner state', 'What future study will use.']
+];
+function buildTrace(){
+  trace.innerHTML = NODES.map((n, i) => `<li class="node" data-n="${i+1}" data-i="${i}"><span class="ribbon" aria-hidden="true"></span>
+    <div class="k"><span>${n[0]}</span><button type="button" class="src" tabindex="-1">Show source</button></div>
+    <p class="hint">${n[1]}</p><div class="v"><div></div></div></li>`).join('');
+  trace.querySelectorAll('.src').forEach(b => b.addEventListener('click', returnToSource));
+}
+let current = null, timers = [];
+function setNode(i, html){
+  const li = trace.querySelector(`[data-i="${i}"]`);
+  li.querySelector('.v>div').innerHTML = html;
+  const open = () => { li.classList.add('on'); li.querySelector('.src').tabIndex = 0; };
+  return open;
+}
+function sequence(opens, startDelay = 0){
+  timers.forEach(clearTimeout); timers = [];
+  opens.forEach((fn, k) => {
+    if (reduce.matches) fn(); else timers.push(setTimeout(fn, startDelay + k * 170));
+  });
+}
+function select(id){
+  const p = PASSAGES.find(x => x.id === id);
+  current = p;
+  document.querySelectorAll('.psg').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.p === id)));
+  buildTrace();
+  $('#clearTrace').hidden = false;
+  const opens = [
+    setNode(0, `<p class="quote">“${esc(p.text)}”</p><p class="claim">Earth Science Notes, p. 12, ${p.n}</p>`),
+    setNode(1, `<p class="chips">${p.concepts.map(c => `<span class="cpt">${CONCEPTS[c].name}</span>`).join('')}</p><p class="claim">Claim: ${esc(p.claim)}</p>`),
+    setNode(2, `<p class="edge">${p.edge[0]}<i>${p.edge[1]}</i>${p.edge[2]}</p>`),
+    setNode(3, `<p class="act"><b>${p.act.type}</b>${esc(p.act.prompt)}</p>`),
+    setNode(4, `<ul class="answers">${p.answers.map((a, k) => `<li><button type="button" class="ans" data-k="${k}" aria-pressed="false">${esc(a.t)}${a.tag ? `<small>${a.tag}</small>` : ''}</button></li>`).join('')}</ul>`)
+  ];
+  trace.querySelectorAll('.ans').forEach(b => b.addEventListener('click', () => answer(Number(b.dataset.k))));
+  sequence(opens);
+  $('#traceNote').textContent = 'Pick an answer to see how it is judged.';
+  if (matchMedia('(max-width:960px)').matches){
+    $('#trace-h').scrollIntoView({behavior: reduce.matches ? 'auto' : 'smooth', block:'start'});
+  }
+}
+function answer(k){
+  const p = current, a = p.answers[k], V = VERDICT[a.v];
+  trace.querySelectorAll('.ans').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.k) === k)));
+  const before = {};
+  p.concepts.forEach(c => before[c] = model[c]);
+  p.concepts.forEach(c => { model[c] = V.state; });
+  passageResult[p.id] = V.state;
+  const o1 = setNode(5, `<dl class="judge">
+      <dt>Conclusion</dt><dd>${esc(a.read[0])}</dd>
+      <dt>Reason</dt><dd>${esc(a.read[1])}</dd>
+      <dt>Checks</dt><dd><ul>${a.checks.map(([ok, t]) => `<li class="${ok ? 'p' : 'f'}">${esc(t)}</li>`).join('')}</ul></dd>
+      <dt>Judge</dt><dd class="verdict ${V.cls}">${V.text}</dd></dl>`);
+  const o2 = setNode(6, `<ul class="state">${p.concepts.map(c => `<li><span>${CONCEPTS[c].name}</span><span class="st ${model[c]}">${before[c] === model[c] ? STATE_LABEL[model[c]] : STATE_LABEL[before[c]] + ' → ' + STATE_LABEL[model[c]]}</span></li>`).join('')}</ul>`);
+  sequence([o1, o2], 60);
+  $('#traceNote').textContent = 'Use “Show source” on any step to return to the exact passage.';
+  updateClosing();
+}
+function returnToSource(){
+  if (!current) return;
+  const el = document.getElementById('psg-' + current.id);
+  el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+  el.scrollIntoView({behavior: reduce.matches ? 'auto' : 'smooth', block:'center'});
+  el.focus({preventScroll:true});
+}
+$('#clearTrace').addEventListener('click', () => {
+  current = null; buildTrace();
+  document.querySelectorAll('.psg').forEach(b => b.setAttribute('aria-pressed', 'false'));
+  $('#clearTrace').hidden = true;
+  $('#traceNote').textContent = 'Every step keeps a link to the passage it came from.';
+});
+buildTrace();
+
+/* ---------- extraction views ---------- */
+const XV = {
+  page:{
+    html:`<div class="mini"><p class="lbl">EARTH SCIENCE</p><div class="rh"><span>Earth Science Notes</span><span>p. 12</span></div><h4>Why seasons happen</h4>
+      <div class="cols"><p>Earth's axis is tilted about 23.4° relative to its orbit and keeps pointing the same way in space all year.</p><p>Earth's distance from the Sun changes only slightly, and Earth is closest to the Sun in early January.</p></div></div>`,
+    notes:[['Looks fine.','Letter-spaced label, running header, heading and two columns. A person reads this correctly without effort.'],['Visual layout is the input, not the reading order.','PDFKit returns strings positioned on a page. It does not return headings, paragraphs or the order a person reads them in.']]
+  },
+  raw:{
+    html:`<pre class="raw">E A R T H   S C I E N C E<sup>1</sup>
+<mark>Earth Scienc Note</mark> p. 12<sup>2</sup><sup>3</sup>
+<mark>Why season happe</mark><sup>2</sup>
+Earth's axis is tilted about 23.4° rel  Earth's distance from the Sun<sup>4</sup>
+ative to its orbit and keeps pointing   changes only slightly, and Earth is
+the same way in space all year.         closest to the Sun in early January.</pre>`,
+    notes:[['1','Explicit spaces in letter-spaced labels interfered with geometric grouping.'],['2','Characters dropped from titles and headings, the same failure seen on real documents.'],['3','Running headers entered the text as if they were content.'],['4','Blocks joined across columns, so sentences interleaved.']]
+  },
+  canon:{
+    html:`<ul class="blocks">
+      <li><code>p12·label</code><span class="x">EARTH SCIENCE<small>decoration, excluded</small></span></li>
+      <li><code>p12·header</code><span class="x">Earth Science Notes, p. 12<small>running header, excluded</small></span></li>
+      <li><code>p12·h1</code><span>Why seasons happen<small>heading</small></span></li>
+      <li><code>p12·¶1</code><span>Earth's axis is tilted about 23.4° relative to its orbit and keeps pointing the same way in space all year.</span></li>
+      <li><code>p12·¶3</code><span>Earth's distance from the Sun changes only slightly, and Earth is closest to the Sun in early January.</span></li></ul>`,
+    notes:[['Change.','Move source ownership into a reconstruction pipeline: geometry-aware extraction, line grouping, block classification and page reconstruction. Keep stable passage identities and canonical whitespace.'],['Why identities matter.','Every concept, question, judgement and learner record cites a passage id. Return-to-source lands on that id, not on a page guess.'],['What tests missed.','V25 could pass 243/243 core tests while native reconstruction, Study/Lens handoff and gestures still had integration problems. Old persisted extraction could also outlive a parser fix.']]
+  }
+};
+function setX(v){
+  document.querySelectorAll('.seg button').forEach(b => { const on = b.dataset.v === v; b.setAttribute('aria-checked', String(on)); b.tabIndex = on ? 0 : -1; });
+  $('#xview').innerHTML = XV[v].html;
+  $('#xnotes').innerHTML = XV[v].notes.map(([a, b]) => v === 'raw' ? `<li><span class="tagn">${a}</span>${b}</li>` : `<li><b>${a}</b> ${b}</li>`).join('');
+}
+const segBtns = [...document.querySelectorAll('.seg button')];
+segBtns.forEach((b, i) => {
+  b.addEventListener('click', () => setX(b.dataset.v));
+  b.addEventListener('keydown', e => {
+    if (!['ArrowRight','ArrowLeft'].includes(e.key)) return;
+    e.preventDefault();
+    const n = segBtns[(i + (e.key === 'ArrowRight' ? 1 : segBtns.length - 1)) % segBtns.length];
+    n.focus(); setX(n.dataset.v);
+  });
+});
+setX('page');
+
+/* ---------- chain built by scrolling ---------- */
+const STAGES = [
+  {nm:'PDF', ds:'Visual layout is the input, not the reading order.', out:'glyphs with positions', tag:'Input', p:['A PDF stores positioned glyphs. Reading order, headings and paragraphs have to be reconstructed.'], warn:'PDF is not clean text.'},
+  {nm:'Canonical source', ds:'Reconstruct text; retain page and passage identity.', out:'passages with stable ids', tag:'Ground truth', p:['Every later stage cites a passage id. Source return is part of the trust model, not a navigation detail: it has to restore the exact document, page, passage, selection and learning context.']},
+  {nm:'Concepts and claims', ds:'Separate definitions, relationships and mnemonic material.', out:'a typed concept graph', tag:'Structure', p:['The Concept Graph replaced the earlier Trails idea. Edges are typed relationships between concepts, not a visual graph drawn because graphs look sophisticated.'], graph:true},
+  {nm:'Questions', ds:'Build teaching context; reject invalid candidates.', out:'one learning activity', tag:'Learning intent', p:['Deterministic routing picks what to study and which activity fits: recall, explain, teach it back, predict. Language generation words it last, and invalid candidates are rejected.']},
+  {nm:'Learner response', ds:'Read the conclusion and its reason separately.', out:'a conclusion and its reason', tag:'Interpretation', p:['A learner can reach the right answer for the wrong reason. Reading the answer as one blob hides that.']},
+  {nm:'Judgement', ds:'Check interpretation before granting learning credit.', out:'credit, a follow-up or a rejection', tag:'Decision', p:['Models interpret language. Deterministic checks decide what counts. The model is not allowed to grant mastery directly.']},
+  {nm:'Learner memory', ds:'Persist evidence that will influence future study.', out:'evidence per concept', tag:'State', p:['UI progress and animation cannot assume a save succeeded. History vanishing after relaunch, duplicate follow-ups after failed saves and silent progress resets all came from that assumption.'], warn:'A mistake written here survives the answer that caused it.'}
+];
+$('#steps').innerHTML = STAGES.map((s, i) => `<div class="step" data-i="${i}"><h3>${s.nm}</h3><p>${s.ds}</p>${s.p.map(t => `<p>${t}</p>`).join('')}${s.warn ? `<p class="warn">${s.warn}</p>` : ''}${s.graph ? `<svg class="graph inline-graph" viewBox="0 0 520 462" role="img" aria-label="Concept graph for the sample page"></svg>` : ''}</div>`).join('');
+$('#dstages').innerHTML = STAGES.map((s, i) => `<li class="dst" data-i="${i}"><span class="n">${i+1}</span><div class="body"><div class="nm">${s.nm}</div><div class="ds">${s.ds}</div><div class="out"><span>${s.out}</span></div>${s.graph ? `<div class="dgraph"><div><svg class="graph" id="chainGraph" viewBox="0 0 520 462" role="img" aria-label="Concept graph"></svg></div></div>` : ''}</div></li>`).join('');
+$('#stripBars').innerHTML = STAGES.map(() => '<i></i>').join('');
+function setChain(i){
+  document.querySelectorAll('.dst').forEach(li => { const k = Number(li.dataset.i); li.classList.toggle('on', k <= i); li.classList.toggle('cur', k === i); });
+  document.querySelectorAll('#stripBars i').forEach((b, k) => b.classList.toggle('on', k <= i));
+  $('#stripLabel').textContent = STAGES[i].nm;
+  $('#dstages').style.setProperty('--prog', (i / (STAGES.length - 1)).toFixed(3));
+  const cg = document.getElementById('chainGraph'); if (cg && i >= 2) cg.classList.add('drawn');
+}
+setChain(0);
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) setChain(Number(e.target.dataset.i)); }), {rootMargin:'-45% 0px -45% 0px'});
+document.querySelectorAll('.step').forEach(s => io.observe(s));
+
+/* ---------- version tabs ---------- */
+const tabs = [...document.querySelectorAll('.tab')];
+function selTab(t){
+  tabs.forEach(x => { const on = x === t; x.setAttribute('aria-selected', String(on)); x.tabIndex = on ? 0 : -1; document.getElementById(x.getAttribute('aria-controls')).hidden = !on; });
+}
+tabs.forEach((t, i) => {
+  t.addEventListener('click', () => selTab(t));
+  t.addEventListener('keydown', e => {
+    let n = null;
+    if (e.key === 'ArrowRight') n = tabs[(i + 1) % tabs.length];
+    if (e.key === 'ArrowLeft') n = tabs[(i + tabs.length - 1) % tabs.length];
+    if (e.key === 'Home') n = tabs[0];
+    if (e.key === 'End') n = tabs[tabs.length - 1];
+    if (n){ e.preventDefault(); n.focus(); selTab(n); }
+  });
+});
+
+/* ---------- performance bars ---------- */
+function fillPerf(){
+  $('#perf').classList.add('on');
+  document.querySelectorAll('#perf .fill').forEach(f => f.style.setProperty('--p', f.dataset.w));
+  document.querySelectorAll('#perf .val').forEach(v => v.style.setProperty('--p', v.dataset.l));
+}
+
+if (reduce.matches) fillPerf();
+else new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting){ fillPerf(); o.disconnect(); } }), {threshold:.35}).observe($('#perf'));
+
+/* ---------- investigations ---------- */
+const INV = [
+  ['Leaving the source could lose the way back.', [['Observed','Travelling from a passage into learning or help flows did not always restore where the learner had been.'],['What it changed','Return-to-source has to preserve the exact document, page, passage, selection, context and learning state. It is part of Leu\'s trust model, not a navigation detail.']]],
+  ['The interface assumed saves succeeded.', [['Observed','Source-help history disappeared after relaunch. Failed saves produced duplicate follow-ups. Progress reset silently. Empty cloud operations reported success.'],['What it changed','UI progress and animation stopped assuming persistence succeeded. State and persistence responsibilities were separated.']]],
+  ['PDFKit and SwiftUI are two interaction systems.', [['Observed','Broken PDF swipes, unclear gesture ownership, selection behaviour, synchronising SwiftUI state with PDFKit, keeping source position, and the Contents location being lost.'],['Constraint','A seamless reading surface had to be built from two systems that do not share an interaction model.']]],
+  ['Native verification could not always run.', [['Observed','Dozens of XCTest files were included in the app target. File writes were restricted, Swift macros caused problems and Simulator access was blocked. Later: simulator discovery, XCUITest flakiness and accessibility-state mismatches.'],['Constraint','This is why the results on this page separate development measurements from unfinished native and device gates.']]],
+  ['Offline intelligence is a distribution problem.', [['Observed','Model packaging, binary size, code signing, hardware capability differences, performance across Apple devices and fallback behaviour.'],['Constraint','Running a model locally is the easy sentence. Shipping it to different devices is the work.']]],
+  ['Robotic speech was not good enough.', [['Observed','Robotic text-to-speech was a recurring quality issue. Voice was useful for learning interactions, but having speech output was not enough.']]]
+];
+$('#invs').innerHTML = `<div class="md-list" role="tablist" aria-orientation="vertical" aria-label="Problems">${INV.map(([h], i) => `<button class="md-tab" role="tab" id="mt${i}" aria-controls="mp${i}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}">${h}</button>`).join('')}</div>` +
+  INV.map(([h, rows], i) => `<div class="md-panel" role="tabpanel" id="mp${i}" aria-labelledby="mt${i}"${i === 0 ? '' : ' hidden'} tabindex="0"><h3>${h}</h3><dl>${rows.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl></div>`).join('');
+const mdTabs = [...document.querySelectorAll('.md-tab')];
+function selMd(t){ mdTabs.forEach(x => { const on = x === t; x.setAttribute('aria-selected', String(on)); x.tabIndex = on ? 0 : -1; document.getElementById(x.getAttribute('aria-controls')).hidden = !on; }); }
+mdTabs.forEach((t, i) => {
+  t.addEventListener('click', () => selMd(t));
+  t.addEventListener('keydown', e => {
+    let n = null;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') n = mdTabs[(i + 1) % mdTabs.length];
+    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') n = mdTabs[(i + mdTabs.length - 1) % mdTabs.length];
+    if (n){ e.preventDefault(); n.focus(); selMd(n); }
+  });
+});
+
+/* ---------- closing ---------- */
+function updateClosing(){
+  $('#closePaper').innerHTML = `<div class="run"><span>Earth Science Notes</span><span>p. 12</span></div><h3>Why seasons happen</h3>` +
+    PASSAGES.map(p => `<p class="psg-static ${passageResult[p.id] || ''}">${esc(p.text)}</p>`).join('');
+  const vals = Object.values(passageResult);
+  const c = s => vals.filter(v => v === s).length;
+  $('#summary').textContent = vals.length
+    ? `You answered on ${vals.length} of 3 passages: ${c('evidence')} credited, ${c('weak')} with weak reasoning, ${c('missed')} not credited. Leu would route the next study session from this, and every entry still points at its passage.`
+    : 'Nothing has been recorded yet. Select a passage at the top of the page and answer it, and this graph will change while the page stays the same.';
+  renderGraphs();
+}
+updateClosing();
+/* ---------- product page chrome ---------- */
+const pnav = $('#pnav');
+new IntersectionObserver(([e]) => pnav.classList.toggle('stuck', !e.isIntersecting)).observe($('#sentinel'));
+const navLinks = [...pnav.querySelectorAll('ul a')];
+const navIO = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) navLinks.forEach(a => a.setAttribute('aria-current', String(a.getAttribute('href') === '#' + e.target.id)));
+}), {rootMargin:'-35% 0px -60% 0px'});
+navLinks.forEach(a => { const s = document.querySelector(a.getAttribute('href')); if (s) navIO.observe(s); });
+updateClosing();
+document.querySelectorAll('svg.graph:not(#chainGraph)').forEach(g => gio.observe(g));
+})();
+
+</script>
+</body>
+</html>

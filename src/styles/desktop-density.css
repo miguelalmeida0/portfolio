@@ -1,0 +1,30 @@
+/* The requested 80% desktop presentation. Keep mobile and print at natural size.
+ * Scope this to page content so viewport-positioned intro, route and guide layers
+ * continue using the same coordinates as their pointer/scroll measurements.
+ */
+@media screen and (min-width: 1024px) {
+  #portfolio-content { zoom: .8; }
+
+  /* Viewport units do not grow with CSS zoom. Keep the existing page gutters and
+   * portrait proportions relative to the expanded content area.
+   */
+  #portfolio-content { --page-x: clamp(20px, 9.375vw, 108px); }
+  #portfolio-content[data-homepage] {
+    --portrait-width: min(calc(125vw - 913px), 56%);
+    --content-inset: var(--page-x);
+  }
+  #portfolio-content[data-homepage] :is(.wind-header, .wind-hero) {
+    width: calc(100% - 2 * var(--page-x));
+  }
+}
+
+/* 1280 physical pixels provide the same layout room as 1600 pixels at 80%. */
+@media screen and (min-width: 1280px) {
+  #portfolio-content[data-homepage] { --caption-height: 40px; }
+  #portfolio-content[data-homepage] .index-column { grid-column: 1 / 4; }
+  #portfolio-content[data-homepage] .stage-region { grid-column: 4 / -1; }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1279px) {
+  #portfolio-content[data-homepage] { --portrait-width: calc((125vw - 128px) * .44); }
+}

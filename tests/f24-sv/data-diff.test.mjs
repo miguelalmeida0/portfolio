@@ -1,0 +1,11 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {tok,diff,stats,renderOps} from '../../src/lib/case-studies/second-voice/diff.js';
+import {ORIGINAL,VOICES,STRENGTHS,REWRITES} from '../../src/lib/case-studies/second-voice/content.js';
+import {SITS,LOG,QP,DEC,FOUND} from '../../src/lib/case-studies/f24/data.js';
+test('tokenization retains apostrophes and separates punctuation',()=>{assert.deepEqual(tok("She's here, isn't she?"),["She's",'here',',',"isn't",'she','?']);assert.deepEqual(tok(''),[]);});
+test('LCS ties delete before insertion',()=>{assert.deepEqual(diff('a b','b a').map(o=>[o.t,o.w]),[['-','a'],['=','b'],['+','a']]);});
+test('punctuation has no leading spaces; adjacent changes and first tokens are marked',()=>{assert.deepEqual(renderOps(diff('One two.','Three four.')).map(t=>[t.word,t.classes,t.space]),[['One','d o0',false],['two','d j',true],['Three','i r0',true],['four','i j',true],['.','k',false]]);});
+test('statistics count words and contiguous replacement, insertion and deletion runs',()=>{assert.deepEqual(stats(diff('a b c.','a z c new.')),{kept:2,words:3,rep:1,add:1,rem:0});assert.deepEqual(stats(diff('a b.','a.')),{kept:1,words:2,rep:0,add:0,rem:1});});
+for(const voice of VOICES)for(const strength of STRENGTHS)test(`${voice.id}/${strength.id}: diff reconstructs both source and authored rewrite`,()=>{const rewrite=REWRITES[voice.id][strength.id],ops=diff(ORIGINAL,rewrite);assert.deepEqual(ops.filter(o=>o.t!=='+').map(o=>o.w),tok(ORIGINAL));assert.deepEqual(ops.filter(o=>o.t!=='-').map(o=>o.w),tok(rewrite));assert.equal(stats(ops).words,17);});
+test('F24 data preserves the reference counts and fictional identities',()=>{assert.equal(SITS.length,9);assert.equal(QP.length,5);assert.equal(DEC.length,7);assert.equal(FOUND.length,9);assert.equal(LOG.length,8);assert.equal(new Set(LOG.map(r=>r.t+'-'+r.rec)).size,8);for(const r of LOG){assert.match(r.rec,/^Team [A-G]$/);if(r.st==='Failed')assert.equal(r.cause,'Example reason, invented for this page.');}});

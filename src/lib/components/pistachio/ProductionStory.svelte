@@ -5,7 +5,7 @@
   <div class="flex flex-col justify-center">
     <p class="mb-3 text-folio-plum">01 / F24</p>
     <h2 id="production-title" class="max-w-2xl text-[clamp(1.6rem,3.15vw,3rem)] leading-[1.1] tracking-[-.04em]">In production at F24, I built the Svelte frontend and now ship React features and shared UI architecture.</h2>
-    <p class="mt-4 text-lg">Used by thousands of companies.</p>
+    <p class="mt-4 text-lg">Used by hundreds of companies.</p>
     <div class="mt-5 flex flex-wrap gap-8 text-folio-plum">
       <a href="/story#at-work" class="inline-flex min-h-11 items-center gap-2 border-b border-folio-plum" {...destinationLink("/story#at-work")}>Read the story <ArrowUpRight size={17} /></a>
       <a href="/portfolio.pdf" class="inline-flex min-h-11 items-center gap-2 border-b border-folio-plum" {...destinationLink("/portfolio.pdf")}>View résumé <ArrowUpRight size={17} /></a>

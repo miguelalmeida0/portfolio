@@ -1,0 +1,1056 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>F24 Connectivity Hub, from mockup to production system | Miguel Almeida</title>
+<meta name="description" content="Case study: Connectivity Hub's original Svelte frontend, built within the F24 product team, the architecture principles behind it, and continued delivery as React joined. All visuals are fictional mockups.">
+<link rel="stylesheet" href="./fonts/fonts.css">
+<style>
+:root{
+  --paper:#EFF3E3; --ink:#0B2B22; --forest:#12372D; --plum:#610D3D; --sage:#E4EAD3; --ivory:#FAF7ED; --rule:#9FAE9B; --muted:#506353; --hl:#E2EDBA;
+  --plum-tint:#F1E3E8; --plum-wash:#F6EEF0; --fail:#8F2D2D; --fail-tint:#F2DEDB; --amber:#7A5410; --amber-tint:#F0E6C8; --anchor:#D5E0C6;
+  --line:rgba(159,174,155,.55);
+  --shadow:0 1px 2px rgba(11,43,34,.06),0 14px 34px -14px rgba(11,43,34,.22);
+  --ease:cubic-bezier(.2,0,0,1);
+  --sans:Figtree,"Helvetica Neue",Arial,system-ui,sans-serif;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);background:var(--paper);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--plum);outline-offset:3px;border-radius:6px}
+::selection{background:var(--plum);color:var(--ivory)}
+p,dd,li{text-wrap:pretty}
+h1,h2,h3,h4{text-wrap:balance}
+[hidden]{display:none!important}
+.wrap{width:min(1312px,100% - clamp(32px,6vw,96px));margin-inline:auto}
+.skip{position:absolute;left:12px;top:-60px;z-index:100;background:var(--plum);color:var(--ivory);padding:10px 16px;border-radius:10px;font-weight:600;text-decoration:none}
+.skip:focus{top:12px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* portfolio header */
+.top{display:flex;align-items:baseline;gap:18px;padding-block:26px 14px}
+.top .me{font:700 20px/1 Arial,Helvetica,sans-serif;text-transform:uppercase;color:var(--ink);border-bottom:2px solid var(--plum);padding-bottom:4px;text-decoration:none}
+.top .city{color:var(--forest);font-size:15px}
+.top nav{margin-left:auto;display:flex;gap:clamp(16px,2.4vw,40px)}
+.top nav a{color:var(--ink);text-decoration:none;font-size:15.5px}
+.top nav a.ask{color:var(--plum)}
+@media (max-width:720px){.top .city,.top nav a:not(.keep){display:none}}
+
+/* product nav */
+.pnav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--paper);border-bottom:1px solid transparent;transition:border-color .2s}
+.pnav.stuck{border-bottom-color:var(--line)}
+.pnav .wrap{display:flex;align-items:center;gap:24px;height:64px}
+.pname{font-weight:800;font-size:22px;letter-spacing:-.03em;text-decoration:none;white-space:nowrap}
+.pnav ul{display:flex;gap:4px;list-style:none;margin:0 auto 0 0;padding:0}
+.pnav ul a{display:block;text-decoration:none;font-size:14.5px;color:var(--forest);padding:8px 13px;border-radius:999px;transition:background .2s,color .2s;white-space:nowrap}
+.pnav ul a:hover{background:var(--sage);color:var(--ink)}
+.pnav ul a[aria-current="true"]{background:var(--sage);color:var(--ink)}
+@media (max-width:1020px){.pnav ul{display:none}.pnav .wrap{justify-content:space-between}}
+
+/* buttons, links, controls */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;padding:13px 24px;font-weight:600;font-size:15.5px;text-decoration:none;border:0;cursor:pointer;background:var(--plum);color:var(--ivory);transition:transform .2s var(--ease),box-shadow .2s,background .2s,opacity .2s;white-space:nowrap}
+.btn:hover{box-shadow:0 8px 20px -8px rgba(97,13,61,.6)}
+.btn:active{transform:scale(.98)}
+.btn.sm{padding:9px 18px;font-size:14.5px}
+.btn.quiet{background:var(--ivory);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--rule)}
+.btn.quiet:hover{background:var(--sage)}
+.btn:disabled{opacity:.45;cursor:default;box-shadow:none;transform:none}
+.tlink{color:var(--plum);font-weight:600;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px;background:none;border:0;padding:0;cursor:pointer}
+.tlink:hover{text-decoration-thickness:2.5px}
+.seg{display:inline-flex;flex-wrap:wrap;background:var(--paper);border-radius:999px;padding:4px;gap:2px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:8px 15px;cursor:pointer;font-weight:600;font-size:14px;color:var(--forest);transition:background .2s,color .2s}
+.seg button:hover{background:var(--sage)}
+.seg button[aria-checked="true"],.seg button[aria-pressed="true"],.seg button[aria-selected="true"]{background:var(--plum);color:var(--ivory)}
+.switch{display:inline-flex;gap:10px;align-items:center;font-size:14px;color:var(--forest);cursor:pointer}
+.switch input{appearance:none;width:34px;height:20px;border-radius:999px;background:var(--rule);position:relative;cursor:pointer;margin:0;flex:none;transition:background .2s}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--ivory);box-shadow:0 1px 2px rgba(11,43,34,.25);transition:transform .2s var(--ease)}
+.switch input:checked{background:var(--plum)}
+.switch input:checked::after{transform:translateX(14px)}
+.label{font-weight:700;font-size:13px;color:var(--muted);margin:0 0 8px}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 11px;font-size:13px;font-weight:600;background:var(--sage);color:var(--forest);white-space:nowrap}
+.pill.hl{background:var(--hl)}
+.pill.plum{background:var(--plum-tint);color:var(--plum)}
+.pill.fail{background:var(--fail-tint);color:var(--fail)}
+.pill.dark{background:var(--forest);color:var(--ivory)}
+.mono{font-family:var(--mono);font-size:.86em}
+
+/* hero */
+.hero{padding:clamp(40px,6vw,88px) 0 clamp(28px,3vw,44px)}
+.kicker{font-weight:600;font-size:15px;color:var(--plum);margin:0 0 20px}
+.hero h1{font-weight:800;font-size:clamp(44px,5.8vw,84px);line-height:1;letter-spacing:-.045em;margin:0;max-width:17ch}
+.hero .sub{font-size:clamp(18px,1.6vw,21px);line-height:1.5;color:var(--forest);max-width:46ch;margin:22px 0 28px}
+.ctas{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+
+/* containers */
+.frame{background:var(--sage);border-radius:clamp(20px,3vw,36px);padding:clamp(12px,2.8vw,44px);position:relative}
+.window{background:var(--ivory);border-radius:clamp(16px,2vw,24px);box-shadow:var(--shadow)}
+.cap{font-size:14px;color:var(--muted);margin:14px 0 0;max-width:80ch}
+.chapter{padding-top:clamp(88px,11vw,160px)}
+.head{margin:0 0 clamp(28px,3.5vw,48px)}
+.head h2{font-weight:800;font-size:clamp(32px,3.6vw,52px);line-height:1.04;letter-spacing:-.045em;margin:0;max-width:21ch}
+.head p{font-size:clamp(17px,1.4vw,19px);color:var(--forest);margin:16px 0 0;max-width:62ch}
+
+/* stage rail (shared visual language with Flow) */
+.rail{list-style:none;margin:0;padding:0}
+.rail li{position:relative;padding:0 0 14px 38px;color:var(--muted);transition:color .25s}
+.rail li::before{content:attr(data-n);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:var(--paper);color:var(--muted);transition:background .25s,color .25s,box-shadow .25s;z-index:1}
+.rail li::after{content:"";position:absolute;left:12.5px;top:28px;bottom:2px;border-left:1px solid var(--line)}
+.rail li:last-child::after{display:none}
+.rail .nm{font-weight:600;font-size:15px;line-height:26px}
+.rail .out{font-size:13.5px;margin:2px 0 0;color:var(--forest)}
+.rail .out:empty{display:none}
+.rail li[data-s="active"]{color:var(--ink)}
+.rail li[data-s="active"]::before{background:var(--hl);color:var(--ink);box-shadow:0 0 0 4px rgba(226,237,186,.7)}
+.rail li[data-s="done"]{color:var(--ink)}
+.rail li[data-s="done"]::before{background:var(--forest);color:var(--ivory)}
+.rail li[data-s="reuse"]{color:var(--ink)}
+.rail li[data-s="reuse"]::before{background:var(--plum);color:var(--ivory)}
+.rail li[data-s="reuse"] .out{color:var(--plum);font-weight:600}
+.rail li[data-s="blocked"]{color:var(--ink)}
+.rail li[data-s="blocked"]::before{background:var(--plum-tint);color:var(--plum)}
+.rail li[data-s="blocked"] .out{color:var(--plum)}
+.rail li[data-s="failed"]{color:var(--ink)}
+.rail li[data-s="failed"]::before{background:var(--fail-tint);color:var(--fail)}
+.rail li[data-s="failed"] .out{color:var(--fail)}
+.rail li[data-s="skipped"] .nm{text-decoration:line-through;text-decoration-thickness:1px}
+.rail li[data-s="skipped"] .out{color:var(--muted)}
+
+/* story rows */
+.story{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:clamp(24px,5vw,88px);padding:clamp(32px,4vw,56px) 0;border-top:1px solid var(--line)}
+.story h3{font-weight:800;font-size:clamp(24px,2.4vw,34px);letter-spacing:-.04em;line-height:1.08;margin:0 0 14px}
+.story .said{font-style:italic;color:var(--muted);font-size:18px;margin:0}
+.story dl{margin:0;display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px 24px}
+.story dt{font-weight:700;font-size:14.5px;color:var(--plum);padding-top:2px}
+.story dd{margin:0;color:var(--forest)}
+@media (max-width:860px){.story{grid-template-columns:minmax(0,1fr)}.story dl{grid-template-columns:minmax(0,1fr);gap:4px}.story dd{margin-bottom:10px}}
+
+/* specs */
+.specs2{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(32px,6vw,104px);align-items:start}
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 32px;background:var(--forest);color:var(--ivory);border-radius:28px;padding:clamp(24px,3vw,40px)}
+.vgrid b{display:block;font-weight:800;font-size:clamp(28px,2.8vw,42px);letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.vgrid span{font-size:14.5px;color:rgba(250,247,237,.78)}
+.vgrid .vh{grid-column:1/-1;font-weight:700;font-size:15px;color:var(--hl);margin:0}
+.facts{display:grid;gap:26px}
+.facts h3{font-weight:700;font-size:16px;margin:0 0 4px}
+.facts p{margin:0;color:var(--forest)}
+@media (max-width:860px){.specs2{grid-template-columns:minmax(0,1fr)}}
+
+.next{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:44px 0 64px;margin-top:clamp(88px,10vw,140px);border-top:1px solid var(--line)}
+.next .lbl{color:var(--muted);font-size:14.5px}
+.next a{font-weight:800;font-size:clamp(34px,4vw,56px);letter-spacing:-.045em;text-decoration:none}
+.next a:hover{color:var(--plum)}
+
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:0s!important;animation-duration:0s!important;transition-delay:0s!important;animation-delay:0s!important;animation-iteration-count:1!important}
+}
+
+
+/* ---------- hero: mockup assembles into a system ---------- */
+#try .window{padding:clamp(18px,3vw,40px);display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(18px,3.5vw,56px);align-items:start}
+.asm-stage{background:var(--paper);border-radius:20px;padding:clamp(18px,3vw,40px);display:flex;justify-content:center;min-height:440px;align-items:flex-start}
+.mock{width:100%;max-width:520px;background:var(--ivory);border-radius:18px;box-shadow:var(--shadow);padding:22px 22px 20px;display:grid;gap:14px;transition:max-width .55s var(--ease)}
+.m-head{display:flex;align-items:center;gap:10px}
+.m-head h3{margin:0 auto 0 0;font-size:19px;font-weight:800;letter-spacing:-.02em}
+.m-field{display:grid;grid-template-columns:96px minmax(0,1fr);gap:4px 14px;align-items:center}
+.m-l{font-size:14px;font-weight:600;color:var(--forest)}
+.m-sel{display:flex;align-items:center;gap:10px;background:var(--paper);border-radius:10px;padding:10px 12px;font-size:15px;box-shadow:inset 0 0 0 1px var(--line);min-height:44px;transition:box-shadow .3s}
+.m-sel .car{margin-left:auto;color:var(--muted)}
+.m-err,.m-meta,.m-loading{grid-column:2;margin:0;font-size:13.5px}
+.m-err{color:var(--fail);font-weight:600}
+.m-meta{color:var(--forest)}
+.m-meta u{color:var(--plum);text-underline-offset:3px}
+.m-loading{color:var(--muted)}
+.m-skel{height:12px;flex:1;border-radius:6px;background:linear-gradient(90deg,var(--sage),var(--hl),var(--sage));background-size:200% 100%;animation:sk 1.4s linear infinite}
+@keyframes sk{to{background-position:-200% 0}}
+.m-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.m-btn{display:inline-flex;align-items:center;border-radius:999px;padding:9px 18px;font-weight:600;font-size:14.5px;background:var(--plum);color:var(--ivory);transition:opacity .3s}
+.m-btn.alt{background:var(--ivory);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--rule)}
+.m-banner{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--fail-tint);border-radius:12px;padding:10px 12px;font-size:14px;box-shadow:inset 3px 0 0 var(--fail)}
+.m-banner span:first-child{margin-right:auto}
+.m-test{background:var(--hl);border-radius:12px;padding:10px 12px;font-size:14px}
+.m-perm{margin:0;font-size:13.5px;color:var(--forest);background:var(--sage);border-radius:10px;padding:8px 12px}
+.m-scope{font-size:12.5px;font-weight:600;background:var(--sage);border-radius:999px;padding:3px 10px}
+.tt{display:inline-flex;align-items:center;gap:5px;font:600 11.5px var(--mono);color:var(--forest);background:var(--hl);border-radius:6px;padding:3px 7px;white-space:nowrap}
+.tt::before{content:"✓";font-family:var(--sans);font-weight:800}
+.m-field .tt{grid-column:2;justify-self:start}
+.mock .m-banner,.mock .m-scope,.mock .m-meta,.mock .m-loading,.mock .m-test,.mock .m-btn.alt,.mock .m-perm,.mock .tt,.mock .m-err,.mock .m-ph,.mock .m-skel{display:none}
+.mock .m-banner,.mock .m-scope,.mock .m-meta,.mock .m-loading,.mock .m-test,.mock .m-perm,.mock .tt,.mock .m-err{animation:lyIn .45s var(--ease)}
+@keyframes lyIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.mock[data-on~="loading"] [data-f="rec"] .m-v{display:none}
+.mock[data-on~="loading"] [data-f="rec"] .m-skel{display:block}
+.mock[data-on~="loading"] [data-f="rec"] .m-loading{display:block}
+.mock[data-on~="validation"] [data-f="scen"] .m-v{display:none}
+.mock[data-on~="validation"] [data-f="scen"] .m-ph{display:inline;color:var(--muted)}
+.mock[data-on~="validation"] [data-f="scen"] .m-err{display:block}
+.mock[data-on~="validation"] [data-f="scen"] .m-sel{box-shadow:inset 0 0 0 1.5px var(--fail)}
+.mock[data-on~="permissions"] .m-btn.save{opacity:.4}
+.mock[data-on~="permissions"] .m-perm{display:block}
+.mock[data-on~="api"] .m-scope,.mock[data-on~="api"] .m-meta{display:block}
+.mock[data-on~="api"] .m-scope{display:inline-block}
+.mock[data-on~="api"][data-on~="loading"] .m-meta{display:none}
+.mock[data-on~="testrun"] .m-btn.alt{display:inline-flex}
+.mock[data-on~="testrun"] .m-test{display:block}
+.mock[data-on~="recovery"] .m-banner{display:flex}
+.mock[data-on~="responsive"]{max-width:330px}
+.mock[data-on~="responsive"] .m-field{grid-template-columns:minmax(0,1fr)}
+.mock[data-on~="responsive"] .m-err,.mock[data-on~="responsive"] .m-meta,.mock[data-on~="responsive"] .m-loading,.mock[data-on~="responsive"] .m-field .tt{grid-column:1}
+.mock[data-on~="tests"] .tt{display:inline-flex}
+.asm-side h3{margin:0 0 4px;font-size:clamp(22px,2vw,28px);font-weight:800;letter-spacing:-.035em;line-height:1.15}
+.asm-side .count{margin:0 0 18px;color:var(--forest);font-size:15px}
+.layers{list-style:none;margin:0 0 18px;padding:0;display:grid;gap:6px}
+.layers button{width:100%;display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:center;text-align:left;border:0;background:var(--paper);border-radius:14px;padding:10px 12px;cursor:pointer;transition:background .2s}
+.layers button:hover{background:var(--sage)}
+.layers .sw{width:34px;height:20px;border-radius:999px;background:var(--rule);position:relative;transition:background .2s}
+.layers .sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--ivory);transition:transform .2s var(--ease)}
+.layers button[aria-checked="true"] .sw{background:var(--plum)}
+.layers button[aria-checked="true"] .sw::after{transform:translateX(14px)}
+.layers b{display:block;font-size:15px;font-weight:700}
+.layers small{display:block;font-size:13px;color:var(--muted);line-height:1.35}
+.asm-actions{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+@media (max-width:960px){#try .window{grid-template-columns:minmax(0,1fr)}.asm-stage{min-height:0}}
+
+/* ---------- states explorer ---------- */
+#states .window{padding:clamp(18px,3vw,40px)}
+.hist-ctl{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:center;margin-bottom:16px}
+.hist-ctl input{border:0;background:var(--paper);border-radius:999px;padding:9px 14px;font-size:14.5px;box-shadow:inset 0 0 0 1px var(--line);min-width:180px}
+.hist-ctl input:focus-visible{outline:none;box-shadow:inset 0 0 0 2px var(--plum)}
+.hist-state{margin:0 0 18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.lb{background:var(--paper);border-radius:18px;padding:8px;min-height:300px}
+.hist-row{width:100%;display:grid;grid-template-columns:62px minmax(0,1.3fr) minmax(0,.7fr) minmax(0,1fr) 98px;gap:12px;align-items:center;text-align:left;border:0;background:transparent;border-radius:12px;padding:11px 12px;cursor:pointer;font-size:14.5px}
+.hist-row:hover{background:var(--sage)}
+.hist-row .t{font:600 13px var(--mono);color:var(--forest)}
+.hist-row .st{justify-self:end}
+.hist-det{margin:0 12px 8px;background:var(--ivory);border-radius:12px;padding:12px 14px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px 16px;font-size:14px}
+.hist-det dt{font-size:12.5px;font-weight:700;color:var(--muted)}
+.hist-det dd{margin:0}
+.hist-msg{padding:40px 20px;text-align:center}
+.hist-msg h3{margin:0 0 6px;font-size:19px;font-weight:800;letter-spacing:-.02em}
+.hist-msg p{margin:0 0 14px;color:var(--forest)}
+.hist-banner{margin:4px 4px 8px;border-radius:12px;padding:10px 12px;font-size:14px;background:var(--plum-wash);box-shadow:inset 3px 0 0 var(--plum);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.hist-banner span{margin-right:auto}
+.hist-foot{display:flex;justify-content:space-between;padding:10px 12px 4px;font-size:13.5px;color:var(--forest)}
+.hist-skel{display:grid;gap:14px;padding:16px 12px}
+.hist-skel i{display:block;height:14px;border-radius:7px;background:linear-gradient(90deg,var(--sage),var(--hl),var(--sage));background-size:200% 100%;animation:sk 1.4s linear infinite}
+@media (max-width:760px){.hist-row{grid-template-columns:52px minmax(0,1fr) 88px}.hist-row .c3,.hist-row .c4{display:none}.hist-det{grid-template-columns:1fr 1fr}}
+
+/* ---------- decisions ---------- */
+.layers-d{display:grid;gap:10px;margin-bottom:22px}
+.ld-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.ld{border-radius:16px;padding:14px 14px 16px;background:var(--ivory);box-shadow:inset 0 0 0 1px var(--line);transition:background .3s,box-shadow .3s,color .3s,opacity .3s;position:relative}
+.ld b{display:block;font-size:15px;font-weight:800;letter-spacing:-.01em}
+.ld small{display:block;font-size:13px;color:var(--muted);margin-top:4px;line-height:1.35}
+.ld-row .ld:not(:last-child)::after{content:"→";position:absolute;right:-9px;top:50%;transform:translate(50%,-50%);color:var(--rule);font-size:14px}
+.ld.wide{grid-column:1/-1}
+.layers-d.focus .ld{opacity:.45}
+.layers-d.focus .ld.on{opacity:1;background:var(--forest);color:var(--ivory);box-shadow:none}
+.layers-d.focus .ld.on small{color:rgba(250,247,237,.78)}
+.dec-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.dec-tabs button{border:0;border-radius:999px;padding:9px 15px;background:var(--ivory);box-shadow:inset 0 0 0 1px var(--line);font-weight:600;font-size:14.5px;cursor:pointer;transition:background .2s,color .2s}
+.dec-tabs button:hover{background:var(--sage)}
+.dec-tabs button[aria-selected="true"]{background:var(--plum);color:var(--ivory);box-shadow:none}
+.dec-tabs .n{font:600 12px var(--mono);opacity:.7;margin-right:6px}
+.dec{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.dec>div{background:var(--ivory);border-radius:22px;padding:20px 22px;box-shadow:var(--shadow)}
+.dec>div.mid{background:var(--hl);box-shadow:none}
+.dec h3{margin:0 0 8px;font-size:14px;font-weight:700;color:var(--plum)}
+.dec p{margin:0;font-size:16px}
+.dec-title{font-weight:800;font-size:clamp(24px,2.4vw,34px);letter-spacing:-.04em;line-height:1.1;margin:0 0 16px}
+@media (max-width:960px){.ld-row{grid-template-columns:repeat(2,minmax(0,1fr))}.ld-row .ld::after{display:none}.dec{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- testing ---------- */
+#testing .window{padding:clamp(18px,3vw,40px);display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(18px,3.5vw,56px);align-items:start}
+.tform{background:var(--paper);border-radius:20px;padding:20px;display:grid;gap:14px}
+.tform input{border:0;background:var(--ivory);border-radius:12px;padding:11px 12px;font-size:15px;box-shadow:inset 0 0 0 1px var(--line);width:100%}
+.tform .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.tform .reqs{font-size:14px;color:var(--forest)}
+.tform .reqs b{font-variant-numeric:tabular-nums}
+.tform .res{font-size:14px;font-weight:600;min-height:22px;margin:0}
+.tform .res.err{color:var(--fail)}
+.asserts{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.asserts li{display:grid;grid-template-columns:26px 1fr auto;gap:12px;align-items:center;background:var(--paper);border-radius:14px;padding:11px 14px;font-size:15px;transition:background .3s}
+.asserts li::before{content:"";width:22px;height:22px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--rule)}
+.asserts li[data-s="pass"]::before{content:"✓";display:grid;place-items:center;background:var(--forest);color:var(--ivory);box-shadow:none;font-weight:800;font-size:12px}
+.asserts li[data-s="skip"]{color:var(--muted)}
+.asserts li[data-s="skip"]::before{box-shadow:inset 0 0 0 1.5px var(--line)}
+.asserts small{font:500 12.5px var(--mono);color:var(--muted);overflow-wrap:anywhere;text-align:right}
+@media (max-width:960px){#testing .window{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- team ---------- */
+.team{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,64px);align-items:start}
+.photo{background:var(--sage);border-radius:28px;aspect-ratio:4/3;display:grid;place-items:center;text-align:center;padding:24px;color:var(--muted);font-size:14.5px}
+.photo-cap{font-size:14px;color:var(--muted);margin:10px 0 0}
+.outcome{font-weight:800;font-size:clamp(30px,3.2vw,46px);letter-spacing:-.045em;line-height:1.04;margin:0 0 10px}
+.outcome+p{margin:0 0 24px;color:var(--forest)}
+.mine{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.mine li{background:var(--ivory);border-radius:999px;padding:7px 13px;font-size:14px;font-weight:600;box-shadow:inset 0 0 0 1px var(--line)}
+.merge{margin:20px 0 0;font-size:15px;color:var(--forest)}
+@media (max-width:860px){.team{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- rewards ---------- */
+@keyframes rowIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+}
+.hist-row{animation:rowIn .35s var(--ease) both;animation-delay:calc(var(--i,0) * 40ms)}
+.hist-det{animation:lyIn .3s var(--ease)}
+.cgroups button .cgroups button.seen .cprog{display:flex;gap:6px;margin:14px 0 0}
+.cprog i{flex:1;height:4px;border-radius:2px;background:rgba(250,247,237,.2);transition:background .3s}
+.cprog i.on{background:var(--hl)}
+.cexp{transition:background .4s}
+.cexp.done{background:var(--plum)}
+.asserts li.show{animation:rowIn .35s var(--ease) both}
+.reqs b{transition:color .3s}
+.reqs b.bump{color:var(--plum)}
+
+/* ---------- hero v2: one situation at a time ---------- */
+.asm-stage{position:relative;cursor:default;padding-top:clamp(52px,6vw,64px)!important}
+.mock{pointer-events:none;user-select:none}
+.ex-pill{position:absolute;top:16px;left:16px;font-size:12.5px;font-weight:700;color:var(--forest);background:var(--ivory);border-radius:999px;padding:5px 11px;box-shadow:inset 0 0 0 1px var(--line)}
+.hint{position:absolute;left:50%;bottom:16px;transform:translate(-50%,6px);background:var(--forest);color:var(--ivory);border-radius:999px;padding:9px 16px;font-size:14px;font-weight:600;opacity:0;transition:opacity .25s,transform .25s var(--ease);pointer-events:none;width:max-content;max-width:calc(100% - 32px);text-align:center;z-index:3}
+.hint.show{opacity:1;transform:translate(-50%,0)}
+.mock .hot{position:relative;border-radius:12px;box-shadow:0 0 0 3px var(--plum);animation:hotIn .7s var(--ease)}
+.mock.hot-all{box-shadow:0 0 0 3px var(--plum),var(--shadow)}
+@keyframes hotIn{from{box-shadow:0 0 0 12px rgba(97,13,61,0)}to{box-shadow:0 0 0 3px var(--plum)}}
+.mock .hot{animation-duration:.4s!important}
+.sits{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:6px}
+.sits button{width:100%;text-align:left;border:0;background:var(--paper);border-radius:14px;padding:11px 14px;cursor:pointer;transition:background .2s,box-shadow .2s;display:block;line-height:1.3}
+.sits button:hover{background:var(--sage)}
+.sits button[aria-checked="true"]{background:var(--ivory);box-shadow:inset 0 0 0 2px var(--plum)}
+.sits b{display:block;font-size:15.5px;font-weight:700;margin:0}
+@media (min-width:961px){.asm-stage{position:sticky;top:84px;align-self:start}}
+.sits .cap{display:none}
+.sits .more{display:none;margin-top:10px;gap:6px;font-size:14.5px;line-height:1.45;color:var(--ink)}
+.sits button[aria-checked="true"] .more{display:grid;animation:lyIn .35s var(--ease)}
+.sits button[aria-checked="true"] .cap{display:none}
+.sits .more i{font-style:normal;font-weight:700;color:var(--plum);display:block;font-size:12.5px}
+.sit-nav{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.sit-count{font-size:14px;color:var(--forest);font-weight:600}
+
+/* ---------- hero v3: Google-style tabbed story ---------- */
+#try .window{display:block!important;padding:clamp(18px,3vw,40px)!important}
+.sit-top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin:0 0 20px}
+.sit-top h3{margin:0;font-size:clamp(22px,2.2vw,30px);font-weight:800;letter-spacing:-.035em;line-height:1.1}
+.sit-top p{margin:6px 0 0;color:var(--forest);font-size:15.5px}
+.playbtn{display:inline-flex;align-items:center;gap:10px;border:0;border-radius:999px;padding:9px 16px 9px 12px;background:var(--paper);box-shadow:inset 0 0 0 1px var(--line);font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap;transition:background .2s}
+.playbtn:hover{background:var(--sage)}
+.playbtn .pi{width:26px;height:26px;border-radius:50%;background:var(--plum);position:relative;flex:none}
+.playbtn .pi::before{content:"";position:absolute;left:10px;top:7px;border-left:9px solid var(--ivory);border-top:6px solid transparent;border-bottom:6px solid transparent}
+.playbtn[aria-pressed="true"] .pi::before{left:8px;top:8px;width:3px;height:10px;border:0;background:var(--ivory);box-shadow:6px 0 0 var(--ivory)}
+.sit-tabs{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 12px;margin:0 -2px 8px;scrollbar-width:none}
+.sit-tabs::-webkit-scrollbar{display:none}
+.stab{position:relative;flex:none;scroll-snap-align:start;border:0;border-radius:14px;padding:12px 16px 16px;background:var(--paper);box-shadow:inset 0 0 0 1px var(--line);cursor:pointer;text-align:left;min-width:120px;transition:background .2s,box-shadow .2s,transform .2s var(--ease)}
+.stab:hover{background:var(--sage);transform:translateY(-1px)}
+.stab .sn{display:block;font:600 12px var(--sans);color:var(--muted);margin-bottom:2px}
+.stab b{display:block;font-size:15px;font-weight:700;white-space:nowrap}
+.stab .bar{position:absolute;left:16px;right:16px;bottom:7px;height:3px;border-radius:2px;background:transparent;overflow:hidden}
+.stab .bar::after{content:"";position:absolute;inset:0;background:var(--plum);transform-origin:left;transform:scaleX(0)}
+.stab[aria-selected="true"]{background:var(--ivory);box-shadow:inset 0 0 0 2px var(--plum)}
+.stab[aria-selected="true"] .sn{color:var(--plum)}
+.stab[aria-selected="true"] .bar{background:rgba(97,13,61,.14)}
+.stab[aria-selected="true"] .bar::after{transform:scaleX(1)}
+.sit-tabs.playing .stab[aria-selected="true"] .bar::after{transform:scaleX(0);animation:fillbar var(--dur,6s) linear forwards}
+@keyframes fillbar{to{transform:scaleX(1)}}
+.stab.seen:not([aria-selected="true"]) .sn::after{content:" ✓";color:var(--forest)}
+.sit-body{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(18px,3.5vw,56px);align-items:center}
+.sit-body .asm-stage{position:relative!important;top:auto!important;min-height:440px}
+.sit-text{outline:none}
+.sit-k{margin:0 0 8px;font-size:14px;font-weight:700;color:var(--plum)}
+.sit-text h4{margin:0 0 18px;font-size:clamp(30px,3.2vw,46px);font-weight:800;letter-spacing:-.045em;line-height:1.02;animation:lyIn .25s var(--ease)}
+.sit-more{display:grid;gap:16px}
+.sit-more p{margin:0;font-size:clamp(16px,1.3vw,18px);line-height:1.5;color:var(--ink);animation:lyIn .25s var(--ease) both}
+.sit-more p+p{animation-delay:.05s}
+.sit-more i{display:block;font-style:normal;font-weight:700;font-size:13px;color:var(--plum);margin-bottom:2px}
+.sit-arrows{display:flex;align-items:center;gap:10px;margin-top:26px}
+.arrow{width:46px;height:46px;border-radius:50%;border:0;background:var(--paper);box-shadow:inset 0 0 0 1px var(--line);cursor:pointer;display:grid;place-items:center;transition:background .2s,transform .2s var(--ease)}
+.arrow:hover{background:var(--sage)}
+.arrow:active{transform:scale(.95)}
+.arrow.fwd{background:var(--plum);box-shadow:none}
+.arrow span{width:10px;height:10px;border-left:2.5px solid var(--forest);border-bottom:2.5px solid var(--forest);transform:translateX(2px) rotate(45deg)}
+.arrow.fwd span{border-color:var(--ivory);transform:translateX(-2px) rotate(-135deg)}
+.sit-hint{font-size:14px;color:var(--muted);margin-left:6px}
+@media (max-width:960px){.sit-body{grid-template-columns:minmax(0,1fr)}.sit-body .asm-stage{min-height:0}.sit-top{align-items:flex-start}}
+@media (max-width:520px){.sit-top{flex-direction:column}.sit-hint{display:none}}
+
+/* ---------- hero v4: calm transitions ---------- */
+.sit-body{align-items:start!important}
+.sit-body .asm-stage{min-height:540px;align-items:flex-start}
+@media (max-width:960px){.sit-body .asm-stage{min-height:520px}}
+.sit-text{padding-top:clamp(8px,3vw,44px);min-height:380px}
+.stab{transition:background .4s ease,box-shadow .4s ease,color .4s ease!important}
+.stab:hover{transform:none!important}
+.stab .sn{transition:color .4s ease}
+@keyframes softIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes hotSoft{from{box-shadow:0 0 0 3px rgba(97,13,61,0)}to{box-shadow:0 0 0 3px var(--plum)}}
+.sit-text h4{animation:softIn .55s cubic-bezier(.22,1,.36,1)!important}
+.sit-more p{animation:softIn .55s cubic-bezier(.22,1,.36,1) both!important}
+.sit-more p+p{animation-delay:.07s!important}
+.mock .m-banner,.mock .m-scope,.mock .m-meta,.mock .m-loading,.mock .m-test,.mock .m-perm,.mock .tt,.mock .m-err{animation:fadeIn .5s ease!important}
+.mock .hot{animation:hotSoft .6s ease!important}
+.mock.hot-all{transition:box-shadow .6s ease}
+.mock{transition:max-width .7s cubic-bezier(.22,1,.36,1)!important}
+.m-sel{transition:box-shadow .5s ease!important}
+.m-btn{transition:opacity .5s ease!important}
+
+/* ---------- migration v2: two lessons ---------- */
+.arrow:disabled{opacity:.35;cursor:default;transform:none}
+.lesson .window{padding:clamp(20px,3vw,44px)}
+.lesson-head{max-width:66ch;margin:0 0 clamp(20px,2.6vw,32px)}
+.lesson-n{margin:0 0 6px;font-size:14px;font-weight:700;color:var(--plum)}
+.lesson-head h3{margin:0 0 8px;font-size:clamp(24px,2.4vw,34px);font-weight:800;letter-spacing:-.04em;line-height:1.08}
+.lesson-head p{margin:0;color:var(--forest);font-size:16.5px}
+.par2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr);grid-template-areas:"old q new";gap:clamp(14px,2.2vw,28px);align-items:start}
+.par2 .scr:first-child{grid-area:old}.par2 .qbox{grid-area:q}.par2 #scrNew{grid-area:new}
+.scr{background:var(--paper);border-radius:20px;padding:16px;display:grid;gap:10px}
+.scr-top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.scr-name{font-weight:800;font-size:16px;letter-spacing:-.02em}
+.scr-name small{display:block;font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:0}
+.scr-sec{background:var(--ivory);border-radius:14px;padding:10px 12px;transition:box-shadow .45s ease,background .45s ease}
+.scr-top .pill{transition:box-shadow .45s ease,background .45s ease,color .45s ease}
+.scr-l{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:6px}
+.scr-chips{display:flex;flex-wrap:wrap;gap:6px;min-height:26px}
+.scr-chips span{font-size:13.5px;font-weight:600;background:var(--sage);border-radius:999px;padding:3px 10px;animation:fadeIn .5s ease both;animation-delay:calc(var(--i,0) * 90ms)}
+.scr-list{list-style:none;margin:0;padding:0;display:grid;gap:6px;min-height:96px}
+.scr-list li{display:flex;justify-content:space-between;gap:8px;font-size:14px;padding:6px 0;border-top:1px solid var(--line);animation:fadeIn .5s ease both;animation-delay:calc(var(--i,0) * 110ms)}
+.scr-list li:first-child{border-top:0}
+.scr-list b{font-size:12.5px;font-weight:700;color:var(--forest);background:var(--hl);border-radius:999px;padding:2px 9px}
+.scr-list li.none{justify-content:center;align-items:center;color:var(--muted);font-style:italic;border:0;min-height:84px}
+#parity .hit{box-shadow:inset 0 0 0 2px var(--plum);background:var(--plum-wash)}
+#parity .pill.hit{box-shadow:0 0 0 2px var(--plum)}
+.qbox{background:var(--ivory);border-radius:20px;padding:16px;box-shadow:inset 0 0 0 1px var(--line)}
+.qparts{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:6px}
+.qrow{width:100%;display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:center;text-align:left;border:0;background:var(--paper);border-radius:14px;padding:10px 12px;cursor:pointer;transition:background .4s ease,box-shadow .4s ease}
+.qrow:hover{background:var(--sage)}
+.qrow .qn{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12.5px;font-weight:700;background:var(--ivory);box-shadow:inset 0 0 0 1.5px var(--rule);transition:background .4s ease,color .4s ease,box-shadow .4s ease}
+.qrow b{display:block;font-size:14.5px;font-weight:700}
+.qrow small{display:block;font-size:13px;color:var(--forest);line-height:1.35}
+.qrow .qs{font-size:12px;font-weight:700;border-radius:999px;padding:3px 9px;background:var(--ivory);color:var(--muted);white-space:nowrap;transition:background .4s ease,color .4s ease}
+.qrow[data-s="checking"]{background:var(--plum-wash);box-shadow:inset 0 0 0 2px var(--plum)}
+.qrow[data-s="checking"] .qs{background:var(--plum);color:var(--ivory)}
+.qrow[data-s="done"] .qn{background:var(--forest);color:var(--ivory);box-shadow:none}
+.qrow[data-s="done"] .qs{background:var(--hl);color:var(--forest)}
+.q-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.verdict{margin-top:clamp(16px,2vw,24px);background:var(--forest);color:var(--ivory);border-radius:20px;padding:clamp(18px,2.4vw,28px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:8px clamp(16px,3vw,40px);align-items:center;animation:softIn .6s cubic-bezier(.22,1,.36,1)}
+.verdict h4{margin:0;font-size:clamp(22px,2.2vw,30px);font-weight:800;letter-spacing:-.035em;line-height:1.1}
+.verdict p{margin:0;color:rgba(250,247,237,.85)}
+.verdict small{display:block;margin-top:8px;color:rgba(250,247,237,.6);font-size:13px}
+.evo-tabs .stab{min-width:170px}
+.evo-body{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:clamp(18px,3.5vw,56px);align-items:start;margin-top:8px}
+.evo-text{outline:none;padding-top:clamp(4px,1vw,12px)}
+.evo-text h4{margin:0 0 12px;font-size:clamp(26px,2.6vw,38px);font-weight:800;letter-spacing:-.04em;line-height:1.05;animation:softIn .55s cubic-bezier(.22,1,.36,1)}
+.evo-p{margin:0;font-size:clamp(16px,1.3vw,18px);line-height:1.5;animation:softIn .55s cubic-bezier(.22,1,.36,1) both;animation-delay:.06s}
+.evo{display:grid;gap:12px;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"sv sv"}
+.evo[data-stage="2"]{grid-template-areas:"fd fd" "sv sv"}
+.evo[data-stage="3"]{grid-template-areas:"fd fd" "sv rx"}
+.box{border-radius:20px;padding:16px 18px 18px;animation:fadeIn .6s ease}
+.box h4{margin:0 0 10px;font-size:15px;font-weight:800;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.box h4 small{font-weight:600;font-size:12.5px;color:var(--muted)}
+.box.sv{grid-area:sv;background:var(--paper)}
+.box.fd{grid-area:fd;background:var(--forest);color:var(--ivory)}
+.box.fd h4 small{color:rgba(250,247,237,.7)}
+.box.rx{grid-area:rx;background:var(--hl)}
+.evo[data-stage="1"] .box.fd,.evo[data-stage="1"] .box.rx,.evo[data-stage="2"] .box.rx{display:none}
+.evo:not([data-stage="1"]) #svFound,.evo:not([data-stage="1"]) .box.sv .sub-h{display:none}
+.chips{display:flex;flex-wrap:wrap;gap:6px;min-height:32px}
+.chip{display:inline-flex;align-items:center;border-radius:10px;padding:6px 11px;font-size:14px;font-weight:600;background:var(--ivory);box-shadow:inset 0 0 0 1px var(--line)}
+.chip.f{background:var(--forest);color:var(--ivory);box-shadow:none}
+.box.fd .chip.f{background:rgba(250,247,237,.12)}
+.sub-h{font-size:12.5px;font-weight:700;color:var(--muted);margin:12px 0 6px}
+.uses{display:none;font-size:13px;color:var(--forest);margin:10px 0 0}
+.uses::before{content:"↑ "}
+.evo[data-stage="2"] .box.sv .uses,.evo[data-stage="3"] .uses{display:block}
+@media (max-width:1000px){.par2{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"old new" "q q"}.evo-body{grid-template-columns:minmax(0,1fr)}.verdict{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){.par2{grid-template-columns:minmax(0,1fr);grid-template-areas:"old" "new" "q"}.evo,.evo[data-stage="2"],.evo[data-stage="3"]{grid-template-columns:minmax(0,1fr)}.evo[data-stage="3"]{grid-template-areas:"fd" "sv" "rx"}}
+
+/* ---------- legal notice ---------- */
+.legal-bar{display:flex;gap:12px;align-items:flex-start;background:var(--sage);border-radius:14px;padding:12px 16px;margin-top:6px;margin-bottom:6px;font-size:14px;line-height:1.5;color:var(--forest)}
+.legal-bar p{margin:0}
+.legal-bar b{color:var(--ink)}
+.legal-bar a,.caplink{color:var(--plum);font-weight:600;text-underline-offset:3px;white-space:nowrap}
+.legal-i{flex:none;width:20px;height:20px;border-radius:50%;background:var(--forest);color:var(--ivory);display:grid;place-items:center;font:italic 700 12px/1 Georgia,serif;margin-top:1px}
+.notice-full{margin-top:clamp(72px,9vw,120px);padding:clamp(22px,3vw,36px);background:var(--sage);border-radius:24px}
+.notice-full h2{margin:0 0 14px;font-size:18px;font-weight:800;letter-spacing:-.02em}
+.notice-full ol{margin:0;padding-left:20px;display:grid;gap:10px;max-width:96ch;font-size:14.5px;line-height:1.55;color:var(--forest)}
+.notice-full b{color:var(--ink)}
+.notice-full + .next{margin-top:clamp(40px,5vw,64px)}
+
+/* reduced motion must win over the class-level !important motion above */
+@media (prefers-reduced-motion: reduce){
+  .mock,.mock .hot,.mock.hot-all,.stab,.m-sel,.m-btn,.sit-text h4,.sit-more p,.sit-more p+p,
+  .mock .m-banner,.mock .m-scope,.mock .m-meta,.mock .m-loading,.mock .m-test,.mock .m-perm,.mock .tt,.mock .m-err{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap top">
+  <a class="me" href="https://miguelalmeida.is-a.dev/">Miguel Almeida</a><span class="city">Berlin</span>
+  <nav aria-label="Portfolio"><a class="keep" href="https://miguelalmeida.is-a.dev/work">Work</a><a href="https://miguelalmeida.is-a.dev/story">Story</a><a href="https://miguelalmeida.is-a.dev/cv">CV</a><a href="https://miguelalmeida.is-a.dev/contact">Contact</a><a class="keep ask" href="https://miguelalmeida.is-a.dev/ask">Ask MiguelLLM</a></nav>
+</div>
+<aside class="wrap legal-bar" role="note" aria-labelledby="legal-h">
+  <span class="legal-i" aria-hidden="true">i</span>
+  <p><b id="legal-h">Illustrative content only.</b> Every screen, name, figure and scenario on this page is a fictional mockup created for this portfolio. No real F24 data, customer information, product screens or internal material is shown. <a href="#notice">Read the full notice</a></p>
+</aside>
+<div id="sentinel"></div>
+<header class="pnav" id="pnav">
+  <div class="wrap">
+    <a class="pname" href="#overview">F24 Connectivity Hub</a>
+    <ul>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#states">States</a></li>
+      <li><a href="#migration">Migration</a></li>
+      <li><a href="#decisions">Decisions</a></li>
+      <li><a href="#testing">Testing</a></li>
+    </ul>
+    <a class="btn sm" href="#try">Try it</a>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <section class="hero" id="overview" aria-labelledby="hero-h">
+    <p class="kicker">F24, frontend architecture and product delivery, 2022-now</p>
+    <h1 id="hero-h">From mockup to production system.</h1>
+    <p class="sub">Built Connectivity Hub's original Svelte frontend within the product team, and continued shipping as React joined the architecture.</p>
+    <div class="ctas"><a class="btn" href="#try">Try it</a><a class="tlink" href="#decisions">Architecture decisions</a></div>
+  </section>
+
+  <section class="frame" id="try" aria-label="A mockup becomes a production screen">
+    <div class="window">
+      <div class="sit-top">
+        <div><h3 id="asm-h">One screen, eight situations.</h3><p>A mockup shows the first. A real product has to handle all of them.</p></div>
+        <button class="playbtn" type="button" id="play" aria-pressed="false"><span class="pi" aria-hidden="true"></span><span class="pl">Play</span></button>
+      </div>
+      <div class="sit-tabs" role="tablist" aria-labelledby="asm-h" id="sits"></div>
+      <div class="sit-body">
+        <div class="asm-stage" id="asmStage"><span class="ex-pill">Example screen</span><span class="hint" id="hint" role="status" aria-live="polite"></span>
+        <div class="mock" id="mock" data-on="" aria-hidden="true">
+          <div class="m-banner"><span>Couldn't save. Your changes are still here.</span><span class="m-btn alt" style="display:inline-flex">Retry</span><span class="tt">error announced</span></div>
+          <div class="m-head"><h3>New configuration</h3><span class="m-scope">Workspace North</span></div>
+          <div class="m-field" data-f="scen"><span class="m-l">Scenario</span><div class="m-sel"><span class="m-v">Site closure</span><span class="m-ph">Choose a scenario</span><span class="car">▾</span></div><p class="m-err">Choose a scenario before saving.</p><span class="tt">required before save</span></div>
+          <div class="m-field" data-f="rec"><span class="m-l">Contact</span><div class="m-sel"><span class="m-v">Team A</span><span class="m-skel"></span><span class="car">▾</span></div><p class="m-loading">Loading contacts</p><p class="m-meta">Showing 20 of 140, <u>load more</u></p><span class="tt">scoped to organisation</span></div>
+          <div class="m-test">Test run: 3 contacts would be notified. Nothing was sent.</div>
+          <p class="m-perm">You can view this configuration. Editing needs editor access.</p>
+          <div class="m-actions"><span class="tt">fires once</span><span class="m-btn alt">Test run</span><span class="m-btn save">Save</span></div>
+        </div>
+      </div>
+        <div class="sit-text" role="tabpanel" id="sitPanel" tabindex="0">
+          <p class="sit-k" id="sitK"></p>
+          <h4 id="sitT"></h4>
+          <div class="sit-more"><p><i>What you see</i><span id="sitSee"></span></p><p><i>What had to be built</i><span id="sitBuilt"></span></p></div>
+          <div class="sit-arrows"><button type="button" class="arrow" id="prev" aria-label="Previous situation"><span aria-hidden="true"></span></button><button type="button" class="arrow fwd" id="next" aria-label="Next situation"><span aria-hidden="true"></span></button><span class="sit-hint">Or pick a tab above</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <p class="cap">Fictional mockup with invented names and data. <a href="#notice" class="caplink">See notice</a>.</p>
+
+  <section class="chapter" aria-labelledby="st-h">
+    <div class="head">
+      <h2 id="st-h">Most of a screen is not the happy path.</h2>
+      <p>An activity history turns a large backend dataset into something people can inspect. Switch its state, search, filter and sort, and open a row.</p>
+    </div>
+    <div class="frame" id="states"><div class="window">
+      <div class="hist-state"><span class="label" id="hists-l" style="margin:0">State</span><div class="seg" role="radiogroup" aria-labelledby="hists-l" id="histState"></div></div>
+      <div class="hist-ctl">
+        <input type="search" id="histSearch" placeholder="Search scenario or contact" aria-label="Search activity" autocomplete="off">
+        <div class="seg" role="radiogroup" aria-label="Status" id="histStatus"></div>
+        <button class="btn sm quiet" type="button" id="histSort"></button>
+        <button class="tlink" type="button" id="histClear">Clear filters</button>
+      </div>
+      <div class="lb" id="hist" aria-live="polite"></div>
+    </div></div>
+  </section>
+
+  <section class="chapter" id="migration" aria-labelledby="mig-h">
+    <div class="head">
+      <h2 id="mig-h">Changing the engine while the product keeps running.</h2>
+      <p>Connectivity Hub kept shipping while its frontend grew from Svelte into React. Two lessons from that move, in plain terms.</p>
+    </div>
+
+    <div class="frame lesson" id="parity"><div class="window">
+      <div class="lesson-head">
+        <p class="lesson-n">Lesson 1</p>
+        <h3>A copy can look perfect and still be wrong.</h3>
+        <p>One screen, rebuilt in React, looked right but showed nothing. Every screen asks the server a question. The copy has to ask exactly the same one.</p>
+      </div>
+      <div class="par2">
+        <article class="scr" aria-label="Original screen, built in Svelte">
+          <div class="scr-top"><span class="scr-name">Original<small>Svelte</small></span><span class="pill hl" data-dep="count">24 entries</span></div>
+          <div class="scr-sec" data-dep="contacts"><span class="scr-l">Contacts</span><div class="scr-chips"><span>Team A</span><span>Team B</span><span>Team C</span></div></div>
+          <div class="scr-sec" data-dep="list"><span class="scr-l">Latest entries</span><ul class="scr-list"><li>Site closure<b>Delivered</b></li><li>Power outage<b>Delivered</b></li><li>Practice drill<b>Delivered</b></li></ul></div>
+        </article>
+        <div class="qbox">
+          <p class="label" id="q-l">The question each screen asks</p>
+          <ol class="qparts" id="qparts" aria-labelledby="q-l"></ol>
+          <div class="q-actions"><button class="btn" type="button" id="compare">Compare the questions</button><button class="tlink" type="button" id="resetCmp" hidden>Start over</button></div>
+        </div>
+        <article class="scr" id="scrNew" aria-label="Rebuilt screen, built in React" aria-live="polite">
+          <div class="scr-top"><span class="scr-name">Rebuilt<small>React</small></span><span class="pill plum" data-dep="count" id="newCount">Showing nothing</span></div>
+          <div class="scr-sec" data-dep="contacts"><span class="scr-l">Contacts</span><div class="scr-chips" id="newChips"><span>All contacts</span></div></div>
+          <div class="scr-sec" data-dep="list"><span class="scr-l">Latest entries</span><ul class="scr-list" id="newList"><li class="none">Nothing to show</li></ul></div>
+        </article>
+      </div>
+      <div class="verdict" id="verdict" role="status" aria-live="polite" hidden></div>
+    </div></div>
+
+    <div class="frame lesson" id="evolve" style="margin-top:clamp(28px,4vw,48px)"><div class="window">
+      <div class="lesson-head">
+        <p class="lesson-n">Lesson 2</p>
+        <h3>Share the foundation. Keep shipping.</h3>
+        <p>Rewriting everything at once would have stopped the product. Instead, the parts every screen needs moved into one shared foundation, and new work joins it.</p>
+      </div>
+      <div class="sit-tabs evo-tabs" role="tablist" aria-label="Migration steps" id="evoTabs"></div>
+      <div class="evo-body">
+        <div class="evo" id="evo" data-stage="1">
+          <div class="box sv"><h4>Svelte app <small id="svNote"></small></h4><div class="chips" id="svFeat"></div><p class="sub-h">Parts every screen needs</p><div class="chips" id="svFound"></div><p class="uses">Built on the shared foundation</p></div>
+          <div class="box fd"><h4>Shared foundation <small>one owner</small></h4><div class="chips" id="fdFound"></div></div>
+          <div class="box rx"><h4>React features <small>new work</small></h4><div class="chips" id="rxFeat"></div><p class="uses">Built on the same foundation</p></div>
+        </div>
+        <div class="evo-text" role="tabpanel" id="evoPanel" tabindex="0">
+          <p class="sit-k" id="evoK"></p>
+          <h4 id="evoTitle"></h4>
+          <p class="evo-p" id="evoText"></p>
+          <div class="sit-arrows"><button type="button" class="arrow" id="evoPrev" aria-label="Previous step"><span aria-hidden="true"></span></button><button type="button" class="arrow fwd" id="evoNext" aria-label="Next step"><span aria-hidden="true"></span></button></div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="chapter" id="decisions" aria-labelledby="dec-h">
+    <div class="head">
+      <h2 id="dec-h">The architecture decisions behind it.</h2>
+      <p>Seven decisions shaped how the frontend stays modular as workflows grow and a second stack arrives. Pick one to see which layers it governs. Shown at the level of principles, not internal design.</p>
+    </div>
+    <div class="layers-d" id="layersD" aria-hidden="true">
+      <div class="ld wide" data-l="shell"><b>Shared app shell</b><small>Auth, session, routing, layout, navigation, providers, tokens, global assets, build and deploy conventions</small></div>
+      <div class="ld-row">
+        <div class="ld" data-l="route"><b>Route</b><small>Entry point and context</small></div>
+        <div class="ld" data-l="feature"><b>Feature</b><small>View, form, async and permission state</small></div>
+        <div class="ld" data-l="components"><b>Reusable components</b><small>Inputs, dropdowns, pagination, labels, feedback states, domain controls</small></div>
+        <div class="ld" data-l="api"><b>API and domain layer</b><small>Contracts and mapping</small></div>
+        <div class="ld" data-l="services"><b>Backend services</b><small>Owned by the backend team</small></div>
+      </div>
+      <div class="ld wide" data-l="tests"><b>Playwright</b><small>Consequences across the whole stack: requests, states, focus, persistence, degraded networks</small></div>
+    </div>
+    <div class="dec-tabs" role="tablist" aria-label="Decisions" id="decTabs"></div>
+    <div id="decPanel" role="tabpanel" tabindex="0"></div>
+  </section>
+
+  <section class="chapter" aria-labelledby="test-h">
+    <div class="head">
+      <h2 id="test-h">Test consequences, not components.</h2>
+      <p>A save button that looks right can still fire twice, send the wrong data or lose focus. Click Save, try a double click, or take the network away. The checks on the right run against this widget's own behaviour.</p>
+    </div>
+    <div class="frame" id="testing"><div class="window">
+      <div class="tform">
+        <div><label class="label" for="cfgName">Name</label><input id="cfgName" value="Weekend practice" autocomplete="off"></div>
+        <div class="row"><span class="label" id="net-l" style="margin:0">Network</span><div class="seg" role="radiogroup" aria-labelledby="net-l" id="net"></div></div>
+        <div class="row"><button class="btn" type="button" id="tSave">Save</button><button class="tlink" type="button" id="tDouble">Double-click Save</button></div>
+        <p class="reqs">Requests sent: <b id="tReqs">0</b></p>
+        <p class="res" id="tRes" role="status" aria-live="polite"></p>
+      </div>
+      <ol class="asserts" id="asserts" aria-label="What the test proves"></ol>
+    </div></div>
+  </section>
+
+  <section class="chapter" id="team" aria-labelledby="team-h">
+    <div class="head"><h2 id="team-h">A team product, and the contribution to it.</h2></div>
+    <div class="team">
+      <figure style="margin:0"><div class="photo">Approved team hackathon photo</div><figcaption class="photo-cap">F24 hackathon, with the product team.</figcaption></figure>
+      <div>
+        <p class="outcome">Used by hundreds of companies.</p>
+        <p>That is a team outcome. Product, design, backend, QA and frontend built it together. Contributions included:</p>
+        <ul class="mine">
+          <li>Original Connectivity Hub frontend, built in Svelte</li><li>Mockups to production</li><li>Modular, reusable architecture</li><li>Backend integration</li>
+          <li>Complex forms and validation</li><li>Asynchronous states and recovery</li><li>Large data sets and pagination</li><li>Search, filtering and sorting</li>
+          <li>Performance work</li><li>Accessibility</li><li>Playwright coverage</li><li>React feature delivery</li>
+        </ul>
+        <p class="merge">Shipping also meant integration work: resolving conflicts in shared code across active branches, then landing clean, lint-passing commits.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-labelledby="spec-h">
+    <div class="head"><h2 id="spec-h">Role and stack.</h2></div>
+    <div class="specs2">
+      <div class="vgrid">
+        <p class="vh">At a glance</p>
+        <div><b>2022-now</b><span>Building Connectivity Hub at F24</span></div>
+        <div><b>Svelte + React</b><span>One product, two frontend stacks</span></div>
+        <div><b>Hundreds</b><span>Companies using the product, a team outcome</span></div>
+        <div><b>Production</b><span>Professional work, private by default</span></div>
+      </div>
+      <div class="facts">
+        <div><h3>Role</h3><p>Frontend architecture and product delivery, working with product, design, backend and QA.</p></div>
+        <div><h3>Core stack</h3><p>Svelte, React, TypeScript and Playwright.</p></div>
+        <div><h3>Confidentiality</h3><p>Every screen on this page is a synthetic recreation with invented names and data. Real feature names, screens, customer data, endpoints, request data and source code stay private.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="notice-full" id="notice" aria-labelledby="notice-h">
+    <h2 id="notice-h">Notice</h2>
+    <ol>
+      <li><b>Fictional mockups.</b> All interfaces, workflows, names (such as “Workspace North” or “Team A”), scenarios, numbers and messages on this page are invented for illustration. They are not taken from, and do not depict, any F24 product, system or account.</li>
+      <li><b>No confidential information.</b> No source code, customer or user data, internal documentation, designs, endpoints, request data, metrics or other non-public information belonging to F24 or its customers is published here.</li>
+      <li><b>Simplified descriptions.</b> Architecture and process descriptions are deliberately general and simplified. They describe working principles and may not reflect any current, past or exact implementation.</li>
+      <li><b>Team outcomes.</b> Product results, including adoption by customers, are the outcome of work by many people at F24 and are not attributed to any individual.</li>
+      <li><b>No affiliation or endorsement.</b> This is a personal portfolio. It is not affiliated with, endorsed by, sponsored by or published on behalf of F24. Company and product names are the property of their respective owners and are used only to describe professional experience.</li>
+      <li><b>Personal views.</b> Opinions and descriptions on this page are the author's own and do not represent the views of F24 or any current or former employer.</li>
+    </ol>
+  </section>
+
+  <nav class="next" aria-label="Next project"><span class="lbl">Next project</span><a href="https://miguelalmeida.is-a.dev/work/second-voice">Second Voice</a></nav>
+</main>
+
+<script>
+(() => {
+const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+const wait = ms => new Promise(r => setTimeout(r, reduce.matches ? 0 : ms));
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function radios(el, items, get, set, role = 'radio'){
+  const attr = role === 'tab' ? 'aria-selected' : 'aria-checked';
+  el.innerHTML = items.map(x => `<button type="button" role="${role}" data-id="${x.id}">${x.name}</button>`).join('');
+  const btns = [...el.querySelectorAll('button')];
+  const sync = () => btns.forEach(b => { const on = b.dataset.id === get(); b.setAttribute(attr, String(on)); b.tabIndex = on ? 0 : -1; });
+  btns.forEach((b, i) => {
+    b.addEventListener('click', () => set(b.dataset.id));
+    b.addEventListener('keydown', e => {
+      const d = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
+      if (!d) return; e.preventDefault();
+      const n = btns[(i + d + btns.length) % btns.length]; set(n.dataset.id); n.focus();
+    });
+  });
+  sync(); return sync;
+}
+
+/* ---------- hero: tabbed story ---------- */
+const SITS = [
+  {id:'', tab:'The mockup', t:'The mockup', see:'A tidy form with two fields and a Save button.', built:'Mostly layout. This is where a design file usually stops.', hot:null},
+  {id:'loading', tab:'Loading', t:'Still loading', see:'A soft placeholder where the contact list will appear, and a note saying it is on its way.', built:'Space held for the data, so nothing jumps when it arrives.', hot:'[data-f="rec"]'},
+  {id:'validation', tab:'Missing info', t:'Something is missing', see:'The empty field is outlined and says exactly what to fix.', built:'Checks that point at the right field, in plain words.', hot:'[data-f="scen"]'},
+  {id:'permissions', tab:'View only', t:'View-only access', see:'Save is greyed out, with the reason written underneath.', built:'Controls that know who is looking, and say why.', hot:'.m-perm'},
+  {id:'api', tab:'Long list', t:'A very long list', see:'The first 20 of 140 contacts, a count, and a way to load more.', built:'Paging that keeps your choices while more arrive.', hot:'[data-f="rec"]'},
+  {id:'testrun', tab:'Test run', t:'Checking before saving', see:'A preview of who would be notified. Nothing is sent.', built:'A test run with its own result, kept apart from your edits.', hot:'.m-test'},
+  {id:'recovery', tab:'Save failed', t:'Saving failed', see:'A calm message at the top, a Retry button, and your work still there.', built:'Recovery that never throws away what someone typed.', hot:'.m-banner'},
+  {id:'responsive', tab:'On a phone', t:'On a phone', see:'The fields stack so everything still fits and reads well.', built:'One layout that adapts, not a second app.', hot:'ALL'},
+  {id:'tests', tab:'Tests', t:'Behind the scenes', see:'Small tags mark what automated tests check every time.', built:'Tests that click, wait and verify like a person would.', hot:null}
+];
+const DUR = 2400;
+let sit = 0, playing = false, timer = null, inView = false, inited = false;
+const tabsEl = $('#sits');
+tabsEl.style.setProperty('--dur', DUR + 'ms');
+tabsEl.innerHTML = SITS.map((x, i) => `<button type="button" class="stab" role="tab" id="st${i}" aria-controls="sitPanel" aria-selected="false" tabindex="-1"><span class="sn">${i === 0 ? 'Start' : `${i} of 8`}</span><b>${x.tab}</b><span class="bar" aria-hidden="true"></span></button>`).join('');
+const tabs = [...tabsEl.querySelectorAll('.stab')];
+function setSit(i, {focus = false, user = false} = {}){
+  const ni = (i + SITS.length) % SITS.length;
+  if (user) setPlaying(false);
+  if (inited && ni === sit){ if (focus) tabs[sit].focus({preventScroll:true}); return; }
+  sit = ni; const x = SITS[sit], mock = $('#mock');
+  const h0 = mock.offsetHeight;
+  mock.dataset.on = x.id;
+  if (inited && !reduce.matches){
+    const h1 = mock.offsetHeight;
+    if (Math.abs(h1 - h0) > 1){ mock.style.overflow = 'hidden'; const an = mock.animate([{height:h0 + 'px'}, {height:h1 + 'px'}], {duration:520, easing:'cubic-bezier(.22,1,.36,1)'}); an.onfinish = an.oncancel = () => { mock.style.overflow = ''; }; }
+  }
+  mock.querySelectorAll('.hot').forEach(e => e.classList.remove('hot'));
+  mock.classList.toggle('hot-all', x.hot === 'ALL');
+  if (x.hot && x.hot !== 'ALL'){ const h = mock.querySelector(x.hot); if (h){ void h.offsetWidth; h.classList.add('hot'); } }
+  tabs.forEach((b, k) => { const on = k === sit; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; if (on) b.classList.add('seen'); });
+  const t = tabs[sit];
+  const tr = t.getBoundingClientRect(), cr = tabsEl.getBoundingClientRect();
+  if (tr.left < cr.left || tr.right > cr.right) tabsEl.scrollTo({left:tabsEl.scrollLeft + (tr.left - cr.left) - 8, behavior:reduce.matches ? 'auto' : 'smooth'});
+  if (focus) t.focus({preventScroll:true});
+  $('#sitPanel').setAttribute('aria-labelledby', t.id);
+  $('#sitK').textContent = sit === 0 ? 'Where every design starts' : `Situation ${sit} of 8`;
+  const h = $('#sitT'); h.textContent = x.t; h.style.animation = 'none'; void h.offsetWidth; h.style.animation = '';
+  $('#sitSee').textContent = x.see; $('#sitBuilt').textContent = x.built;
+  $('#sitPanel').querySelectorAll('.sit-more p').forEach(p => { p.style.animation = 'none'; void p.offsetWidth; p.style.animation = ''; });
+  inited = true;
+  schedule();
+}
+function schedule(){
+  clearTimeout(timer);
+  // restart the progress fill on the active tab
+  tabsEl.classList.remove('playing'); void tabsEl.offsetWidth;
+  if (playing && inView){ tabsEl.classList.add('playing'); timer = setTimeout(() => setSit(sit + 1), DUR); }
+}
+function setPlaying(v){
+  playing = v;
+  const b = $('#play'); b.setAttribute('aria-pressed', String(v)); b.querySelector('.pl').textContent = v ? 'Pause' : 'Play';
+  schedule();
+}
+tabs.forEach((b, i) => {
+  b.addEventListener('click', () => setSit(i, {user:true}));
+  b.addEventListener('keydown', e => {
+    const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+    if (d){ e.preventDefault(); setSit(i + d, {focus:true, user:true}); }
+    if (e.key === 'Home'){ e.preventDefault(); setSit(0, {focus:true, user:true}); }
+    if (e.key === 'End'){ e.preventDefault(); setSit(SITS.length - 1, {focus:true, user:true}); }
+  });
+});
+$('#prev').addEventListener('click', () => setSit(sit - 1, {user:true}));
+$('#next').addEventListener('click', () => setSit(sit + 1, {user:true}));
+$('#play').addEventListener('click', () => { if (playing){ setPlaying(false); return; } playing = true; setSit(sit + 1); setPlaying(true); });
+let hintT;
+$('#asmStage').addEventListener('click', () => {
+  const h = $('#hint');
+  h.textContent = 'This is a picture of the screen. Pick a tab above to change it.';
+  h.classList.add('show'); clearTimeout(hintT); hintT = setTimeout(() => h.classList.remove('show'), 2600);
+  tabsEl.animate([{opacity:1}, {opacity:.55}, {opacity:1}], {duration:reduce.matches ? 1 : 900, easing:'ease-in-out'});
+});
+new IntersectionObserver(([e]) => { inView = e.isIntersecting; schedule(); }, {threshold:.45}).observe($('#try'));
+setSit(0);
+setPlaying(!reduce.matches);
+
+/* ---------- activity states ---------- */
+const LOG = [
+  {t:'09:42', scen:'Site closure', iface:'SMS', rec:'Team A', st:'Delivered', id:'Contact 1'},
+  {t:'09:40', scen:'Power outage', iface:'Email', rec:'Team B', st:'Delivered', id:'Contact 2'},
+  {t:'09:31', scen:'Practice drill', iface:'SMS', rec:'Team C', st:'Failed', id:'Contact 3', cause:'Example reason, invented for this page.'},
+  {t:'09:12', scen:'Site closure', iface:'App', rec:'Team D', st:'Delivered', id:'Contact 4'},
+  {t:'08:58', scen:'Power outage', iface:'SMS', rec:'Team E', st:'Failed', id:'Contact 5', cause:'Example reason, invented for this page.'},
+  {t:'08:44', scen:'Practice drill', iface:'Email', rec:'Team F', st:'Delivered', id:'Contact 6'},
+  {t:'08:20', scen:'Site closure', iface:'SMS', rec:'Team G', st:'Delivered', id:'Contact 7'},
+  {t:'07:55', scen:'Power outage', iface:'App', rec:'Team A', st:'Delivered', id:'Contact 1'}
+];
+const L = {state:'success', q:'', status:'all', newest:true, open:null};
+const STATES = [{id:'success', name:'Success'}, {id:'loading', name:'Loading'}, {id:'empty', name:'Empty'}, {id:'partial', name:'Partial'}, {id:'error', name:'Error'}, {id:'denied', name:'No permission'}, {id:'stale', name:'Stale'}];
+const syncLbState = radios($('#histState'), STATES, () => L.state, id => { L.state = id; renderLb(); });
+const syncLbStatus = radios($('#histStatus'), [{id:'all', name:'All'}, {id:'Delivered', name:'Delivered'}, {id:'Failed', name:'Failed'}], () => L.status, id => { L.status = id; renderLb(); });
+$('#histSearch').addEventListener('input', e => { L.q = e.target.value; renderLb(); });
+$('#histSort').addEventListener('click', () => { L.newest = !L.newest; renderLb(); });
+$('#histClear').addEventListener('click', () => { L.q = ''; L.status = 'all'; L.newest = true; $('#histSearch').value = ''; renderLb(); });
+function renderLb(){
+  syncLbState(); syncLbStatus();
+  $('#histSort').textContent = L.newest ? 'Newest first' : 'Oldest first';
+  const lb = $('#hist');
+  const msg = (h, p, btn) => `<div class="hist-msg"><h3>${h}</h3><p>${p}</p>${btn || ''}</div>`;
+  if (L.state === 'loading'){ lb.innerHTML = `<div class="hist-skel" aria-label="Loading">${'<i></i>'.repeat(6)}</div>`; return; }
+  if (L.state === 'error'){ lb.innerHTML = msg("Couldn't load the activity history.", 'Your search and filters are kept.', '<button class="btn sm" type="button" data-to="success">Retry</button>'); bindTo(); return; }
+  if (L.state === 'denied'){ lb.innerHTML = msg('This history is not available to you.', 'Viewing it needs viewer access. Ask an administrator.'); return; }
+  let rows = LOG.filter(r => (L.status === 'all' || r.st === L.status) && (`${r.scen} ${r.rec}`.toLowerCase().includes(L.q.toLowerCase())));
+  if (!L.newest) rows = [...rows].reverse();
+  if (L.state === 'empty' || !rows.length){ lb.innerHTML = msg('No entries match.', L.state === 'empty' ? 'Nothing arrived in this period.' : 'Try fewer filters.', '<button class="btn sm quiet" type="button" data-clear>Clear filters</button>'); bindTo(); return; }
+  const partial = L.state === 'partial';
+  if (partial) rows = rows.slice(0, 5);
+  let html = '';
+  if (partial) html += `<div class="hist-banner"><span>Contact names couldn't load. Showing placeholders.</span><button class="btn sm quiet" type="button" data-to="success">Retry names</button></div>`;
+  if (L.state === 'stale') html += `<div class="hist-banner"><span>The workspace changed. These results are from Workspace North.</span><button class="btn sm quiet" type="button" data-to="success">Refresh</button></div>`;
+  html += rows.map((r, i) => {
+    const key = `${r.t}-${r.rec}`, open = L.open === key;
+    return `<button class="hist-row" type="button" aria-expanded="${open}" data-key="${key}" style="--i:${i}"><span class="t">${r.t}</span><span>${esc(r.scen)}</span><span class="c3">${r.iface}</span><span class="c4">${partial ? `<span class="mono">${r.id}</span>` : esc(r.rec)}</span><span class="st pill ${r.st === 'Failed' ? 'fail' : 'hl'}">${r.st}</span></button>` +
+      (open ? `<dl class="hist-det"><div><dt>Scenario</dt><dd>${esc(r.scen)}</dd></div><div><dt>Contact</dt><dd>${partial ? r.id : esc(r.rec)}</dd></div><div><dt>Channel</dt><dd>${r.iface}</dd></div><div><dt>${r.st === 'Failed' ? 'Root cause' : 'Outcome'}</dt><dd>${r.cause ? esc(r.cause) : 'Delivered'}</dd></div></dl>` : '');
+  }).join('');
+  html += `<div class="hist-foot"><span>${rows.length} of 24 entries</span><span>${partial ? 'Partial data' : 'Synthetic data'}</span></div>`;
+  lb.innerHTML = html;
+  lb.querySelectorAll('.hist-row').forEach(b => b.addEventListener('click', () => { L.open = L.open === b.dataset.key ? null : b.dataset.key; renderLb(); lb.querySelector(`[data-key="${b.dataset.key}"]`).focus(); }));
+  bindTo();
+}
+function bindTo(){
+  $('#hist').querySelectorAll('[data-to]').forEach(b => b.addEventListener('click', () => { L.state = b.dataset.to; renderLb(); }));
+  $('#hist').querySelectorAll('[data-clear]').forEach(b => b.addEventListener('click', () => { L.state = 'success'; $('#histClear').click(); }));
+}
+renderLb();
+
+/* ---------- lesson 1: compare the questions ---------- */
+const QP = [
+  {t:'Where it asks', d:'The same address on the server.', deps:['count', 'contacts', 'list']},
+  {t:'Whose data', d:'The same workspace and the same contacts.', deps:['count', 'contacts', 'list']},
+  {t:'How much, in what order', d:'The same page size and sort order.', deps:['count', 'list']},
+  {t:'The shape of the answer', d:'The same fields, read the same way.', deps:['contacts', 'list']},
+  {t:'What it remembers', d:'No stale answer kept from before.', deps:['count', 'list']}
+];
+const qs = QP.map(() => 'idle'); let qBusy = false;
+const QLABEL = {idle:'Not compared', checking:'Comparing', done:'Compared'};
+function renderQ(){
+  $('#qparts').innerHTML = QP.map((q, i) => `<li><button type="button" class="qrow" data-i="${i}" data-s="${qs[i]}"><span class="qn" aria-hidden="true">${qs[i] === 'done' ? '✓' : i + 1}</span><span><b>${q.t}</b><small>${q.d}</small></span><span class="qs">${QLABEL[qs[i]]}</span></button></li>`).join('');
+  $('#qparts').querySelectorAll('.qrow').forEach(b => b.addEventListener('click', () => checkOne(Number(b.dataset.i))));
+}
+const hitDeps = deps => document.querySelectorAll('#parity [data-dep]').forEach(z => z.classList.toggle('hit', !!deps && deps.includes(z.dataset.dep)));
+async function check(i){ qs[i] = 'checking'; renderQ(); hitDeps(QP[i].deps); await wait(750); qs[i] = 'done'; renderQ(); }
+async function checkOne(i){
+  if (qBusy || qs[i] === 'done') return;
+  qBusy = true; await check(i); hitDeps(null); qBusy = false;
+  if (qs.every(x => x === 'done')) finish();
+  const b = $('#qparts').querySelector(`[data-i="${i}"]`); if (b) b.focus();
+}
+async function compareAll(){
+  if (qBusy) return;
+  qBusy = true; $('#compare').disabled = true;
+  for (let i = 0; i < QP.length; i++) if (qs[i] !== 'done') await check(i);
+  hitDeps(null); qBusy = false; finish();
+}
+function finish(){
+  $('#compare').hidden = true; $('#resetCmp').hidden = false;
+  const c = $('#newCount'); c.textContent = '24 entries'; c.className = 'pill hl';
+  $('#newChips').innerHTML = ['Team A', 'Team B', 'Team C'].map((t, i) => `<span style="--i:${i}">${t}</span>`).join('');
+  $('#newList').innerHTML = [['Site closure'], ['Power outage'], ['Practice drill']].map(([t], i) => `<li style="--i:${i + 2}">${t}<b>Delivered</b></li>`).join('');
+  const v = $('#verdict'); v.hidden = false;
+  v.innerHTML = `<h4>Same question. Same answer.</h4><div><p>Once every part of the question matches, both screens show the same thing. That comparison, not a matching screenshot, is what makes a migration safe to ship.</p><small>An illustration of the method, with invented data.</small></div>`;
+  $('#resetCmp').focus();
+}
+function resetCmp(){
+  qs.fill('idle'); renderQ(); hitDeps(null);
+  $('#compare').hidden = false; $('#compare').disabled = false; $('#resetCmp').hidden = true;
+  const c = $('#newCount'); c.textContent = 'Showing nothing'; c.className = 'pill plum';
+  $('#newChips').innerHTML = '<span>All contacts</span>';
+  $('#newList').innerHTML = '<li class="none">Nothing to show</li>';
+  $('#verdict').hidden = true; $('#compare').focus();
+}
+$('#compare').addEventListener('click', compareAll);
+$('#resetCmp').addEventListener('click', resetCmp);
+renderQ();
+
+/* ---------- lesson 2: shared foundation (FLIP) ---------- */
+const FOUND = ['Sign-in', 'Sessions', 'Page routing', 'Layout', 'Navigation', 'App-wide settings', 'Colours and type', 'Shared assets', 'Build and release setup'];
+const SVF = ['Feature screens', 'Forms', 'Lists and tables', 'Detail views', 'History views', 'Settings'];
+const RXF = ['New features', 'Rebuilt screens'];
+$('#svFeat').innerHTML = SVF.map(f => `<span class="chip">${f}</span>`).join('');
+$('#rxFeat').innerHTML = RXF.map(f => `<span class="chip">${f}</span>`).join('');
+$('#svFound').innerHTML = FOUND.map(f => `<span class="chip f">${f}</span>`).join('');
+const ESTAGES = [
+  {tab:'Single source of truth', k:'Step 1 of 3', t:'One codebase, one source of truth.', p:'At first, everything lived in a single Svelte codebase: the screens people use, and the parts every screen needs, such as sign-in, navigation, layout and styling. That works well, until a second technology has to share the same product.', note:'one codebase'},
+  {tab:'A shared foundation', k:'Step 2 of 3', t:'Pull out what every screen needs.', p:'Sign-in, navigation, layout, styling and the build setup moved into one shared foundation with a single owner. The screens keep their own logic. Nothing changes for the people using the product.', note:'screens only'},
+  {tab:'Two stacks, one product', k:'Step 3 of 3', t:'New work joins without a pause.', p:'New features are built in React on the same foundation, while the Svelte screens keep shipping. The goal is one consistent product: same look, same behaviour, same accessibility, on every screen.', note:'still shipping'}
+];
+let estage = 0;
+$('#evoTabs').innerHTML = ESTAGES.map((x, i) => `<button type="button" class="stab" role="tab" id="et${i}" aria-controls="evoPanel" aria-selected="false" tabindex="-1"><span class="sn">Step ${i + 1}</span><b>${x.tab}</b></button>`).join('');
+const etabs = [...document.querySelectorAll('#evoTabs .stab')];
+function setStage(i, focus){
+  const ni = Math.max(0, Math.min(ESTAGES.length - 1, i));
+  const first = estage === ni && document.querySelector('#evoTitle').textContent;
+  if (first){ if (focus) etabs[ni].focus(); return; }
+  const chips = [...document.querySelectorAll('#evo .chip')];
+  const before = new Map(chips.map(c => [c, c.getBoundingClientRect()]));
+  estage = ni; const x = ESTAGES[ni];
+  $('#evo').dataset.stage = String(ni + 1);
+  const dest = ni === 0 ? $('#svFound') : $('#fdFound');
+  document.querySelectorAll('#evo .chip.f').forEach(c => dest.appendChild(c));
+  $('#svNote').textContent = x.note;
+  etabs.forEach((b, k) => { b.setAttribute('aria-selected', String(k === ni)); b.tabIndex = k === ni ? 0 : -1; if (k <= ni) b.classList.add('seen'); });
+  if (focus) etabs[ni].focus();
+  $('#evoPanel').setAttribute('aria-labelledby', 'et' + ni);
+  $('#evoK').textContent = x.k;
+  const h = $('#evoTitle'); h.textContent = x.t; h.style.animation = 'none'; void h.offsetWidth; h.style.animation = '';
+  const p = $('#evoText'); p.textContent = x.p; p.style.animation = 'none'; void p.offsetWidth; p.style.animation = '';
+  $('#evoPrev').disabled = ni === 0; $('#evoNext').disabled = ni === ESTAGES.length - 1;
+  if (reduce.matches) return;
+  chips.forEach(c => {
+    const a = before.get(c), b = c.getBoundingClientRect();
+    if (!a.width || !b.width) return;
+    const dx = a.left - b.left, dy = a.top - b.top;
+    if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+    c.animate([{transform:`translate(${dx}px,${dy}px)`}, {transform:'none'}], {duration:800, easing:'cubic-bezier(.22,1,.36,1)'});
+  });
+}
+etabs.forEach((b, i) => {
+  b.addEventListener('click', () => setStage(i));
+  b.addEventListener('keydown', e => {
+    const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+    if (d){ e.preventDefault(); setStage(i + d, true); }
+  });
+});
+$('#evoPrev').addEventListener('click', () => setStage(estage - 1));
+$('#evoNext').addEventListener('click', () => setStage(estage + 1));
+estage = -1; setStage(0);
+
+/* ---------- decisions ---------- */
+const DEC = [
+  {t:'Keep state separate by kind.', l:['feature', 'components'], c:'Configuration workflows keep growing, and boundaries blur fast when one component owns everything.', d:'Each feature holds its own view, form, async and permission state. Reusable components sit below it, and an API and domain layer below those.', r:'The same inputs, dropdowns, pagination, labels and feedback states serve many workflows.'},
+  {t:'Design every async state, not just success.', l:['feature', 'api'], c:'A mockup shows success. Production also has idle, loading, partial, empty, validation error, server error, retry, changed context and stale data.', d:'Each workflow models those states explicitly, so the screen is predictable in all of them.', r:'Operators get fewer surprises, and every state is a target a test can name.'},
+  {t:'Upstream changes invalidate downstream choices.', l:['feature', 'api'], c:'Earlier choices decide which later options exist, and the configuration depends on all of them.', d:'When an upstream selection changes, dependent selections are checked and cleared if they no longer apply.', r:'A stale selection can never survive into a saved configuration.'},
+  {t:'A test run is its own state.', l:['feature', 'api', 'services'], c:'The configuration being edited, the one submitted for a test and the result on screen can all differ.', d:'Treat them as separate truths, so an old result is never mistaken for the current configuration.', r:'People check behaviour before saving instead of configuring and hoping.'},
+  {t:'A shared shell owns the platform.', l:['shell', 'route'], c:'Two frontend stacks need one consistent product: auth, session, routing, layout, navigation, providers, tokens, assets and build conventions.', d:'Move those into a shared app shell. Product features own their domain behaviour.', r:'Every concern has one owner, which keeps features from coupling across projects.'},
+  {t:'Migrate behaviour, not pixels.', l:['api', 'services', 'components'], c:'A migrated screen rendered correctly and showed no data.', d:'Prove the old request contract equals the new one: address, scope, paging, ordering, response shape, field mapping and caching.', r:'Parity is checked at runtime, not by eye.'},
+  {t:'Test consequences, not components.', l:['tests'], c:'A click that looks right can still fire twice, send the wrong data or lose focus.', d:'Playwright covers critical user flows end to end, including accessibility, persisted state and degraded networks.', r:'The tests describe what the product promises, so refactors stay safe.'}
+];
+let dec = 0;
+$('#decTabs').innerHTML = DEC.map((x, i) => `<button type="button" role="tab" id="dt${i}" aria-controls="decPanel">${x.t.replace(/\.$/, '')}</button>`).join('');
+const decBtns = [...document.querySelectorAll('#decTabs button')];
+decBtns.forEach((b, i) => {
+  b.addEventListener('click', () => setDec(i));
+  b.addEventListener('keydown', e => {
+    const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+    if (!d) return; e.preventDefault(); const n = (i + d + DEC.length) % DEC.length; setDec(n); decBtns[n].focus();
+  });
+});
+function setDec(i){
+  dec = i; const x = DEC[i];
+  decBtns.forEach((b, k) => { b.setAttribute('aria-selected', String(k === i)); b.tabIndex = k === i ? 0 : -1; });
+  $('#decPanel').setAttribute('aria-labelledby', 'dt' + i);
+  $('#layersD').classList.add('focus');
+  document.querySelectorAll('#layersD .ld').forEach(l => l.classList.toggle('on', x.l.includes(l.dataset.l)));
+  $('#decPanel').innerHTML = `<p class="dec-title">${x.t}</p><div class="dec"><div><h3>Context</h3><p>${x.c}</p></div><div class="mid"><h3>Decision</h3><p>${x.d}</p></div><div><h3>Consequence</h3><p>${x.r}</p></div></div>`;
+}
+setDec(0);
+
+/* ---------- testing ---------- */
+const NETS = [{id:'normal', name:'Normal'}, {id:'slow', name:'Slow'}, {id:'offline', name:'Offline'}];
+let net = 'normal', reqs = 0, pending = false, server = null;
+const syncNet = radios($('#net'), NETS, () => net, id => { net = id; syncNet(); });
+const ASSERTS = [
+  ['once', 'Request fired once', 'expect(requests).toBe(1)'],
+  ['sent', 'Sends what the form shows', 'expect(sent).toEqual(form)'],
+  ['disabled', 'Save disabled while pending', 'toBeDisabled()'],
+  ['error', 'Error shown inline, form kept', 'offline only'],
+  ['persist', 'Saved state matches the server', 'online only'],
+  ['focus', 'Focus returns to Save', 'toBeFocused()']
+];
+function renderAsserts(res = {}, cascade = false){
+  $('#asserts').innerHTML = ASSERTS.map(([k, t, s]) => `<li data-s="${cascade ? 'idle' : (res[k] || 'idle')}"><span>${t}</span><small>${s}</small></li>`).join('');
+  if (!cascade) return;
+  const lis = [...$('#asserts').children];
+  ASSERTS.forEach(([k], i) => setTimeout(() => { lis[i].dataset.s = res[k] || 'idle'; lis[i].classList.add('show'); }, reduce.matches ? 0 : 140 * (i + 1)));
+}
+renderAsserts();
+async function save(times){
+  const btn = $('#tSave');
+  if (pending) return;
+  const before = reqs, name = $('#cfgName').value;
+  const res = {};
+  for (let i = 0; i < times; i++){
+    if (btn.disabled) continue;
+    pending = true; btn.disabled = true; reqs += 1;
+    res.disabled = btn.disabled ? 'pass' : 'idle';
+  }
+  $('#tReqs').textContent = reqs; const rb = $('#tReqs'); rb.classList.add('bump'); setTimeout(() => rb.classList.remove('bump'), 700);
+  $('#tRes').className = 'res'; $('#tRes').textContent = 'Saving…';
+  const sentBody = {name};
+  await wait(net === 'slow' ? 1600 : 600);
+  if (net === 'offline'){
+    $('#tRes').className = 'res err'; $('#tRes').textContent = "Couldn't save. You're offline. The name you typed is kept.";
+    res.error = $('#cfgName').value === name ? 'pass' : 'idle'; res.persist = 'skip';
+  } else {
+    server = {...sentBody};
+    $('#tRes').textContent = `Saved “${server.name}”.`;
+    res.persist = server.name === $('#cfgName').value ? 'pass' : 'idle'; res.error = 'skip';
+  }
+  pending = false; btn.disabled = false; btn.focus();
+  res.once = reqs - before === 1 ? 'pass' : 'idle';
+  res.sent = sentBody.name === name ? 'pass' : 'idle';
+  res.focus = document.activeElement === btn ? 'pass' : 'idle';
+  if (times > 1 && res.once === 'pass') $('#tRes').textContent = `Two clicks, one request. ${$('#tRes').textContent}`;
+  renderAsserts(res, true);
+}
+$('#tSave').addEventListener('click', () => save(1));
+$('#tDouble').addEventListener('click', () => save(2));
+
+/* ---------- product nav ---------- */
+const pnav = $('#pnav');
+new IntersectionObserver(([e]) => pnav.classList.toggle('stuck', !e.isIntersecting)).observe($('#sentinel'));
+const links = [...pnav.querySelectorAll('ul a')];
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) links.forEach(a => a.setAttribute('aria-current', String(a.getAttribute('href') === '#' + e.target.id))); }), {rootMargin:'-35% 0px -60% 0px'});
+links.forEach(a => { const s = document.querySelector(a.getAttribute('href')); if (s) io.observe(s); });
+})();
+</script>
+</body>
+</html>

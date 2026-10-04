@@ -1,6 +1,7 @@
 @import 'tailwindcss' source(none);
 @import './styles/tokens.css';
 @import './styles/page-system.css';
+@import './styles/desktop-density.css';
 @source './routes';
 @source './lib/components/experience';
 @source './lib/experience';

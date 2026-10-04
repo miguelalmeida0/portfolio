@@ -15,15 +15,15 @@ test('one accessible headline and exact desktop geometry', async ({ page }) => {
   await expect(page.locator('h1')).toHaveAccessibleName('Frontend developer & design engineer.');
   await expect(page.locator('h1')).toBeInViewport();
   for (const [selector, expected] of [
-    ['.wind-hero', { x:108,y:128,width:1224,height:500 }],
-    ['.content-card', { x:108,y:128,width:673,height:500 }],
-    ['.portrait-card', { x:805,y:128,width:527,height:500 }]
+    ['.wind-hero', { x:86.4,y:102.4,width:1267.2,height:400 }],
+    ['.content-card', { x:86.4,y:102.4,width:538.4,height:400 }],
+    ['.portrait-card', { x:644,y:102.4,width:709.6,height:400 }]
   ] as const) {
     const actual = (await page.locator(selector).boundingBox())!;
     // WebKit rounds grid tracks to 1/64px; keep the geometry within 0.05px.
     for (const key of ['x','y','width','height'] as const) expect(actual[key], `${selector} ${key}`).toBeCloseTo(expected[key], 1);
   }
-  expect((await page.locator('#work').boundingBox())!.y).toBe(692);
+  expect((await page.locator('#work').boundingBox())!.y).toBeCloseTo(553.6,1);
 });
 
 test('pointer bends nearby glyphs, colors hot glyphs and releases within one second', async ({ page }) => {
@@ -52,7 +52,7 @@ for (const [width, height] of [[1440,900],[1366,768],[1280,800],[1024,768],[834,
     const img = (await portrait.boundingBox())!;
     expect(img.x).toBeGreaterThanOrEqual(card.x);
     expect(img.x + img.width).toBeLessThanOrEqual(card.x + card.width + 0.1);
-    expect(img.y - card.y).toBeGreaterThanOrEqual(width >= 1024 ? 24 : width >= 768 ? 20 : 16);
+    expect(img.y - card.y).toBeGreaterThanOrEqual(width >= 1024 ? 19.2 : width >= 768 ? 20 : 16);
     expect(img.y + img.height).toBeCloseTo(card.y + card.height, 0);
     await expect(portrait).toHaveCSS('object-fit', 'contain');
     expect(img.width / img.height).toBeCloseTo(1086 / 1448, 2);
@@ -97,7 +97,9 @@ test('keyboard order reaches and activates View CV', async ({ page, browserName 
     await page.keyboard.press(browserName === 'webkit' && process.platform === 'darwin' ? 'Alt+Tab' : 'Tab');
     await expect(name === 'Ask MiguelLLM' ? page.getByRole('button', { name, exact: true }) : name === 'View CV' ? page.locator('.wind-hero').getByRole('link', { name, exact: true }) : page.getByRole('link', { name, exact: true })).toBeFocused();
   }
-  await expect(page.locator('.primary')).toHaveCSS('outline-width', '3px');
+  const physicalOutline = await page.locator('.primary').evaluate(el => parseFloat(getComputedStyle(el).outlineWidth) * Number(getComputedStyle(document.querySelector('#portfolio-content')!).zoom));
+  expect(physicalOutline).toBeGreaterThanOrEqual(2);
+  expect(physicalOutline).toBeLessThanOrEqual(2.5);
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/cv$/);
 });

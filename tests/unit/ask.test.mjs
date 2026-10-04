@@ -52,7 +52,7 @@ test('portfolio explanations survive missing visible sources and reject substitu
 let sequence = 0;
 const request = (body, client = `ask-${sequence++}`) => POST({ request: new Request('http://localhost/api/ask', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }), getClientAddress: () => client });
 test('structured endpoint reuses guardrails, validates submitted sources, refuses unknowns and rate limits', async () => {
-  const areas = { stack: 'React · TypeScript · Svelte · JavaScript', f24: 'Built a product used by thousands of companies.', quality: 'Playwright · accessibility' };
+  const areas = { stack: 'React · TypeScript · Svelte · JavaScript', f24: 'Built a product used by hundreds of companies.', quality: 'Playwright · accessibility' };
   const response = await request({ question: 'What is his stack?', areas });
   assert.equal(response.status, 200);
   const body = await response.json();

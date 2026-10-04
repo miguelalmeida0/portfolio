@@ -6,10 +6,10 @@ const routes = [
   ['/cv', /Miguel\s*Almeida\./],
   ['/story', /^Story$/],
   ['/work/needle', /^Needle$/],
-  ['/work/second-voice-ai', /^Second Voice$/],
-  ['/work/f24', /^F24$/],
-  ['/work/leu', /^Leu: from PDF text\s*to learner state\.$/],
-  ['/work/flow', /^Flow$/]
+  ['/work/second-voice-ai', /^Choose a literary voice\. See exactly what changes\.$/],
+  ['/work/f24', /^From mockup to production system\.$/],
+  ['/work/leu', /^From PDF text to learner state\.$/],
+  ['/work/flow', /^From speech to deterministic state\.$/]
 ] as const;
 
 for (const [path, heading] of routes) {
@@ -45,14 +45,14 @@ for (const [path, heading] of routes) {
       }
       await expect(destinationLink).not.toHaveAttribute('target', '_blank');
       await destinationLink.click();
-      await expect(page).toHaveURL(new RegExp(`${path}$`));
+      await expect(page).toHaveURL(new RegExp(`${path.replace('second-voice-ai', 'second-voice')}$`));
       await expect(page.locator('main h1')).toHaveText(heading);
       await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
       await page.goBack();
       await expect(page.locator('main h1')).toHaveText(routes[0][1]);
       await expect(page.locator('[data-pixel-intro]')).toBeHidden();
       await page.goForward();
-      await expect(page).toHaveURL(new RegExp(`${path}$`));
+      await expect(page).toHaveURL(new RegExp(`${path.replace('second-voice-ai', 'second-voice')}$`));
       await expect(page.locator('main h1')).toHaveText(heading);
       await expect(page.locator('[data-route-veil]')).toBeHidden();
     }

@@ -61,7 +61,7 @@ async function openDestination(page: Page, link: Locator, path: string) {
   const count = page.context().pages().length;
   await expect(link).not.toHaveAttribute('target', '_blank');
   await link.click();
-  await page.waitForURL(url => url.pathname === path);
+  await page.waitForURL(url => url.pathname === path.replace('second-voice-ai', 'second-voice'));
   await expect(page.locator('main h1')).toBeVisible();
   await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
   await expect(page.locator('#portfolio-content')).toHaveJSProperty('inert', false);
@@ -142,10 +142,10 @@ test('case studies stay in this tab and external evidence opens separately', asy
   await page.locator('.project-index button').filter({ hasText: 'Leu' }).click();
   await openDestination(page, page.getByRole('link', { name: 'View Leu case study', exact: true }), '/work/leu');
   await page.goto('/work/leu');
-  await expect(page.locator('.incident-index')).toHaveCount(0);
-  await expect(page.getByText('Seven investigations that changed the system.', { exact: true })).toHaveCount(0);
-  await expect(page.locator('.incident')).toHaveCount(7);
-  const evidence = page.getByRole('link', { name: 'Read the V36 evaluation', exact: true });
+  await expect(page.locator('#engineering .md-tab')).toHaveCount(7);
+  await openPortfolioHome(page);
+  await page.locator('.project-index button').filter({ hasText: 'Leu' }).click();
+  const evidence = page.locator('#work .links').getByRole('link', { name: 'Source', exact: true });
   const href = await evidence.getAttribute('href');
   // Isolate tab behavior from third-party availability. The real href is retained.
   await context.route('https://github.com/**', route => route.fulfill({ contentType: 'text/html', body: '<h1>Evidence destination</h1>' }));
@@ -199,5 +199,17 @@ test('Mirror AI route, assets, sitemap and next-project link are removed', async
   expect(await (await request.get('/sitemap.xml')).text()).not.toContain('mirror-ai');
   await page.goto('/work/leu');
   await expect(page.locator('a[href*="mirror"]')).toHaveCount(0);
-  await expect(page.locator('a').filter({ hasText: 'Next case study' })).toHaveAttribute('href', '/work/needle');
+  await expect(page.getByRole('navigation', { name: 'Next project' }).getByRole('link')).toHaveAttribute('href', '/work/flow');
+});
+
+
+test('every homepage F24 deep link lands on a rendered case-study section', async ({ page, request }) => {
+  await openPortfolioHome(page);
+  await page.locator('.project-index button').filter({ hasText: 'F24' }).click();
+  const links = await page.locator('#work a[href^="/work/f24#"]').evaluateAll(nodes => nodes.map(n => n.getAttribute('href')!));
+  expect(links.length).toBeGreaterThan(0);
+  const response = await request.get('/work/f24');
+  expect(response.ok()).toBe(true);
+  const html = await response.text();
+  for (const href of links) expect(html, href).toContain(`id="${href.split('#')[1]}"`);
 });

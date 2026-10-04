@@ -8,7 +8,7 @@ test('hero presents the role, stack and complete portrait', async ({ page }) => 
   const hero = page.locator('.wind-hero');
   await expect(hero.locator('h1')).toHaveAccessibleName('Frontend developer & design engineer.');
   await expect(hero.locator('.hero-stack')).toHaveText('React · TypeScript · Svelte · JavaScript');
-  await expect(hero.locator('.experience')).toHaveText('Built a product used by thousands of companies.');
+  await expect(hero.locator('.experience')).toHaveText('Built a product used by hundreds of companies.');
   await expect(hero.locator('.quality')).toHaveText('Playwright · accessibility');
   const portrait = hero.locator('.portrait');
   await expect(portrait).toHaveAttribute('src', '/images/miguel-contact-editorial.webp');

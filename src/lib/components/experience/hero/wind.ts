@@ -67,7 +67,9 @@ export function installWind(node: HTMLElement, debugPos?: { line: number; pos: n
     // Read stable layout boxes, not the bending glyph under the pointer.
     const rect = line.getBoundingClientRect();
     const children = [...line.querySelectorAll<HTMLElement>('[data-glyph]')];
-    const x = event.clientX - rect.left;
+    // Pointer coordinates are physical pixels; offsets use unzoomed CSS pixels.
+    const scale = rect.width / line.offsetWidth || 1;
+    const x = (event.clientX - rect.left) / scale;
     const origin = children[0]?.offsetLeft ?? 0;
     const glyph = children.find(g => x < g.offsetLeft - origin + g.offsetWidth) ?? children.at(-1);
     if (!glyph) return;

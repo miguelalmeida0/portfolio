@@ -6,7 +6,7 @@ const projects = ['needle', 'second-voice', 'f24', 'flow', 'leu'] as const;
 test('recruiter hero and five selectable projects preserve the desktop hierarchy', async ({ page, request }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await openPortfolioHome(page);
-  await expect(page.locator('.experience')).toHaveText('Built a product used by thousands of companies.');
+  await expect(page.locator('.experience')).toHaveText('Built a product used by hundreds of companies.');
   await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName('Frontend developer & design engineer.');
   await expect(page.locator('.wind-hero').getByRole('link', { name: 'View CV', exact: true })).toBeVisible();
   expect(await page.locator('[data-project-row]').evaluateAll(rows => rows.map(row => row.getAttribute('data-ask-id')))).toEqual(['w-needle','w-sv','w-f24','w-flow','w-leu']);

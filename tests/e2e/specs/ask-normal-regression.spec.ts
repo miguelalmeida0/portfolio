@@ -19,7 +19,7 @@ test('normal refresh ×10, uncached refresh ×5, slow 3G / 6× CPU, fresh landin
         if (!getComputedStyle(header).fontFamily.includes('Figtree')) w.__askPaint.violations.push('unstyled header');
         if (card && getComputedStyle(card).backgroundColor !== 'rgb(228, 237, 191)') w.__askPaint.violations.push('old hero palette');
         if (document.querySelector('.facts, .static-projects, .ask-panel, .ask-flag, .is-lit')) w.__askPaint.violations.push('old or Ask residue');
-        if (!card?.textContent?.includes('Built a product used by thousands of companies.')) w.__askPaint.violations.push('old hero copy');
+        if (!card?.textContent?.includes('Built a product used by hundreds of companies.')) w.__askPaint.violations.push('old hero copy');
       }
       requestAnimationFrame(sample);
     };
