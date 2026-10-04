@@ -5,14 +5,14 @@ export type VideoSource = { src: string; type: string };
 // `sources` are tried in order via canPlayType; `src` is the universal fallback.
 export type VideoSpec = { src: string; sources?: VideoSource[]; poster: string; label: string; caption: string; fit: 'cover' | 'contain' };
 export type WorkProject = {
-  id: 'second-voice' | 'f24' | 'flow' | 'leu';
+  id: 'needle' | 'second-voice' | 'f24' | 'flow' | 'leu';
   name: string; sub: string; line: string; role: string; stack: string;
   cta: { label: string; href: string }; cta2: { label: string; href: string };
   source?: string; poster: string; alt: string;
-  stage: { kind: 'pair'; demo: 'second-voice' | 'f24' } | { kind: 'solo'; video: VideoSpec };
+  stage: { kind: 'pair'; demo: 'second-voice' | 'f24' } | { kind: 'solo'; video: VideoSpec } | { kind: 'image'; src: string; caption: string };
 };
 
-export const workProjects: WorkProject[] = ['second-voice-ai', 'f24', 'flow', 'leu'].map(slug => {
+export const workProjects: WorkProject[] = ['needle', 'second-voice-ai', 'f24', 'flow', 'leu'].map(slug => {
   const p = archive.find(project => project.slug === slug)!;
   const id = (slug === 'second-voice-ai' ? 'second-voice' : slug) as WorkProject['id'];
   const poster = id === 'leu' ? leuMedia.poster : p.image;
@@ -23,9 +23,11 @@ export const workProjects: WorkProject[] = ['second-voice-ai', 'f24', 'flow', 'l
     poster, alt,
     cta: id === 'second-voice' ? { label: 'Open app', href: p.live!.href }
       : { label: id === 'f24' ? 'My contribution' : 'Case study', href: `/work/${slug}${id === 'f24' ? '#product-impact' : ''}` },
-    cta2: id === 'second-voice' || id === 'f24' ? { label: 'Case study', href: `/work/${slug}` }
+    cta2: id === 'needle' ? { label: 'Open app', href: p.live!.href }
+      : id === 'second-voice' || id === 'f24' ? { label: 'Case study', href: `/work/${slug}` }
       : { label: 'Source', href: p.source! },
-    stage: id === 'second-voice' || id === 'f24' ? { kind: 'pair', demo: id }
+    stage: id === 'needle' ? { kind: 'image', src: poster, caption: p.caption }
+      : id === 'second-voice' || id === 'f24' ? { kind: 'pair', demo: id }
       : { kind: 'solo', video: id === 'leu' ? leuMedia : { src: p.video!, poster, label: alt, caption: p.caption, fit: 'cover' } }
   };
 });

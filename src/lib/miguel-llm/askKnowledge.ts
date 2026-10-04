@@ -10,7 +10,7 @@ import { availabilityKnowledge } from '../../data/miguel-llm/availability';
 import { projectSystems } from '$lib/experience/project-systems';
 import type { AreaId, KnowledgeAnswer } from '$lib/ask/types';
 
-const projectAreas: Record<string, AreaId> = { f24:'w-f24', flow:'w-flow', leu:'w-leu', 'second-voice-ai':'w-sv' };
+const projectAreas: Record<string, AreaId> = { needle:'w-needle', f24:'w-f24', flow:'w-flow', leu:'w-leu', 'second-voice-ai':'w-sv' };
 const unsupported = (q: string) => /graphql|kubernetes|salary|visa|married|children|\bage\b/.test(q);
 export function evidenceArea(question: string): AreaId | undefined {
   const q = question.toLowerCase();
@@ -73,7 +73,7 @@ export function buildAskKnowledge(question: string, area?: AreaId): KnowledgeAns
     projectSystems.f24.tools.find(tool => tool.area === 'Verification')!.purpose,
     `Second Voice: ${sv.decisions[2].detail}`
   ], ['Quality & frontend practice|/cv', projectSource('second-voice-ai'), projectSource('flow')]);
-  const slug = ({ 'w-sv':'second-voice-ai', try:'second-voice-ai', draft:'second-voice-ai', rewrite:'second-voice-ai', 'w-flow':'flow', 'w-leu':'leu' } as Partial<Record<AreaId,string>>)[topic!];
+  const slug = ({ 'w-sv':'second-voice-ai', try:'second-voice-ai', draft:'second-voice-ai', rewrite:'second-voice-ai', 'w-needle':'needle', 'w-flow':'flow', 'w-leu':'leu' } as Partial<Record<AreaId,string>>)[topic!];
   if (slug) {
     const p = project(slug);
     return make([p.problem, p.contribution, ...(slug === 'leu' ? [projectSystems.leu.summary] : [])], [
