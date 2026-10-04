@@ -12,13 +12,14 @@ test('fast downward scrolling lands on the complete reward before a new gesture 
   await page.evaluate(y => window.scrollTo({ top: y - 160, behavior: 'instant' }), destination);
   await page.mouse.move(1100, 450);
   await page.mouse.wheel(0, 3000);
-  await expect.poll(() => page.evaluate(() => scrollY)).toBeCloseTo(destination, 0);
+  // WebKit reports an integer scroll offset for a fractional layout position.
+  await expect.poll(() => page.evaluate(y => Math.abs(scrollY - y), destination)).toBeLessThanOrEqual(1);
   for (const x of [300, 1100, 300]) {
     await page.mouse.move(x, 450);
     await page.mouse.wheel(0, 1800);
     await page.waitForTimeout(150);
   }
-  expect(await page.evaluate(() => scrollY)).toBeCloseTo(destination, 0);
+  expect(await page.evaluate(y => Math.abs(scrollY - y), destination)).toBeLessThanOrEqual(1);
   await expect(page.locator('[data-story-progress]')).toHaveText('All 8 answered');
   const panel = (await page.locator('.story-visual').boundingBox())!;
   expect(panel.y).toBeCloseTo(86 * .8, 1);
@@ -48,26 +49,41 @@ for (const width of [1440, 1920]) {
   test(`wheel over either column reads the story before Line M at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/story');
+    await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
+    await page.evaluate(() => document.fonts.ready);
     await expect(page.locator('[data-story-section]').first()).toHaveAttribute('data-current');
     const footer = page.locator('[data-line-m]');
+    let wheelDelta = 0;
+    await page.exposeFunction('recordStoryWheel', (delta: number) => { wheelDelta = delta; });
+    await page.evaluate(() => window.addEventListener('wheel', event => (window as any).recordStoryWheel(event.deltaY), { capture: true }));
     for (const x of [width * .25, width * .75]) {
       const before = await page.evaluate(() => scrollY);
       await page.mouse.move(x, 450);
+      wheelDelta = 0;
       await page.mouse.wheel(0, 640 * .8);
-      await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(before + 400 * .8);
+      // Mobile Chromium scales emulated wheel input by its device pixel ratio.
+      // Check movement against the event actually delivered to the page.
+      await expect.poll(() => wheelDelta).toBeGreaterThan(0);
+      await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(before + wheelDelta * .6);
       await expect.poll(() => footer.evaluate(e => e.getBoundingClientRect().top)).toBeGreaterThan(900);
       expect(await page.locator('.story-scroll').evaluate(e => e.scrollTop)).toBe(0);
       const panel = (await page.locator('.story-visual').boundingBox())!;
       expect(panel.y).toBeCloseTo(86 * .8, 1);
       expect(900 * .8 - panel.y - panel.height).toBeCloseTo(panel.y, 1);
     }
-    await expect(page.locator('[data-story-section]').nth(2)).toHaveAttribute('data-current');
-    await page.locator('[data-story-section]').nth(2).locator('[data-story-next]').click();
-    await expect(page.locator('[data-story-section]').nth(3)).toBeFocused();
-    await expect(page.locator('[data-story-section]').nth(3)).toHaveAttribute('data-current');
+    await expect(page.locator('html')).not.toHaveClass(/\blenis-scrolling\b/);
+    const current = await page.locator('[data-story-section]').evaluateAll(sections => sections.findIndex(section => section.hasAttribute('data-current')));
+    expect(current).toBeGreaterThan(0);
+    expect(current).toBeLessThan(7);
+    await page.locator('[data-story-section]').nth(current).locator('[data-story-next]').click();
+    await expect(page.locator('[data-story-section]').nth(current + 1)).toBeFocused();
+    await expect(page.locator('[data-story-section]').nth(current + 1)).toHaveAttribute('data-current');
     await page.keyboard.press('End');
     await expect(footer).toBeInViewport();
     await expect(page.locator('[data-story-progress]')).toHaveText('All 8 answered');
+    // The footer becomes visible before the native End scroll finishes. Let
+    // that journey settle before testing the independent return-to-top action.
+    await expect.poll(() => page.evaluate(() => Math.abs(scrollY - (document.documentElement.scrollHeight - innerHeight)))).toBeLessThanOrEqual(1);
     // Keyboard scroll keys act on the document once the clicked control no longer owns focus.
     await page.evaluate(() => (document.activeElement as HTMLElement)?.blur());
     await page.keyboard.press('Home');

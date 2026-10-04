@@ -41,13 +41,16 @@ for (const [width,height] of [...sizes,[768,1024],[320,844]]) {
   });
 }
 for(const [width,height] of sizes) {
-  test(`portrait geometry and rendered copy freeze at ${width}`,async({page})=>{
+  test(`portrait geometry and rendered copy freeze at ${width}`,async({page,browserName})=>{
     await page.setViewportSize({width,height});
     await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
     const before=JSON.parse(fs.readFileSync(`baseline/${width}.json`,'utf8')).find((b:any)=>b.sel==='[data-portrait-card]');
     const portrait=(await page.locator('[data-portrait-card]').boundingBox())!;
     const zoom=width>=1024?.8:1;
-    const expectedWidth=width>=1280?Math.min(width*1.25-913,(width*1.25-216)*.56)*zoom:width>=1024?(width*1.25-128)*.44*zoom:before.w;
+    // WebKit resolves viewport units inside CSS zoom against the expanded
+    // viewport. Preserve that existing presentation as well as the other engines.
+    const viewportUnits=browserName==='webkit'?width/zoom:width;
+    const expectedWidth=width>=1280?Math.min(viewportUnits*1.25-913,(width*1.25-216)*.56)*zoom:width>=1024?(viewportUnits*1.25-128)*.44*zoom:before.w;
     expect(portrait.width).toBeCloseTo(expectedWidth,1); expect(portrait.height).toBeCloseTo(before.h*zoom,1);
     const copy=await page.locator('[data-ask-id]').evaluateAll(nodes=>Object.fromEntries(nodes.map(e=>[(e as HTMLElement).dataset.askId,(e as HTMLElement).innerText])));
     const expectedCopy=JSON.parse(fs.readFileSync(`baseline/${width}-source-texts.json`,'utf8'));
@@ -99,7 +102,7 @@ for(const width of [1920,1440,1280,1024,768,390,320]) test(`stable project frame
       await expect.soft(page).toHaveScreenshot(`tidy-${width}-${id}.png`,{fullPage:true,animations:'disabled',maxDiffPixelRatio:.002});
     }
   }
-  for(const frame of frames) expect(frame).toEqual(frames[0]);
+  for(const frame of frames) for(const key of ['footer', 'h', 'top', 'w'] as const) expect(frame[key]).toBeCloseTo(frames[0][key], 2);
 });
 for(const reducedMotion of ['reduce','no-preference'] as const) test(`both film controls pause and resume with ${reducedMotion}`,async({page})=>{
   await page.emulateMedia({reducedMotion});

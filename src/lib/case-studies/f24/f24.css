@@ -243,7 +243,8 @@ html:has(.cs-f24){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);b
 .cs-f24 .ld small{display:block;font-size:13px;color:var(--muted);margin-top:4px;line-height:1.35}
 .cs-f24 .ld-row .ld:not(:last-child)::after{content:"→";position:absolute;right:-9px;top:50%;transform:translate(50%,-50%);color:var(--rule);font-size:14px}
 .cs-f24 .ld.wide{grid-column:1/-1}
-.cs-f24 .layers-d.focus .ld{opacity:.45}
+/* Dim the surface rather than the text so inactive layers remain readable. */
+.cs-f24 .layers-d.focus .ld:not(.on){background:color-mix(in srgb,var(--ivory) 45%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--line) 45%,transparent)}
 .cs-f24 .layers-d.focus .ld.on{opacity:1;background:var(--forest);color:var(--ivory);box-shadow:none}
 .cs-f24 .layers-d.focus .ld.on small{color:rgba(250,247,237,var(--cs-alpha-78))}
 .cs-f24 .dec-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}

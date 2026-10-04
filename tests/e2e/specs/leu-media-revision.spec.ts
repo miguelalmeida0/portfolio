@@ -157,7 +157,17 @@ test('WebM failure uses MP4 and retains playback after case-study navigation', a
   await page.locator('.leu-flow-loop video').scrollIntoViewIfNeeded();
   await expect(page.locator('.leu-flow-loop video')).toHaveAttribute('src', leuMedia.src);
   await expect(page.locator('.leu-flow-loop video')).toHaveJSProperty('paused', false);
+  await page.evaluate(() => {
+    (window as any).leuClickEvidence = [];
+    for (const type of ['pointerdown', 'pointerup', 'click']) document.addEventListener(type, event => {
+      const mouse = event as MouseEvent;
+      (window as any).leuClickEvidence.push({ type, x: mouse.clientX, y: mouse.clientY,
+        target: (event.target as Element)?.outerHTML.slice(0, 500), prevented: event.defaultPrevented });
+    }, { capture: true });
+  });
   await page.getByRole('link', { name: 'View Leu case study', exact: true }).click();
+  console.log('Leu navigation click', await page.evaluate(() => ({ url: location.href,
+    events: (window as any).leuClickEvidence, state: document.documentElement.dataset })));
   await expect(page.locator('.cs-leu #try')).toBeVisible();
   await page.goBack();
   await ready(page);
