@@ -12,7 +12,22 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    slug: 'second-voice-ai', name: 'Second Voice', category: 'Product design & frontend', type: 'Personal project', number: '01',
+    slug: 'needle', name: 'Needle', category: 'Search & performance engineering', type: 'Personal project', number: '01',
+    summary: 'Search 10,000 artworks. A semantic search engine.',
+    role: 'Product design & performance engineering', period: 'Independent product · 2026',
+    ownership: 'Designed and engineered the search interface, worker retrieval, prepared index and image delivery pipeline.',
+    stack: ['React', 'TypeScript', 'Web Workers', 'HNSW', 'Node.js', 'Sharp', 'Docker'],
+    image: '/projects/needle/wall.webp', alt: 'The actual Needle collection wall showing ranked Met artworks after a Queen Louise query.',
+    caption: 'Actual public release, captured locally at revision baa50f2. Images and retrieval are real; this is not a public-host latency measurement.',
+    live: { href: 'https://needle.miguelalmeida.xyz', label: 'Open Needle' }, source: 'https://github.com/miguelalmeida0/needle-portfolio-release',
+    problem: 'A visual search product coordinates retrieval, image transfer and rendering. A ranked ID is not useful while the artwork remains invisible.',
+    contribution: 'Prepared the search graph ahead of a visit, moved retrieval into a worker and built bounded image derivatives with explicit source identity, HTTP validation and viewport-aware rendering.',
+    outcome: 'A public deployable release with 10,000 Met catalog records, 120 local opening images, a corpus-bound graph and a windowed collection wall. The case study connects the shipped mechanisms to their source.',
+    limitation: 'Historical before/after reports are not included in the public release, so timing improvements are not certified here. Remote imagery and cold corpus transfer remain separate costs. Experimental neural retrieval is not enabled on public hosts.',
+    decisions: []
+  },
+  {
+    slug: 'second-voice-ai', name: 'Second Voice', category: 'Product design & frontend', type: 'Personal project', number: '02',
     summary: 'Choose a literary voice. See exactly what changes.',
     role: 'Design & engineering', period: 'Independent product · 2026',
     ownership: 'I designed and built the writing interface, edit comparison and request recovery.',
@@ -31,7 +46,7 @@ export const projects: Project[] = [
     ]
   },
 {
-    slug: 'f24', name: 'F24', category: 'Production frontend', type: 'Professional work', number: '02',
+    slug: 'f24', name: 'F24', category: 'Production frontend', type: 'Professional work', number: '03',
     summary: 'Built a product used by thousands of companies.',
     role: 'Frontend architecture & product delivery', period: 'F24 · 2022–now',
     ownership: 'Built Connectivity Hub’s original frontend alongside product, design, backend and QA. Modular architecture, reusable components, service integrations and performance, with continued delivery as the product evolves from Svelte toward React.',
@@ -49,7 +64,7 @@ export const projects: Project[] = [
   "name": "Flow",
   "category": "Voice-first personal computing",
   "type": "Personal project",
-  "number": "03",
+  "number": "04",
   "summary": "Move a meeting. Inspect the change. Undo it.",
   "role": "Product design & frontend engineering",
   "ownership": "I designed and built the React interface and action model that turn spoken requests into editable calendar events, plans and commitments.",
@@ -89,7 +104,7 @@ export const projects: Project[] = [
   ]
 },
 {
-    slug: 'leu', name: 'Leu', category: 'Native AI learning', type: 'Personal project', number: '04',
+    slug: 'leu', name: 'Leu', category: 'Native AI learning', type: 'Personal project', number: '05',
     summary: 'Read a passage. Find the gap. Return to the exact source.',
     role: 'Product design & native engineering', period: 'Independent product · 2026',
     ownership: 'Designed and built the native learning experience, from reader interaction and source-linked learning to on-device neural narration.',

@@ -7,7 +7,7 @@ for (const width of [1440, 834, 390]) test(`project selection has a distinct fil
   await page.goto('/#work');
   await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
   const buttons = page.locator('.project-index button');
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < await buttons.count(); i++) {
     const button = buttons.nth(i);
     await button.focus();
     await button.press('Enter');
@@ -17,7 +17,7 @@ for (const width of [1440, 834, 390]) test(`project selection has a distinct fil
     const colors = await buttons.evaluateAll(nodes => nodes.map(node => ({ background: getComputedStyle(node, '::after').backgroundColor, color: getComputedStyle(node).color })));
     expect(colors[i].background).not.toBe('rgba(0, 0, 0, 0)');
     expect(colors[i].color).not.toBe(colors[i].background);
-    for (let j = 0; j < 4; j++) if (j !== i) expect(colors[j].background).toBe('rgba(0, 0, 0, 0)');
+    for (let j = 0; j < colors.length; j++) if (j !== i) expect(colors[j].background).toBe('rgba(0, 0, 0, 0)');
     await expect(button).toBeFocused();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     if (i < 2) await page.locator('#work').screenshot({ path: `/tmp/project-selected-${i}-${width}.png` });

@@ -17,7 +17,7 @@ test.beforeEach(async ({ page }, testInfo) => {
     ? { width: 390, height: 844 } : { width: 1440, height: 1020 });
   await page.addInitScript(() => sessionStorage.setItem('seen-intro', 'true'));
   await page.goto('/#work');
-  await expect(page.locator('.project-index button')).toHaveCount(4);
+  await expect(page.locator('.project-index button')).toHaveCount(5);
   await ready(page);
 });
 
@@ -26,7 +26,7 @@ test('Leu starts promptly, has product motion in the first second, and shares ex
   await page.locator('#work').scrollIntoViewIfNeeded();
   await page.evaluate(() => {
     (window as any).leuSelectedAt = performance.now();
-    document.querySelectorAll<HTMLButtonElement>('.project-index button')[3].click();
+    document.querySelector<HTMLButtonElement>('[data-project-row][data-ask-id="w-leu"]')!.click();
   });
   const film = page.locator('.leu-flow-loop video');
   const firstFrameMs = await film.evaluate(video => new Promise<number>(resolve => {
@@ -87,7 +87,7 @@ test('Leu starts promptly, has product motion in the first second, and shares ex
 
   await page.getByRole('link', { name: 'View Leu case study', exact: true }).click();
   await expect(page).toHaveURL(/\/work\/leu$/);
-  const projectFilm = page.locator('article [data-hero-media] .leu-flow-loop video');
+  const projectFilm = page.locator('article .leu-film .leu-flow-loop video');
   await projectFilm.scrollIntoViewIfNeeded();
   await expect(projectFilm).toHaveJSProperty('currentSrc', metrics.src);
   await expect(projectFilm).toHaveAttribute('poster', leuMedia.posterFallback);
@@ -101,7 +101,7 @@ test('Leu starts promptly, has product motion in the first second, and shares ex
   await expect.poll(() => projectFilm.evaluate(video => (video as HTMLVideoElement).currentTime)).toBeLessThan(1);
   await expect(projectFilm).toHaveJSProperty('paused', false);
   await page.goBack();
-  await expect(page.locator('.project-index button')).toHaveCount(4);
+  await expect(page.locator('.project-index button')).toHaveCount(5);
   await page.getByRole('button', { name: /^Leu/ }).click();
   await expect(page.locator('.leu-flow-loop video')).toHaveJSProperty('paused', false);
 });
@@ -125,7 +125,7 @@ for (const activation of ['click', 'keyboard'] as const) {
       await expect(page).toHaveURL(new RegExp(`/work/${slug}$`));
       await expect(page.locator('h1')).toBeVisible();
       await page.goBack();
-      await expect(page.locator('.project-index button')).toHaveCount(4);
+      await expect(page.locator('.project-index button')).toHaveCount(5);
       await ready(page);
     }
   });
@@ -136,7 +136,7 @@ test('reduced motion preserves the poster, explicit Play works, and inactive med
   const movies: string[] = [];
   page.on('request', request => { if (/\.(webm|mp4)$/.test(request.url())) movies.push(request.url()); });
   await page.reload();
-  await expect(page.locator('.project-index button')).toHaveCount(4);
+  await expect(page.locator('.project-index button')).toHaveCount(5);
   await ready(page);
   await page.getByRole('button', { name: /^Leu/ }).click();
   const film = page.locator('.leu-flow-loop video');
@@ -160,10 +160,11 @@ test('WebM failure uses the same MP4 fallback on both pages', async ({ page }) =
   await page.route('**/leu-loop-v2.webm', route => route.abort());
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.getByRole('button', { name: /^Leu/ }).click();
+  await page.locator('.leu-flow-loop video').scrollIntoViewIfNeeded();
   await expect(page.locator('.leu-flow-loop video')).toHaveAttribute('src', leuMedia.src);
   await expect(page.locator('.leu-flow-loop video')).toHaveJSProperty('paused', false);
   await page.getByRole('link', { name: 'View Leu case study', exact: true }).click();
-  const film = page.locator('article [data-hero-media] .leu-flow-loop video');
+  const film = page.locator('article .leu-film .leu-flow-loop video');
   await film.scrollIntoViewIfNeeded();
   await expect(film).toHaveAttribute('src', leuMedia.src);
   await expect(film).toHaveJSProperty('paused', false);

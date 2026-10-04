@@ -109,7 +109,7 @@ test('modified, external, download and desktop links remain native', async () =>
     assert.equal(s.owner.mobileState.value, 'idle');
     assert.equal(s.events.length, 0);
   }
-  for (const fields of [{ href: 'https://external.test/' }, { download: 'file' }, { target: '_blank' }]) {
+  for (const fields of [{ href: 'https://external.test/' }, { download: 'file' }]) {
     const s = setup(); const event = s.click(); Object.assign(event.currentTarget, fields);
     await s.owner.navigateFromMenu(event, s.close);
     assert.equal(event.defaultPrevented, false);
@@ -117,6 +117,28 @@ test('modified, external, download and desktop links remain native', async () =>
   const s = setup({ mobile: false }); const event = s.click();
   await s.owner.navigateFromMenu(event, s.close);
   assert.equal(event.defaultPrevented, false);
+});
+
+test('new-tab links close the menu without covering or intercepting navigation', async () => {
+  const s = setup();
+  const event = s.click();
+  event.currentTarget.target = '_blank';
+  let closeCalls = 0;
+  await s.owner.navigateFromMenu(event, () => {
+    closeCalls++;
+    assert.equal(s.veil.hidden, true);
+    assert.equal(s.owner.mobileState.value, 'idle');
+  });
+  assert.equal(closeCalls, 1);
+  assert.equal(event.defaultPrevented, false);
+  assert.equal(s.veil.hidden, true);
+  assert.equal(s.owner.mobileState.value, 'idle');
+  assert.equal(s.animations.length, 0);
+  assert.deepEqual(s.events, []);
+
+  const handled = s.click({ defaultPrevented: true });
+  handled.currentTarget.target = '_blank';
+  await s.owner.navigateFromMenu(handled, () => assert.fail('An already handled click must not close the menu'));
 });
 
 test('rejected navigation releases the veil and announces recovery', async () => {
