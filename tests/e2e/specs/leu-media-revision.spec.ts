@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures';
 import { leuMedia } from '../../../src/lib/content/leu-media';
 import { sampleFor } from '../../../src/lib/experience/samples';
 

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures';
 import { openPortfolioHome, openSecondVoiceStudio } from '../helpers/portfolio';
 
 test('mobile menu closes on Escape and restores focus', async ({ page }) => {

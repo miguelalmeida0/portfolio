@@ -35,7 +35,9 @@ try {
  assert.match(await page.locator('[data-project-row]').first().innerText(),/Needle/);
  assert.match(await page.locator('.experience').innerText(),/hundreds of companies/);
  await page.screenshot({path:`${dir}/candidate-home.png`});
- await page.goto(`${base}/work/needle`);assert.equal(await page.locator('[data-needle-study] section').count(),8);
+ await page.goto(`${base}/work/needle`);
+ assert.equal(await page.locator('[data-needle-study] h1').innerText(),'From a query to a visible artwork.');
+ for(const id of ['try','engineering','images','cache','rendering','product','specs'])assert.equal(await page.locator(`[data-needle-study] #${id}`).count(),1);
  await page.screenshot({path:`${dir}/candidate-needle.png`});
  writeFileSync(`${dir}/verification.json`,JSON.stringify({base,results,needlePreserved:true,legacyLink:true},null,2));
 }finally{await browser.close();}

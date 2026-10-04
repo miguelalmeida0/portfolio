@@ -4,7 +4,7 @@
  * Runs against the reference prototype today and the production build later.
  * The only thing that differs between them is the naming map below — switch with ASK_TARGET=prod.
  */
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page } from '../fixtures';
 import AxeBuilder from '@axe-core/playwright';
 import { selectWorkProject } from '../helpers/portfolio';
 import plans from '../../../src/lib/ask/question-plans.json' with { type: 'json' };

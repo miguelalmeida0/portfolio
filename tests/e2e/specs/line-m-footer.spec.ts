@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page } from '../fixtures';
 import AxeBuilder from '@axe-core/playwright';
 
 test.use({ viewport: { width: 1920, height: 963 } });
@@ -115,8 +115,8 @@ for(const width of [1920,1440,1100,834,390,375]) test(`layout, typography and ac
 test('desktop geometry retains the handoff line, train and station positions',async({page})=>{
   await page.emulateMedia({reducedMotion:'reduce'}); await page.reload(); await page.locator(footer).scrollIntoViewIfNeeded();
   const root=(await page.locator(footer).boundingBox())!, line=(await page.getByRole('navigation',{name:'Contact Miguel'}).boundingBox())!;
-  expect(root.height).toBe(640);expect(line.x-root.x).toBe(170);expect(line.y-root.y).toBe(452);expect(line.height).toBe(12);
-  const train=(await page.locator('[data-train]').boundingBox())!;expect(train.width).toBe(200);expect(train.height).toBe(58);
+  expect(root.height).toBeCloseTo(512,1);expect(line.x-root.x).toBeCloseTo(136,1);expect(line.y-root.y).toBeCloseTo(361.6,1);expect(line.height).toBeCloseTo(9.6,1);
+  const train=(await page.locator('[data-train]').boundingBox())!;expect(train.width).toBeCloseTo(160,1);expect(train.height).toBeCloseTo(46.4,1);
   for(const [i,at] of [16,39,62,85].entries()) {
     const ring=(await page.locator(`${stop(i)} > span:first-child`).boundingBox())!;
     expect(ring.x+ring.width/2).toBeCloseTo(line.x+line.width*at/100,0);

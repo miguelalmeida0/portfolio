@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixtures';
 
 test('normal refresh ×10, uncached refresh ×5, slow 3G / 6× CPU, fresh landing and seen session have no old frames', async ({ page, context, browserName }, testInfo) => {
   test.skip(browserName !== 'chromium', 'CDP supplies cache, network and CPU controls');
@@ -19,7 +19,9 @@ test('normal refresh ×10, uncached refresh ×5, slow 3G / 6× CPU, fresh landin
         if (!getComputedStyle(header).fontFamily.includes('Figtree')) w.__askPaint.violations.push('unstyled header');
         if (card && getComputedStyle(card).backgroundColor !== 'rgb(228, 237, 191)') w.__askPaint.violations.push('old hero palette');
         if (document.querySelector('.facts, .static-projects, .ask-panel, .ask-flag, .is-lit')) w.__askPaint.violations.push('old or Ask residue');
-        if (!card?.textContent?.includes('Built a product used by hundreds of companies.')) w.__askPaint.violations.push('old hero copy');
+        const copy = card?.querySelector('.experience')?.textContent?.trim();
+        // HTML can arrive in chunks. A partial prefix is not an old version.
+        if (copy && !'Built a product used by hundreds of companies.'.startsWith(copy)) w.__askPaint.violations.push('old hero copy');
       }
       requestAnimationFrame(sample);
     };
@@ -33,6 +35,7 @@ test('normal refresh ×10, uncached refresh ×5, slow 3G / 6× CPU, fresh landin
     await expect.poll(() => page.evaluate(() => (window as any).__askPaint.frames)).toBeGreaterThan(2);
     const paint = await page.evaluate(() => (window as any).__askPaint);
     expect(paint.violations).toEqual([]);
+    await expect(page.locator('.experience')).toHaveText('Built a product used by hundreds of companies.');
     expect(await page.locator('[data-ask-id]').evaluateAll(nodes => nodes.every(n => getComputedStyle(n).transform === 'none' && getComputedStyle(n, '::before').content === 'none'))).toBe(true);
     evidence.push({ label, ...paint });
   }

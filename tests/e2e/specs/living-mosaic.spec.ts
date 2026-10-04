@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures';
 import { openPortfolioHome, selectWorkProject } from '../helpers/portfolio';
 
 const projects = ['needle', 'second-voice', 'f24', 'flow', 'leu'] as const;
@@ -12,7 +12,7 @@ test('recruiter hero and five selectable projects preserve the desktop hierarchy
   expect(await page.locator('[data-project-row]').evaluateAll(rows => rows.map(row => row.getAttribute('data-ask-id')))).toEqual(['w-needle','w-sv','w-f24','w-flow','w-leu']);
   const hero = (await page.locator('.wind-hero').boundingBox())!;
   const work = (await page.locator('#work').boundingBox())!;
-  expect(work.y).toBe(692); expect(work.y - hero.y - hero.height).toBe(64);
+  expect(work.y).toBeCloseTo(553.6,1); expect(work.y - hero.y - hero.height).toBeCloseTo(51.2,1);
   for (const id of projects) {
     await selectWorkProject(page, id);
     await expect(page.locator('#work .stage')).toHaveCount(1);

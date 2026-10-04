@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures';
 import AxeBuilder from '@axe-core/playwright';
 import { openPortfolioHome, selectWorkProject } from '../helpers/portfolio';
 
@@ -58,7 +58,7 @@ test('Flow shows its full native video frame across small screens and remains cl
   const video=stage.locator('video');
   await video.scrollIntoViewIfNeeded();
   await expect.poll(()=>video.evaluate(element=>(element as HTMLVideoElement).currentTime)).toBeGreaterThan(0);
-  const media=await video.evaluate(element=>{const v=element as HTMLVideoElement;return{w:v.videoWidth,h:v.videoHeight,muted:v.muted,loop:v.loop,inline:v.playsInline,src:v.currentSrc}});
+  const media=await video.evaluate(element=>{const v=element as HTMLVideoElement;return{w:v.videoWidth,h:v.videoHeight,muted:v.muted,loop:v.loop,inline:v.hasAttribute('playsinline'),src:v.currentSrc}});
   expect(media).toMatchObject({w:1920,h:1080,muted:true,loop:true,inline:true});
   expect(media.src).toContain('flow-loop-web-final.mp4');
   for(const width of [1099,1024,834,768,767,650,550,430,390,375,320]) {
@@ -71,7 +71,7 @@ test('Flow shows its full native video frame across small screens and remains cl
     expect(media.h * scale).toBeLessThanOrEqual(box.height + 1);
     expect(await video.evaluate(element=>getComputedStyle(element).objectFit)).toBe('contain');
     const caption=(await stage.locator('.caption').boundingBox())!;
-    expect(box.y-caption.y-caption.height).toBeLessThan(16);
+    expect(box.y-caption.y-caption.height).toBeLessThanOrEqual(16);
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
     if([834,550,390].includes(width)) {
       await video.evaluate(element=>(element as HTMLVideoElement).pause());

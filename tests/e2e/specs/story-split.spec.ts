@@ -3,7 +3,7 @@
  * Runs against the reference prototype today; set STORY_TARGET=prod and STORY_URL to run it on the real build.
  * The only difference between the two is the selector map below.
  */
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page } from '../fixtures';
 import AxeBuilder from '@axe-core/playwright';
 import data from '../../../src/lib/story/story.json' with { type: 'json' };
 

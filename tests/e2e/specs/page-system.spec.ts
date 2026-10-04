@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from '../fixtures';
 import AxeBuilder from '@axe-core/playwright';
 
 const routes = ['/', '/story', '/cv', '/work/second-voice-ai', '/work/f24', '/work/flow', '/work/leu', '/out/linkedin', '/not-found'];

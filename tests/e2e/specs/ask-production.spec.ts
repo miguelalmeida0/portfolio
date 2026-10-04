@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page } from '../fixtures';
 import AxeBuilder from '@axe-core/playwright';
 import sharp from 'sharp';
 
@@ -216,18 +216,20 @@ for (const [width,height] of [[1920,963],[1440,1020],[1024,768],[834,1112],[430,
     await page.mouse.move(0, 0);
     await page.evaluate(() => (document.activeElement as HTMLElement)?.blur());
     const before = await page.screenshot({ animations: 'disabled' });
-    const expected = await sharp(before).raw().toBuffer();
+    const expected = await sharp(before).removeAlpha().raw().toBuffer({ resolveWithObject: true });
     await open(page); await close(page);
     const menuClose = page.getByRole('button', { name: 'Close', exact: true });
     if (await menuClose.isVisible()) await menuClose.click();
     await page.mouse.move(0,0); await page.evaluate(() => (document.activeElement as HTMLElement)?.blur());
     const after = await page.screenshot({ animations: 'disabled' });
-    const pixels = await sharp(after).raw().toBuffer();
+    const actual = await sharp(after).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+    expect(actual.info).toEqual(expected.info);
+    const pixels = actual.data;
     // Chrome can rasterize the rounded Menu border one channel level differently
     // after focusing it. No geometry, text, color-token or content change is allowed.
     let changed = 0, maximum = 0;
     for (let i = 0; i < pixels.length; i += 3) {
-      const delta = Math.max(...[0,1,2].map(c => Math.abs(pixels[i+c] - expected[i+c])));
+      const delta = Math.max(...[0,1,2].map(c => Math.abs(pixels[i+c] - expected.data[i+c])));
       if (delta) changed++;
       maximum = Math.max(maximum, delta);
     }

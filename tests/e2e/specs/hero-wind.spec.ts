@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures';
 
 test.use({ viewport: { width: 1440, height: 900 } });
 test.beforeEach(async ({ page }) => {
@@ -136,9 +136,10 @@ test('coarse pointer at desktop width has no glyph DOM', async ({ browser, brows
 
 test('320px and 200 percent layout have no clipped headline or horizontal scrolling', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(page.locator('[data-glyph]')).toHaveCount(0);
   for (const width of [320, 720]) {
     await page.setViewportSize({ width, height: 900 });
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     const heading = await page.locator('h1').evaluate(el => ({ scroll:el.scrollWidth, client:el.clientWidth }));
     expect(heading.scroll, `headline at ${width}px: ${JSON.stringify(heading)}`).toBeLessThanOrEqual(heading.client);
   }

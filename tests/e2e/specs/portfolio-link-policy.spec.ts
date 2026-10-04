@@ -1,4 +1,4 @@
-import { expect, test, type Page, type Locator } from '@playwright/test';
+import { expect, test, type Page, type Locator } from '../fixtures';
 import { openPortfolioHome, openSecondVoiceStudio } from '../helpers/portfolio';
 
 const routes = ['/', '/story', '/cv', '/work/second-voice-ai', '/work/f24', '/work/flow', '/work/leu', '/out/linkedin'];
@@ -142,7 +142,7 @@ test('case studies stay in this tab and external evidence opens separately', asy
   await page.locator('.project-index button').filter({ hasText: 'Leu' }).click();
   await openDestination(page, page.getByRole('link', { name: 'View Leu case study', exact: true }), '/work/leu');
   await page.goto('/work/leu');
-  await expect(page.locator('#engineering .md-tab')).toHaveCount(7);
+  await expect(page.locator('#engineering .md-tab')).toHaveCount(6);
   await openPortfolioHome(page);
   await page.locator('.project-index button').filter({ hasText: 'Leu' }).click();
   const evidence = page.locator('#work .links').getByRole('link', { name: 'Source', exact: true });

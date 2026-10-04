@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures';
 import AxeBuilder from '@axe-core/playwright';
 
 for (const width of [1440, 834, 390]) test(`current Second Voice case study at ${width}px`, async ({ page }) => {
@@ -19,13 +19,14 @@ for (const width of [1440, 834, 390]) test(`current Second Voice case study at $
     await workspace.getByRole('radio', { name: 'Strong', exact: true }).check();
     await workspace.getByRole('button', { name: 'Rewrite', exact: true }).click();
     await expect(workspace.locator('#resultTag')).toContainText(author);
-    await expect(workspace.locator('#resultTag')).toContainText('Strong');
+    await expect(workspace.locator('#resultTag')).toContainText('strong');
     await workspace.getByRole('radio', { name: 'Original', exact: true }).check();
     await expect(workspace.locator('#mv')).toHaveAttribute('data-mode', 'original');
     await workspace.getByRole('radio', { name: 'Rewrite', exact: true }).check();
     await expect(workspace.locator('#mv')).toHaveAttribute('data-mode', 'rewrite');
     await expect(workspace.locator('#draftText')).toHaveText(draft);
   }
+  await expect.poll(() => workspace.evaluate(el => el.getAnimations({ subtree: true }).filter(a => a.playState === 'running' || a.pending).length)).toBe(0);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   expect(errors).toEqual([]);
 });

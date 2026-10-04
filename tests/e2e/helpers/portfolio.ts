@@ -23,6 +23,7 @@ export async function openSecondVoiceStudio(page: Page) {
 
 /** Select a mounted stage by identity, independent of the current project order. */
 export async function selectWorkProject(page: Page, id: 'needle' | 'second-voice' | 'f24' | 'flow' | 'leu') {
+  await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
   const area = id === 'second-voice' ? 'sv' : id;
   await page.locator(`[data-project-row][data-ask-id="w-${area}"]`).click();
   await expect(page.locator('#work')).toHaveAttribute('data-project', id);
@@ -46,4 +47,15 @@ export async function installClipboardStub(page: Page) {
       });
     }
   });
+}
+
+/** CSS zoom can quantize a 3px outline to two physical pixels. */
+export async function expectVisibleFocus(locator: import('@playwright/test').Locator) {
+  await expect(locator).toHaveCSS('outline-style', 'solid');
+  const width = await locator.evaluate(el => {
+    const zoom = Number(getComputedStyle(document.querySelector('#portfolio-content')!).zoom) || 1;
+    return parseFloat(getComputedStyle(el).outlineWidth) * zoom;
+  });
+  expect(width).toBeGreaterThanOrEqual(2);
+  expect(width).toBeLessThanOrEqual(3);
 }

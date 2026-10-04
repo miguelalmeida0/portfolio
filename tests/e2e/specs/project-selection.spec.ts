@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures';
 import AxeBuilder from '@axe-core/playwright';
 
 for (const width of [1440, 834, 390]) test(`project selection has a distinct filled state at ${width}px`, async ({ page }) => {

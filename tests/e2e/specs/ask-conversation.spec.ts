@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures';
 import AxeBuilder from '@axe-core/playwright';
 
 test.beforeEach(async ({ page }) => {
@@ -21,6 +21,9 @@ test('hello welcomes the visitor and suggested questions produce concrete answer
   await expect(page.locator('[data-ask-knowledge]')).toContainText('flexible events');
   await expect(page.locator('[data-ask-knowledge]')).toContainText('rollback');
   await expect(page.locator('.ask-sources a').first()).toHaveAttribute('href', '/work/flow');
+  // Audit the settled reading state, after the guide entrance and answer fades.
+  await expect(page.locator('[data-ask-panel]')).toHaveCSS('opacity', '1');
+  await expect.poll(() => page.locator('[data-ask-panel]').evaluate(el => el.getAnimations({ subtree: true }).filter(a => a.playState === 'running' || a.pending).length)).toBe(0);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
 

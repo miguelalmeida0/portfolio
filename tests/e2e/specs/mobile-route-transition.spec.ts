@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from '../fixtures';
 import { openPortfolioHome } from '../helpers/portfolio';
 
 // Observe every animation frame, including the route commit. Assertions use the

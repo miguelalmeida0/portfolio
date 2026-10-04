@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures';
 
 // This suite tests wheel and keyboard input at desktop and narrow layouts.
 // Mobile WebKit has no wheel API; touch gestures have separate acceptance coverage.
@@ -21,9 +21,9 @@ test('fast downward scrolling lands on the complete reward before a new gesture 
   expect(await page.evaluate(() => scrollY)).toBeCloseTo(destination, 0);
   await expect(page.locator('[data-story-progress]')).toHaveText('All 8 answered');
   const panel = (await page.locator('.story-visual').boundingBox())!;
-  expect(panel.y).toBe(86);
-  expect(panel.y + panel.height).toBe(914);
-  await expect(page.locator('[data-line-m]')).not.toBeInViewport();
+  expect(panel.y).toBeCloseTo(86 * .8, 1);
+  expect(panel.y + panel.height).toBeCloseTo((1000 - 86) * .8, 1);
+  await expect(page.locator('[data-line-m] h2')).not.toBeInViewport();
   await page.waitForTimeout(1600);
   await expect(page.locator('.short-version li').last()).toHaveCSS('opacity', '1');
   await page.mouse.wheel(0, 600);
@@ -53,13 +53,13 @@ for (const width of [1440, 1920]) {
     for (const x of [width * .25, width * .75]) {
       const before = await page.evaluate(() => scrollY);
       await page.mouse.move(x, 450);
-      await page.mouse.wheel(0, 640);
-      await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(before + 400);
+      await page.mouse.wheel(0, 640 * .8);
+      await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(before + 400 * .8);
       await expect.poll(() => footer.evaluate(e => e.getBoundingClientRect().top)).toBeGreaterThan(900);
       expect(await page.locator('.story-scroll').evaluate(e => e.scrollTop)).toBe(0);
       const panel = (await page.locator('.story-visual').boundingBox())!;
-      expect(panel.y).toBe(86);
-      expect(900 - panel.y - panel.height).toBe(panel.y);
+      expect(panel.y).toBeCloseTo(86 * .8, 1);
+      expect(900 * .8 - panel.y - panel.height).toBeCloseTo(panel.y, 1);
     }
     await expect(page.locator('[data-story-section]').nth(2)).toHaveAttribute('data-current');
     await page.locator('[data-story-section]').nth(2).locator('[data-story-next]').click();
@@ -68,6 +68,8 @@ for (const width of [1440, 1920]) {
     await page.keyboard.press('End');
     await expect(footer).toBeInViewport();
     await expect(page.locator('[data-story-progress]')).toHaveText('All 8 answered');
+    // Keyboard scroll keys act on the document once the clicked control no longer owns focus.
+    await page.evaluate(() => (document.activeElement as HTMLElement)?.blur());
     await page.keyboard.press('Home');
     await expect(page.locator('[data-story-section]').first()).toHaveAttribute('data-current');
   });

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures';
 import { openPortfolioHome, selectWorkProject } from '../helpers/portfolio';
 
 const sizes = [[1440, 1000], [1280, 900], [1100, 900], [834, 1112], [390, 844]];
