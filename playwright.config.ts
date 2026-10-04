@@ -5,6 +5,11 @@ const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${PORT}`;
 const isCi = Boolean(process.env.CI);
 const shouldStartWebServer = process.env.PLAYWRIGHT_SKIP_WEB_SERVER !== '1';
 const chromiumExecutablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH;
+// Linux WebKit's legacy GStreamer pipeline can block pause() during MP4
+// teardown. Use its supported playbin3 backend; see tests/e2e/BROWSER_RUNTIME.md.
+const webkitLaunchOptions = process.platform === 'linux'
+  ? { env: { ...process.env, WEBKIT_GST_USE_PLAYBIN3: '1' } }
+  : undefined;
 
 export default defineConfig({
   testDir: './tests/e2e/specs',
@@ -69,6 +74,7 @@ export default defineConfig({
       name: 'webkit-desktop',
       use: {
         ...devices['Desktop Safari'],
+        launchOptions: webkitLaunchOptions,
         viewport: { width: 1440, height: 1000 }
       }
     },
@@ -84,6 +90,7 @@ export default defineConfig({
       name: 'webkit-mobile',
       use: {
         ...devices['iPhone 13'],
+        launchOptions: webkitLaunchOptions,
         viewport: { width: 390, height: 844 }
       }
     }

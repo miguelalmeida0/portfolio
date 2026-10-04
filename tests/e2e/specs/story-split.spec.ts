@@ -66,9 +66,20 @@ test('Back sits beside Next, names the previous question, and goes back', async 
 });
 
 test('arrow keys retain normal page scrolling without skipping answers', async ({ page, browserName, isMobile }) => {
+  await page.evaluate(() => (document.activeElement as HTMLElement)?.blur());
   await page.keyboard.press('ArrowDown');
   await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(0);
   expect(await currentIndex(page)).toBe(0);
+  // Let the native ArrowDown animation settle before sending the opposite
+  // command. Its first nonzero frame is not the end of the keyboard scroll.
+  await page.evaluate(async () => {
+    let previous = scrollY, stableFrames = 0;
+    while (stableFrames < 6) {
+      await new Promise(requestAnimationFrame);
+      stableFrames = scrollY === previous ? stableFrames + 1 : 0;
+      previous = scrollY;
+    }
+  });
   await page.keyboard.press(browserName === 'webkit' && isMobile ? 'Meta+ArrowUp' : 'Home');
   await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
 });

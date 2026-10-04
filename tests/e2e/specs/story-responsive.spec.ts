@@ -22,14 +22,27 @@ for (const width of [390, 834, 1024]) test(`inline Story scenes, controls and co
     });
     expect(boxes.sceneBottom).toBeLessThanOrEqual(boxes.controlsTop - 4);
     expect(boxes.sceneTop).toBeGreaterThanOrEqual(boxes.captionBottom + 4);
-    const sceneOverflow = await panel.locator('[data-story-scene]').evaluate(element => ({
-      scene: element.getAttribute('data-story-scene'), scroll: element.scrollHeight, client: element.clientHeight,
-      bounds: element.getBoundingClientRect().toJSON(),
-      children: [...element.querySelectorAll('*')].map(child => ({
-        tag: child.tagName, class: child.className, bounds: child.getBoundingClientRect().toJSON()
-      }))
-    }));
-    expect(sceneOverflow.scroll, JSON.stringify(sceneOverflow)).toBeLessThanOrEqual(sceneOverflow.client + 1);
+    const sceneOverflow = await panel.locator('[data-story-scene]').evaluate(element => {
+      const bounds = element.getBoundingClientRect();
+      const card = element.firstElementChild!;
+      const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+      const clipped: string[] = [];
+      while (walker.nextNode()) {
+        const node = walker.currentNode;
+        if (!node.textContent?.trim()) continue;
+        const range = document.createRange(); range.selectNodeContents(node);
+        for (const box of range.getClientRects()) if (box.width && box.height &&
+          (box.top < bounds.top - 1 || box.bottom > bounds.bottom + 1 ||
+           box.left < bounds.left - 1 || box.right > bounds.right + 1)) clipped.push(node.textContent.trim());
+      }
+      return { scene: element.getAttribute('data-story-scene'), clipped,
+        overflow: element.scrollHeight - element.clientHeight,
+        bottomPadding: parseFloat(getComputedStyle(card).paddingBottom) };
+    });
+    // Firefox rounds the care card's 259.2px box into a 258px stage. Only
+    // blank bottom padding may overflow; every text line must fit without scrolling.
+    expect(sceneOverflow.clipped, JSON.stringify(sceneOverflow)).toEqual([]);
+    expect(sceneOverflow.overflow, JSON.stringify(sceneOverflow)).toBeLessThanOrEqual(Math.max(1, sceneOverflow.bottomPadding));
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     if (width === 390) await panel.screenshot({path:`.cache/story-mobile-scene-${i}.png`});
     await section.locator('[data-story-next]').click();
