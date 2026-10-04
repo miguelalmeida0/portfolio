@@ -102,12 +102,12 @@ test('image comparison uses actual encoded sizes and windowing keeps the DOM bou
 test('actual product views switch to the mobile capture', async ({ page }) => {
   await page.goto('/work/needle');
   await page.getByRole('group', { name: 'Product views' }).getByRole('button', { name: 'Mobile', exact: true }).click();
-  await expect(page.locator('.product-capture img')).toHaveAttribute('src', '/projects/needle/mobile.webp');
-  await expect.poll(() => page.locator('.product-capture img').evaluate(el => (el as HTMLImageElement).naturalWidth)).toBe(390);
+  await expect(page.locator('.product-capture img')).toHaveAttribute('src', '/projects/needle/mobile-monolith.webp');
+  await expect.poll(() => page.locator('.product-capture img').evaluate(el => (el as HTMLImageElement).naturalWidth)).toBe(780);
 });
 
 test('missing product media has a readable fallback', async ({ page }) => {
-  await page.route('**/projects/needle/wall.webp', route => route.abort());
+  await page.route('**/projects/needle/wall-monolith.webp', route => route.abort());
   await page.goto('/work/needle');
   await page.locator('.product-capture').scrollIntoViewIfNeeded();
   await expect(page.getByRole('status').filter({ hasText: 'Product capture unavailable' })).toBeVisible();
