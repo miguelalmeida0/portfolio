@@ -76,6 +76,7 @@ export default defineConfig({
       name: 'chromium-mobile',
       use: {
         ...devices['Pixel 7'],
+        launchOptions: chromiumExecutablePath ? { executablePath: chromiumExecutablePath } : undefined,
         viewport: { width: 390, height: 844 }
       }
     },

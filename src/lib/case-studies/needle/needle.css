@@ -29,6 +29,9 @@ html:has(.cs-needle){scroll-padding-top:72px;scroll-behavior:smooth}
 .cs-needle .kicker{font-weight:600;font-size:15px;color:var(--plum);margin:0 0 22px}
 .cs-needle .hero h1{font-size:clamp(44px,5.8vw,84px);font-weight:800;line-height:1;letter-spacing:-.045em;max-width:19ch;margin:0}
 .cs-needle .hero .sub{font-size:clamp(18px,1.6vw,21px);line-height:1.5;color:var(--forest);max-width:44ch;margin:22px 0 28px}
+.cs-needle .hero-stack{margin:0 0 28px;max-width:60ch}
+.cs-needle .hero-stack dt{font-size:14px;font-weight:700;color:var(--plum);margin:0 0 4px}
+.cs-needle .hero-stack dd{font-size:17px;font-weight:600;line-height:1.5;color:var(--forest);margin:0}
 .cs-needle .ctas{display:flex;flex-wrap:wrap;align-items:center;gap:22px}
 .cs-needle .tlink,.cs-needle .source-link{color:var(--plum);font-weight:600;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px}
 .cs-needle .source-link{display:inline-flex;align-items:center;min-height:44px;font-size:14.5px}

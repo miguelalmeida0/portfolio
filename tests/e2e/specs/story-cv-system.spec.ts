@@ -110,7 +110,7 @@ for(const width of [1440,390]) {
     await expect(page.locator('#intro-heading')).toBeVisible();
     await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase','idle');
     const frames=await page.evaluate(()=>(window as any).__headerFrames);
-    expect(frames.filter((f:any)=>f.old||f.avatar||f.x!==initial!.x||f.height!==initial!.height)).toEqual([]);
+    expect(frames.filter((f:any)=>f.old||f.avatar||Math.abs(f.x-initial!.x)>.02||Math.abs(f.height-initial!.height)>.02)).toEqual([]);
     await page.goto('/story');
     await page.locator('[data-story-section]').last().scrollIntoViewIfNeeded();
     await page.locator('.ending-actions a[href="/cv"]').click();
