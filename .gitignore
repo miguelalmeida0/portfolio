@@ -7,6 +7,10 @@ build
 .wrangler
 playwright-report
 test-results
+artifacts/
+parity-report/
+tests/**/parity/parity-report/
+tests/**/reference/screenshots/
 docs/private-media-review/
 .env
 .env.*

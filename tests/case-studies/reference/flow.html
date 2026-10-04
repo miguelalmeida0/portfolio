@@ -1,0 +1,1254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flow, a voice-first personal interface | Miguel Almeida</title>
+<meta name="description" content="Case study: Flow turns natural-language commands into typed, validated, reversible calendar operations.">
+<link rel="stylesheet" href="./fonts/fonts.css">
+<style>
+:root{
+  --paper:#EFF3E3; --ink:#0B2B22; --forest:#12372D; --plum:#610D3D; --sagebg:#E4EAD3; --ivory:#FAF7ED; --rulec:#9FAE9B; --mutedc:#506353; --highlight:#E2EDBA;
+  --plum-tint:#F1E3E8; --plum-wash:#F6EEF0; --fail:#8F2D2D; --fail-tint:#F2DEDB; --amber:#7A5410; --amber-tint:#F0E6C8;
+  --shadow:0 1px 2px rgba(11,43,34,.06),0 14px 34px -14px rgba(11,43,34,.22);
+  --ease:cubic-bezier(.2,0,0,1); --rewind:cubic-bezier(.65,0,.35,1);
+  --sans:Figtree,"Helvetica Neue",Arial,system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  color-scheme:light;
+  --canvas:var(--paper); --stage:var(--sagebg); --surface:var(--ivory); --well:var(--sagebg); --line:rgba(159,174,155,.55);
+  --ink-2:var(--forest); --muted:var(--mutedc); --label:var(--mutedc);
+  --sage:var(--rulec); --sage-ink:var(--forest); --sage-tint:var(--highlight);
+  --mist:var(--rulec); --blue:var(--plum); --blue-ink:var(--plum); --blue-tint:#D5E0C6; --blue-wash:var(--plum-wash);
+  --blush:var(--plum-tint); --clay:var(--fail); --warn:var(--plum); --warn-tint:var(--plum-tint);
+  --serif:var(--sans);
+  --ev:var(--ivory); --ev-line:var(--line); --ev-prot:var(--forest); --ghost:var(--forest); --accent:var(--plum); --accent-tint:var(--highlight); --accent-ink:var(--ivory);
+  --ok:var(--forest); --err:var(--fail); --rule:var(--line); --panel:var(--sagebg); --bg:var(--paper);
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);background:var(--canvas);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--canvas);color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--blue-ink);outline-offset:3px;border-radius:6px}
+.wrap{width:min(1312px,100% - clamp(32px,6vw,96px));margin-inline:auto}
+
+/* top bar */
+.top{display:flex;justify-content:space-between;align-items:center;padding-block:18px;font-size:14.5px}
+.top .me{font-weight:600;text-decoration:none;letter-spacing:.01em}
+.top nav{display:flex;gap:26px}
+.top nav a{text-decoration:none;color:var(--ink-2)}
+.top nav a:hover{color:var(--ink)}
+@media (max-width:720px){.top nav a:not(.keep){display:none}}
+
+/* product sub-nav */
+.pnav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--canvas);border-bottom:1px solid transparent;transition:border-color .2s}
+.pnav.stuck{border-bottom-color:var(--line)}
+.pnav .wrap{display:flex;align-items:center;gap:28px;height:64px}
+.pname{font:500 24px/1 var(--serif);text-decoration:none;display:flex;align-items:center;gap:10px}
+.pnav ul{display:flex;gap:6px;list-style:none;margin:0 auto 0 0;padding:0}
+.pnav ul a{display:block;text-decoration:none;font-size:14.5px;color:var(--ink-2);padding:8px 14px;border-radius:999px;transition:background .2s,color .2s}
+.pnav ul a:hover{background:var(--well);color:var(--ink)}
+.pnav ul a[aria-current="true"]{background:var(--surface);color:var(--ink);box-shadow:0 0 0 1px var(--line)}
+@media (max-width:900px){.pnav ul{display:none}.pnav .wrap{justify-content:space-between}}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;padding:13px 24px;font-weight:600;font-size:15.5px;text-decoration:none;border:0;cursor:pointer;transition:transform .2s var(--ease),box-shadow .2s,background .2s}
+.btn.primary{background:var(--ink);color:var(--canvas)}
+.btn.primary:hover{box-shadow:0 6px 18px -6px rgba(11,43,34,.4)}
+.btn.primary:active{transform:scale(.98)}
+.btn.outline{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn.outline:hover{background:var(--surface)}
+.btn.sm{padding:9px 18px;font-size:14.5px}
+
+/* hero */
+.hero{text-align:center;padding:clamp(40px,6vw,88px) 0 clamp(36px,4vw,56px)}
+.kicker{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:15px;color:var(--label);margin:0 0 22px}
+.hero h1{font:400 clamp(48px,7vw,100px)/1 var(--serif);letter-spacing:-.025em;margin:0 auto;max-width:15ch;text-wrap:balance}
+.hero .sub{font-size:clamp(18px,1.6vw,21px);line-height:1.5;color:var(--ink-2);max-width:46ch;text-wrap:balance;margin:26px auto 34px}
+.ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+sup a{text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:.72em;padding:0 1px}
+
+/* stages (big rounded media frames) */
+.frame{background:var(--stage);border-radius:clamp(20px,3vw,36px);padding:clamp(18px,3.5vw,56px);position:relative;overflow:hidden}
+.window{background:var(--surface);border-radius:clamp(16px,2vw,24px);box-shadow:var(--shadow);position:relative}
+
+/* hero: command decomposition */
+#cmd .window{padding:clamp(22px,4vw,56px) clamp(20px,4vw,56px) 0}
+.cmd-top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:clamp(18px,2.4vw,30px)}
+.cmd-top .tag{font-size:14px;font-weight:600;color:var(--label)}
+.replay{border:0;background:var(--well);border-radius:999px;padding:7px 14px;font-size:13.5px;font-weight:600;cursor:pointer;color:var(--ink-2)}
+.replay:hover{background:var(--line)}
+.sentence{font:400 clamp(26px,3.6vw,52px)/1.18 var(--serif);letter-spacing:-.015em;margin:0 0 clamp(24px,3.5vw,44px);max-width:30ch}
+.tok{background-repeat:no-repeat;background-size:0% 100%;background-position:0 0;border-radius:6px;padding:0 3px;margin:0 -3px;transition:background-size .7s var(--ease)}
+.tok.t{background-image:linear-gradient(var(--sage-tint),var(--sage-tint))}
+.tok.a{background-image:linear-gradient(var(--blue-tint),var(--blue-tint))}
+.tok.k{background-image:linear-gradient(var(--blush),var(--blush))}
+#cmd[data-step] .tok{background-size:100% 100%}
+.tok.a{transition-delay:.18s}.tok.k{transition-delay:.36s}
+.ops{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.op{background:var(--canvas);border-radius:18px;padding:18px 20px 20px;opacity:0;transform:translateY(10px);transition:opacity .5s var(--ease),transform .5s var(--ease)}
+.op:nth-child(2){transition-delay:.1s}.op:nth-child(3){transition-delay:.2s}
+#cmd[data-step="2"] .op,#cmd[data-step="3"] .op,#cmd[data-step="4"] .op{opacity:1;transform:none}
+.op .verb{display:inline-block;font:600 12.5px/1 var(--mono);padding:6px 9px;border-radius:7px;margin:0 0 12px}
+.op.t .verb{background:var(--sage-tint);color:var(--sage-ink)}
+.op.k .verb{background:var(--blush);color:var(--clay)}
+.op .what{font:500 24px/1.15 var(--serif);margin:0}
+.op .how{color:var(--muted);font-size:14.5px;margin:4px 0 0}
+.op .res{margin:12px 0 0;font-weight:600;font-size:15px;font-variant-numeric:tabular-nums}
+.checks{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0;padding:0;opacity:0;transition:opacity .5s var(--ease)}
+#cmd[data-step="3"] .checks,#cmd[data-step="4"] .checks{opacity:1}
+.checks li{display:inline-flex;align-items:center;gap:8px;background:var(--sage-tint);color:var(--sage-ink);border-radius:999px;padding:7px 14px 7px 10px;font-size:14px;font-weight:600}
+.checks li::before{content:"";width:16px;height:16px;border-radius:50%;background:var(--sage-ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.2l2.2 2.2 4.8-4.8' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
+.tl{position:relative;margin:clamp(22px,3vw,36px) 0 0;height:104px}
+.tl .hr{position:absolute;top:0;bottom:0;border-left:1px dashed var(--line)}
+.tl .hr span{position:absolute;bottom:4px;left:6px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tl .bar{position:absolute;top:8px;height:30px;border-radius:9px;background:var(--well);box-shadow:inset 3px 0 0 var(--mist);font-size:12.5px;font-weight:500;line-height:30px;padding:0 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .45s}
+.tl .bar.prot{background:var(--warn-tint);box-shadow:inset 3px 0 0 var(--warn)}
+.tl .bar.ghost{top:44px;background:var(--sage-tint);box-shadow:inset 0 0 0 1.5px var(--sage-ink);color:var(--sage-ink);font-weight:600;opacity:0;transform:translateX(-16px);transition:opacity .55s var(--ease),transform .7s var(--ease)}
+#cmd[data-step="4"] .tl .bar.ghost{opacity:1;transform:none}
+#cmd[data-step="4"] .tl .bar.from{opacity:.35}
+.tl-list{display:none;list-style:none;margin:20px 0 0;padding:0}
+.tl-list li{padding:10px 0;border-top:1px solid var(--line);font-size:15px}
+.dock{display:flex;align-items:center;gap:14px;margin:clamp(22px,3vw,34px) calc(-1 * clamp(20px,4vw,56px)) 0;padding:16px clamp(20px,4vw,56px);border-top:1px solid var(--line);background:var(--canvas);border-radius:0 0 clamp(16px,2vw,24px) clamp(16px,2vw,24px)}
+.dock .pill{flex:1;display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:999px;padding:8px 8px 8px 18px;box-shadow:0 0 0 1px var(--line);min-width:0}
+.dock .pill span{font-size:14px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.wave{display:flex;gap:3px;align-items:center;height:20px}
+.wave i{width:3px;border-radius:2px;background:var(--mist);height:6px;animation:wv 1.1s ease-in-out infinite}
+.wave i:nth-child(2){animation-delay:.12s}.wave i:nth-child(3){animation-delay:.24s}.wave i:nth-child(4){animation-delay:.36s}.wave i:nth-child(5){animation-delay:.48s}
+@keyframes wv{0%,100%{height:5px}50%{height:18px}}
+.dock .mute{width:36px;height:36px;border-radius:50%;background:var(--blue-wash);display:grid;place-items:center}
+.dock .mute i{width:3px;height:12px;border-left:2px solid var(--blue);border-right:2px solid var(--blue);box-sizing:content-box;padding:0 2px}
+.mascot{width:44px;height:44px;flex:none}
+.cap{font-size:14px;color:var(--muted);text-align:center;margin:18px auto 0;max-width:72ch}
+@media (max-width:900px){.ops{grid-template-columns:1fr}}
+@media (max-width:640px){.tl{display:none}.tl-list{display:block}.dock .pill span{display:none}}
+
+/* section heads */
+.chapter{padding-top:clamp(88px,11vw,168px)}
+.head{text-align:center;max-width:840px;margin:0 auto clamp(36px,4.5vw,64px)}
+.head .eyebrow{font-weight:600;font-size:15px;color:var(--label);margin:0 0 14px}
+.head h2{font:400 clamp(38px,5vw,68px)/1.04 var(--serif);letter-spacing:-.02em;margin:0}
+.head p{font-size:clamp(17px,1.4vw,19px);color:var(--ink-2);margin:20px auto 0;max-width:58ch}
+
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px}
+.tile{border-radius:28px;padding:clamp(24px,2.6vw,36px);display:flex;flex-direction:column;min-height:280px;position:relative;overflow:hidden}
+.tile.w3{grid-column:span 3}.tile.w2{grid-column:span 2}.tile.w4{grid-column:span 4}
+.tile h3{font:400 clamp(26px,2.4vw,34px)/1.08 var(--serif);letter-spacing:-.015em;margin:0 0 10px;max-width:16ch}
+.tile p{margin:0;color:var(--ink-2);font-size:16px;max-width:40ch}
+.tile .go{margin-top:auto;align-self:flex-start}
+.tile>p{margin-bottom:24px}
+.tile.sage{background:var(--sage-tint)}.tile.blue{background:var(--blue-tint)}.tile.blush{background:var(--blush)}.tile.sand{background:var(--stage)}.tile.well{background:var(--surface);box-shadow:0 0 0 1px var(--line)}.tile.warn{background:var(--warn-tint)}
+.vis{margin:0 0 24px;display:flex;flex-direction:column;gap:8px}
+.vis .ev-s{background:var(--surface);border-radius:10px;padding:8px 12px;font-size:13.5px;font-weight:500;display:flex;justify-content:space-between;gap:10px;box-shadow:0 1px 0 rgba(0,0,0,.04)}
+.vis .ev-s small{color:var(--muted);font-variant-numeric:tabular-nums}
+.vis .ev-s.hl{box-shadow:inset 0 0 0 1.5px var(--ink)}
+@media (max-width:960px){.bento{grid-template-columns:repeat(2,minmax(0,1fr))}.tile.w3,.tile.w2,.tile.w4{grid-column:span 1}}
+@media (max-width:600px){.bento{grid-template-columns:1fr}.tile{min-height:0}}
+
+/* demo */
+.demo{position:relative;display:grid;grid-template-columns:minmax(260px,.95fr) minmax(0,1.45fr) minmax(250px,.9fr);grid-template-areas:"talk cal rail";padding:0;overflow:visible}
+.demo>section{min-width:0}
+.talk{grid-area:talk;padding:26px 26px 26px;border-right:1px solid var(--line);display:flex;flex-direction:column}
+.cal{grid-area:cal;padding:26px 26px 26px;border-right:1px solid var(--line)}
+.rail{grid-area:rail;padding:26px 26px 26px}
+.colhead{font:500 22px/1.2 var(--serif);margin:0 0 4px}
+.colsub{font-size:13.5px;color:var(--muted);margin:0 0 16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.chip{border:0;background:var(--canvas);border-radius:999px;padding:8px 14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--ink-2);transition:background .2s,color .2s}
+.chip:hover{background:var(--well);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--canvas)}
+.chip:disabled{opacity:.45;cursor:default}
+.fail{display:flex;gap:10px;align-items:center;font-size:14px;color:var(--ink-2);margin:0 0 16px;cursor:pointer}
+.fail input{appearance:none;width:34px;height:20px;border-radius:999px;background:var(--line);position:relative;cursor:pointer;transition:background .2s;flex:none;margin:0}
+.fail input::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--surface);box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .2s var(--ease)}
+.fail input:checked{background:var(--clay)}
+.fail input:checked::after{transform:translateX(14px)}
+.log{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;flex:1;min-height:220px;max-height:440px;overflow:auto}
+.log li{max-width:94%;font-size:15px;line-height:1.45}
+.log .you{align-self:flex-end;background:var(--ink);color:var(--canvas);padding:10px 14px;border-radius:18px 18px 6px 18px}
+.log .you mark{background:transparent;color:inherit;border-bottom:2px solid var(--mist);font-weight:600}
+.log .flow{background:var(--canvas);padding:10px 14px;border-radius:18px 18px 18px 6px}
+.log .flow b{font-weight:600}
+.log .sys{font-size:12.5px;color:var(--muted);align-self:center;text-align:center}
+.log .pid{font:600 11.5px/1 var(--mono);padding:3px 6px;border-radius:6px;background:var(--sage-tint);color:var(--sage-ink);margin-right:4px;vertical-align:1px}
+.log .stale{text-decoration:line-through;opacity:.55}
+.empty{color:var(--muted);font-size:14.5px;background:transparent!important}
+.log:has(.empty){min-height:0;flex:none}
+.replies{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;min-height:40px}
+.reply{border:0;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);border-radius:999px;padding:9px 16px;cursor:pointer;font-weight:600;font-size:14px}
+.reply:hover{background:var(--canvas)}
+.reply.primary{background:var(--ink);color:var(--canvas);box-shadow:none}
+.reply.danger{box-shadow:inset 0 0 0 1.5px var(--clay);color:var(--clay)}
+.tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.tool{border:0;background:transparent;border-radius:999px;padding:7px 12px;cursor:pointer;font-size:14px;font-weight:600;color:var(--ink-2)}
+.tool:not(:disabled):hover{background:var(--canvas)}
+.tool:disabled{opacity:.35;cursor:default}
+.days{display:grid;grid-template-columns:40px repeat(2,minmax(0,1fr));gap:0 10px}
+.dayheads{display:contents}
+.dayhead{border:0;background:transparent;text-align:left;padding:6px 10px 10px;cursor:pointer;border-radius:12px;margin-bottom:8px}
+.dayhead{font:500 19px/1.2 var(--serif)}
+.dayhead small{display:block;font:500 12px/1.4 var(--sans);color:var(--muted)}
+.dayhead[aria-pressed="true"]{background:var(--blue-wash)}
+.dayhead[aria-pressed="true"] small{color:var(--blue-ink)}
+.hours,.track{position:relative;height:var(--calh,720px)}
+.hours span{position:absolute;right:6px;transform:translateY(-50%);font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.track{border-radius:14px;background:var(--canvas)}
+.track .line{position:absolute;left:0;right:0;border-top:1px solid var(--line);opacity:.7}
+.ev{position:absolute;left:6px;right:6px;border-radius:10px;background:var(--ev);box-shadow:inset 3px 0 0 var(--mist),0 1px 2px rgba(11,43,34,.08);padding:4px 9px 4px 11px;overflow:hidden;font-size:13px;line-height:1.25;transition:top .55s var(--ease),height .55s var(--ease),opacity .35s,background .3s;z-index:1}
+.ev .t{font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev .tm{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums}
+.ev.short{padding-block:0;display:flex;gap:6px;align-items:center;font-size:12px}
+.ev.short .tm{display:none}
+.ev.prot{background:var(--ev-prot);box-shadow:inset 3px 0 0 var(--warn)}
+.ev.prot .t::after{content:"";display:inline-block;width:10px;height:10px;margin-left:6px;vertical-align:-1px;background:var(--warn);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect x='1.5' y='4.5' width='7' height='5' rx='1'/%3E%3Cpath d='M3 4.5V3a2 2 0 014 0v1.5' fill='none' stroke='black' stroke-width='1.2'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Crect x='1.5' y='4.5' width='7' height='5' rx='1'/%3E%3Cpath d='M3 4.5V3a2 2 0 014 0v1.5' fill='none' stroke='black' stroke-width='1.2'/%3E%3C/svg%3E") center/contain no-repeat}
+.ev.pending{opacity:.4}
+.ev.pending-del{background:transparent;box-shadow:inset 0 0 0 1.5px var(--clay)}
+.ev.pending-del .t{text-decoration:line-through;color:var(--clay)}
+.ev.pending-del .t::before{content:attr(data-pid) " · delete ";display:inline-block;margin-right:4px;text-decoration:none}
+.ev.cand{box-shadow:inset 0 0 0 2px var(--blue-ink)}
+.ev.flash{background:var(--blush)}
+.ev.gone,.ev.new{opacity:0}
+.rewinding .ev{transition-timing-function:var(--rewind);transition-duration:.6s}
+.ghost{position:absolute;left:6px;right:6px;border-radius:10px;border:1.5px dashed var(--sage-ink);background:var(--sage-tint);padding:4px 9px;font-size:12.5px;font-weight:600;line-height:1.25;color:var(--sage-ink);z-index:2;pointer-events:none;animation:ghostIn .35s var(--ease)}
+.trail{position:absolute;left:6px;right:6px;border-radius:10px;border:1.5px solid var(--mist);pointer-events:none;animation:trail .65s ease-out forwards;z-index:0}
+@keyframes ghostIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+@keyframes trail{from{opacity:.9}to{opacity:0}}
+.now{position:absolute;left:0;right:0;border-top:2px solid var(--blue);z-index:3}
+.now::before{content:"";position:absolute;left:-4px;top:-5px;width:8px;height:8px;border-radius:50%;background:var(--blue)}
+.lines{position:absolute;inset:0;pointer-events:none;z-index:5;overflow:visible;width:100%;height:100%}
+.lines path{fill:none;stroke:var(--blue-ink);stroke-width:1.5;stroke-dasharray:4 4}
+.stages{list-style:none;margin:0;padding:0}
+.stages .stage{position:relative;padding:0 0 14px 36px;color:var(--muted);transition:color .25s;background:none;border-radius:0;overflow:visible}
+.stages .stage::before{content:attr(data-n);position:absolute;left:0;top:0;font-size:12px;font-weight:700;width:24px;height:24px;border-radius:50%;background:var(--canvas);display:grid;place-items:center;transition:all .25s;z-index:1}
+.stages .stage::after{content:"";position:absolute;left:11.5px;top:26px;bottom:2px;border-left:1px solid var(--line)}
+.stages .stage:last-child::after{display:none}
+.stage .nm{font-weight:600;font-size:14.5px}
+.stage pre{margin:6px 0 0;font:12px/1.5 var(--mono);white-space:pre-wrap;word-break:break-word;color:var(--ink-2);background:var(--canvas);border-radius:10px;padding:8px 10px}
+.stage pre:empty{display:none}
+.stages .stage[data-s="active"]{color:var(--ink)}
+.stages .stage[data-s="active"]::before{background:var(--blue-tint);color:var(--blue-ink);box-shadow:0 0 0 4px var(--blue-wash)}
+.stages .stage[data-s="done"]{color:var(--ink)}
+.stages .stage[data-s="done"]::before{background:var(--sage-ink);color:var(--surface)}
+.stages .stage[data-s="blocked"]{color:var(--ink)}
+.stages .stage[data-s="blocked"]::before{background:var(--warn-tint);color:var(--warn)}
+.stages .stage[data-s="blocked"] pre{color:var(--warn);background:var(--warn-tint)}
+.stages .stage[data-s="failed"]::before{background:var(--blush);color:var(--clay)}
+.stages .stage[data-s="failed"] pre{color:var(--clay);background:var(--blush)}
+.stages .stage.gate::before{content:"";width:14px;height:14px;left:5px;top:5px;border-radius:4px;transform:rotate(45deg)}
+.rail-note{font-size:13px;color:var(--muted);margin:10px 0 0}
+@media (max-width:1180px){
+  .demo{grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);grid-template-areas:"talk cal" "rail rail"}
+  .cal{border-right:0}
+  .rail{border-top:1px solid var(--line)}
+  .stages{display:grid;grid-template-columns:repeat(9,minmax(150px,1fr));gap:0 12px;overflow-x:auto;padding-bottom:8px}
+  .stages .stage{padding:34px 8px 0 0}
+  .stages .stage::after{left:28px;right:0;top:12px;bottom:auto;border-left:0;border-top:1px solid var(--line)}
+}
+@media (max-width:720px){
+  .demo{grid-template-columns:1fr;grid-template-areas:"talk" "cal" "rail"}
+  .talk{border-right:0;border-bottom:1px solid var(--line)}
+  .days{grid-template-columns:36px minmax(0,1fr)}
+  .dayheads{display:flex;gap:8px;grid-column:2}
+  .days[data-active="0"] .track[data-day="1"],.days[data-active="1"] .track[data-day="0"]{display:none}
+  .stages{display:block;overflow:visible}
+  .stages .stage{padding:0 0 12px 36px}
+  .stages .stage::after{left:11.5px;top:26px;bottom:2px;right:auto;border-top:0;border-left:1px solid var(--line)}
+  .stages .stage[data-s="idle"]{display:none}
+  .log{max-height:340px}
+  :root{--calh:600px}
+}
+#demoStage{padding:0}
+#demoStage .window{border-radius:inherit;box-shadow:none}
+
+/* latency */
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:16px}
+.stat{border-radius:28px;padding:clamp(24px,3vw,40px)}
+.stat .n{font:400 clamp(56px,7vw,104px)/1 var(--serif);letter-spacing:-.03em;margin:0;font-variant-numeric:tabular-nums}
+.stat .l{font-weight:600;margin:10px 0 4px}
+.stat p{margin:0;color:var(--ink-2);font-size:15.5px;max-width:42ch}
+.stat.sage{background:var(--sage-tint)}.stat.blue{background:var(--blue-tint)}
+.stat.sage .n{color:var(--sage-ink)}.stat.blue .n{color:var(--blue-ink)}
+@media (max-width:760px){.stats{grid-template-columns:1fr}}
+.seg{display:inline-flex;background:var(--canvas);border-radius:999px;padding:4px;margin:0 0 26px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:9px 18px;cursor:pointer;font-weight:600;font-size:14.5px;color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--canvas)}
+#latWin{padding:clamp(22px,3vw,40px)}
+.lat{position:relative}
+.lrow{display:grid;grid-template-columns:minmax(180px,.9fr) minmax(0,2.2fr);gap:20px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}
+.lrow:first-child{border-top:1px solid var(--line)}
+.lrow[hidden]{display:none}
+.lrow .n{font-weight:600;font-size:15.5px}
+.lrow .n small{display:block;font-weight:400;color:var(--muted);font-size:13px}
+.bar-wrap{position:relative;height:30px}
+.lbar{position:absolute;left:0;top:4px;height:22px;border-radius:6px;background:var(--sage-ink);transition:width .8s var(--ease);min-width:3px}
+.lrow.speech .lbar{background:var(--blue-ink)}
+.lval.in{color:var(--surface)!important}
+.lval{position:absolute;top:4px;font-weight:700;font-size:13.5px;line-height:22px;white-space:nowrap;transition:left .8s var(--ease);font-variant-numeric:tabular-nums}
+.lval.in{transform:translateX(-100%);color:#fff}
+.p95{position:absolute;top:0;height:30px;border-left:2px dotted var(--ink-2);transition:left .8s var(--ease)}
+.target{position:absolute;top:-4px;bottom:-4px;border-left:1.5px dashed var(--warn);pointer-events:none;transition:left .8s var(--ease)}
+.target span{position:absolute;bottom:-20px;left:4px;font-size:12px;color:var(--warn);white-space:nowrap}
+.axis{display:grid;grid-template-columns:minmax(180px,.9fr) minmax(0,2.2fr);gap:20px;padding-top:12px}
+.ticks{position:relative;height:20px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.ticks span{position:absolute;transform:translateX(-50%)}
+.ticks span:first-child{transform:none}
+@media (max-width:760px){.lrow,.axis{grid-template-columns:1fr;gap:6px}.axis>div:first-child{display:none}}
+
+/* architecture strip */
+.pipe{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;counter-reset:p}
+.pipe li{list-style:none;background:var(--surface);border-radius:18px;padding:16px 14px;font-weight:600;font-size:14.5px;line-height:1.3;min-height:104px;display:flex;flex-direction:column;justify-content:space-between}
+.pipe li span{font:500 26px/1 var(--serif);color:var(--label)}
+.pipe li.commit{background:var(--ink);color:var(--canvas)}
+.pipe li.commit span{color:var(--mist)}
+.early{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:center;margin:0 0 22px;color:var(--muted);font-size:15px}
+.early s{text-decoration-thickness:1px}
+.quote{font:400 clamp(21px,2vw,27px)/1.4 var(--serif);text-align:center;max-width:46ch;margin:30px auto 0}
+@media (max-width:1000px){.pipe{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:520px){.pipe{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* investigations as tiles */
+.inv-tile details{margin-top:auto;padding-top:20px}
+.inv-tile summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:15px;background:var(--surface);border-radius:999px;padding:9px 16px}
+.inv-tile summary::-webkit-details-marker{display:none}
+.inv-tile summary::after{content:"";width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .2s}
+.inv-tile details[open] summary::after{transform:rotate(-135deg) translateY(-2px)}
+.inv-tile dl{margin:20px 0 0}
+.inv-tile dt{font-weight:600;font-size:14px;color:var(--label);margin-top:16px}
+.inv-tile dt:first-child{margin-top:0}
+.inv-tile dd{margin:4px 0 0;color:var(--ink-2);font-size:15.5px}
+.inv-tile .said{font:italic 400 19px/1.4 var(--serif);color:var(--ink-2);margin:2px 0 0}
+
+/* specs */
+.specs{border-top:1px solid var(--line)}
+.spec{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:24px;padding:26px 0;border-bottom:1px solid var(--line)}
+.spec h3{font:500 22px/1.2 var(--serif);margin:0}
+.spec p,.spec ul{margin:0;color:var(--ink-2)}
+.spec ul{padding:0;list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 32px}
+.spec ul b{color:var(--ink);font-variant-numeric:tabular-nums}
+@media (max-width:760px){.spec{grid-template-columns:1fr;gap:8px}.spec ul{grid-template-columns:1fr}}
+
+/* footnotes + footer */
+.notes{margin-top:clamp(88px,10vw,140px);padding-top:28px;border-top:1px solid var(--line);font-size:13.5px;color:var(--muted)}
+.notes ol{margin:0;padding-left:20px;display:grid;gap:8px;max-width:110ch}
+.next{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:44px 0 64px;margin-top:40px;border-top:1px solid var(--line)}
+.next .lbl{color:var(--muted);font-size:14.5px}
+.next a{font:400 clamp(34px,4vw,56px)/1 var(--serif);text-decoration:none;letter-spacing:-.02em}
+.next a:hover{color:var(--blue-ink)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:0s!important;animation-duration:0s!important;transition-delay:0s!important;animation-iteration-count:1!important}
+}
+
+/* portfolio identity */
+.top{display:flex;align-items:baseline;gap:18px;padding-block:26px 14px}
+.top .me{font:700 20px/1 Arial,Helvetica,sans-serif;text-transform:uppercase;color:var(--ink);border-bottom:2px solid var(--plum);padding-bottom:4px;text-decoration:none}
+.top .city{color:var(--forest);font-size:15px}
+.top nav{margin-left:auto;display:flex;gap:clamp(16px,2.4vw,40px)}
+.top nav a{color:var(--ink);text-decoration:none;font-size:15.5px}
+.top nav a.ask{color:var(--plum)}
+@media (max-width:720px){.top .city{display:none}}
+::selection{background:var(--plum);color:var(--ivory)}
+:focus-visible{outline:2px solid var(--plum)!important}
+.btn.primary{background:var(--plum)!important;color:var(--ivory)!important}
+.btn.primary:hover{box-shadow:0 8px 20px -8px rgba(97,13,61,.6)!important}
+.btn.outline{background:transparent!important;box-shadow:inset 0 0 0 1.5px var(--rulec)!important;color:var(--ink)!important}
+.btn.outline:hover{background:var(--sagebg)!important}
+.hero h1,.head h2,.tile h3,.stat .n,.next a,.tile .hn,.big,.nums b,.step h3,.paper h3,.mini h4{font-family:var(--sans)!important;font-weight:800!important;letter-spacing:-.045em!important}
+.kicker,.head .eyebrow,.eyebrow{color:var(--plum)!important}
+
+/* flow on portfolio palette */
+.sentence{font-weight:700!important;letter-spacing:-.035em!important}
+.op .what,.colhead,.dayhead,.spec h3,.pipe li span{font-weight:700!important;letter-spacing:-.02em}
+.pname{font-weight:800!important;letter-spacing:-.03em}
+.quote,.inv-tile .said{font-style:normal!important;font-weight:500!important}
+.tok.a{background-image:linear-gradient(#D5E0C6,#D5E0C6)!important}
+.tok.k{background-image:linear-gradient(var(--plum-tint),var(--plum-tint))!important}
+.op.k .verb{color:var(--plum)!important}
+.chip[aria-pressed="true"]{background:var(--plum)!important;color:var(--ivory)!important}
+.log .you{background:var(--forest)!important;color:var(--ivory)!important}
+.log .flow{background:var(--sagebg)!important}
+.reply.primary{background:var(--plum)!important;color:var(--ivory)!important}
+.reply.danger{box-shadow:inset 0 0 0 1.5px var(--plum)!important;color:var(--plum)!important}
+.dayhead[aria-pressed="true"]{background:var(--highlight)!important}
+.dayhead[aria-pressed="true"] small{color:var(--forest)!important}
+.track{background:var(--paper)!important}
+.ev.prot,.tl .bar.prot{background:var(--forest)!important;color:var(--ivory)!important;box-shadow:none!important}
+.ev.prot .tm{color:rgba(250,247,237,.72)!important}
+.ev.prot .t::after{background:var(--ivory)!important}
+.ev.cand{box-shadow:inset 0 0 0 2px var(--plum)!important}
+.lines path{stroke:var(--plum)!important}
+.now,.now::before{border-color:var(--plum)!important;background:var(--plum)}
+.now{background:transparent}
+.stages .stage[data-s="done"]::before{background:var(--forest)!important;color:var(--ivory)!important}
+.stages .stage[data-s="active"]::before{background:var(--highlight)!important;color:var(--ink)!important;box-shadow:0 0 0 4px rgba(226,237,186,.6)!important}
+.stages .stage[data-s="blocked"]::before{background:var(--plum-tint)!important;color:var(--plum)!important}
+.stages .stage[data-s="blocked"] pre{background:var(--plum-tint)!important;color:var(--plum)!important}
+.stage pre{background:var(--paper)!important}
+.fail input:checked{background:var(--plum)!important}
+.seg button[aria-pressed="true"]{background:var(--plum)!important;color:var(--ivory)!important}
+.lbar{background:var(--forest)!important}.lrow.speech .lbar{background:var(--plum)!important}
+.lval.in{color:var(--ivory)!important}
+.target{border-color:var(--plum)!important}.target span{color:var(--plum)!important}
+.pipe li.commit{background:var(--plum)!important;color:var(--ivory)!important}
+.pipe li.commit span{color:var(--plum-tint)!important}
+.tile.warn{background:var(--forest)!important;color:var(--ivory)}
+.tile.warn p{color:rgba(250,247,237,.82)!important}
+.tile.warn .btn.primary{background:var(--ivory)!important;color:var(--plum)!important}
+.tile.blue{background:var(--sagebg)!important}.tile.sage{background:var(--highlight)!important}.tile.blush{background:var(--plum-tint)!important}
+.tile.well{background:var(--ivory)!important;box-shadow:inset 0 0 0 1px var(--line)!important}
+.stat.sage{background:var(--highlight)!important}.stat.blue{background:var(--forest)!important;color:var(--ivory)}
+.stat.blue p{color:rgba(250,247,237,.82)!important}.stat.blue .n{color:var(--ivory)!important}.stat.sage .n{color:var(--forest)!important}
+.pnav ul a[aria-current="true"]{background:var(--sagebg)!important;box-shadow:none!important;color:var(--ink)!important}
+.dock .mute{background:var(--plum-wash)!important}.dock .mute i{border-color:var(--plum)!important}
+.wave i{background:var(--rulec)!important}
+sup a{color:var(--plum)!important}
+
+/* taste audit */
+.skip{position:absolute;left:12px;top:-60px;z-index:100;background:var(--plum);color:var(--ivory);padding:10px 16px;border-radius:10px;font-weight:600;text-decoration:none}
+.skip:focus{top:12px}
+p,dd,li{text-wrap:pretty}
+h1,h2,h3{text-wrap:balance}
+.hero{text-align:left!important;padding-bottom:clamp(28px,3vw,44px)!important}
+.hero h1{font-size:clamp(44px,5.8vw,84px)!important;max-width:19ch!important;margin:0!important;line-height:1!important}
+.hero .sub{margin:22px 0 28px!important;max-width:44ch!important}
+.ctas{justify-content:flex-start!important;align-items:center;gap:22px!important}
+.tlink{color:var(--plum);font-weight:600;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px}
+.tlink:hover{text-decoration-thickness:2.5px}
+.cap{text-align:left!important;margin:14px 0 0!important}
+.head{text-align:left!important;margin:0 0 clamp(28px,3.5vw,48px)!important;max-width:none!important}
+.head h2{font-size:clamp(32px,3.6vw,52px)!important;max-width:20ch}
+.head p{margin:16px 0 0!important;max-width:60ch!important}
+.early{justify-content:flex-start!important}
+.quote{text-align:left!important;margin:28px 0 0!important;max-width:56ch!important;font-size:clamp(19px,1.6vw,23px)!important}
+.stat .n{font-size:clamp(44px,5.2vw,76px)!important}
+.checks li::before{display:none}
+.checks li{padding:7px 14px!important}
+.ev.prot .t::after{content:"Protected"!important;-webkit-mask:none!important;mask:none!important;background:none!important;width:auto!important;height:auto!important;font-size:10px;font-weight:600;color:rgba(250,247,237,.75);margin-left:6px}
+.tile{min-height:240px}
+.tile.w6{grid-column:span 6;min-height:0;flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px 32px}
+.tile.w6 h3{margin:0}
+.tile.w6>p{margin:0!important;flex:1;min-width:240px}
+.tile.w6 .go{margin:0 0 0 auto!important}
+@media (max-width:960px){.tile.w6{grid-column:span 2}}
+@media (max-width:600px){.tile.w6{grid-column:span 1}}
+.ev{top:0!important;height:calc(var(--h,0) * var(--calh,720px) - 2px);transform:translateY(calc(var(--t,0) * var(--calh,720px)));transition:transform .55s var(--ease),height .3s var(--ease),opacity .35s,background .3s!important}
+.rewinding .ev{transition-timing-function:var(--rewind)!important;transition-duration:.6s!important}
+.bar-wrap{container-type:inline-size}
+.lbar{width:100%!important;transform-origin:left;transform:scaleX(calc(var(--p,0) / 100));transition:transform .8s var(--ease)!important}
+.lval{left:0!important;transform:translateX(calc(var(--p,0) * 1cqw + 10px));transition:transform .8s var(--ease)!important}
+.lval.in{transform:translateX(calc(var(--p,0) * 1cqw - 100% - 10px))!important}
+.p95,.target{left:0!important;transform:translateX(calc(var(--p,0) * 1cqw));transition:transform .8s var(--ease)!important}
+.pipe{gap:0 16px!important;padding:0}
+.pipe li{background:none!important;border-radius:0!important;border-top:2px solid var(--rulec);padding:14px 2px 0!important;min-height:0!important;gap:10px;justify-content:flex-start!important}
+.pipe li.commit{border-top-color:var(--plum)}
+.pipe li.commit,.pipe li.commit span{background:none!important;color:var(--plum)!important}
+.stories{margin-top:clamp(48px,6vw,88px)}
+.story{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:clamp(24px,5vw,88px);padding:clamp(32px,4vw,56px) 0;border-top:1px solid var(--line)}
+.story h3{font-weight:800;font-size:clamp(26px,2.6vw,36px);letter-spacing:-.04em;line-height:1.08;margin:0 0 14px}
+.story .said{font-style:italic;color:var(--mutedc);font-size:18px;margin:0}
+.story dl{margin:0;display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px 24px}
+.story dt{font-weight:700;font-size:14.5px;color:var(--plum);padding-top:2px}
+.story dd{margin:0;color:var(--forest)}
+@media (max-width:860px){.story{grid-template-columns:1fr}.story dl{grid-template-columns:1fr;gap:4px}.story dd{margin-bottom:10px}}
+.specs2{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(32px,6vw,104px);align-items:start}
+.vgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 32px;background:var(--forest);color:var(--ivory);border-radius:28px;padding:clamp(24px,3vw,40px)}
+.vgrid b{display:block;font-weight:800;font-size:clamp(30px,3vw,44px);letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.vgrid span{font-size:14.5px;color:rgba(250,247,237,.78)}
+.vgrid sup a{color:var(--highlight)!important}
+.facts{display:grid;gap:26px}
+.facts h3{font-weight:700;font-size:16px;margin:0 0 4px}
+.facts p{margin:0;color:var(--forest)}
+@media (max-width:860px){.specs2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap top">
+  <a class="me" href="https://miguelalmeida.is-a.dev/">Miguel Almeida</a><span class="city">Berlin</span>
+  <nav aria-label="Portfolio"><a class="keep" href="https://miguelalmeida.is-a.dev/work">Work</a><a href="https://miguelalmeida.is-a.dev/story">Story</a><a href="https://miguelalmeida.is-a.dev/cv">CV</a><a href="https://miguelalmeida.is-a.dev/contact">Contact</a><a class="keep ask" href="https://miguelalmeida.is-a.dev/ask">Ask MiguelLLM</a></nav>
+</div>
+<div id="sentinel"></div>
+<header class="pnav" id="pnav">
+  <div class="wrap">
+    <a class="pname" href="#overview">Flow</a>
+    <ul>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#latency">Latency</a></li>
+      <li><a href="#engineering">Engineering</a></li>
+      <li><a href="#specs">Specs</a></li>
+    </ul>
+    <a class="btn primary sm" href="#try">Try it</a>
+  </div>
+</header>
+
+
+<main class="wrap" id="main">
+  <section class="hero" id="overview" aria-labelledby="hero-h">
+    <p class="kicker">Flow, a voice-first personal interface</p>
+    <h1 id="hero-h">From speech to deterministic state.</h1>
+    <p class="sub">Conversation controls your calendar and personal life. Every change is proposed, checked and reversible before it happens.</p>
+    <div class="ctas"><a class="btn primary" href="#try">Try it</a><a class="tlink" href="#engineering">How it's built</a></div>
+  </section>
+
+  <section class="frame" id="cmd" aria-labelledby="cmd-h">
+    <div class="window">
+      <div class="cmd-top"><span class="tag" id="cmd-h">One sentence becomes three typed operations</span><button class="replay" id="replay" type="button">Replay</button></div>
+      <p class="sentence" aria-label="Move the design review after lunch, push planning by 30 minutes, and keep the gym fixed.">
+        <span aria-hidden="true">Move <span class="tok t">the design review</span> <span class="tok a">after lunch</span>, push <span class="tok t">planning</span> <span class="tok a">by 30 minutes</span>, and keep <span class="tok k">the gym</span> fixed.</span>
+      </p>
+      <div class="ops">
+        <div class="op t"><span class="verb">move</span><p class="what">Design review</p><p class="how">Relative anchor: after Lunch</p><p class="res" data-res="review"></p></div>
+        <div class="op t"><span class="verb">shift</span><p class="what">Q3 planning</p><p class="how">Relative duration: +30 min</p><p class="res" data-res="planning"></p></div>
+        <div class="op k"><span class="verb">keep</span><p class="what">Gym</p><p class="how">A constraint, not an action</p><p class="res">Identical after commit</p></div>
+      </div>
+      <ul class="checks" aria-label="Validation"><li>No overlaps</li><li>Gym unchanged</li><li>Two changes, one commit</li></ul>
+      <div class="tl" id="tl" aria-hidden="true"></div>
+      <ul class="tl-list" id="tlList"></ul>
+    </div>
+  </section>
+
+  <!-- capabilities bento -->
+  <section class="chapter" aria-labelledby="cap-h">
+    <div class="head">
+      <h2 id="cap-h">Natural language is fuzzy. Your calendar is not.</h2>
+      <p>Flow understands, proposes and validates, then waits for you.</p>
+    </div>
+    <div class="bento">
+      <article class="tile blue w4"><h3>It asks which one.</h3><p>“Move the meeting” has four candidates. Flow asks instead of guessing, and your answer becomes part of the same operation.</p>
+        <button class="btn primary sm go" data-run="ambiguous">Try “Move the meeting”</button></article>
+      <article class="tile warn w2"><h3>Protected stays protected.</h3><p>Deleting your flight needs explicit approval, separate from a plain “yes”.</p><button class="btn primary sm go" data-run="protected">Try “Delete my flight”</button></article>
+      <article class="tile blush w2"><h3>It catches conflicts.</h3><p>Moving lunch into planning surfaces the overlap and offers a fix that fits.</p><button class="btn primary sm go" data-run="conflict">Try “Move lunch to 2pm”</button></article>
+      <article class="tile sage w4"><h3>All or nothing.</h3><p>A compound command commits as one write. If any part fails, nothing changes and the calendar is exactly as before.</p>
+        <button class="btn primary sm go" data-run="compound">Try the compound command</button></article>
+      <article class="tile well w6"><h3>“Yes” means the latest yes.</h3><p>Correct yourself mid-proposal and approval binds to the new proposal only.</p><button class="btn primary sm go" data-run="correction">Try a correction</button></article>
+    </div>
+  </section>
+
+  <!-- demo -->
+  <section class="chapter" id="try" aria-labelledby="try-h">
+    <div class="head">
+      <h2 id="try-h">Nothing changes until you say yes.</h2>
+      <p>Pick a command and watch it move through the action pipeline. Click Today or Tomorrow to change the context the same words resolve against.</p>
+    </div>
+    <div class="frame" id="demoStage"><div class="window">
+      <div class="demo" id="demo">
+        <section class="talk" aria-labelledby="talk-h">
+          <h3 class="colhead" id="talk-h">Conversation</h3>
+          <p class="colsub">Sample commands</p>
+          <div class="chips" id="chips" role="group" aria-label="Commands"></div>
+          <label class="fail"><input type="checkbox" id="failToggle"> Make the second operation fail</label>
+          <ol class="log" id="log" aria-live="polite" aria-relevant="additions"><li class="empty" id="emptyLog">Each command runs through the pipeline before anything on the calendar changes.</li></ol>
+          <div class="replies" id="replies"></div>
+          <div class="tools">
+            <button class="tool" id="undo" type="button" disabled>Undo</button>
+            <button class="tool" id="redo" type="button" disabled>Redo</button>
+            <button class="tool" id="what" type="button" disabled>What changed?</button>
+            <button class="tool" id="reset" type="button">Reset day</button>
+          </div>
+        </section>
+        <section class="cal" aria-labelledby="cal-h">
+          <h3 class="colhead" id="cal-h">Calendar</h3>
+          <p class="colsub">The active day is the default context</p>
+          <div class="days" id="days" data-active="0">
+            <div aria-hidden="true"></div>
+            <div class="dayheads">
+              <button class="dayhead" data-day="0" type="button" aria-pressed="true">Today<small>Active context</small></button>
+              <button class="dayhead" data-day="1" type="button" aria-pressed="false">Tomorrow<small>&nbsp;</small></button>
+            </div>
+            <div class="hours" id="hours" aria-hidden="true"></div>
+            <div class="track" data-day="0" id="track0" role="list" aria-label="Today"></div>
+            <div class="track" data-day="1" id="track1" role="list" aria-label="Tomorrow"></div>
+          </div>
+        </section>
+        <section class="rail" aria-labelledby="rail-h">
+          <h3 class="colhead" id="rail-h">Action pipeline</h3>
+          <p class="colsub">What each stage produced</p>
+          <ol class="stages" id="stages">
+            <li class="stage" data-k="1" data-n="1"><div class="nm">Normalize</div><pre></pre></li>
+            <li class="stage" data-k="2" data-n="2"><div class="nm">Interpret</div><pre></pre></li>
+            <li class="stage" data-k="3" data-n="3"><div class="nm">Actions, selectors, constraints</div><pre></pre></li>
+            <li class="stage" data-k="4" data-n="4"><div class="nm">Resolve references</div><pre></pre></li>
+            <li class="stage" data-k="5" data-n="5"><div class="nm">Transform draft</div><pre></pre></li>
+            <li class="stage" data-k="6" data-n="6"><div class="nm">Validate invariants</div><pre></pre></li>
+            <li class="stage gate" data-k="gate" data-n=""><div class="nm">Proposal and confirmation</div><pre></pre></li>
+            <li class="stage" data-k="7" data-n="7"><div class="nm">Atomic commit</div><pre></pre></li>
+            <li class="stage" data-k="8" data-n="8"><div class="nm">Render, persist, verify</div><pre></pre></li>
+          </ol>
+          <p class="rail-note">Illustrative model of Flow's pipeline.</p>
+        </section>
+        <svg class="lines" id="lines" aria-hidden="true"></svg>
+      </div>
+    </div></div>
+  </section>
+
+  <!-- latency -->
+  <section class="chapter" id="latency" aria-labelledby="lat-h">
+    <div class="head">
+      <h2 id="lat-h">A fast screen is not a fast assistant.</h2>
+      <p>The wake UI paints in tens of milliseconds. The conversation you wait through is dominated by speech infrastructure, which is a different engineering problem.</p>
+    </div>
+    <div class="stats">
+      <div class="stat sage"><p class="n">42.1 ms</p><p class="l">Wake handler to Chromium paint, median</p><p>p95 around 65.7 ms. An earlier wake first-paint observation of 227.1 ms had missed the sub-100 ms target.</p></div>
+      <div class="stat blue"><p class="n">1.578 s</p><p class="l">Speech-to-text drain</p><p>Alongside decoder initialisation around 841 ms and TTS scheduling around 1.049 s p50.</p></div>
+    </div>
+    <div class="frame" style="padding:clamp(14px,2vw,24px)"><div class="window" id="latWin">
+      <div class="seg lat-switch" role="group" aria-label="Compare">
+        <button type="button" data-mode="screen" aria-pressed="true">What the screen does</button>
+        <button type="button" data-mode="talk" aria-pressed="false">What the conversation does</button>
+      </div>
+      <div class="lat" id="lat"></div>
+      <div class="axis"><div></div><div class="ticks" id="ticks"></div></div>
+    </div></div>
+    <p class="cap">Each row is a separate measurement with its own statistic, so they are not added into an end-to-end total. The speech pipeline also sat around 2.6 GB RSS with peaks near 3.1 GB, so optimisation meant residency, initialisation and release, not only milliseconds.</p>
+  </section>
+
+  <!-- engineering -->
+  <section class="chapter" id="engineering" aria-labelledby="eng-h">
+    <div class="head">
+      <h2 id="eng-h">Interpret first. Earn the right to commit.</h2>
+      <p>Interpretation proposes operations. Resolution identifies their targets. Deterministic checks decide whether a candidate document is safe to return.</p>
+    </div>
+    <p class="early"><span>Early path:</span><s>Utterance</s><span>→</span><s>Phrase or regex match</s><span>→</span><s>Direct mutation</s></p>
+    <ol class="pipe">
+        <li><span>1</span>Normalize</li><li><span>2</span>Interpret</li><li><span>3</span>Actions, selectors, constraints</li><li><span>4</span>Resolve references</li>
+        <li><span>5</span>Transform draft</li><li><span>6</span>Validate invariants</li><li class="commit"><span>7</span>Atomic commit</li><li><span>8</span>Render, persist</li>
+      </ol>
+    <p class="quote">The engine clones the document, applies actions to a draft and validates the result. It returns a successful document or a clarification, confirmation or conflict. The caller owns the next transition.</p>
+
+    <div class="stories">
+      <article class="story">
+        <div><h3>A scheduling operation could lose an event.</h3><p class="said">“Move lunch after standup and protect my workout.”</p></div>
+        <dl>
+          <dt>Observed</dt><dd>During arrangeDay, flexible events could disappear. In compound commands, a second failure could leave the first operation applied.</dd>
+          <dt>Cause</dt><dd>The early path coupled interpretation to mutation. Demo-specific event IDs and seeded times hid weaknesses against user-created data.</dd>
+          <dt>Change</dt><dd>Resolve references, clone the document, apply actions to the draft, then validate. A failure returns before the candidate becomes authoritative. Identity, relationships and protected anchors are constraints on the operation.</dd>
+          <dt>Evidence</dt><dd>Source tests cover rollback on an invalid relationship, duplicate identities, stable linked-event identity and atomic moves across dates.</dd>
+          <dt>Tradeoff</dt><dd>Atomic rejection can turn a partly useful request into no change at all. A clarification is easier to understand than an invisible half-success.</dd>
+        </dl>
+      </article>
+    </div>
+  </section>
+
+  <!-- specs -->
+  <section class="chapter" id="specs" aria-labelledby="spec-h">
+    <div class="head"><h2 id="spec-h">Stack, actions and verification.</h2></div>
+    <div class="specs2">
+      <div class="vgrid" aria-label="Verification at one functional milestone">
+        <div><b>630/630</b><span>Targeted tests</span></div>
+        <div><b>110/110</b><span>Chaos tests</span></div>
+        <div><b>33/33</b><span>Voice autopilot</span></div>
+        <div><b>35/35</b><span>Bridge tests</span></div>
+        <div><b>5/5</b><span>Endpoint tests</span></div>
+        <div><b>0</b><span>Safety violations</span></div>
+        <div><b>0</b><span>False wakes in the negative set</span></div>
+        <div><b>29/30</b><span>Latency benchmark</span></div>
+      </div>
+      <div class="facts">
+        <div><h3>Built with</h3><p>React, TypeScript, Motion, Zod and Playwright.</p></div>
+        <div><h3>Voice</h3><p>Wake word, then continuous conversation without repeating it. Interruption, correction and cancel. Spoken questions take spoken answers, and confirmations attach to the latest proposal.</p></div>
+        <div><h3>Calendar actions</h3><p>Create, move, resize, rename, recolor, label, importance, protect, unprotect, recover, split, merge, defer, delete, batch edit, undo, redo and “what changed?”</p></div>
+        <div><h3>Checked before a proposal</h3><p>Conflicts, travel implications, deadlines, dependencies, duplicates and protected events.</p></div>
+        <div><h3>Home</h3><p>Calendar, Journal, Inbox, Plans and Friends in the current direction.</p></div>
+      </div>
+    </div>
+  </section>
+  <nav class="next" aria-label="Next project"><span class="lbl">Next project</span><a href="https://miguelalmeida.is-a.dev/work/leu">Leu</a></nav>
+</main>
+
+<script>
+
+(() => {
+const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+const wait = ms => new Promise(r => setTimeout(r, reduce.matches ? 0 : ms));
+const H = (h, m = 0) => h * 60 + m;
+const fmt = m => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+const span = o => fmt(o.start) + '-' + fmt(o.end);
+const DAYS = ['Today', 'Tomorrow'];
+const VIEW_START = H(8), VIEW_END = H(21), DAY_MIN = H(7), DAY_MAX = H(22);
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const SEED = [
+  {id:'standup', title:'Standup', day:0, start:H(9,30), end:H(9,45), kind:'meeting'},
+  {id:'review', title:'Design review', day:0, start:H(10), end:H(11), kind:'meeting'},
+  {id:'sarah', title:'1:1 with Sarah', day:0, start:H(11,15), end:H(11,45), kind:'meeting'},
+  {id:'lunch0', title:'Lunch', day:0, start:H(12,30), end:H(13,15), kind:'meal'},
+  {id:'planning', title:'Q3 planning', day:0, start:H(14,30), end:H(15,30), kind:'meeting'},
+  {id:'dentist', title:'Dentist', day:0, start:H(16,30), end:H(17,15), kind:'appointment'},
+  {id:'gym', title:'Gym', day:0, start:H(18), end:H(19), kind:'personal', protected:true},
+  {id:'flight', title:'Flight BER → LIS', day:1, start:H(8,10), end:H(10,40), kind:'travel', protected:true},
+  {id:'lunch1', title:'Lunch', day:1, start:H(13), end:H(13,45), kind:'meal'},
+  {id:'dinner', title:'Dinner with Ana', day:1, start:H(19,30), end:H(21), kind:'personal'}
+];
+const cloneDoc = d => d.map(e => ({...e}));
+const byId = (d, id) => d.find(e => e.id === id);
+
+/* ---------- scenarios: interpretation output is scripted, everything after it is computed ---------- */
+const COMPOUND_OPS = [
+  {kind:'move', target:{title:'design review'}, to:{after:{title:'lunch'}}},
+  {kind:'shift', target:{title:'planning'}, by:30},
+  {kind:'keep', target:{title:'gym'}}
+];
+const SCENARIOS = [
+  {key:'compound', label:'Compound', say:'Move the design review after lunch, push planning by 30 minutes, and keep the gym fixed.', norm:'move [design review] after [lunch]\nshift [planning] +30m\nkeep [gym]', intent:'2 operations, 1 constraint', ops:COMPOUND_OPS},
+  {key:'clean', label:'Clean', say:'Move design review to 1:30pm.', norm:'move [design review] to 13:30', intent:'1 operation', ops:[{kind:'move', target:{title:'design review'}, to:{at:H(13,30)}}]},
+  {key:'ambiguous', label:'Ambiguous', say:'Move the meeting 30 minutes later.', phrase:'the meeting', norm:'shift [the meeting] +30m', intent:'1 operation, unresolved reference', ops:[{kind:'shift', target:{kind:'meeting', phrase:'the meeting'}, by:30}]},
+  {key:'conflict', label:'Conflict', say:'Move lunch to 2pm.', norm:'move [lunch] to 14:00', intent:'1 operation', ops:[{kind:'move', target:{title:'lunch'}, to:{at:H(14)}}]},
+  {key:'protected', label:'Protected', say:'Delete my flight.', norm:'delete [flight]', intent:'1 destructive operation', ops:[{kind:'delete', target:{title:'flight'}}]},
+  {key:'except', label:'Exclusion', say:'Push everything after lunch by an hour except the dentist.', norm:'shift [all after lunch] +60m\nexcept [dentist]', intent:'batch operation, 1 exclusion', ops:[{kind:'shiftAfter', after:{title:'lunch'}, by:60, except:[{title:'dentist'}]}]},
+  {key:'correction', label:'Correction', say:'Move lunch to 1:30pm.', norm:'move [lunch] to 13:30', intent:'1 operation', ops:[{kind:'move', target:{title:'lunch'}, to:{at:H(13,30)}}], correction:true}
+];
+
+/* ---------- engine ---------- */
+function matches(e, ref){
+  if (ref.title && !e.title.toLowerCase().includes(ref.title)) return false;
+  if (ref.kind && e.kind !== ref.kind) return false;
+  return true;
+}
+function lookup(doc, ref, ctx, sameDay){
+  if (ref.id){ const e = byId(doc, ref.id); return {list: e ? [e] : [], via:'chosen by you'}; }
+  if (sameDay !== undefined) return {list: doc.filter(e => e.day === sameDay && matches(e, ref)), via:'same day as target'};
+  if (ctx.dayOverride !== undefined) return {list: doc.filter(e => e.day === ctx.dayOverride && matches(e, ref)), via: DAYS[ctx.dayOverride] + ', from correction'};
+  const local = doc.filter(e => e.day === ctx.activeDay && matches(e, ref));
+  if (local.length) return {list: local, via: DAYS[ctx.activeDay] + ', active day'};
+  return {list: doc.filter(e => matches(e, ref)), via:'not on active day, searched all days'};
+}
+const refName = r => r.phrase || r.title || r.kind;
+function resolve(doc, ops, ctx){
+  const out = [], notes = [];
+  for (let i = 0; i < ops.length; i++){
+    const op = ops[i];
+    if (op.kind === 'shiftAfter'){
+      const a = lookup(doc, op.after, ctx);
+      if (a.list.length !== 1) return {status:'none', phrase: refName(op.after)};
+      const anchor = a.list[0];
+      notes.push(`“after ${refName(op.after)}” → ends ${fmt(anchor.end)}, ${DAYS[anchor.day]}`);
+      const exc = [...ctx.leaveOut];
+      (op.except || []).forEach(x => {
+        const r = lookup(doc, x, ctx, anchor.day);
+        r.list.forEach(e => exc.push(e.id));
+        notes.push(`except “${refName(x)}” → ${r.list.map(e => e.title).join(', ') || 'nothing'}`);
+      });
+      const targets = doc.filter(e => e.day === anchor.day && e.start >= anchor.end && !exc.includes(e.id));
+      targets.forEach(t => out.push({kind:'shift', id:t.id, by:op.by}));
+      notes.push(`selected → ${targets.map(t => t.title).join(', ') || 'nothing'}`);
+      continue;
+    }
+    const ref = ctx.bindings[i] ? {id: ctx.bindings[i]} : op.target;
+    const r = lookup(doc, ref, ctx);
+    if (r.list.length === 0) return {status:'none', phrase: refName(op.target)};
+    if (r.list.length > 1) return {status:'clarify', index:i, phrase: refName(op.target), candidates: r.list};
+    const t = r.list[0];
+    notes.push(`“${refName(op.target)}” → ${t.title} ${span(t)}, ${r.via}`);
+    if (op.kind === 'move'){
+      let start;
+      if (op.to.at !== undefined) start = op.to.at;
+      else {
+        const a = lookup(doc, op.to.after, ctx, t.day);
+        if (a.list.length !== 1) return {status:'none', phrase: refName(op.to.after)};
+        start = a.list[0].end;
+        notes.push(`“after ${refName(op.to.after)}” → ${fmt(start)}, ${a.via}`);
+      }
+      out.push({kind:'move', id:t.id, start});
+    } else if (op.kind === 'shift') out.push({kind:'shift', id:t.id, by:op.by});
+    else if (op.kind === 'delete') out.push({kind:'delete', id:t.id});
+    else if (op.kind === 'keep') out.push({kind:'keep', id:t.id});
+  }
+  ctx.extra.forEach(x => out.push(x));
+  return {status:'resolved', ops:out, notes};
+}
+function transform(doc, rops, failSecond){
+  const draft = cloneDoc(doc), changes = [];
+  let m = 0;
+  rops.forEach(op => {
+    if (op.kind === 'keep') return;
+    m++;
+    if (failSecond && m === 2) throw new Error('Operation 2 (' + op.kind + ' ' + byId(draft, op.id).title + ') failed');
+    const e = byId(draft, op.id);
+    const before = {start:e.start, end:e.end};
+    if (op.kind === 'move'){ const d = e.end - e.start; e.start = op.start; e.end = op.start + d; }
+    if (op.kind === 'shift'){ e.start += op.by; e.end += op.by; }
+    if (op.kind === 'resize'){ e.end = op.end; }
+    if (op.kind === 'delete'){ e.deleted = true; }
+    const ex = changes.find(c => c.id === op.id);
+    const after = e.deleted ? null : {start:e.start, end:e.end};
+    if (ex) ex.after = after; else changes.push({id:op.id, title:e.title, day:e.day, before, after});
+  });
+  return {draft: draft.filter(e => !e.deleted), changes, mutations:m};
+}
+function validate(doc, draft, changes, rops, ctx){
+  const keep = rops.filter(o => o.kind === 'keep').map(o => o.id);
+  for (const c of changes) if (keep.includes(c.id)) return {status:'reject', msg:`${c.title} is marked fixed in this command.`};
+  const prot = changes.filter(c => byId(doc, c.id).protected && !ctx.approved.includes(c.id));
+  if (prot.length) return {status:'protected', items:prot};
+  for (const c of changes){
+    if (!c.after) continue;
+    if (c.after.start < DAY_MIN || c.after.end > DAY_MAX) return {status:'reject', msg:`${c.title} would end outside the day.`};
+    const clash = draft.find(e => e.id !== c.id && e.day === c.day && e.start < c.after.end && c.after.start < e.end);
+    if (clash) return {status:'conflict', change:c, clash};
+  }
+  const checks = ['no overlaps'];
+  keep.forEach(id => checks.push(byId(doc, id).title + ' unchanged'));
+  changes.forEach(c => { if (byId(doc, c.id).protected) checks.push(c.title + ' approved'); });
+  return {status:'ok', checks};
+}
+const describe = c => c.after ? `${c.title} ${span(c.before)} → ${span(c.after)}` : `delete ${c.title} (${span(c.before)})`;
+function prettyOp(op){
+  switch (op.kind){
+    case 'move': return `move   target:"${refName(op.target)}"\n       to:${op.to.at !== undefined ? fmt(op.to.at) : 'after("' + refName(op.to.after) + '")'}`;
+    case 'shift': return `shift  target:"${refName(op.target)}" by:+${op.by}m`;
+    case 'shiftAfter': return `shift  select:after("${refName(op.after)}") by:+${op.by}m\n       except:[${op.except.map(x => '"' + refName(x) + '"').join(', ')}]`;
+    case 'delete': return `delete target:"${refName(op.target)}"`;
+    case 'keep': return `keep   target:"${refName(op.target)}"  (constraint)`;
+  }
+}
+
+/* ---------- hero ---------- */
+const cmd = $('#cmd');
+function buildHero(){
+  const ctx = newCtx(0);
+  const r = resolve(SEED, COMPOUND_OPS, ctx);
+  const tr = transform(SEED, r.ops, false);
+  tr.changes.forEach(c => { const el = document.querySelector(`[data-res="${c.id}"]`); if (el) el.textContent = span(c.before) + ' → ' + span(c.after); });
+  const tl = $('#tl'), list = $('#tlList');
+  const pct = m => ((m - VIEW_START) / (VIEW_END - VIEW_START) * 100) + '%';
+  const w = (a, b) => ((b - a) / (VIEW_END - VIEW_START) * 100) + '%';
+  let html = '';
+  for (let h = 8; h <= 20; h += 2) html += `<div class="hr" style="left:${pct(H(h))}"><span>${String(h).padStart(2,'0')}:00</span></div>`;
+  SEED.filter(e => e.day === 0).forEach(e => {
+    const moved = tr.changes.find(c => c.id === e.id);
+    html += `<div class="bar${e.protected ? ' prot' : ''}${moved ? ' from' : ''}" style="left:${pct(e.start)};width:${w(e.start, e.end)}" title="${esc(e.title)}">${esc(e.title)}</div>`;
+  });
+  tr.changes.forEach(c => { html += `<div class="bar ghost" style="left:${pct(c.after.start)};width:${w(c.after.start, c.after.end)}">${esc(c.title)}</div>`; });
+  tl.innerHTML = html;
+  list.innerHTML = tr.changes.map(c => `<li><b>${esc(c.title)}</b> ${span(c.before)} → ${span(c.after)}</li>`).join('') + `<li><b>Gym</b> 18:00-19:00, unchanged</li>`;
+}
+let heroTimers = [];
+function playHero(){
+  heroTimers.forEach(clearTimeout); heroTimers = [];
+  if (reduce.matches){ cmd.dataset.step = '4'; return; }
+  delete cmd.dataset.step;
+  void cmd.offsetWidth;
+  [1,2,3,4].forEach((s, i) => heroTimers.push(setTimeout(() => cmd.dataset.step = String(s), 350 + i * 750)));
+}
+$('#replay').addEventListener('click', playHero);
+
+/* ---------- demo state ---------- */
+function newCtx(active){ return {bindings:{}, extra:[], approved:[], leaveOut:[], dayOverride:undefined, activeDay:active}; }
+const S = {doc: cloneDoc(SEED), activeDay:0, history:[], future:[], pending:null, busy:false, turn:null, pid:0};
+const log = $('#log'), replies = $('#replies'), stagesEl = $('#stages');
+
+function setStage(k, s, out){
+  const li = stagesEl.querySelector(`[data-k="${k}"]`);
+  li.dataset.s = s;
+  if (out !== undefined) li.querySelector('pre').textContent = out;
+}
+function resetStages(){ stagesEl.querySelectorAll('.stage').forEach(li => { li.dataset.s = 'idle'; li.querySelector('pre').textContent = ''; }); }
+resetStages();
+
+function say(who, html){
+  const e = document.getElementById('emptyLog'); if (e) e.remove();
+  const li = document.createElement('li'); li.className = who; li.innerHTML = html; log.appendChild(li);
+  log.scrollTop = log.scrollHeight;
+  return li;
+}
+function setReplies(items){
+  replies.innerHTML = '';
+  items.forEach(it => {
+    const b = document.createElement('button'); b.type = 'button';
+    b.className = 'reply' + (it.cls ? ' ' + it.cls : ''); b.textContent = it.label;
+    b.addEventListener('click', () => { if (!S.busy) it.run(); });
+    replies.appendChild(b);
+  });
+}
+function setBusy(v){
+  S.busy = v;
+  document.querySelectorAll('.chip').forEach(c => c.disabled = v);
+  $('#undo').disabled = v || !S.history.length;
+  $('#redo').disabled = v || !S.future.length;
+  $('#what').disabled = v || !S.history.length;
+}
+
+/* ---------- calendar rendering ---------- */
+const calH = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--calh')) || 720;
+const topPct = m => ((m - VIEW_START) / (VIEW_END - VIEW_START) * 100);
+function buildGrid(){
+  const hours = $('#hours'); let hh = '';
+  for (let h = 8; h <= 21; h++) hh += `<span style="top:${topPct(H(h))}%">${String(h).padStart(2,'0')}</span>`;
+  hours.innerHTML = hh;
+  [0,1].forEach(d => {
+    const t = document.getElementById('track' + d); let lines = '';
+    for (let h = 8; h <= 21; h++) lines += `<div class="line" style="top:${topPct(H(h))}%"></div>`;
+    t.innerHTML = lines + `<div class="ghosts"></div>`;
+  });
+  $('#track0').insertAdjacentHTML('beforeend', `<div class="now" style="top:${topPct(H(9,10))}%" title="Now 09:10"></div>`);
+}
+function placeEv(el, e){
+  el.style.setProperty('--t', (topPct(e.start) / 100).toFixed(5));
+  el.style.setProperty('--h', ((e.end - e.start) / (VIEW_END - VIEW_START)).toFixed(5));
+  el.classList.toggle('short', (e.end - e.start) <= 30);
+  el.querySelector('.tm').textContent = span(e);
+  el.setAttribute('aria-label', `${e.title}, ${span(e)}${e.protected ? ', protected' : ''}`);
+}
+function renderCal(opts = {}){
+  const seen = new Set();
+  S.doc.forEach(e => {
+    seen.add(e.id);
+    let el = document.querySelector(`.ev[data-id="${e.id}"]`);
+    const track = document.getElementById('track' + e.day);
+    if (!el){
+      el = document.createElement('div'); el.className = 'ev new'; el.dataset.id = e.id; el.setAttribute('role','listitem');
+      el.innerHTML = `<span class="t"></span><span class="tm"></span>`;
+      el.querySelector('.t').textContent = e.title;
+      track.appendChild(el);
+      placeEv(el, e);
+      requestAnimationFrame(() => requestAnimationFrame(() => el.classList.remove('new')));
+    } else {
+      if (opts.trails && !reduce.matches){
+        const cur = parseFloat(el.style.getPropertyValue('--t')), h = parseFloat(el.style.getPropertyValue('--h'));
+        if (Math.abs(cur - topPct(e.start) / 100) > 1e-4){
+          const tr = document.createElement('div'); tr.className = 'trail'; tr.style.top = (cur * 100) + '%'; tr.style.height = `calc(${h * 100}% - 2px)`;
+          track.appendChild(tr); setTimeout(() => tr.remove(), 700);
+        }
+      }
+      placeEv(el, e);
+    }
+    el.classList.toggle('prot', !!e.protected);
+    el.classList.remove('pending');
+  });
+  document.querySelectorAll('.ev').forEach(el => {
+    if (!seen.has(el.dataset.id)){ el.classList.add('gone'); setTimeout(() => el.remove(), reduce.matches ? 0 : 380); }
+  });
+  drawGhosts();
+}
+function drawGhosts(){
+  document.querySelectorAll('.ghosts').forEach(g => g.innerHTML = '');
+  document.querySelectorAll('.ev.pending,.ev.pending-del').forEach(e => e.classList.remove('pending','pending-del'));
+  if (!S.pending) return;
+  S.pending.changes.forEach(c => {
+    const g = document.querySelector(`#track${c.day} .ghosts`);
+    const orig = document.querySelector(`.ev[data-id="${c.id}"]`);
+    if (!c.after){ if (orig){ orig.classList.add('pending-del'); orig.querySelector('.t').dataset.pid = 'P' + S.pending.pid; } return; }
+    if (orig) orig.classList.add('pending');
+    const d = document.createElement('div');
+    const pos = c.after || c.before;
+    d.className = 'ghost';
+    d.style.top = topPct(pos.start) + '%';
+    d.style.height = `calc(${(pos.end - pos.start) / (VIEW_END - VIEW_START) * 100}% - 2px)`;
+    d.textContent = `P${S.pending.pid} · ${c.title}`;
+    g.appendChild(d);
+  });
+}
+
+/* ---------- ambiguity lines ---------- */
+let lineTargets = null;
+function drawLines(){
+  const svg = $('#lines'); svg.innerHTML = '';
+  if (!lineTargets) return;
+  const box = $('#demo').getBoundingClientRect();
+  const mark = lineTargets.mark.getBoundingClientRect();
+  if (!mark.width) return;
+  const bub = lineTargets.mark.closest('li') || lineTargets.mark;
+  const x1 = Math.max(mark.right, bub.getBoundingClientRect().right) - box.left, y1 = mark.top + mark.height / 2 - box.top;
+  lineTargets.ids.forEach(id => {
+    const el = document.querySelector(`.ev[data-id="${id}"]`); if (!el || !el.offsetParent) return;
+    const r = el.getBoundingClientRect();
+    const x2 = r.left - box.left, y2 = r.top + r.height / 2 - box.top;
+    const stacked = x2 < x1 + 20;
+    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const d = stacked
+      ? `M${mark.left - box.left + mark.width/2},${mark.bottom - box.top} C${mark.left - box.left + mark.width/2},${(y1 + y2)/2} ${r.left - box.left + 20},${(y1 + y2)/2} ${r.left - box.left + 20},${r.top - box.top}`
+      : `M${x1 + 4},${y1} C${(x1 + x2) / 2},${y1} ${(x1 + x2) / 2},${y2} ${x2 - 2},${y2}`;
+    p.setAttribute('d', d); svg.appendChild(p);
+  });
+}
+function setLines(mark, ids){
+  lineTargets = mark ? {mark, ids} : null;
+  document.querySelectorAll('.ev.cand').forEach(e => e.classList.remove('cand'));
+  if (ids) ids.forEach(id => { const e = document.querySelector(`.ev[data-id="${id}"]`); if (e) e.classList.add('cand'); });
+  drawLines();
+}
+new ResizeObserver(() => drawLines()).observe($('#demo'));
+addEventListener('resize', drawLines);
+
+/* ---------- running a turn ---------- */
+function userLine(sc){
+  if (sc.phrase){ return esc(sc.say).replace(esc(sc.phrase), `<mark>${esc(sc.phrase)}</mark>`); }
+  return esc(sc.say);
+}
+function startScenario(sc){
+  if (S.busy) return;
+  if (S.pending){ say('sys', `<span class="stale"><span class="pid">P${S.pending.pid}</span> dropped</span> A new request replaced it.`); S.pending = null; drawGhosts(); }
+  setLines(null);
+  document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', String(c.dataset.key === sc.key)));
+  S.turn = {sc, ctx:newCtx(S.activeDay), youEl:null};
+  S.turn.youEl = say('you', userLine(sc));
+  setReplies([]);
+  run(1);
+}
+async function run(from){
+  const T = S.turn, sc = T.sc;
+  setBusy(true);
+  if (from <= 1){
+    resetStages();
+    setStage(1, 'active'); await wait(240); setStage(1, 'done', sc.norm);
+    setStage(2, 'active'); await wait(240); setStage(2, 'done', sc.intent);
+    setStage(3, 'active'); await wait(260); setStage(3, 'done', sc.ops.map(prettyOp).join('\n'));
+  } else {
+    ['4','5','6','gate','7','8'].forEach(k => { if (k >= from || k === 'gate') setStage(k, 'idle', ''); });
+  }
+  T.ctx.activeDay = S.activeDay;
+  setStage(4, 'active'); await wait(320);
+  const r = resolve(S.doc, sc.ops, T.ctx);
+  if (r.status === 'none'){
+    setStage(4, 'blocked', `“${r.phrase}” → no match`);
+    say('flow', `I can't find anything matching “${esc(r.phrase)}”. Nothing changed.`);
+    return setBusy(false);
+  }
+  if (r.status === 'clarify'){
+    setStage(4, 'blocked', `“${r.phrase}” → ${r.candidates.length} candidates\nwaiting for you`);
+    say('flow', `Which ${esc(r.phrase.replace(/^the /, ''))}? I found ${r.candidates.length} on ${DAYS[r.candidates[0].day].toLowerCase()}.`);
+    const mark = T.youEl.querySelector('mark') || T.youEl;
+    setLines(mark, r.candidates.map(c => c.id));
+    setReplies(r.candidates.map(c => ({label:`${c.title}, ${fmt(c.start)}`, run:() => {
+      T.ctx.bindings[r.index] = c.id;
+      say('you', `The ${esc(c.title)}.`);
+      setLines(null); setReplies([]);
+      run(4);
+    }})).concat([{label:'Never mind', run:() => { setLines(null); say('you','Never mind.'); say('flow','Okay. Nothing changed.'); setReplies([]); setStage(4,'failed','cancelled by you'); }}]));
+    return setBusy(false);
+  }
+  setStage(4, 'done', r.notes.join('\n'));
+  setStage(5, 'active'); await wait(320);
+  let tr;
+  const failOn = $('#failToggle').checked;
+  try { tr = transform(S.doc, r.ops, failOn); }
+  catch (err){
+    setStage(5, 'failed', err.message + '\ndraft discarded, 0 changes applied');
+    say('flow', `That didn't go through. ${esc(err.message)}, so the whole request was rejected. Your calendar is exactly as it was.`);
+    flashAll();
+    return setBusy(false);
+  }
+  const failNote = failOn && tr.mutations < 2 ? '\n(only one operation, nothing to fail)' : '';
+  setStage(5, 'done', tr.changes.length ? tr.changes.map(describe).join('\n') + failNote : 'no changes');
+  setStage(6, 'active'); await wait(320);
+  const v = validate(S.doc, tr.draft, tr.changes, r.ops, T.ctx);
+  if (v.status === 'reject'){ setStage(6, 'failed', v.msg); say('flow', esc(v.msg) + ' Nothing changed.'); return setBusy(false); }
+  if (v.status === 'conflict'){
+    const {change:c, clash} = v;
+    setStage(6, 'blocked', `${c.title} ${span(c.after)} overlaps\n${clash.title} ${span(clash)}`);
+    say('flow', `${esc(c.title)} at ${span(c.after)} would overlap <b>${esc(clash.title)}</b> (${span(clash)}).`);
+    const opts = [];
+    if (clash.start > c.after.start && clash.start - c.after.start >= 15){
+      const end = clash.start;
+      opts.push({label:`Shorten to ${fmt(c.after.start)}-${fmt(end)}`, cls:'primary', run:() => {
+        say('you', `Shorten it to end at ${fmt(end)}.`); setReplies([]);
+        T.ctx.extra.push({kind:'resize', id:c.id, end}); run(4);
+      }});
+    }
+    opts.push({label:'Leave it', run:() => { say('you','Leave it.'); say('flow','Okay. Nothing changed.'); setReplies([]); setStage(6,'failed','cancelled by you'); }});
+    setReplies(opts);
+    return setBusy(false);
+  }
+  if (v.status === 'protected'){
+    const names = v.items.map(i => i.title).join(', ');
+    setStage(6, 'blocked', `protected: ${names}\nneeds explicit approval`);
+    const verb = v.items.some(i => !i.after) ? 'Deleting' : 'Changing';
+    say('flow', `<b>${esc(names)}</b> is protected. ${verb} it needs your explicit approval${tr.changes.length > v.items.length ? `. The rest of the request can go ahead without it` : ''}.`);
+    const opts = [{label:`Approve ${verb.toLowerCase()} ${names}`, cls:'danger', run:() => {
+      say('you', `Yes, ${verb.toLowerCase()} ${esc(names)} is intended.`); setReplies([]);
+      v.items.forEach(i => T.ctx.approved.push(i.id)); run(4);
+    }}];
+    if (tr.changes.length > v.items.length){
+      opts.unshift({label:`Leave ${names} in place`, cls:'primary', run:() => {
+        say('you', `Leave ${esc(names)} where it is.`); setReplies([]);
+        v.items.forEach(i => T.ctx.leaveOut.push(i.id)); run(4);
+      }});
+    } else opts.push({label:'Cancel', run:() => { say('you','Cancel.'); say('flow','Cancelled. Nothing changed.'); setReplies([]); setStage(6,'failed','cancelled by you'); }});
+    setReplies(opts);
+    return setBusy(false);
+  }
+  setStage(6, 'done', v.checks.join('\n'));
+  S.pid += 1;
+  S.pending = {pid:S.pid, changes:tr.changes, draft:tr.draft, label:sc.say};
+  setStage('gate', 'blocked', `P${S.pid} · ${tr.changes.length} change${tr.changes.length === 1 ? '' : 's'}\nawaiting confirmation`);
+  drawGhosts();
+  say('flow', `<span class="pid">P${S.pid}</span> ${tr.changes.map(c => esc(describe(c))).join('; ')}. Go ahead?`);
+  const opts = [
+    {label:'Yes', cls:'primary', run:() => confirm(S.pending.pid)},
+    {label:'Cancel', run:() => cancel()}
+  ];
+  if (sc.correction && T.ctx.dayOverride === undefined){
+    const other = S.activeDay === 0 ? 1 : 0;
+    opts.splice(1, 0, {label:`No, I meant ${DAYS[other].toLowerCase()}`, run:() => correct(other)});
+  }
+  setReplies(opts);
+  setBusy(false);
+}
+function flashAll(){
+  if (reduce.matches) return;
+  document.querySelectorAll('.ev').forEach(e => { e.classList.add('flash'); setTimeout(() => e.classList.remove('flash'), 600); });
+}
+function correct(day){
+  const old = S.pending;
+  say('you', `No, I meant ${DAYS[day].toLowerCase()}.`);
+  log.querySelectorAll('.flow').forEach(li => { if (li.innerHTML.includes(`>P${old.pid}<`)) li.classList.add('stale'); });
+  say('sys', `<span class="pid">P${old.pid}</span> superseded. A “yes” now binds to the next proposal only`);
+  S.pending = null; drawGhosts(); setReplies([]);
+  S.turn.ctx.dayOverride = day;
+  setStage(3, 'done', S.turn.sc.ops.map(prettyOp).join('\n') + `\n+ date:${DAYS[day].toLowerCase()} (correction)`);
+  run(4);
+}
+async function confirm(pid){
+  if (!S.pending || S.pending.pid !== pid){ say('flow', 'That approval belonged to a proposal that no longer exists. Nothing changed.'); return; }
+  const P = S.pending;
+  say('you', 'Yes.'); setReplies([]); setBusy(true);
+  setStage('gate', 'done', `P${pid} confirmed`);
+  setStage(7, 'active'); await wait(300);
+  const before = S.doc;
+  S.doc = P.draft; S.pending = null;
+  S.history.push({pid, before, after:S.doc, changes:P.changes, label:P.label}); S.future = [];
+  setStage(7, 'done', `P${pid}: ${P.changes.length} change${P.changes.length === 1 ? '' : 's'} in one write`);
+  renderCal();
+  setStage(8, 'active'); await wait(420);
+  const ok = P.changes.every(c => c.after ? (byId(S.doc, c.id) && byId(S.doc, c.id).start === c.after.start && byId(S.doc, c.id).end === c.after.end) : !byId(S.doc, c.id));
+  setStage(8, ok ? 'done' : 'failed', `revision ${S.history.length} · ${ok ? 'verified against proposal' : 'mismatch'}\nundo available`);
+  say('flow', `Done. ${P.changes.length === 1 ? 'One change' : P.changes.length + ' changes'} applied together.`);
+  setBusy(false);
+}
+function cancel(){
+  say('you', 'Actually, cancel that.');
+  if (S.pending) setStage('gate', 'failed', `P${S.pending.pid} cancelled`);
+  S.pending = null; drawGhosts(); setReplies([]);
+  say('flow', 'Cancelled. Nothing changed.');
+}
+function undo(){
+  if (!S.history.length || S.busy) return;
+  if (S.pending){ S.pending = null; setReplies([]); }
+  const h = S.history.pop(); S.future.push(h); S.doc = h.before;
+  rewind();
+  say('flow', `Undid <span class="pid">P${h.pid}</span> as one step: ${h.changes.map(c => esc(c.title)).join(', ')} restored.`);
+  setBusy(false);
+}
+function redo(){
+  if (!S.future.length || S.busy) return;
+  const h = S.future.pop(); S.history.push(h); S.doc = h.after;
+  rewind();
+  say('flow', `Redid <span class="pid">P${h.pid}</span>.`);
+  setBusy(false);
+}
+function rewind(){
+  const cal = $('.cal'); cal.classList.add('rewinding');
+  renderCal({trails:true});
+  setTimeout(() => cal.classList.remove('rewinding'), 650);
+}
+function whatChanged(){
+  if (!S.history.length) return;
+  say('you', 'What changed?');
+  const items = S.history.slice(-3).reverse().map(h => `<span class="pid">P${h.pid}</span> ${h.changes.map(c => esc(describe(c))).join('; ')}`);
+  say('flow', items.join('<br>'));
+}
+function resetDay(){
+  if (S.busy) return;
+  S.doc = cloneDoc(SEED); S.history = []; S.future = []; S.pending = null; S.pid = 0; S.turn = null;
+  setLines(null); setReplies([]); resetStages();
+  log.innerHTML = '<li class="empty" id="emptyLog">Day reset. Pick a command.</li>';
+  document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed','false'));
+  renderCal(); setBusy(false);
+}
+function setActive(d){
+  S.activeDay = d;
+  $('#days').dataset.active = String(d);
+  document.querySelectorAll('.dayhead').forEach(b => {
+    const on = Number(b.dataset.day) === d;
+    b.setAttribute('aria-pressed', String(on));
+    b.querySelector('small').innerHTML = on ? 'Active context' : '&nbsp;';
+  });
+  requestAnimationFrame(drawLines);
+}
+
+/* ---------- wire up ---------- */
+const chips = $('#chips');
+SCENARIOS.forEach(sc => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'chip'; b.dataset.key = sc.key; b.setAttribute('aria-pressed', 'false');
+  b.textContent = sc.label; b.title = sc.say;
+  b.setAttribute('aria-label', `${sc.label}: ${sc.say}`);
+  b.addEventListener('click', () => startScenario(sc));
+  chips.appendChild(b);
+});
+document.querySelectorAll('.dayhead').forEach(b => b.addEventListener('click', () => setActive(Number(b.dataset.day))));
+$('#undo').addEventListener('click', undo);
+$('#redo').addEventListener('click', redo);
+$('#what').addEventListener('click', whatChanged);
+$('#reset').addEventListener('click', resetDay);
+addEventListener('keydown', e => {
+  if (!(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== 'z') return;
+  if (!$('#demo').contains(document.activeElement)) return;
+  e.preventDefault(); e.shiftKey ? redo() : undo();
+});
+
+/* ---------- latency ---------- */
+const LAT = [
+  {g:'ui', n:'Wake handler to Chromium paint', s:'median, p95 marked', v:42.1, p95:65.7},
+  {g:'ui', n:'Earlier wake first-paint', s:'single observation', v:227.1},
+  {g:'talk', n:'STT decoder initialisation', s:'approx.', v:841},
+  {g:'talk', n:'STT drain', s:'approx.', v:1578},
+  {g:'talk', n:'Final transcript to response', s:'approx.', v:223},
+  {g:'talk', n:'TTS scheduling', s:'p50', v:1049}
+];
+const lat = $('#lat'), ticks = $('#ticks');
+lat.innerHTML = LAT.map((r, i) => `<div class="lrow ${r.g === 'talk' ? 'speech' : ''}" data-g="${r.g}" data-i="${i}">
+  <div class="n">${r.n}<small>${r.s}</small></div>
+  <div class="bar-wrap"><div class="lbar"></div>${r.p95 ? '<div class="p95" title="p95 65.7 ms"></div>' : ''}<div class="lval">${r.v < 1000 ? r.v + ' ms' : (r.v / 1000).toFixed(3) + ' s'}${r.p95 ? ' · p95 ' + r.p95 + ' ms' : ''}</div><div class="target"${r.g === 'ui' && i === 0 ? '' : ' hidden'}><span>100 ms target</span></div></div>
+</div>`).join('');
+function setLat(mode){
+  const max = mode === 'screen' ? 250 : 1700;
+  document.querySelectorAll('.lat-switch button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
+  lat.querySelectorAll('.lrow').forEach(row => {
+    const r = LAT[Number(row.dataset.i)];
+    row.hidden = mode === 'screen' && r.g === 'talk';
+    const p = Math.min(r.v / max, 1) * 100;
+    row.querySelector('.lbar').style.setProperty('--p', p);
+    const lv = row.querySelector('.lval'); lv.classList.toggle('in', p > 70); lv.style.setProperty('--p', p);
+    const q = row.querySelector('.p95'); if (q) q.style.setProperty('--p', r.p95 / max * 100);
+    const t = row.querySelector('.target'); if (t) t.style.setProperty('--p', 100 / max * 100);
+  });
+  const step = mode === 'screen' ? 50 : 400;
+  let th = '';
+  for (let v = 0; v <= max; v += step) th += `<span style="left:${v / max * 100}%">${v} ms</span>`;
+  ticks.innerHTML = th;
+}
+document.querySelectorAll('.lat-switch button').forEach(b => b.addEventListener('click', () => setLat(b.dataset.mode)));
+
+
+/* ---------- product page chrome ---------- */
+document.querySelectorAll('[data-run]').forEach(b => b.addEventListener('click', () => {
+  const sc = SCENARIOS.find(s => s.key === b.dataset.run);
+  $('#try').scrollIntoView({behavior: reduce.matches ? 'auto' : 'smooth', block:'start'});
+  if (S.busy) return;
+  setTimeout(() => startScenario(sc), reduce.matches ? 0 : 500);
+}));
+const pnav = $('#pnav');
+new IntersectionObserver(([e]) => pnav.classList.toggle('stuck', !e.isIntersecting)).observe($('#sentinel'));
+const navLinks = [...pnav.querySelectorAll('ul a')];
+const navIO = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) navLinks.forEach(a => a.setAttribute('aria-current', String(a.getAttribute('href') === '#' + e.target.id)));
+}), {rootMargin:'-35% 0px -60% 0px'});
+navLinks.forEach(a => { const s = document.querySelector(a.getAttribute('href')); if (s) navIO.observe(s); });
+
+/* ---------- init ---------- */
+buildHero();
+buildGrid();
+renderCal();
+setLat('screen');
+setBusy(false);
+playHero();
+reduce.addEventListener('change', () => { if (reduce.matches) cmd.dataset.step = '4'; });
+})();
+
+</script>
+</body>
+</html>

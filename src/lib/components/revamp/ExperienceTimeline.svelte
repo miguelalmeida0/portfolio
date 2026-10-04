@@ -12,7 +12,7 @@
   <div class="experience-inner">
     <div class="section-title">
       <p use:reveal={{ threshold: 0.1 }}>Production experience</p>
-      <h2 id="experience-title" use:reveal={{ threshold: 0.1, delay: 60 }}>Built from scratch.<br />Used by thousands of companies.</h2>
+      <h2 id="experience-title" use:reveal={{ threshold: 0.1, delay: 60 }}>Built from scratch.<br />Used by hundreds of companies.</h2>
     </div>
 
     <div>

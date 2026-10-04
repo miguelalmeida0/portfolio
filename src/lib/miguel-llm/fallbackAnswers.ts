@@ -57,7 +57,7 @@ export function buildFallbackAnswer(question: string, mode: MiguelLLMMode, _rece
       [site.email], ['Résumé & download|/cv', 'Contact Miguel|/#contact'], ['What did Miguel personally build?', 'What kind of role fits Miguel?']);
   }
   if (/connectivity|\bf24\b|production (frontend |work |experience)|\b(current employer|work history|professional experience)\b/.test(q)) {
-    return make('At F24, the original Svelte frontend moved from initial mockups through production as part of the wider product team. Miguel’s frontend contribution later continued in the React application. The application is now used by thousands of companies.',
+    return make('At F24, the original Svelte frontend moved from initial mockups through production as part of the wider product team. Miguel’s frontend contribution later continued in the React application. The application is now used by hundreds of companies.',
       [cvExperience[0].bullets[2], 'The company-adoption figure describes the application, not a claim that Miguel alone created its business impact.'],
       ['Production experience|/cv#experience', 'F24 work|/work/f24'], ['What did Miguel personally build?', 'What does his previous team lead say?', 'What kind of role fits Miguel?']);
   }
