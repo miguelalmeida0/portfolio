@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  validate:
+  checks:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -29,15 +29,42 @@ jobs:
       - run: npm run check
       - run: npm run test:unit
       - run: npm run build
+
+  browser-tests:
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
       - run: npx playwright install --with-deps chromium firefox webkit
-      - run: mkdir -p .cache/tmp && TMPDIR=$PWD/.cache/tmp npx playwright test
+      - run: mkdir -p .cache/tmp && TMPDIR=$PWD/.cache/tmp npx playwright test --shard=${{ matrix.shard }}/20
       - name: Upload browser test results
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v5
         with:
-          name: browser-test-results
+          name: browser-test-results-${{ matrix.shard }}
           path: |
             playwright-report/
             test-results/
           if-no-files-found: ignore
           retention-days: 3
+
+  validate:
+    if: ${{ always() }}
+    needs: [checks, browser-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every check and browser shard to pass
+        env:
+          CHECKS_RESULT: ${{ needs.checks.result }}
+          BROWSER_RESULT: ${{ needs.browser-tests.result }}
+        run: test "$CHECKS_RESULT" = success && test "$BROWSER_RESULT" = success
