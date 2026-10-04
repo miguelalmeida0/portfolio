@@ -1,5 +1,5 @@
 import { recoveredCases } from '../helpers/case-studies';
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures';
 import { openSecondVoiceStudio } from '../helpers/portfolio';
 import { SECOND_VOICE_URL } from '../../../src/lib/experience/voice-bridge';
 

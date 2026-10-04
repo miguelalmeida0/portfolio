@@ -29,7 +29,7 @@
     const change = () => { reduced = media.matches; requested = false; sync(); };
     change();
     const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); }, { threshold: .05 });
-    observer.observe(element.closest('#work') ?? element);
+    observer.observe(element);
     media.addEventListener('change', change);
     document.addEventListener('visibilitychange', sync);
     return () => { alive = false; observer.disconnect(); media.removeEventListener('change', change); document.removeEventListener('visibilitychange', sync); element.pause(); element.removeAttribute('src'); element.load(); };

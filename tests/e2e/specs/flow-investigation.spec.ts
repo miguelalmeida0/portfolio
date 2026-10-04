@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from '../fixtures';
 import AxeBuilder from '@axe-core/playwright';
 const idle = (page: Page) => page.waitForFunction(() => !document.querySelector('#chips .chip:disabled'));
 const events = (page: Page) => page.locator('.ev[role="listitem"]').evaluateAll(nodes => nodes.map(n => n.getAttribute('aria-label')).sort());
@@ -53,6 +53,11 @@ for (const width of [1440, 1024, 834, 390, 375]) test(`readable and accessible a
   await expect(page.locator('#engineering .story')).toHaveCount(1);
   await expect(page.locator('#engineering .pipe li')).toHaveCount(8);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await expect(page.locator('#cmd')).toHaveAttribute('data-step', '4');
+  await expect.poll(() => page.locator('#cmd').evaluate(el => el.getAnimations({ subtree: true }).filter(a => (a.playState === 'running' || a.pending) && a.effect?.getTiming().iterations !== Infinity).length)).toBe(0);
+  // Resizing moves chart labels between container coordinates; inspect the
+  // finished chart rather than an intermediate frame of its 800ms transition.
+  await expect.poll(() => page.locator('#latency').evaluate(el => el.getAnimations({ subtree: true }).filter(a => a.playState === 'running' || a.pending).length)).toBe(0);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   const invalidLinks = await page.locator('.cs-flow a[href]').evaluateAll(links => links.filter(link => {
     const a = link as HTMLAnchorElement;

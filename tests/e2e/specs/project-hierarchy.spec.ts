@@ -1,5 +1,5 @@
 import { recoveredCases } from '../helpers/case-studies';
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures';
 import { openPortfolioHome, selectWorkProject } from '../helpers/portfolio';
 
 const projects = ['second-voice-ai', 'f24', 'flow', 'leu'];

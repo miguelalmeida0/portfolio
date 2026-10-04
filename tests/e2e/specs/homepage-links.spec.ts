@@ -1,5 +1,6 @@
-import { expect, test } from '@playwright/test';
-import { installClipboardStub, openPortfolioHome, openSecondVoiceStudio, selectWorkProject } from '../helpers/portfolio';
+import { recoveredCases } from '../helpers/case-studies';
+import { expect, test } from '../fixtures';
+import { expectVisibleFocus, installClipboardStub, openPortfolioHome, openSecondVoiceStudio, selectWorkProject } from '../helpers/portfolio';
 
 const projects = [['f24', 'F24'], ['flow', 'Flow'], ['leu', 'Leu']] as const;
 
@@ -31,7 +32,7 @@ test('each selected media surface and case-study link navigate in the same tab',
       await expect(link).not.toHaveAttribute('target', '_blank');
       await link.click();
       await expect(page).toHaveURL(new RegExp(`/work/${slug}$`));
-      await expect(page.locator('main h1')).toContainText(name);
+      await expect(page.locator('main h1')).toHaveText(recoveredCases.find(study => study.slug === slug)!.heading);
       await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
       expect(page.context().pages()).toHaveLength(1);
       await page.goBack();
@@ -51,10 +52,10 @@ test('keyboard reaches each media anchor and Enter opens its case study', async 
     await page.keyboard.press('Shift+Tab');
     await expect(media).toBeFocused();
     await expect(media).toHaveCSS('outline-style', 'solid');
-    await expect(media).toHaveCSS('outline-width', '3px');
+    await expectVisibleFocus(media);
     await page.keyboard.press('Enter');
     await expect(page).toHaveURL(new RegExp(`/work/${slug}$`));
-    await expect(page.locator('main h1')).toContainText(name);
+    await expect(page.locator('main h1')).toHaveText(recoveredCases.find(study => study.slug === slug)!.heading);
     await page.goBack();
     await expect(page.locator('#intro-heading')).toBeVisible();
   }

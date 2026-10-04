@@ -1,5 +1,5 @@
 // Acceptance coverage for the shared, non-modal Ask guide.
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from '../fixtures';
 import { openPortfolioHome, selectWorkProject } from '../helpers/portfolio';
 
 async function openGuide(page: Page) {
@@ -44,15 +44,16 @@ test('real endpoint supports a preset, a new question and internal answer naviga
   await page.goto('/story');
   const { panel } = await openGuide(page);
   await panel.getByRole('button', { name: 'Second Voice', exact: true }).click();
-  await expect(panel.locator('[data-ask-knowledge]')).toContainText('Second Voice');
+  await expect(panel.locator('[data-ask-knowledge]')).toContainText('writer');
+  await expect(panel.locator('.ask-sources a[href="/work/second-voice-ai"]')).toBeVisible();
   const input = panel.getByRole('textbox', { name: 'Type your own question' });
   await input.fill('What did Miguel build in Flow?');
   await panel.getByRole('button', { name: 'Ask your question' }).click();
-  await expect(panel.locator('[data-ask-knowledge]')).toContainText('React');
+  await expect(panel.locator('[data-ask-knowledge]')).toContainText('deterministic action');
   await panel.locator('.ask-sources a[href="/work/flow"]').first().click();
   await expect(page).toHaveURL(/\/work\/flow$/);
   await expect(panel).toHaveCount(0);
-  await expect(page.locator('h1')).toHaveText('Flow');
+  await expect(page.locator('h1')).toHaveText('From speech to deterministic state.');
   expect(errors).toEqual([]);
 });
 
@@ -74,7 +75,8 @@ for (const [width, height] of [[1440, 1020], [430, 932], [393, 852], [390, 844]]
       await expect(input).toBeInViewport();
       await expect(page.locator('.ask-close')).toBeInViewport();
       await input.press('Enter');
-      await expect(panel.locator('[data-ask-knowledge]')).toContainText('Leu');
+      await expect(panel.locator('[data-ask-knowledge]')).toContainText('native learning loop');
+      await expect(panel.locator('.ask-sources a[href="/work/leu"]').first()).toBeVisible();
       await expect(input).toBeInViewport();
     }
     await closeGuide(page);
@@ -98,7 +100,8 @@ test('shared shortcut opens Ask; offline and rate-limit failures remain retryabl
   await expect(panel.locator('[data-ask-answer]')).toContainText('Give it a minute');
   await page.unroute('**/api/ask');
   await panel.getByRole('button', { name: 'Try again' }).click();
-  await expect(panel.locator('[data-ask-knowledge]')).toContainText('Leu');
+  await expect(panel.locator('[data-ask-knowledge]')).toContainText('native learning loop');
+      await expect(panel.locator('.ask-sources a[href="/work/leu"]').first()).toBeVisible();
 });
 
 test('current Story, CV and all project routes share Ask and restore its trigger', async ({ page }) => {

@@ -52,7 +52,25 @@
   let routeVeil: HTMLDivElement;
   const { mobileState, navigationError, navigateFromMenu } = installRouteTransitions(() => routeVeil);
 
-  afterNavigate(() => syncScrollPosition());
+  afterNavigate(({ from, to, type }) => {
+    syncScrollPosition();
+    if (!to?.url.hash || type === 'popstate' || from?.url.pathname === to.url.pathname) return;
+    // A case-study font can change section heights after Kit's first fragment
+    // scroll. Align once after the destination has finished laying out.
+    const destination = to.url.href;
+    let cancelled = false;
+    const cancel = () => { cancelled = true; };
+    const inputs = ['wheel', 'touchstart', 'keydown'] as const;
+    inputs.forEach(name => window.addEventListener(name, cancel, { once: true, passive: true }));
+    void document.fonts.ready.then(() => requestAnimationFrame(() => {
+      inputs.forEach(name => window.removeEventListener(name, cancel));
+      if (cancelled || location.href !== destination) return;
+      try {
+        document.getElementById(decodeURIComponent(to.url.hash.slice(1)))?.scrollIntoView({ block: 'start', behavior: 'instant' });
+        syncScrollPosition();
+      } catch { /* A malformed fragment keeps the browser's normal position. */ }
+    }));
+  });
   onMount(() => {
     window.addEventListener('miguel-llm:open', openGuide);
     const controller = createAskController();
@@ -70,7 +88,7 @@
       if (current.url.pathname === scrollPath) return;
       scrollPath = current.url.pathname;
       disposeScroll?.();
-      disposeScroll = ['/','/work/flow','/work/leu','/work/f24','/work/second-voice'].includes(current.url.pathname) ? undefined : installSmoothScroll();
+      disposeScroll = ['/','/work/flow','/work/leu','/work/f24','/work/second-voice','/work/needle'].includes(current.url.pathname) ? undefined : installSmoothScroll();
     });
     return () => { controller.destroy(); askController.set(undefined); window.removeEventListener('miguel-llm:open', openGuide); presentation.disconnect(); disposePage(); disposeScroll?.(); disposePolicy(); };
   });
@@ -98,7 +116,7 @@
 <div class="wind-theme" data-homepage={$page.url.pathname === '/' ? '' : undefined} id="portfolio-content" inert={$mobileState !== 'idle'}>
   <a href="#main" class="wind-skip sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded focus:bg-plum focus:px-5 focus:py-3 focus:text-white" {...destinationLink("#main")}>Skip to content</a>
   <Header guideOpen={$askView.state !== 'idle'} {guideReady} homepage={$page.url.pathname === '/'} askActive={$askView.state !== 'idle'} {navigateFromMenu} navigationTransitionActive={$mobileState !== 'idle'} />
-  {#if ['/work/flow','/work/leu','/work/f24','/work/second-voice'].includes($page.url.pathname)}<slot />{:else}<main id="main"><slot /></main>{/if}
+  {#if ['/work/flow','/work/leu','/work/f24','/work/second-voice','/work/needle'].includes($page.url.pathname)}<slot />{:else}<main id="main"><slot /></main>{/if}
   <section class="contact" aria-label="Contact"><Contact /></section>
 </div>
 

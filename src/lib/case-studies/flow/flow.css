@@ -503,3 +503,12 @@ html:has(.cs-flow){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);
 }
 
 .cs-flow{--cs-alpha-06:.06;--cs-alpha-22:.22;--cs-alpha-55:.55;--cs-alpha-4:.4;--cs-alpha-04:.04;--cs-alpha-25:.25;--cs-alpha-08:.08;--cs-alpha-6:.6;--cs-alpha-72:.72;--cs-alpha-82:.82;--cs-alpha-75:.75;--cs-alpha-78:.78}
+
+/* Keep motion preferences stronger than the component-specific transition rules. */
+@layer base {
+@media (prefers-reduced-motion: reduce) {
+  .cs-flow.cs-flow .ev, .cs-flow.cs-flow .rewinding .ev,
+  .cs-flow.cs-flow .lbar, .cs-flow.cs-flow .lval,
+  .cs-flow.cs-flow .p95, .cs-flow.cs-flow .target { transition: none !important; }
+}
+}

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures';
 import { selectWorkProject } from '../helpers/portfolio';
 import { variants, notes } from '../../../src/lib/content/second-voice';
 import { originalDraft, sampleFor, type Author, type Strength } from '../../../src/lib/experience/samples';

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures';
 import { recoveredCases } from '../helpers/case-studies';
 import { selectWorkProject } from '../helpers/portfolio';
 
@@ -19,7 +19,9 @@ test('reduced motion shows real posters without decorative video requests', asyn
   await selectWorkProject(page, 'leu');
   const film = page.locator('#work video');
   await expect(film).not.toHaveAttribute('src', /.+/);
-  await expect(page.locator('#work img[src*="poster"]')).toBeVisible();
+  await expect(film).toBeVisible();
+  await expect(film).toHaveAttribute('poster', /leu.*poster/);
+  await expect(film).toHaveJSProperty('paused', true);
   expect(videos).toEqual([]);
 });
 

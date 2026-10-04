@@ -1,5 +1,5 @@
 import { recoveredCases } from '../helpers/case-studies';
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures';
 import { openPortfolioHome, openSecondVoiceStudio, selectWorkProject } from '../helpers/portfolio';
 
 const projects = ['needle', 'second-voice-ai', 'f24', 'leu', 'flow'];
@@ -23,7 +23,9 @@ for (const slug of projects) test(`${slug} exposes its current case-study struct
   const response = await page.goto('/work/' + slug);
   expect(response?.status()).toBe(200);
   if (slug === 'needle') {
-    await expect(page.locator('[data-needle-study] section')).toHaveCount(8);
+    for (const id of ['try', 'engineering', 'images', 'cache', 'rendering', 'product', 'specs']) {
+      await expect(page.locator(`[data-needle-study] #${id}`)).toHaveCount(1);
+    }
     await expect(page.locator('#boundaries')).toContainText('not quantified here');
     await expect(page.getByRole('link', { name: 'All work', exact: true })).toHaveAttribute('href', '/#work');
   } else {
@@ -111,7 +113,7 @@ test('removed VIGIA route is not redirected to Flow', async ({ request }) => {
   expect(response.headers().location).toBeUndefined();
 });
 
-test('Flow film loads, plays silently and restores its poster for reduced motion', async ({ page }) => {
+test('Flow film loads, plays silently and stops when reduced motion is enabled', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await openPortfolioHome(page);
   await selectWorkProject(page, 'flow');
@@ -125,7 +127,7 @@ test('Flow film loads, plays silently and restores its poster for reduced motion
   await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).readyState)).toBeGreaterThanOrEqual(2);
   await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).currentTime)).toBeGreaterThan(0);
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await expect(video).toBeHidden();
-  await expect(page.locator('img[src="/projects/flow/flow-loop-poster-final.jpg"]')).toBeVisible();
+  await expect(video).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Play film', exact: true })).toBeVisible();
   await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).paused)).toBe(true);
 });

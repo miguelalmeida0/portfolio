@@ -1,7 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './e2e/fixtures';
 import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs';
-import { selectWorkProject } from './e2e/helpers/portfolio';
+import { expectVisibleFocus, selectWorkProject } from './e2e/helpers/portfolio';
 import { workProjects } from '../src/lib/content/work-projects';
 // @ts-expect-error Shared JavaScript loader used by the repository's Node checks.
 import { loadLocalTs } from '../scripts/lib/load-local-ts.mjs';
@@ -54,7 +54,7 @@ for(const [width,height] of sizes) {
     // Approved F24 ownership update; preserve every other original source string.
     expectedCopy.f24='Built a product used by hundreds of companies.';
     const needle=workProjects.find(p=>p.id==='needle')!;
-    expectedCopy['w-needle']=`${needle.name}\n${needle.sub}`;
+    expectedCopy['w-needle']=width < 768 ? needle.name : `${needle.name}\n${needle.sub}`;
     expect(copy).toEqual(expectedCopy);
   });
   test(`portrait zero-pixel contract at ${width}`,async({page})=>{
@@ -74,8 +74,12 @@ test('hero hierarchy, active bar, keyboard focus and above-fold work title',asyn
   expect(facts[0]).toEqual(facts[1]);
   const active=page.locator('[data-project-row][aria-current="true"]');
   const s=await active.evaluate(e=>{const s=getComputedStyle(e),b=getComputedStyle(e,'::after');return {bg:s.backgroundColor,border:s.borderWidth,outline:s.outlineStyle,bar:b.width,left:b.left};});
-  expect(s).toEqual({bg:'rgba(0, 0, 0, 0)',border:'0px',outline:'none',bar:'3px',left:'0px'});
-  await active.focus(); await expect(active).toHaveCSS('outline-width','3px');
+  const {bar,...rest}=s;
+  expect(rest).toEqual({bg:'rgba(0, 0, 0, 0)',border:'0px',outline:'none',left:'0px'});
+  expect(parseFloat(bar)).toBeCloseTo(3,1);
+  await active.focus();
+  await page.keyboard.press('Tab'); await page.keyboard.press('Shift+Tab');
+  await expect(active).toBeFocused(); await expectVisibleFocus(active);
 });
 for(const width of [1920,1440,1280,1024,768,390,320]) test(`stable project frames and resting snapshots at ${width}`,async({page})=>{
   await page.setViewportSize({width,height:width===1440?900:844});

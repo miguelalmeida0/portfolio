@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures';
 import { installClipboardStub, openSecondVoiceStudio } from '../helpers/portfolio';
 
 async function chooseAuthor(page: import('@playwright/test').Page, name: string) {

@@ -1,11 +1,11 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures';
 import { openPortfolioHome } from '../helpers/portfolio';
 
 const routes = [
   ['/', /Frontend developer\s*& design engineer\./],
   ['/cv', /Miguel\s*Almeida\./],
   ['/story', /^Story$/],
-  ['/work/needle', /^Needle$/],
+  ['/work/needle', /^From a query to a visible artwork\.$/],
   ['/work/second-voice-ai', /^Choose a literary voice\. See exactly what changes\.$/],
   ['/work/f24', /^From mockup to production system\.$/],
   ['/work/leu', /^From PDF text to learner state\.$/],

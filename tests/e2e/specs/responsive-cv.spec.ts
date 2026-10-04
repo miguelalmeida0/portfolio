@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../fixtures';
 import { openPortfolioHome } from '../helpers/portfolio';
 
 const routes = ['/', '/cv', '/story', '/work/second-voice-ai', '/work/f24', '/work/leu', '/work/flow'];
