@@ -19,14 +19,26 @@ mobile) before the subsequent Needle case-study update on main.
 
 After incorporating the interactive Needle page and its technology-stack
 introduction from production commit `2f4083c897a2286848a9d51552d88954656418b8`,
-the repair candidate again produced zero differing pixels on all 12 controlled
+repair candidate `907aa997bdb2365669cd1950ce2a591e9af51c2d` produced zero differing pixels on all 12 controlled
 comparisons: homepage, Needle, F24, Second Voice, Flow and Leu at 1440px and
 390px. Both sides used the same local Chromium build, decoded images and fonts,
 reduced motion, a dismissed introduction and the initial page state. This is
 source-parity evidence, not a replacement for the hosted cross-browser suite.
+
+The subsequent contrast correction intentionally darkens inactive F24 architecture
+labels and previous-event labels in Flow's case-study timeline. The subdued surfaces and borders use the existing palette;
+diagram geometry is retained. These case-study diagrams are outside the
+homepage screenshot baselines above; their accessibility rules remain enabled.
 
 Baselines are browser, platform and device-scale specific. A screenshot from a
 different local Chromium build must not overwrite a hosted Linux baseline.
 Review missing or changed images together with the independent source-copy,
 geometry and interaction assertions; do not approve snapshots solely to make
 CI pass. Portrait snapshots retain zero-pixel tolerance.
+
+The 30 WebKit desktop/mobile Linux baselines were captured at `907aa99` by
+run `37195070352`, artifacts `browser-evidence-10`, `-12`, `-18` and `-20`.
+Each portrait, hero and project state was visually reviewed before adoption.
+These freeze the existing WebKit presentation, including its viewport-unit
+resolution under desktop CSS zoom. Intro handoff assertions remain separate
+and are not relaxed by accepting resting screenshots.

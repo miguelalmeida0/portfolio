@@ -22,7 +22,14 @@ for (const width of [390, 834, 1024]) test(`inline Story scenes, controls and co
     });
     expect(boxes.sceneBottom).toBeLessThanOrEqual(boxes.controlsTop - 4);
     expect(boxes.sceneTop).toBeGreaterThanOrEqual(boxes.captionBottom + 4);
-    expect(await panel.locator('[data-story-scene]').evaluate(element => element.scrollHeight <= element.clientHeight + 1)).toBe(true);
+    const sceneOverflow = await panel.locator('[data-story-scene]').evaluate(element => ({
+      scene: element.getAttribute('data-story-scene'), scroll: element.scrollHeight, client: element.clientHeight,
+      bounds: element.getBoundingClientRect().toJSON(),
+      children: [...element.querySelectorAll('*')].map(child => ({
+        tag: child.tagName, class: child.className, bounds: child.getBoundingClientRect().toJSON()
+      }))
+    }));
+    expect(sceneOverflow.scroll, JSON.stringify(sceneOverflow)).toBeLessThanOrEqual(sceneOverflow.client + 1);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     if (width === 390) await panel.screenshot({path:`.cache/story-mobile-scene-${i}.png`});
     await section.locator('[data-story-next]').click();

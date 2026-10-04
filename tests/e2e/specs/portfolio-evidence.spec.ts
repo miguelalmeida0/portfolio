@@ -26,8 +26,8 @@ for (const slug of projects) test(`${slug} exposes its current case-study struct
     for (const id of ['try', 'engineering', 'images', 'cache', 'rendering', 'product', 'specs']) {
       await expect(page.locator(`[data-needle-study] #${id}`)).toHaveCount(1);
     }
-    await expect(page.locator('#boundaries')).toContainText('not quantified here');
-    await expect(page.getByRole('link', { name: 'All work', exact: true })).toHaveAttribute('href', '/#work');
+    await expect(page.locator('#specs')).toContainText('not quantified here');
+    await expect(page.getByRole('navigation', { name: 'Next project' }).getByRole('link', { name: 'Second Voice', exact: true })).toHaveAttribute('href', '/work/second-voice');
   } else {
     const study = recoveredCases.find(s => s.slug === slug)!;
     await expect(page.locator('main h1')).toHaveText(study.heading);
@@ -118,9 +118,9 @@ test('Flow film loads, plays silently and stops when reduced motion is enabled',
   await openPortfolioHome(page);
   await selectWorkProject(page, 'flow');
   const video = page.locator('video');
+  await video.scrollIntoViewIfNeeded();
   await expect(video).toHaveAttribute('src', '/projects/flow/flow-loop-web-final.mp4');
   await expect(video).toHaveAttribute('poster', '/projects/flow/flow-loop-poster-final.jpg');
-  await video.scrollIntoViewIfNeeded();
   await expect(video).toHaveAttribute('loop', '');
   await expect(video).toHaveAttribute('playsinline', '');
   await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).muted)).toBe(true);

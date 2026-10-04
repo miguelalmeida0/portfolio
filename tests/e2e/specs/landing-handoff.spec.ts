@@ -29,7 +29,7 @@ async function seek(page: import('@playwright/test').Page, ms: number) {
 }
 
 for (const [width, height] of viewports) {
-  test(`portrait handoff at ${width}x${height}`, async ({ page }) => {
+  test(`portrait handoff at ${width}x${height}`, async ({ page }, testInfo) => {
     await page.setViewportSize({ width, height });
     await holdIntro(page);
     const initial = (await page.locator('[data-landing-target]').boundingBox())!;
@@ -45,6 +45,8 @@ for (const [width, height] of viewports) {
     await expect(page.locator('[data-pixel-intro]')).toHaveCount(0);
     await expect(page.locator('[data-landing-target] img')).toHaveCSS('visibility', 'visible');
     const after = await page.screenshot();
+    await testInfo.attach('portrait-before-handoff', { body: before, contentType: 'image/png' });
+    await testInfo.attach('portrait-after-handoff', { body: after, contentType: 'image/png' });
     const clip = { left: Math.round(initial.x), top: Math.round(initial.y), width: Math.round(initial.width), height: Math.round(initial.height) };
     const a = await sharp(before).extract(clip).ensureAlpha().raw().toBuffer();
     const b = await sharp(after).extract(clip).ensureAlpha().raw().toBuffer();
@@ -52,7 +54,7 @@ for (const [width, height] of viewports) {
     for (let i = 0; i < a.length; i++) { const delta = Math.abs(a[i] - b[i]); sum += delta; maximum = Math.max(maximum, delta); }
     // Fixed-layer versus page-layer alpha rasterization can differ by a few
     // edge values. This bound rejects a shifted image or a visible material cut.
-    expect(sum / a.length).toBeLessThan(.02); // < 0.008% of the channel range.
+    expect(sum / a.length, JSON.stringify({ initial, final, mean: sum / a.length, maximum })).toBeLessThan(.02); // < 0.008% of the channel range.
     expect(maximum).toBeLessThanOrEqual(16);
   });
 }
