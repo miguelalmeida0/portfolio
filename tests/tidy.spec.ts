@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs';
-import sharp from 'sharp';
+import { selectWorkProject } from './e2e/helpers/portfolio';
+import { workProjects } from '../src/lib/content/work-projects';
 // @ts-expect-error Shared JavaScript loader used by the repository's Node checks.
 import { loadLocalTs } from '../scripts/lib/load-local-ts.mjs';
 
@@ -18,6 +19,8 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
   await page.evaluate(()=>document.fonts.ready);
+  await selectWorkProject(page, 'second-voice');
+  await page.evaluate(() => scrollTo(0, 0));
 });
 
 for (const [width,height] of [...sizes,[768,1024],[320,844]]) {
@@ -48,24 +51,17 @@ for(const [width,height] of sizes) {
     const expectedCopy=JSON.parse(fs.readFileSync(`baseline/${width}-source-texts.json`,'utf8'));
     // Approved F24 ownership update; preserve every other original source string.
     expectedCopy.f24='Built a product used by thousands of companies.';
+    const needle=workProjects.find(p=>p.id==='needle')!;
+    expectedCopy['w-needle']=`${needle.name}\n${needle.sub}`;
     expect(copy).toEqual(expectedCopy);
   });
   test(`portrait zero-pixel contract at ${width}`,async({page})=>{
     await page.setViewportSize({width,height});
     await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
     await page.locator('.portrait').evaluate((img:HTMLImageElement)=>img.decode());
-    // Chromium's scaled-image raster varies with the screen origin. Compare the
-    // frozen card at its baseline origin; its real geometry is asserted above.
-    const box=JSON.parse(fs.readFileSync(`baseline/${width}.json`,'utf8')).find((b:any)=>b.sel==='[data-portrait-card]');
-    await page.locator('[data-portrait-card]').evaluate((e,box)=>{
-      const r=e.getBoundingClientRect();
-      (e as HTMLElement).style.transform=`translate(${box.left-r.left}px,${box.top-r.top}px)`;
-    },box);
-    const actual=await sharp(await page.locator('[data-portrait-card]').screenshot({animations:'disabled'})).raw().toBuffer({resolveWithObject:true});
-    const baseline=await sharp(`baseline/${width}-portrait.png`).raw().toBuffer({resolveWithObject:true});
-    expect(actual.info).toEqual(baseline.info);
-    let changed=0; for(let i=0;i<actual.data.length;i+=actual.info.channels) if(actual.data.subarray(i,i+actual.info.channels).compare(baseline.data.subarray(i,i+actual.info.channels))) changed++;
-    expect(changed).toBe(0);
+    // Golden images are specific to browser, operating system and device scale.
+    // The geometry and source-copy contracts above remain independent of rasterization.
+    await expect(page.locator('[data-portrait-card]')).toHaveScreenshot(`portrait-${width}.png`, { animations:'disabled', maxDiffPixels:0 });
   });
 }
 test('hero hierarchy, active bar, keyboard focus and above-fold work title',async({page})=>{
@@ -83,8 +79,8 @@ for(const width of [1920,1440,1280,1024,768,390,320]) test(`stable project frame
   await page.setViewportSize({width,height:width===1440?900:844});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   const frames=[];
-  for(let i=0;i<4;i++) {
-    await page.locator('[data-project-row]').nth(i).click();
+  for(const id of ['second-voice','f24','flow','leu'] as const) {
+    await selectWorkProject(page, id);
     await page.waitForTimeout(850);
     frames.push(await page.locator('[data-stage-frame]').evaluate(e=>({w:e.getBoundingClientRect().width,h:e.getBoundingClientRect().height,top:e.getBoundingClientRect().top+scrollY,footer:document.querySelector('footer')!.getBoundingClientRect().top+scrollY})));
     const captionFits=await page.locator('[data-stage-caption]').evaluate(el=>{
@@ -94,17 +90,18 @@ for(const width of [1920,1440,1280,1024,768,390,320]) test(`stable project frame
     expect(captionFits).toBe(true);
     if(width===1440||width===390) {
       await page.evaluate(()=>scrollTo(0,0));
-      await expect(page).toHaveScreenshot(`tidy-${width}-${i}.png`,{fullPage:true,animations:'disabled',maxDiffPixelRatio:.002});
+      await expect.soft(page).toHaveScreenshot(`tidy-${width}-${id}.png`,{fullPage:true,animations:'disabled',maxDiffPixelRatio:.002});
     }
   }
   for(const frame of frames) expect(frame).toEqual(frames[0]);
 });
 for(const reducedMotion of ['reduce','no-preference'] as const) test(`both film controls pause and resume with ${reducedMotion}`,async({page})=>{
   await page.emulateMedia({reducedMotion});
-  for(const [index,name] of [[2,'film'],[3,'Leu film']] as const) {
-    await page.locator('[data-project-row]').nth(index).click();
+  for(const [id,name] of [['flow','film'],['leu','Leu film']] as const) {
+    await selectWorkProject(page, id);
     const media=page.locator('[data-stage-frame] video');
     await expect(media).toHaveCount(1);
+    await media.scrollIntoViewIfNeeded();
     if(reducedMotion==='reduce') {
       await expect(media).toHaveJSProperty('paused',true);
       await page.locator('[data-stage-caption]').getByRole('button',{name:`Play ${name}`,exact:true}).click();
@@ -120,11 +117,12 @@ for(const reducedMotion of ['reduce','no-preference'] as const) test(`both film 
 });
 test('all work themes pass axe and Leu caption control pauses',async({page})=>{
   await page.setViewportSize({width:1440,height:900});
-  for(let i=0;i<4;i++) {
-    await page.locator('[data-project-row]').nth(i).click(); await page.waitForTimeout(850);
+  for(const id of ['second-voice','f24','flow','leu'] as const) {
+    await selectWorkProject(page, id); await page.waitForTimeout(850);
     expect((await new AxeBuilder({page}).analyze()).violations.map(v=>v.id)).toEqual([]);
   }
   await expect(page.locator('[data-stage-frame] video')).toHaveCount(1);
+  await page.locator('video').scrollIntoViewIfNeeded();
   const button=page.locator('[data-stage-caption]').getByRole('button',{name:'Play Leu film'});
   await button.click(); await expect(page.locator('video')).toHaveJSProperty('paused',false);
   await page.getByRole('button',{name:'Pause Leu film'}).click(); await expect(page.locator('video')).toHaveJSProperty('paused',true);

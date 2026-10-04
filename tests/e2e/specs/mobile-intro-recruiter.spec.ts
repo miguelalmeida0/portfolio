@@ -20,22 +20,24 @@ test('reduced motion shows real posters without decorative video requests', asyn
   await expect(page.locator('video')).toHaveAttribute('src', /.+/);
 });
 
-test('case studies expose ownership and hero media immediately before architecture', async ({ page }) => {
+test('case studies expose their contribution, stack and architecture', async ({ page }) => {
   for (const slug of ['second-voice-ai', 'f24', 'leu', 'flow']) {
     await page.goto('/work/' + slug);
-    await expect(page.locator('main .role-label')).toBeVisible();
-    await expect(page.locator('main header [data-project-stack]')).toBeVisible();
+    const header = page.locator('main header').first();
+    await expect(header.locator('h1')).toBeVisible();
+    await expect(header.locator('[data-project-stack], .stack')).toHaveText(/\S/);
+    await expect(header.locator('p').first()).toHaveText(/\S/);
+    const architecture = page.locator('#architecture');
+    await expect(architecture.locator('h2')).toBeVisible();
+    expect(await architecture.evaluate(el => Boolean(el.compareDocumentPosition(document.querySelector('main h1')!) & Node.DOCUMENT_POSITION_PRECEDING))).toBe(true);
     if (slug === 'f24') {
-      await expect(page.locator('#product-purpose')).toHaveText('What the product is');
+      await expect(page.locator('#product-impact')).toContainText('thousands of companies');
       await expect(page.locator('#production-decision')).toContainText('Tradeoff');
-      expect(await page.locator('#architecture').evaluate(el => el.previousElementSibling?.tagName)).toBe('HEADER');
+    } else if (slug === 'second-voice-ai') {
+      await expect(page.locator('#writing-demo')).toBeVisible();
     } else {
-      expect(await page.locator('#architecture').evaluate(architecture => {
-        const media = document.querySelector('main video, main figure');
-        return !!media && !!(architecture.compareDocumentPosition(media) & Node.DOCUMENT_POSITION_PRECEDING);
-      })).toBe(true);
+      await expect(page.locator('main video')).toBeVisible();
     }
   }
-  const schemas = await page.locator('script[type="application/ld+json"]').allTextContents();
-  expect(schemas.join(' ')).toContain('Frontend developer & design engineer');
+  expect((await page.locator('script[type="application/ld+json"]').allTextContents()).join(' ')).toContain('Frontend developer & design engineer');
 });

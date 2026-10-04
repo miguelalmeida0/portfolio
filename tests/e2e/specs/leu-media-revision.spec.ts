@@ -29,6 +29,9 @@ test('Leu starts promptly, has product motion in the first second, and shares ex
     document.querySelector<HTMLButtonElement>('[data-project-row][data-ask-id="w-leu"]')!.click();
   });
   const film = page.locator('.leu-flow-loop video');
+  await film.scrollIntoViewIfNeeded();
+  // Startup is measured once the film is visible; offscreen media intentionally pauses.
+  await page.evaluate(() => { (window as any).leuSelectedAt = performance.now(); });
   const firstFrameMs = await film.evaluate(video => new Promise<number>(resolve => {
     (video as HTMLVideoElement).requestVideoFrameCallback(() => resolve(performance.now() - (window as any).leuSelectedAt));
   }));
@@ -103,6 +106,7 @@ test('Leu starts promptly, has product motion in the first second, and shares ex
   await page.goBack();
   await expect(page.locator('.project-index button')).toHaveCount(5);
   await page.getByRole('button', { name: /^Leu/ }).click();
+  await page.locator('.leu-flow-loop video').scrollIntoViewIfNeeded();
   await expect(page.locator('.leu-flow-loop video')).toHaveJSProperty('paused', false);
 });
 
@@ -144,6 +148,7 @@ test('reduced motion preserves the poster, explicit Play works, and inactive med
   await expect(film).toHaveAttribute('poster', leuMedia.posterFallback);
   await expect(film).toHaveJSProperty('paused', true);
   expect(movies).toEqual([]);
+  await film.scrollIntoViewIfNeeded();
   await page.getByRole('button', { name: 'Play Leu film', exact: true }).click();
   await expect(film).toHaveJSProperty('paused', false);
   await expect.poll(() => movies.length).toBeGreaterThan(0);
@@ -176,6 +181,7 @@ test('a direct reduced-motion case-study visit can play and pause after hydratio
   const film = page.locator('article .leu-flow-loop video');
   await film.scrollIntoViewIfNeeded();
   await expect(film).not.toHaveAttribute('src');
+  await film.scrollIntoViewIfNeeded();
   await page.getByRole('button', { name: 'Play Leu film', exact: true }).click();
   await expect.poll(() => film.evaluate(video => (video as HTMLVideoElement).readyState)).toBeGreaterThanOrEqual(2);
   await expect(film).toHaveJSProperty('paused', false);
@@ -193,7 +199,7 @@ test('all projects retain shared geometry and Second Voice controls remain indep
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   }
   sizes.forEach(size => { expect(size.width).toBeCloseTo(sizes[0].width, 1); expect(size.height).toBeCloseTo(sizes[0].height, 1); });
-  expect(sizes[0].height).toBe(page.viewportSize()!.width === 390 ? 780 : 560);
+  expect(sizes[0].height).toBe(page.viewportSize()!.width === 390 ? 976 : 560);
   await page.getByRole('button', { name: /^Second Voice AI/ }).click();
   expect(await page.locator('.authors').evaluate(element => element.closest('a'))).toBeNull();
   await page.getByRole('tab', { name: 'King', exact: true }).click();

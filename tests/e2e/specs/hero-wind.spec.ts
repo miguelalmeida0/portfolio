@@ -61,6 +61,11 @@ for (const [width, height] of [[1440,900],[1366,768],[1280,800],[1024,768],[834,
 
 test('crossing glyph boundaries stays bounded without changing headline layout', async ({ page }) => {
   const heading = page.locator('h1');
+  if (!(await page.evaluate(() => matchMedia('(pointer: fine)').matches))) {
+    await expect(page.locator('[data-glyph]')).toHaveCount(0);
+    await expect(heading).toHaveAccessibleName('Frontend developer & design engineer.');
+    return;
+  }
   await expect(page.locator('[data-glyph]')).not.toHaveCount(0);
   const before = (await heading.boundingBox())!;
   const errors: string[] = [];
@@ -83,7 +88,7 @@ test('keyboard order reaches and activates View CV', async ({ page, browserName 
   test.skip(!(await page.evaluate(() => matchMedia('(pointer: fine)').matches)), 'Desktop tab order');
   for (const name of ['Skip to content', 'Miguel Almeida, Berlin — home', 'Work', 'Story', 'CV', 'Contact', 'Ask MiguelLLM', 'View CV']) {
     // macOS WebKit uses Option-Tab to include links in keyboard navigation.
-    await page.keyboard.press(browserName === 'webkit' ? 'Alt+Tab' : 'Tab');
+    await page.keyboard.press(browserName === 'webkit' && process.platform === 'darwin' ? 'Alt+Tab' : 'Tab');
     await expect(name === 'Ask MiguelLLM' ? page.getByRole('button', { name, exact: true }) : name === 'View CV' ? page.locator('.wind-hero').getByRole('link', { name, exact: true }) : page.getByRole('link', { name, exact: true })).toBeFocused();
   }
   await expect(page.locator('.primary')).toHaveCSS('outline-width', '3px');

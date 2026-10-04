@@ -1,11 +1,11 @@
 import { expect, test, type Page, type Locator } from '@playwright/test';
-import { openPortfolioHome } from '../helpers/portfolio';
+import { openPortfolioHome, openSecondVoiceStudio } from '../helpers/portfolio';
 
 const routes = ['/', '/story', '/cv', '/work/second-voice-ai', '/work/f24', '/work/flow', '/work/leu', '/out/linkedin'];
 
 for (const width of [1440, 390]) {
   for (const entry of ['/#top', '/story', '/work/flow']) {
-    test(`header stays in the same tab from ${entry} at ${width}px`, async ({ page, context }) => {
+    test(`header stays in the same tab from ${entry} at ${width}px`, async ({ page, context, baseURL }) => {
       await page.setViewportSize({ width, height: 844 });
       const errors: string[] = [];
       page.on('pageerror', error => errors.push(error.message));
@@ -16,7 +16,7 @@ for (const width of [1440, 390]) {
         const link = nav.getByRole('link', { name: label, exact: true });
         await expect(link).not.toHaveAttribute('target', '_blank');
         await link.click();
-        await expect(page).toHaveURL('http://localhost:4173' + path);
+        await expect(page).toHaveURL(new URL(path, baseURL).href);
         await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
         await expect(page.locator('#portfolio-content')).toHaveJSProperty('inert', false);
         await expect(page.locator('main h1')).toBeVisible();
@@ -25,9 +25,9 @@ for (const width of [1440, 390]) {
         expect(context.pages()).toHaveLength(1);
       }
       await page.goBack();
-      await expect(page).toHaveURL('http://localhost:4173/#work');
+      await expect(page).toHaveURL(new URL('/#work', baseURL).href);
       await page.goForward();
-      await expect(page).toHaveURL('http://localhost:4173/#contact');
+      await expect(page).toHaveURL(new URL('/#contact', baseURL).href);
       expect(context.pages()).toHaveLength(1);
       expect(errors).toEqual([]);
     });
@@ -90,18 +90,18 @@ test('live app and contact profiles open a new tab while the portfolio remains o
     await link.click();
     const popup = await next;
     await popup.waitForLoadState();
-    expect(popup.url()).toBe(href);
+    expect(popup.url()).toBe(new URL(href!).href);
     expect(page.url()).toBe(original);
     expect(await popup.evaluate(() => window.opener === null)).toBe(true);
     await popup.close();
   }
 });
 
-test('destination targets exist in server HTML before JavaScript runs', async ({ browser }) => {
+test('destination targets exist in server HTML before JavaScript runs', async ({ browser, baseURL }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   for (const route of routes) {
-    const response = await page.goto('http://localhost:4173' + route);
+    const response = await page.goto(new URL(route, baseURL).href);
     expect(response?.status(), route).toBe(200);
     await auditLinks(page);
   }
@@ -136,7 +136,7 @@ for (const width of [1440, 390]) test(`all live routes and dynamically selected 
 });
 
 test('case studies stay in this tab and external evidence opens separately', async ({ page, context }) => {
-  await openPortfolioHome(page);
+  await openSecondVoiceStudio(page);
   await openDestination(page, page.locator('#work .links').getByRole('link', { name: 'Case study', exact: true }), '/work/second-voice-ai');
   await openPortfolioHome(page);
   await page.locator('.project-index button').filter({ hasText: 'Leu' }).click();
@@ -154,7 +154,7 @@ test('case studies stay in this tab and external evidence opens separately', asy
   await evidence.click();
   const popup = await next;
   await popup.waitForLoadState();
-  expect(popup.url()).toBe(href);
+  expect(popup.url()).toBe(new URL(href!).href);
   expect(page.url()).toBe(original);
   expect(await popup.evaluate(() => window.opener === null)).toBe(true);
   await popup.close();
@@ -199,5 +199,5 @@ test('Mirror AI route, assets, sitemap and next-project link are removed', async
   expect(await (await request.get('/sitemap.xml')).text()).not.toContain('mirror-ai');
   await page.goto('/work/leu');
   await expect(page.locator('a[href*="mirror"]')).toHaveCount(0);
-  await expect(page.locator('a').filter({ hasText: 'Next case study' })).toHaveAttribute('href', '/work/second-voice-ai');
+  await expect(page.locator('a').filter({ hasText: 'Next case study' })).toHaveAttribute('href', '/work/needle');
 });

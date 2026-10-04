@@ -254,6 +254,19 @@
       ]
     },
     {
+      "id": "w-needle",
+      "label": "Needle",
+      "group": 4,
+      "question": "What did Miguel build in Needle?",
+      "steps": [
+        {
+          "lead": "His flagship project:",
+          "source": "w-needle",
+          "quote": "Needle"
+        }
+      ]
+    },
+    {
       "id": "w-sv",
       "label": "Second Voice AI",
       "group": 4,
@@ -430,6 +443,7 @@
     ],
     [
       "selwork",
+      "w-needle",
       "w-sv",
       "w-f24"
     ],

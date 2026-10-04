@@ -19,7 +19,7 @@ const S = PROD ? {
   progress: '[data-left]', ringCount: '[data-pct]', ringDone: '[data-ringw].done', panel: '[data-l50]', panelDone: '[data-l50].complete',
   scene: (id: string) => `[data-sn="${id}"]`, sceneOn: '[data-sn].on', action: (i: number) => `[data-ctrls] [data-a="${i}"]`, caption: '[data-cap]', copy: '[data-copy]',
 };
-const URL_ = process.env.STORY_URL ?? 'http://localhost:4173/story';
+const URL_ = process.env.STORY_URL ?? new URL('/story', process.env.PLAYWRIGHT_BASE_URL ?? 'http://127.0.0.1:4173').href;
 const Q = data.questions, N = Q.length;
 
 async function open(page: Page) { await page.goto(URL_); await page.mouse.move(1500, 500); await page.waitForTimeout(600); }

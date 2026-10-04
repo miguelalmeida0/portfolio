@@ -4,7 +4,8 @@ import { openPortfolioHome } from '../helpers/portfolio';
 const routes = [
   ['/', /Frontend developer\s*& design engineer\./],
   ['/cv', /Miguel\s*Almeida\./],
-  ['/story', /I started in UX\.\s*Then built the frontend\./],
+  ['/story', /^Story$/],
+  ['/work/needle', /^Needle$/],
   ['/work/second-voice-ai', /^Second Voice$/],
   ['/work/f24', /^F24$/],
   ['/work/leu', /^Leu: from PDF text\s*to learner state\.$/],
@@ -28,7 +29,7 @@ for (const [path, heading] of routes) {
       await openPortfolioHome(page);
       const isProject = path.startsWith('/work/');
       if (isProject) {
-        const names: Record<string, string> = { 'second-voice-ai': 'Second Voice AI', f24: 'F24', flow: 'Flow', leu: 'Leu' };
+        const names: Record<string, string> = { needle: 'Needle', 'second-voice-ai': 'Second Voice AI', f24: 'F24', flow: 'Flow', leu: 'Leu' };
         await page.locator('.project-index button').filter({ hasText: names[path.split('/').at(-1)!] }).click();
       }
       const link = isProject
@@ -40,21 +41,18 @@ for (const [path, heading] of routes) {
         await page.getByRole('button', { name: 'Menu', exact: true }).click();
         destinationLink = page.locator(`#mobile-navigation a[href="${path}"]`);
       }
-      const popup = page.waitForEvent('popup');
+      await expect(destinationLink).not.toHaveAttribute('target', '_blank');
       await destinationLink.click();
-      const destination = await popup;
-      destination.on('pageerror', error => errors.push(error.message));
-      await expect(destination.locator('main h1')).toHaveText(heading);
-      await expect(destination.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+      await expect(page).toHaveURL(new RegExp(`${path}$`));
+      await expect(page.locator('main h1')).toHaveText(heading);
+      await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+      await page.goBack();
       await expect(page.locator('main h1')).toHaveText(routes[0][1]);
       await expect(page.locator('[data-pixel-intro]')).toBeHidden();
-      await destination.goto(path === '/story' ? '/cv' : '/story');
-      await destination.goBack();
-      await expect(destination.locator('main h1')).toHaveText(heading);
-      await destination.goForward();
-      await expect(destination).toHaveURL(path === '/story' ? /\/cv$/ : /\/story$/);
-      await expect(destination.locator('[data-route-veil]')).toBeHidden();
-      await destination.close();
+      await page.goForward();
+      await expect(page).toHaveURL(new RegExp(`${path}$`));
+      await expect(page.locator('main h1')).toHaveText(heading);
+      await expect(page.locator('[data-route-veil]')).toBeHidden();
     }
     expect(errors).toEqual([]);
   });

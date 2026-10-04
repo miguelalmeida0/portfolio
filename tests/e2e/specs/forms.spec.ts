@@ -52,7 +52,7 @@ test('mobile studio exposes the source comparison and keeps all controls within 
   await expect(result).toBeVisible();
   await expect(page.locator('.draft')).toContainText('Every winter, the harbor lights went dark.');
   const surface = await page.locator('.frame').boundingBox();
-  const submit = await page.getByRole('button', { name: 'Show Tolkien example' }).boundingBox();
+  const submit = await page.getByRole('button', { name: 'Regenerate', exact: true }).boundingBox();
   expect(submit!.y + submit!.height).toBeLessThan(surface!.y + surface!.height);
   expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
 });

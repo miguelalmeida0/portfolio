@@ -47,6 +47,18 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium firefox webkit
       - run: mkdir -p .cache/tmp && TMPDIR=$PWD/.cache/tmp npx playwright test --shard=${{ matrix.shard }}/20
+      - name: Upload compact failure evidence
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: browser-evidence-${{ matrix.shard }}
+          path: |
+            test-results/**/*.png
+            test-results/**/error-context.md
+            test-results/e2e-results.json
+            tests/**/*-snapshots/*linux.png
+          if-no-files-found: ignore
+          retention-days: 3
       - name: Upload browser test results
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v5
@@ -59,7 +71,7 @@ jobs:
           retention-days: 3
 
   validate:
-    if: ${{ always() }}
+    if: ${{ always() && !cancelled() }}
     needs: [checks, browser-tests]
     runs-on: ubuntu-latest
     steps:

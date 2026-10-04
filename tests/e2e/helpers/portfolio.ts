@@ -17,9 +17,18 @@ export async function openPortfolioHome(page: Page) {
 /** Select the prepared Second Voice pair from the work index. */
 export async function openSecondVoiceStudio(page: Page) {
   await openPortfolioHome(page);
-  await page.locator('[data-project-row][data-ask-id="w-sv"]').click();
-  await expect(page.locator('#work')).toHaveAttribute('data-project', 'second-voice');
+  await selectWorkProject(page, 'second-voice');
   await expect(page.getByRole('tabpanel')).toBeVisible();
+}
+
+/** Select a mounted stage by identity, independent of the current project order. */
+export async function selectWorkProject(page: Page, id: 'needle' | 'second-voice' | 'f24' | 'flow' | 'leu') {
+  const area = id === 'second-voice' ? 'sv' : id;
+  await page.locator(`[data-project-row][data-ask-id="w-${area}"]`).click();
+  await expect(page.locator('#work')).toHaveAttribute('data-project', id);
+  const stage = page.locator(`#work .stage[data-project="${id}"]`);
+  await expect(stage).toBeVisible();
+  return stage;
 }
 
 export async function installClipboardStub(page: Page) {

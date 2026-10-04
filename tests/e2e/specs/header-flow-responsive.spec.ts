@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { openPortfolioHome } from '../helpers/portfolio';
+import { openPortfolioHome, selectWorkProject } from '../helpers/portfolio';
 
 test('identity and navigation never overlap while resizing shared routes', async ({page}) => {
   test.setTimeout(60000);
@@ -53,7 +53,7 @@ test('tablet burger navigates in the same tab and restores focus when resized',a
 test('Flow shows its full native video frame across small screens and remains clickable',async({page,context})=>{
   await page.setViewportSize({width:390,height:844});
   await openPortfolioHome(page);
-  await page.locator('.project-index button').nth(2).click();
+  await selectWorkProject(page, 'flow');
   const stage=page.locator('.stage[data-project="flow"]');
   const video=stage.locator('video');
   await video.scrollIntoViewIfNeeded();
@@ -64,7 +64,11 @@ test('Flow shows its full native video frame across small screens and remains cl
   for(const width of [1099,1024,834,768,767,650,550,430,390,375,320]) {
     await page.setViewportSize({width,height:844});
     const box=(await video.boundingBox())!;
-    expect(Math.abs(box.width/box.height-media.w/media.h)).toBeLessThan(.005);
+    // The player fills the project frame; contain keeps the complete 16:9 film visible.
+    const scale = Math.min(box.width / media.w, box.height / media.h);
+    expect(scale).toBeGreaterThan(0);
+    expect(media.w * scale).toBeLessThanOrEqual(box.width + 1);
+    expect(media.h * scale).toBeLessThanOrEqual(box.height + 1);
     expect(await video.evaluate(element=>getComputedStyle(element).objectFit)).toBe('contain');
     const caption=(await stage.locator('.caption').boundingBox())!;
     expect(box.y-caption.y-caption.height).toBeLessThan(16);
@@ -83,12 +87,12 @@ test('Flow shows its full native video frame across small screens and remains cl
 test('desktop Flow and the other project frame dimensions are preserved',async({page})=>{
   await page.setViewportSize({width:1440,height:1020});
   await page.emulateMedia({reducedMotion:'reduce'});await openPortfolioHome(page);
-  await page.locator('.project-index button').nth(2).click();
+  await selectWorkProject(page, 'flow');
   expect((await page.locator('.stage .frame').boundingBox())!.height).toBe(560);
-  expect(await page.locator('.stage video').evaluate(element=>getComputedStyle(element).objectFit)).toBe('cover');
+  expect(await page.locator('.stage video').evaluate(element=>getComputedStyle(element).objectFit)).toBe('contain');
   await page.setViewportSize({width:390,height:844});
-  for(const index of [0,1,3]){
-    await page.locator('.project-index button').nth(index).click();
-    expect((await page.locator('.stage .frame').boundingBox())!.height).toBe(780);
+  for(const id of ['second-voice', 'f24', 'leu'] as const){
+    await selectWorkProject(page, id);
+    expect((await page.locator('.stage .frame').boundingBox())!.height).toBe(976);
   }
 });

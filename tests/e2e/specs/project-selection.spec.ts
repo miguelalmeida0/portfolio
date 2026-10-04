@@ -35,6 +35,8 @@ test('CV PDF and both footer resume links open separately', async ({ page, conte
   await context.route('**/portfolio.pdf', route => route.fulfill({ contentType: 'text/html', body: '<h1>PDF destination</h1>' }));
   await page.goto('/cv');
   for (const selector of ['.cv-summary a[href="/portfolio.pdf"]', '[data-dep="3"]', '[data-stop="3"]']) {
+    // The desktop board and mobile stop list are alternate responsive presentations.
+    await page.setViewportSize({ width: selector.startsWith('[data-stop') ? 390 : 1440, height: 1000 });
     const original = page.url();
     const link = page.locator(selector);
     await expect(link).not.toHaveAttribute('download');
