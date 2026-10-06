@@ -15,7 +15,7 @@ for (const [width, height] of sizes) for (const reduced of [false, true]) {
     await expect(picker).toBeEnabled();
     await expect(page.locator('.story-panel.inline')).toHaveCount(width < 1100 ? 8 : 0);
     const overflow = () => page.evaluate(() => document.documentElement.scrollWidth > innerWidth);
-    expect(await overflow()).toBe(false);
+    await expect.poll(overflow).toBe(false);
     await page.screenshot({ path: `artifacts/portfolio-corrections/story/${width}-${height}-${reduced}-start.png` });
 
     // Both input paths scroll the document, including over a visual scene.
@@ -96,10 +96,10 @@ for (const [width, height] of sizes) for (const reduced of [false, true]) {
     await page.goBack();
     await expect(page).toHaveURL(/\/story(?:#contact)?$/);
     await expect(picker).toBeEnabled();
-    expect(await overflow()).toBe(false);
+    await expect.poll(overflow).toBe(false);
     await page.setViewportSize({ width: width < 1100 ? 1280 : 390, height: 844 });
     await expect(page.locator('.story-panel.inline')).toHaveCount(width < 1100 ? 0 : 8);
-    expect(await overflow()).toBe(false);
+    await expect.poll(overflow).toBe(false);
     expect(errors).toEqual([]);
     await context.close();
   });
