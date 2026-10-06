@@ -54,6 +54,7 @@
 
   afterNavigate(() => syncScrollPosition());
   onMount(() => {
+    if ($page.url.pathname === '/cv/pdf') return;
     window.addEventListener('miguel-llm:open', openGuide);
     const controller = createAskController();
     askController.set(controller);
@@ -92,6 +93,9 @@
   {@html `<script type="application/ld+json">${personStructuredData}</script>`}
 </svelte:head>
 
+{#if $page.url.pathname === '/cv/pdf'}
+  <slot />
+{:else}
 {#if $page.url.pathname === '/' && introAvailable}<PixelIntroduction />{/if}
 <IntroWelcome />
 <!-- Keep guide isolation independent of the landing's inert lifecycle. -->
@@ -111,6 +115,7 @@
 <!-- Root sibling: never inherits a page/header transform or stacking context. -->
 <div bind:this={routeVeil} data-route-veil data-phase={$mobileState} hidden aria-hidden="true" class="route-veil no-print"></div>
 <p role="status" class="sr-only">{$navigationError}</p>
+{/if}
 
 <style>
   .route-veil {

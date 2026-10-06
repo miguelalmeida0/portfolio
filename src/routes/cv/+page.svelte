@@ -15,7 +15,7 @@
     <div class="profile-surface profile-primary cv-intro"><p class="profile-meta">Experience / Berlin, Germany</p><h1 class="cv-name">Miguel Almeida.</h1><p class="cv-role" data-ask-id="role">Frontend developer<br />&amp; design engineer.</p><p class="cv-stack" data-ask-id="stack"><span>JavaScript · React</span><span class="stack-divider"> · </span><span>Svelte · TypeScript</span></p></div>
     <div class="profile-surface profile-support cv-summary">
       <p class="profile-lead" data-ask-id="f24">Four years at F24: original Svelte frontend through production, then continued delivery in React.</p>
-      <a href="/portfolio.pdf" class="profile-button" {...destinationLink("/portfolio.pdf")}><ArrowUpRight size={18} aria-hidden="true" /> Open CV PDF</a>
+      <a href="/cv/pdf" class="profile-button" {...destinationLink("/cv/pdf")}><ArrowUpRight size={18} aria-hidden="true" /> Open CV PDF</a>
       <a href={'mailto:'+site.email} class="profile-link cv-email" {...destinationLink('mailto:'+site.email)}>{site.email}</a>
     </div>
   </header>

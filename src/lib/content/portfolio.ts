@@ -36,7 +36,7 @@ export const portfolio: PortfolioContent = {
     },
     downloadCta: {
       label: 'Download PDF',
-      href: '/portfolio.pdf'
+      href: '/cv/pdf'
     },
     stats: [
       {

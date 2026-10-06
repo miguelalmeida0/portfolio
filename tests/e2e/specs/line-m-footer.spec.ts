@@ -50,15 +50,15 @@ for(const [i,url] of [[1,'https://www.linkedin.com/in/miguelalmeida1/'],[2,'http
 }
 test('resume opens in a new tab', async ({ page, context }) => {
   const link = page.locator(stop(3));
-  await expect(link).toHaveAttribute('href', '/portfolio.pdf');
+  await expect(link).toHaveAttribute('href', '/cv/pdf');
   await expect(link).toHaveAttribute('target', '_blank');
   // Verify navigation independently of the browser PDF viewer.
-  await context.route('**/portfolio.pdf', route => route.fulfill({ contentType: 'text/html', body: '<h1>Resume PDF destination</h1>' }));
+  await context.route('**/cv/pdf', route => route.fulfill({ contentType: 'text/html', body: '<h1>Resume PDF destination</h1>' }));
   const original = page.url();
   const opened = page.waitForEvent('popup');
   await link.click();
   const popup = await opened;
-  await expect(popup).toHaveURL(/\/portfolio.pdf$/);
+  await expect(popup).toHaveURL(/\/cv\/pdf$/);
   expect(page.url()).toBe(original);
   await popup.close();
 });

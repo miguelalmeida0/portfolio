@@ -23,3 +23,10 @@ test('resume PDFs open in a new tab, including direct and canonical URLs', () =>
     assert.equal(destinationLink(href).rel, 'noopener noreferrer');
   }
 });
+test('the CV reader opens separately while ordinary CV navigation stays in this tab', () => {
+  for (const href of ['/cv/pdf', '/cv/pdf#page=1', 'https://miguelalmeida.is-a.dev/cv/pdf']) {
+    assert.equal(destinationLink(href).target, '_blank');
+    assert.equal(destinationLink(href).rel, 'noopener noreferrer');
+  }
+  assert.equal(destinationLink('/cv').target, undefined);
+});
