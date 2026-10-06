@@ -26,8 +26,10 @@ try {
     for(const slug of ['f24','second-voice','needle','leu','flow']) {
       await page.goto(base+'/work/'+slug);await page.waitForTimeout(800);
       const next=page.getByRole('navigation',{name:'Next project',exact:true}).getByRole('link');
-      await next.scrollIntoViewIfNeeded();const y=await page.evaluate(()=>scrollY);
+      await next.scrollIntoViewIfNeeded();await page.waitForTimeout(800);
+      await page.evaluate(()=>document.addEventListener('click',()=>{window.__departureY=scrollY;},{once:true,capture:true}));
       await next.click();await page.waitForTimeout(800);
+      const y=await page.evaluate(()=>window.__departureY);
       assert.ok(await page.evaluate(()=>scrollY<2));
       const frames=await page.evaluate(()=>window.__routeFrames);
       assert.ok(!frames.some(f=>f.name.includes('project-identity')),'title must never fly');
@@ -38,7 +40,8 @@ try {
         assert.equal(fade.frames[0].opacity,'0');assert.equal(fade.frames.at(-1).opacity,'1');
       } else assert.equal(frames.length,0);
       await page.goBack();await page.waitForTimeout(800);
-      assert.ok(Math.abs(await page.evaluate(()=>scrollY)-y)<5);
+      const restored=await page.evaluate(()=>scrollY);
+      assert.ok(Math.abs(restored-y)<5,`${width} ${reducedMotion} ${slug}: history ${y} -> ${restored}`);
       results.push({width,reducedMotion,slug,animations:[...new Set(frames.map(f=>f.name))]});
     }
     assert.deepEqual(errors,[]);await context.close();
