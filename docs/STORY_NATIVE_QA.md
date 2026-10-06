@@ -31,4 +31,50 @@ later task, after every event listener has completed. A microtask observation
 was too early in a native event dispatch and was corrected before accepting it.
 
 The corrected regression failed against `85c162b` in run 37476411512:
-the wheel event was prevented. Implementation results follow after validation.
+the wheel event was prevented.
+
+## Rendered review
+
+Local Chrome review covered desktop (1440px and 1512px), tablet (768px),
+and mobile (390px). The chapter index, centered answer/example pairs, mobile
+stacking, fixed Back link, green summary and F24 presentation image were inspected.
+Needle's live and candidate first view retain the same geometry and content.
+Before/after captures are in `artifacts/story-editorial/`.
+
+The first implementation run, 37478362360, passed native input, all eight
+examples, no-JavaScript reading and F24 photo checks. Its mobile Back/reload
+stress case exposed an unhandled ViewTransition callback rejection. The route
+owner now handles `updateCallbackDone` rejection alongside `ready` and `finished`.
+The next run exposed an additional route/history race during an unfinished
+snapshot. Story now bypasses snapshot transitions and the mobile history veil:
+entering and leaving this reading page is ordinary, immediate navigation.
+The stress assertions were retained unchanged.
+
+## Scope and performance
+
+No new dependencies. Story no longer installs Lenis, ScrollTriggers or a paced
+scroll controller. Its only scroll observation is IntersectionObserver for the
+index highlight and cancellation of examples leaving view. Example timers are
+cancelled on unmount and when the tab becomes hidden. No ambient animation runs
+behind reading copy. Field INP/LCP figures have not been measured in this pass.
+
+F24 uses the existing 1024x685 presentation photo, with its intrinsic ratio,
+lazy loading, descriptive alt text and no image animation. The homepage photo
+composition and downloadable CV are unchanged.
+
+## Passing release checks
+
+Run [37479488178](https://github.com/miguelalmeida0/portfolio/actions/runs/37479488178)
+on application commit `a226bbe` passed:
+
+- Typecheck and lint: zero errors and warnings; production build passed.
+- 80 unit tests, 11 case-study data tests and 35 case-study interaction/motion tests.
+- 14 new browser tests: native wheel regression; five viewport sizes in both
+  standard and reduced motion; touch, PageDown, every chapter link, fixed Back,
+  copy, history/reload and resize; all eight interactive examples; reading with
+  JavaScript disabled; uncropped, static F24 image.
+- No page errors or horizontal overflow in the browser matrix.
+
+This is Chromium automation plus real Chrome visual review, not a Safari or
+physical-device performance certification. Playwright captures and traces are
+attached to the CI run as `portfolio-corrections`.
