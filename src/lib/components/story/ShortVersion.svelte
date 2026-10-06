@@ -6,7 +6,7 @@
   let summary: HTMLDivElement;
   let visible = $state(false);
   onMount(() => {
-    const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) visible = true; }, { threshold: .01 });
+    const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) visible = true; }, { threshold: .2 });
     // Observe the stage: the summary itself is clipped shut before its reveal.
     observer.observe(summary.parentElement!);
     return () => observer.disconnect();

@@ -34,6 +34,11 @@ for (const [width, height] of sizes) for (const reduced of [false, true]) {
       await page.mouse.wheel(0, 360);
     }
     await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(before + 100);
+    if (width >= 1100) {
+      const wheelEnd = await page.evaluate(() => scrollY);
+      await page.keyboard.press('PageDown');
+      await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(wheelEnd + 100);
+    }
     await picker.click();
     await expect(page.locator('#story-chapters')).toBeVisible();
     await page.keyboard.press('Escape');

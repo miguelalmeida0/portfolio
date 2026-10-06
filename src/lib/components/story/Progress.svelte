@@ -6,7 +6,7 @@
   let open = $state(false);
   let trigger: HTMLButtonElement;
   let dock: HTMLElement;
-  function choose(index: number) { open = false; go(index); }
+  function choose(index: number) { open = false; trigger.focus({ preventScroll: true }); go(index); }
   onMount(() => {
     const outside = (event: PointerEvent) => { if (!dock.contains(event.target as Node)) open = false; };
     const escape = (event: KeyboardEvent) => { if (event.key === "Escape" && open) { open = false; trigger.focus(); } };
