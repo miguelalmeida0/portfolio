@@ -1,0 +1,50 @@
+name: Motion review
+on:
+  push:
+    branches: ['motion-review/**']
+permissions:
+  contents: read
+concurrency:
+  group: motion-review-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        phase: [before, after]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use the frozen production baseline for the before run
+        if: matrix.phase == 'before'
+        run: git restore --source=914c8a4 -- src package.json package-lock.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run check && npm run lint && npm run test:unit && npm run build
+      - name: Serve production build
+        run: |
+          mkdir -p .cache/tmp artifacts/motion
+          TMPDIR=$PWD/.cache/tmp WRANGLER_LOG_PATH=$PWD/.cache/wrangler.log npx wrangler pages dev .svelte-kit/cloudflare --ip 127.0.0.1 --port 4398 --log-level error --show-interactive-dev-session=false > artifacts/motion/server.log 2>&1 &
+          for i in $(seq 1 40); do curl -sf http://127.0.0.1:4398/ >/dev/null && exit 0; sleep 1; done
+          cat artifacts/motion/server.log
+          exit 1
+      - name: Motion survey and measurements
+        run: node scripts/motion-survey.mjs ${{ matrix.phase }}
+      - name: Focused motion acceptance
+        if: matrix.phase == 'after'
+        run: |
+          if test -f scripts/motion-acceptance.mjs; then node scripts/motion-acceptance.mjs; fi
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: motion-${{ matrix.phase }}
+          path: artifacts/motion
+          retention-days: 7
