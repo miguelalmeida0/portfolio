@@ -12,7 +12,7 @@ export function chapterTitles(node: HTMLElement, selector = '.chapter > .head h2
       context.add(() => {
         for (const heading of node.querySelectorAll<HTMLElement>(selector)) {
           // Restored scroll/history and in-view reading must never be hidden again.
-          if (heading.getBoundingClientRect().top < innerHeight * .5) continue;
+          if (heading.getBoundingClientRect().top < innerHeight) continue;
           let entered = false;
           splits.push(SplitText.create(heading, {
             type: 'lines', mask: 'lines', autoSplit: true, aria: 'auto',
