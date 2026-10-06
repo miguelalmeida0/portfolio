@@ -38,3 +38,47 @@ test('failed PDF loading keeps a usable download and web CV', async ({ page }) =
   await expect(page.getByRole('link', { name: 'Download PDF', exact: true })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Read the web CV' })).toHaveAttribute('target', '_blank');
 });
+
+test('reading scale supports keyboard precision, bounded zoom and fit recovery', async ({ page }) => {
+  await page.goto('/cv/pdf');
+  const adjust = page.getByRole('button', { name: 'Adjust zoom', exact: true });
+  await expect(adjust).toBeEnabled();
+  await adjust.press('Enter');
+  const slider = page.getByRole('slider', { name: 'Zoom percentage' });
+  await expect(slider).toBeFocused();
+  await slider.press('End');
+  await expect(adjust).toHaveText('200%');
+  await expect(page.getByRole('button', { name: 'Zoom in', exact: true })).toBeDisabled();
+  const enlargedWidth = await page.locator('.pdfViewer .page').evaluate(el => el.getBoundingClientRect().width);
+  await slider.press('Home');
+  await expect(adjust).toHaveText('25%');
+  await expect(page.getByRole('button', { name: 'Zoom out', exact: true })).toBeDisabled();
+  await slider.press('ArrowRight');
+  await expect(adjust).toHaveText('26%');
+  await page.getByRole('button', { name: 'Fit page', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Fit page', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  expect(await page.locator('.pdfViewer .page').evaluate(el => el.getBoundingClientRect().width)).toBeLessThan(enlargedWidth);
+  await page.getByRole('button', { name: 'Fit page', exact: true }).press('Escape');
+  await expect(adjust).toBeFocused();
+  await expect(adjust).toHaveAttribute('aria-expanded', 'false');
+  await adjust.click();
+  await page.getByRole('heading', { name: 'Miguel Almeida · CV', exact: true }).click();
+  await expect(page.getByRole('region', { name: 'Reading scale', exact: true })).toHaveCount(0);
+});
+
+test('reading scale stays inside a phone viewport and respects reduced motion', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/cv/pdf');
+  const adjust = page.getByRole('button', { name: 'Adjust zoom', exact: true });
+  await expect(adjust).toBeEnabled();
+  await adjust.click();
+  const panel = page.getByRole('region', { name: 'Reading scale', exact: true });
+  const geometry = await panel.evaluate(el => ({ left: el.getBoundingClientRect().left, right: el.getBoundingClientRect().right, animation: getComputedStyle(el).animationName }));
+  expect(geometry.left).toBeGreaterThanOrEqual(0);
+  expect(geometry.right).toBeLessThanOrEqual(390);
+  expect(geometry.animation).toBe('none');
+  await page.getByRole('button', { name: 'Fit width', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Fit width', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  expect(await page.locator('.pdfViewer .page').evaluate(el => el.getBoundingClientRect().width)).toBeLessThanOrEqual(390);
+});

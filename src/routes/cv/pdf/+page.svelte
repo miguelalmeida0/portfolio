@@ -3,6 +3,7 @@
   import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
   import 'pdfjs-dist/web/pdf_viewer.css';
   import type { PDFViewer } from 'pdfjs-dist/web/pdf_viewer.mjs';
+  import CvZoom from '$lib/components/CvZoom.svelte';
 
   let container: HTMLDivElement;
   let pages: HTMLDivElement;
@@ -10,6 +11,20 @@
   let ready = false;
   let failed = false;
   let scale = 'auto';
+  let percent = 100;
+
+  function changeScale(value: string) {
+    if (!viewer || !ready) return;
+    scale = value;
+    const numeric = Number(value);
+    if (Number.isFinite(numeric) && numeric > 0) {
+      // Defer expensive canvas redraws while the ruler moves; PDF.js keeps the
+      // existing page visible and retains the reader's position meanwhile.
+      viewer.updateScale({ scaleFactor: numeric / viewer.currentScale, drawingDelay: 120 });
+    } else {
+      resize();
+    }
+  }
 
   function resize() {
     if (viewer && ready) viewer.currentScaleValue = scale;
@@ -42,6 +57,11 @@
           if (disposed) return;
           ready = true;
           resize();
+        });
+        eventBus.on('scalechanging', ({ scale: actualScale, presetValue }: { scale: number; presetValue?: string }) => {
+          if (disposed) return;
+          percent = Math.round(actualScale * 100);
+          scale = presetValue || String(actualScale);
         });
         eventBus.on('pagerendered', ({ error }: { error?: unknown }) => {
           if (error && !disposed) failed = true;
@@ -78,16 +98,7 @@
   <header class="reader-toolbar">
     <div class="reader-title"><h1>Miguel Almeida · CV</h1><p>Links open in new tabs.</p></div>
     <div class="reader-actions">
-      <label>Zoom
-        <select bind:value={scale} onchange={resize} disabled={!ready}>
-          <option value="auto">Automatic</option>
-          <option value="page-width">Fit width</option>
-          <option value="page-fit">Fit page</option>
-          <option value="1">100%</option>
-          <option value="1.5">150%</option>
-          <option value="2">200%</option>
-        </select>
-      </label>
+      <CvZoom ready={ready && !failed} {percent} mode={scale} onscale={changeScale} />
       <a class="download" href="/files/miguel-almeida-cv.pdf" download="Miguel-Almeida-CV.pdf">Download PDF</a>
     </div>
   </header>
@@ -115,15 +126,16 @@
   h1 { margin: 0; font-size: 17px; font-weight: 600; line-height: 1.4; }
   .reader-title p { margin: 3px 0 0; font-size: 13px; color: #506353; }
   .reader-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
-  label { display: flex; align-items: center; gap: 8px; font-size: 14px; }
-  select, .download { min-height: 44px; border: 1px solid #a9b6a7; border-radius: 8px; padding: 10px 12px; font: inherit; }
-  select { color: #12372d; background: white; }
+  .download { min-height: 44px; border: 1px solid #12372d; border-radius: 12px; padding: 10px 16px; font: inherit; transition: background 160ms, transform 160ms; }
   .download { display: inline-flex; align-items: center; background: #12372d; color: white; text-decoration: none; font-size: 14px; }
+  .download:hover { background: #244f3d; }
+  .download:active { transform: translateY(1px); }
   .reader-body { position: relative; flex: 1; min-height: 0; }
   .reader-scroll { position: absolute; inset: 0; overflow: auto; overscroll-behavior: contain; }
   .reader-message { position: relative; z-index: 1; margin: 24px; padding: 20px; background: #f5f6ed; }
   .reader-message a { display: inline-block; margin: 12px 20px 0 0; text-decoration: underline; }
-  .cv-reader :global(a:focus-visible), select:focus-visible { outline: 3px solid #610d3d; outline-offset: 3px; }
+  .cv-reader :global(a:focus-visible) { outline: 3px solid #610d3d; outline-offset: 3px; }
   .cv-reader :global(.annotationLayer .linkAnnotation > a:hover) { background: rgb(97 13 61 / 10%); }
   @media (max-width: 600px) { .reader-toolbar { padding: 12px; } .reader-actions { gap: 12px; } }
+  @media (prefers-reduced-motion: reduce) { .download { transition: none; } }
 </style>
