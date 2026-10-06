@@ -23,7 +23,9 @@ export function workMotion(node: HTMLElement) {
       if (!frame || !plane) continue;
       // Fixed outer frame/hit target. Only the media plane and directional cue move.
       const shift = gsap.quickTo(plane, 'x', { duration: motion.standard, ease: motion.pointer });
-      const scale = gsap.quickTo(plane, 'scale', { duration: motion.standard, ease: motion.secondary });
+      const scaleX = gsap.quickTo(plane, 'scaleX', { duration: motion.standard, ease: motion.secondary });
+      const scaleY = gsap.quickTo(plane, 'scaleY', { duration: motion.standard, ease: motion.secondary });
+      const scale = (value: number) => { scaleX(value); scaleY(value); };
       const arrowX = arrow && gsap.quickTo(arrow, 'x', { duration: motion.micro, ease: motion.secondary });
       const arrowY = arrow && gsap.quickTo(arrow, 'y', { duration: motion.micro, ease: motion.secondary });
       const activate = () => { scale(1.018); arrowX?.(3); arrowY?.(-3); };

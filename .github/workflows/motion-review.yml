@@ -41,11 +41,12 @@ jobs:
       - name: Repeated cold loads and mobile CPU measurements
         run: node scripts/motion-performance.mjs ${{ matrix.phase }}
       - name: Focused motion acceptance
+        id: motion_acceptance
         if: matrix.phase == 'after'
         run: |
           if test -f scripts/motion-acceptance.mjs; then node scripts/motion-acceptance.mjs; fi
       - name: Preserved case-study behavior
-        if: matrix.phase == 'after'
+        if: matrix.phase == 'after' && (success() || steps.motion_acceptance.outcome == 'failure')
         env:
           PARITY_IMPL_BASE: http://127.0.0.1:4398
         run: |
