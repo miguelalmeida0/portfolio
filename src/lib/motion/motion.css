@@ -120,10 +120,10 @@
     mix-blend-mode: normal;
   }
   ::view-transition-old(root) {
-    animation: route-fade-out var(--motion-feedback) ease-out both;
+    animation: route-fade-out var(--motion-press) ease-out both;
   }
   ::view-transition-new(root) {
-    animation: route-fade-in var(--motion-route) var(--motion-settle) both;
+    animation: route-fade-in var(--motion-route) var(--motion-settle) var(--motion-press) both;
   }
 
   ::view-transition-group(project-media) {

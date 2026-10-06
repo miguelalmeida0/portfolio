@@ -7,8 +7,9 @@ The audit and priority matrix are in [MOTION_AUDIT.md](MOTION_AUDIT.md).
 
 Route direction revised after live feedback: removed the project-title shared
 element, including the capture listener and all title geometry interpolation.
-Navigation now uses an opacity-only root fade: 170ms outgoing, 360ms incoming,
-with the shared settle ease. Reduced motion remains immediate. The existing
+Navigation now uses an opacity-only fade through the paper background: 110ms
+outgoing, then 360ms incoming with the shared settle ease. The brief handoff
+avoids overlapping two pages of text. Reduced motion remains immediate. The existing
 mobile menu/history opacity veil and SvelteKit scroll restoration are preserved.
 
 The user rejected added motion on personal photographs. Removed the portrait
