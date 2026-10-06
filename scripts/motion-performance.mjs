@@ -5,7 +5,7 @@ await mkdir(out,{recursive:true});
 const browser=await chromium.launch();const runs=[];
 try {
 for(const mobile of [false,true])for(const route of ['/','/work/needle'])for(let run=0;run<3;run++){
- const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1440,height:900},isMobile:mobile,hasTouch:mobile});
+ const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1440,height:900},isMobile:mobile,hasTouch:mobile,...(!mobile&&run===0?{recordVideo:{dir:`${out}/interaction-video`,size:{width:1440,height:900}}}:{})});
  await context.addInitScript(()=>{
   sessionStorage.setItem('seen-intro','true');
   const m=window.__perf={lcp:0,cls:0,tasks:[],events:[],frames:[],sampling:false};

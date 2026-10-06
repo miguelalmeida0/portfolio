@@ -32,7 +32,7 @@ for(const viewport of [{width:1440,height:900},{width:1280,height:800},{width:76
   results.push({viewport,route,...g,chapters:await headings.count()});
  }
  await page.goto(base+'/work/needle');await settled(page);
- await page.locator('.pnav a[href="#engineering"]').focus();await page.keyboard.press('Enter');await pause(page);
+ await page.locator('a[href="#engineering"]').filter({visible:true}).first().focus();await page.keyboard.press('Enter');await pause(page);
  assert.ok(new URL(page.url()).hash==='#engineering');
  await page.keyboard.press('Tab');assert.notEqual(await page.evaluate(()=>document.activeElement?.tagName),'BODY');
  await page.setViewportSize({width:viewport.height,height:viewport.width});await pause(page);
@@ -47,7 +47,7 @@ for(const viewport of [{width:1440,height:900},{width:1280,height:800},{width:76
  assert.ok((await geometry(page)).owners.includes('chapter-titles'));
  await context.close();
 }
-const context=await browser.newContext({viewport:{width:1440,height:900}});await context.addInitScript(()=>sessionStorage.setItem('seen-intro','true'));
+const context=await browser.newContext({viewport:{width:1440,height:900},recordVideo:{dir:`${out}/video`,size:{width:1440,height:900}}});await context.addInitScript(()=>sessionStorage.setItem('seen-intro','true'));
 const page=await context.newPage();await page.goto(base+'/cv');await settled(page);
 const cdp=await context.newCDPSession(page);await cdp.send('HeapProfiler.collectGarbage');const heapBefore=await cdp.send('Runtime.getHeapUsage');
 const counts=[];
