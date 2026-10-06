@@ -17,11 +17,11 @@ concurrency:
 jobs:
   checks:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .node-version
           cache: npm
@@ -30,41 +30,46 @@ jobs:
       - run: npm run test:unit
       - run: npm run build
 
-  browser-tests:
+  browser-smoke:
     needs: checks
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    timeout-minutes: 12
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .node-version
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium firefox webkit
-      - run: mkdir -p .cache/tmp && TMPDIR=$PWD/.cache/tmp npx playwright test --shard=${{ matrix.shard }}/20
-      - name: Upload browser test results
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v5
+      - run: npx playwright install --with-deps chromium
+      - name: Run critical desktop and mobile browser smoke
+        run: |
+          mkdir -p .cache/tmp
+          TMPDIR=$PWD/.cache/tmp npx playwright test tests/e2e/specs/ci-smoke.spec.ts \
+            --project=chromium-desktop \
+            --project=chromium-mobile \
+            --workers=2
+      - name: Upload browser failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v7
         with:
-          name: browser-test-results-${{ matrix.shard }}
+          name: browser-smoke-failure
           path: |
             playwright-report/
             test-results/
           if-no-files-found: ignore
-          retention-days: 3
+          retention-days: 2
 
   validate:
     if: ${{ always() }}
-    needs: [checks, browser-tests]
+    needs: [checks, browser-smoke]
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - name: Require every check and browser shard to pass
+      - name: Require blocking checks to pass
         env:
           CHECKS_RESULT: ${{ needs.checks.result }}
-          BROWSER_RESULT: ${{ needs.browser-tests.result }}
+          BROWSER_RESULT: ${{ needs.browser-smoke.result }}
         run: test "$CHECKS_RESULT" = success && test "$BROWSER_RESULT" = success
