@@ -173,6 +173,11 @@
   .mobile-summary { min-height:0; padding-bottom:80px; }
   .mobile-summary .short-version { position:relative; top:auto; }
 }
+@media (max-width:399px) {
+  .mobile-summary .short-version { padding:20px; }
+  .short-version ol { gap:8px; }
+  .short-kicker { font-size:14px; }
+}
 @media (prefers-reduced-motion:reduce) {
   .story-ending { min-height:100svh; }
   .mobile-summary { min-height:0; padding-bottom:80px; }

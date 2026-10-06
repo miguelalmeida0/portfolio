@@ -65,6 +65,11 @@ for (const [width, height] of sizes) for (const reduced of [false, true]) {
     if (width < 1100) await summary.scrollIntoViewIfNeeded();
     await expect(summary).toHaveClass(/complete/);
     await expect(summary.locator('li').last()).toHaveCSS('opacity', '1');
+    if (width < 768) {
+      const actions = (await summary.locator('.short-actions').boundingBox())!;
+      const navigation = (await dock.boundingBox())!;
+      expect(actions.y + actions.height).toBeLessThan(navigation.y - 8);
+    }
     await page.screenshot({ path: `artifacts/portfolio-corrections/story/${width}-${height}-${reduced}-reward.png` });
 
     // The green stage lingers spatially while the page keeps responding.

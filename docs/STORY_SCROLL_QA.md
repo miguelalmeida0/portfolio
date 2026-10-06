@@ -47,6 +47,10 @@ all mobile/tablet and reduced-motion journeys but exposed the desktop
 wheel-to-keyboard ownership bug; the final run keeps that assertion unchanged.
 The opacity-only route fade was separately verified by run `37456359559`.
 
+Final screenshot review tightened summary spacing below 400px: at 375×812,
+the reward actions now end 49.7px above the persistent dock. An explicit mobile
+action-clearance assertion was added to the browser matrix.
+
 No new GSAP animations or ScrollTriggers were introduced. The reward wheel/key
 interceptors were removed; the shared keyboard handoff never prevents default.
 An IntersectionObserver is disconnected
