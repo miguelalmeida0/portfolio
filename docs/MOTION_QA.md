@@ -18,6 +18,14 @@ wheel and deliberate anchor journeys across home and case studies. Touch stays
 native, nested scroll surfaces retain their own input, and reduced motion disables
 Lenis. Connected Chrome verified next-project scrollY 0 and Back restoring 6687.
 
+The regression also exposed a 25px Leu Back-navigation adjustment in Linux
+Chromium. The scroll trace showed Kit restoring 7976 correctly, then native
+anchoring shifting to 8001 before ScrollTrigger refreshed. Opting the complete
+`#portfolio-content` frame out of browser anchoring prevents that second owner
+from overriding route restoration. Opting only the chapter subtree out was
+insufficient and was removed. The connected Chrome check now restores exactly
+7971 → 7971. Anchor journeys also respect the document's sticky-nav inset.
+
 Desktop case-study canvases now share the site gutters instead of a 1312px cap
 shrunk to 1050 physical pixels by the approved 80% density. At a 1512px viewport,
 the canvas grows from 1049.6px to 1339.2px. Paragraph measures remain constrained.
@@ -25,6 +33,20 @@ the canvas grows from 1049.6px to 1339.2px. Paragraph measures remain constraine
 Regression runner: `scripts/portfolio-corrections.mjs`. Evidence is written to
 `artifacts/portfolio-corrections`. The measurements below describe the earlier
 motion release, not a fresh performance benchmark of these follow-up changes.
+
+Follow-up production-build verification passed on source `1d35c92`:
+[Portfolio corrections run](https://github.com/miguelalmeida0/portfolio/actions/runs/37447836865).
+All 50 project next/back/forward checks passed at 1440×900, 1280×800, 768×1024,
+390×844 and 375×812 in normal and reduced motion. New-project positions remain
+within 2px of the top, history positions within 5px of departure, and none of the
+canvases overflows. The runner also checks the real photo decodes, both photos
+and the portrait have no added transform, the F24 image link works, homepage
+wheel input works, and anchor headings clear the sticky navigation. All 35
+existing case-study behavior/motion checks and 11 data tests passed, as did
+typecheck, lint, 80 unit tests and the production build. Raw screenshots and
+scroll-call traces are under `artifacts/portfolio-corrections/verified-1d35c92`.
+Local headless Chromium remains blocked by macOS process permissions; connected
+Chrome supplied the local visual checks, and Linux CI ran the automated suite.
 
 ## Implemented decisions
 
