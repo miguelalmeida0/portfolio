@@ -1,97 +1,90 @@
 import { expect, test } from '@playwright/test';
 
-test('fast downward scrolling lands on the complete reward before a new gesture continues', async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 1000 });
-  await page.goto('/story');
-  await expect(page.locator('[data-story-next]').first()).toBeEnabled();
-  const destination = await page.locator('.story-ending').evaluate(e => scrollY + e.getBoundingClientRect().top - 86);
-  await page.evaluate(y => window.scrollTo({ top: y - 160, behavior: 'instant' }), destination);
-  await page.mouse.move(1100, 450);
-  await page.mouse.wheel(0, 3000);
-  await expect.poll(() => page.evaluate(() => scrollY)).toBeCloseTo(destination, 0);
-  for (const x of [300, 1100, 300]) {
-    await page.mouse.move(x, 450);
-    await page.mouse.wheel(0, 1800);
-    await page.waitForTimeout(150);
-  }
-  expect(await page.evaluate(() => scrollY)).toBeCloseTo(destination, 0);
-  await expect(page.locator('[data-story-progress]')).toHaveText('All 8 answered');
-  const panel = (await page.locator('.story-visual').boundingBox())!;
-  expect(panel.y).toBe(86);
-  expect(panel.y + panel.height).toBe(914);
-  await expect(page.locator('[data-line-m]')).not.toBeInViewport();
-  await page.waitForTimeout(1600);
-  await expect(page.locator('.short-version li').last()).toHaveCSS('opacity', '1');
-  await page.mouse.wheel(0, 600);
-  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(destination + 300);
-});
+const sizes = [[1440, 900], [1280, 800], [1440, 685], [768, 1024], [390, 844], [375, 812]];
+for (const [width, height] of sizes) for (const reduced of [false, true]) {
+  test(`Story remains a single scroll at ${width}x${height}, reduced=${reduced}`, async ({ browser }) => {
+    test.setTimeout(90000);
+    const context = await browser.newContext({ viewport: { width, height }, hasTouch: width < 768,
+      isMobile: width < 768, reducedMotion: reduced ? 'reduce' : 'no-preference' });
+    const page = await context.newPage();
+    const errors: string[] = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.goto(`${process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:4398'}/story`);
+    const dock = page.getByRole('navigation', { name: 'Story navigation', exact: true });
+    const picker = dock.getByRole('button', { name: 'Choose a chapter', exact: true });
+    await expect(picker).toBeEnabled();
+    await expect(page.locator('.story-panel.inline')).toHaveCount(width < 1100 ? 8 : 0);
+    const overflow = () => page.evaluate(() => document.documentElement.scrollWidth > innerWidth);
+    expect(await overflow()).toBe(false);
+    await page.screenshot({ path: `artifacts/portfolio-corrections/story/${width}-${height}-${reduced}-start.png` });
 
-test('reward resistance allows immediate reversal and an explicit contact link', async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto('/story');
-  await expect(page.locator('[data-story-next]').first()).toBeEnabled();
-  const destination = await page.locator('.story-ending').evaluate(e => scrollY + e.getBoundingClientRect().top - 86);
-  await page.evaluate(y => window.scrollTo({ top: y, behavior: 'instant' }), destination);
-  await page.mouse.move(1100, 450);
-  await page.mouse.wheel(0, 600);
-  await page.mouse.wheel(0, -300);
-  await expect.poll(() => page.evaluate(() => scrollY)).toBeLessThan(destination - 100);
-  await page.locator('.ending-actions a.primary').click();
-  await expect(page.locator('[data-line-m]')).toBeInViewport();
-});
-
-for (const width of [1440, 1920]) {
-  test(`wheel over either column reads the story before Line M at ${width}px`, async ({ page }) => {
-    await page.setViewportSize({ width, height: 900 });
-    await page.goto('/story');
-    await expect(page.locator('[data-story-section]').first()).toHaveAttribute('data-current');
-    const footer = page.locator('[data-line-m]');
-    for (const x of [width * .25, width * .75]) {
-      const before = await page.evaluate(() => scrollY);
-      await page.mouse.move(x, 450);
-      await page.mouse.wheel(0, 640);
-      await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(before + 400);
-      await expect.poll(() => footer.evaluate(e => e.getBoundingClientRect().top)).toBeGreaterThan(900);
-      expect(await page.locator('.story-scroll').evaluate(e => e.scrollTop)).toBe(0);
-      const panel = (await page.locator('.story-visual').boundingBox())!;
-      expect(panel.y).toBe(86);
-      expect(900 - panel.y - panel.height).toBe(panel.y);
-    }
-    await expect(page.locator('[data-story-section]').nth(2)).toHaveAttribute('data-current');
-    await page.locator('[data-story-section]').nth(2).locator('[data-story-next]').click();
-    await expect(page.locator('[data-story-section]').nth(3)).toBeFocused();
-    await expect(page.locator('[data-story-section]').nth(3)).toHaveAttribute('data-current');
-    await page.keyboard.press('End');
-    await expect(footer).toBeInViewport();
-    await expect(page.locator('[data-story-progress]')).toHaveText('All 8 answered');
-    await page.keyboard.press('Home');
-    await expect(page.locator('[data-story-section]').first()).toHaveAttribute('data-current');
-  });
-}
-
-for (const viewport of [{ width: 390, height: 844 }, { width: 1440, height: 700 }]) {
-  test(`one reading flow on mobile and short screens ${viewport.width}x${viewport.height}`, async ({ page }) => {
-    await page.setViewportSize(viewport);
-    await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/story');
-    await expect(page.locator('.story-panel.inline')).toHaveCount(8);
-    const illustration = page.locator('[data-story-scene="hi"]');
-    await illustration.scrollIntoViewIfNeeded();
-    const box = (await illustration.boundingBox())!;
+    // Both input paths scroll the document, including over a visual scene.
     const before = await page.evaluate(() => scrollY);
-    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-    await page.mouse.wheel(0, 150);
+    if (width < 768) {
+      const cdp = await context.newCDPSession(page);
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: width / 2, y: 600 }] });
+      for (let y = 580; y >= 300; y -= 20) {
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: width / 2, y }] });
+        await page.waitForTimeout(16);
+      }
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+      await cdp.detach();
+    } else {
+      await page.mouse.move(width * .25, height * .45);
+      await page.mouse.wheel(0, 360);
+    }
     await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(before + 100);
-    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+    await picker.click();
+    await expect(page.locator('#story-chapters')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(picker).toBeFocused();
+    await expect(page.locator('#story-chapters')).toBeHidden();
+    await picker.click();
+    await page.locator('#story-chapters button').first().click();
+    await expect(page.locator('[data-story-section]').first()).toBeFocused();
+
     for (let i = 0; i < 8; i++) {
       const section = page.locator('[data-story-section]').nth(i);
       await expect(section).toHaveAttribute('data-current');
-      await section.locator('[data-story-action="0"]').click();
-      expect(await section.locator('.story-scene').evaluate(e => e.scrollHeight <= e.clientHeight + 1)).toBe(true);
-      await section.locator('[data-story-next]').click();
+      await expect(dock.getByRole('link', { name: 'Home', exact: true })).toBeInViewport();
+      const panel = width < 1100 ? section.locator('.story-panel') : page.locator('.story-visual');
+      await panel.locator('[data-story-action="0"]').click();
+      await page.waitForTimeout(500);
+      const active = panel.locator('.story-scene[data-active]');
+      expect(await active.evaluate(e => e.scrollHeight <= e.clientHeight + 1)).toBe(true);
+      await dock.getByRole('button', { name: 'Next chapter', exact: true }).click();
+      await expect(page.locator('[data-story-section]').nth(i + 1)).toBeFocused();
     }
-    await expect(page.locator('.story-ending')).toBeFocused();
     await expect(page.locator('[data-story-progress]')).toHaveText('All 8 answered');
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    const summary = page.locator('.short-version');
+    if (width < 1100) await summary.scrollIntoViewIfNeeded();
+    await expect(summary).toHaveClass(/complete/);
+    await expect(summary.locator('li').last()).toHaveCSS('opacity', '1');
+    await page.screenshot({ path: `artifacts/portfolio-corrections/story/${width}-${height}-${reduced}-reward.png` });
+
+    // The green stage lingers spatially while the page keeps responding.
+    if (width >= 1100 && !reduced) {
+      const start = await page.evaluate(() => scrollY);
+      const top = (await summary.boundingBox())!.y;
+      await page.mouse.move(width * .75, height * .5);
+      await page.mouse.wheel(0, 300);
+      await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(start + 150);
+      expect(Math.abs((await summary.boundingBox())!.y - top)).toBeLessThan(2);
+      await page.mouse.wheel(0, -200);
+      await expect.poll(() => page.evaluate(() => scrollY)).toBeLessThan(start + 150);
+    }
+    await page.locator('.ending-actions a.primary').click();
+    await expect(page.locator('[data-line-m]')).toBeInViewport();
+    await expect(dock.getByRole('link', { name: 'Home', exact: true })).toBeInViewport();
+    await dock.getByRole('link', { name: 'Home', exact: true }).click();
+    await expect(page).toHaveURL(/\/#top$/);
+    await page.goBack();
+    await expect(picker).toBeEnabled();
+    expect(await overflow()).toBe(false);
+    await page.setViewportSize({ width: width < 1100 ? 1280 : 390, height: 844 });
+    await expect(page.locator('.story-panel.inline')).toHaveCount(width < 1100 ? 0 : 8);
+    expect(await overflow()).toBe(false);
+    expect(errors).toEqual([]);
+    await context.close();
   });
 }

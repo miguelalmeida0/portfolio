@@ -1,7 +1,7 @@
 name: Portfolio corrections
 on:
   push:
-    branches: ['portfolio-corrections/**', 'route-fade/**']
+    branches: ['portfolio-corrections/**', 'route-fade/**', 'story-flow/**']
 permissions:
   contents: read
 concurrency:
@@ -31,6 +31,12 @@ jobs:
         if: startsWith(github.ref, 'refs/heads/portfolio-corrections/')
       - run: node scripts/route-fade-review.mjs
         if: startsWith(github.ref, 'refs/heads/route-fade/')
+      - name: Story reading and reward
+        if: startsWith(github.ref, 'refs/heads/story-flow/')
+        env:
+          PLAYWRIGHT_BASE_URL: http://127.0.0.1:4398
+          PLAYWRIGHT_SKIP_WEB_SERVER: '1'
+        run: npx playwright test tests/e2e/specs/story-scroll.spec.ts --project=chromium-desktop --workers=1 --retries=0 --reporter=list
       - name: Existing case-study interactions
         if: startsWith(github.ref, 'refs/heads/portfolio-corrections/')
         env:
