@@ -29,7 +29,9 @@ for(const mobile of [false,true])for(const route of ['/','/work/needle'])for(let
  for(let i=0;i<30;i++){await page.mouse.wheel(0,i<20?90:-90);await page.waitForTimeout(32);}
  await page.evaluate(()=>window.__perf.sampling=false);
  const metrics=await page.evaluate(()=>{
-  const m=window.__perf,s=[...m.frames].sort((a,b)=>a-b),events=Object.values(Object.fromEntries(m.events.map(e=>[e.id,e.duration])));
+  const m=window.__perf,s=[...m.frames].sort((a,b)=>a-b),grouped=new Map();
+  m.events.forEach(e=>grouped.set(e.id,Math.max(grouped.get(e.id)||0,e.duration)));
+  const events=[...grouped.values()];
   return {lcp:m.lcp,cls:m.cls,interactionCount:events.length,maxInteractionMs:Math.max(0,...events),longTaskCount:m.tasks.length,longTaskTotal:m.tasks.reduce((a,b)=>a+b,0),longestTask:Math.max(0,...m.tasks),frameP95:s[Math.floor(s.length*.95)],frameCount:s.length,framesOver34ms:s.filter(v=>v>34).length};
  });
  runs.push({phase,mobile,cpuRate:mobile?4:1,route,run,...metrics});console.log(runs.at(-1));await context.close();

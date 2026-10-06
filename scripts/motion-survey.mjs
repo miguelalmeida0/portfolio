@@ -28,7 +28,9 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 
   });
   const page = await context.newPage();
   const errors = [];
+  const consoleMessages = [];
   page.on('pageerror', error => errors.push(error.message));
+  page.on('console', message => { if (['warning', 'error'].includes(message.type())) consoleMessages.push({ type: message.type(), text: message.text() }); });
   for (const route of routes) {
     const prefix = `${out}/${viewport.width}-${route.replaceAll('/', '_') || 'home'}`;
     await page.goto(base + route, { waitUntil: 'networkidle' });
@@ -63,9 +65,10 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 
       const sorted = [...m.frames].sort((a,b)=>a-b);
       return { lcp: m.lcp, cls: m.cls, longTaskCount: m.longTasks.length, longTaskTotal: m.longTasks.reduce((a,b)=>a+b,0), longestTask: Math.max(0,...m.longTasks), maxInteractionDuration: Math.max(0,...m.interactions), frameP95: sorted[Math.floor(sorted.length*.95)], frameOver34ms: m.frames.filter(n=>n>34).length, frameCount: m.frames.length };
     });
-    results.push({ viewport, route, ...inventory, metrics, errors: [...errors] });
+    results.push({ viewport, route, ...inventory, metrics, errors: [...errors], consoleMessages: [...consoleMessages] });
     console.log(`${phase} ${viewport.width} ${route}: ${inventory.headings.length} headings, ${inventory.controls.length} controls, CLS ${metrics.cls.toFixed(4)}`);
     errors.length = 0;
+    consoleMessages.length = 0;
     await writeFile(`${out}/survey.json`, JSON.stringify(results,null,2));
   }
   await context.close();

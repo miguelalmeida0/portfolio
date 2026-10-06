@@ -6,8 +6,16 @@ export type MotionRuntime = {
   gsap: typeof import('gsap').gsap;
   ScrollTrigger: typeof import('gsap/ScrollTrigger').ScrollTrigger;
 };
+function afterFirstPaint() {
+  return new Promise<void>(resolve => {
+    const ready = () => { void document.fonts.ready.then(() => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))); };
+    if (document.readyState === 'complete') ready();
+    else window.addEventListener('load', ready, { once: true });
+  });
+}
 export function loadMotion() {
-  return shared ??= Promise.all([import('gsap'), import('gsap/ScrollTrigger'), import('gsap/CustomEase')]).then(([core, scroll, ease]) => {
+  // Keep optional motion parsing/initialization out of the critical first paint.
+  return shared ??= afterFirstPaint().then(() => Promise.all([import('gsap'), import('gsap/ScrollTrigger'), import('gsap/CustomEase')])).then(([core, scroll, ease]) => {
     core.gsap.registerPlugin(scroll.ScrollTrigger, ease.CustomEase);
     ease.CustomEase.create(motion.primary, '0.22,1,0.36,1');
     ease.CustomEase.create(motion.secondary, '0.2,0.8,0.2,1');
