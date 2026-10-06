@@ -22,7 +22,7 @@
       </div>
     </div>
     <footer>
-      <a href="/portfolio.pdf" {...destinationLink("/portfolio.pdf")}>Open résumé <span class="motion-arrow" aria-hidden="true">↗</span></a>
+      <a href="/cv/pdf" {...destinationLink("/cv/pdf")}>Open résumé <span class="motion-arrow" aria-hidden="true">↗</span></a>
       <span class="build-note">Built with Svelte 5 · SvelteKit · TypeScript · Tailwind</span>
       <MotionToggle />
       <span>Miguel Almeida · Berlin</span>

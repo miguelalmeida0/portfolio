@@ -33,3 +33,8 @@ verified desktop app URL. Preserve these files together in future releases.
 GitHub `main` pushes automatically deploy to the same Cloudflare Pages project.
 Use one deployment path per release and wait for its Cloudflare Pages check
 before verifying the public domain. Do not run a parallel direct deployment.
+
+CV reading links use `/cv/pdf`, a dedicated PDF.js reader whose PDF annotations
+open in new tabs. Keep `/portfolio.pdf` and `/files/miguel-almeida-cv.pdf` as raw
+PDF endpoints for downloads and existing external links. Regenerating the PDF
+automatically updates the reader; it renders the actual file, not a separate CV.

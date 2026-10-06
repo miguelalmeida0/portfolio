@@ -15,7 +15,7 @@
       <span role="status" class="text-xs">{copied ? 'Email copied.' : copyError ? 'Please copy the email address above.' : ''}</span>
     </div>
     <nav aria-label="Social and résumé links" class="z-10 mt-4 w-24 shrink-0 text-sm sm:mt-12 sm:w-44 sm:text-base">
-      {#each [{ label: 'LinkedIn', href: 'https://www.linkedin.com/in/miguelalmeida1/' }, { label: 'GitHub', href: 'https://github.com/miguelalmeida0' }, { label: 'Résumé', href: '/portfolio.pdf' }] as item}
+      {#each [{ label: 'LinkedIn', href: 'https://www.linkedin.com/in/miguelalmeida1/' }, { label: 'GitHub', href: 'https://github.com/miguelalmeida0' }, { label: 'Résumé', href: '/cv/pdf' }] as item}
         <a href={item.href}   class="mb-3 flex min-h-11 items-center justify-between gap-2 border-b border-folio-paper/60 hover:opacity-75" {...destinationLink(item.href)}>{item.label}<ArrowUpRight size={18} /></a>
       {/each}
     </nav>

@@ -8,7 +8,7 @@
     <p class="mt-4 text-lg">Used by hundreds of companies.</p>
     <div class="mt-5 flex flex-wrap gap-8 text-folio-plum">
       <a href="/story#at-work" class="inline-flex min-h-11 items-center gap-2 border-b border-folio-plum" {...destinationLink("/story#at-work")}>Read the story <ArrowUpRight size={17} /></a>
-      <a href="/portfolio.pdf" class="inline-flex min-h-11 items-center gap-2 border-b border-folio-plum" {...destinationLink("/portfolio.pdf")}>View résumé <ArrowUpRight size={17} /></a>
+      <a href="/cv/pdf" class="inline-flex min-h-11 items-center gap-2 border-b border-folio-plum" {...destinationLink("/cv/pdf")}>View résumé <ArrowUpRight size={17} /></a>
     </div>
   </div>
 </section>

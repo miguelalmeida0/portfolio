@@ -32,9 +32,9 @@ for (const width of [1440, 834, 390]) test(`project selection has a distinct fil
 });
 
 test('CV PDF and both footer resume links open separately', async ({ page, context }) => {
-  await context.route('**/portfolio.pdf', route => route.fulfill({ contentType: 'text/html', body: '<h1>PDF destination</h1>' }));
+  await context.route('**/cv/pdf', route => route.fulfill({ contentType: 'text/html', body: '<h1>PDF destination</h1>' }));
   await page.goto('/cv');
-  for (const selector of ['.cv-summary a[href="/portfolio.pdf"]', '[data-dep="3"]', '[data-stop="3"]']) {
+  for (const selector of ['.cv-summary a[href="/cv/pdf"]', '[data-dep="3"]', '[data-stop="3"]']) {
     const original = page.url();
     const link = page.locator(selector);
     await expect(link).not.toHaveAttribute('download');
@@ -42,7 +42,7 @@ test('CV PDF and both footer resume links open separately', async ({ page, conte
     const next = page.waitForEvent('popup');
     await link.click();
     const popup = await next;
-    await expect(popup).toHaveURL(/\/portfolio.pdf$/);
+    await expect(popup).toHaveURL(/\/cv\/pdf$/);
     expect(page.url()).toBe(original);
     await popup.close();
   }

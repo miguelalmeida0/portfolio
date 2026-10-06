@@ -52,11 +52,11 @@ test('CV opens a PDF in a new tab and email uses mailto',async({page,request,con
   const response=await request.get('/portfolio.pdf');
   expect(response.status()).toBe(200);
   expect((await response.body()).subarray(0,5).toString()).toBe('%PDF-');
-  await context.route('**/portfolio.pdf', route => route.fulfill({ contentType: 'text/html', body: '<h1>PDF destination</h1>' }));
+  await context.route('**/cv/pdf', route => route.fulfill({ contentType: 'text/html', body: '<h1>PDF destination</h1>' }));
   const next=page.waitForEvent('popup');
   await link.click();
   const popup=await next;
-  await expect(popup).toHaveURL(/\/portfolio.pdf$/);
+  await expect(popup).toHaveURL(/\/cv\/pdf$/);
   await popup.close();
   await expect(page).toHaveURL(/\/cv$/);
   await expect(page.locator('.cv-email')).toHaveAttribute('href','mailto:miguelalmeida1592@gmail.com');
