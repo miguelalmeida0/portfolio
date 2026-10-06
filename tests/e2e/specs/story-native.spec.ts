@@ -9,6 +9,7 @@ test('Story leaves wheel input under native browser control', async ({ page }) =
   });
   await page.goto('/story');
   await page.getByRole('link', {name:'Back to home',exact:true}).waitFor();
+  await page.waitForFunction(() => document.querySelector('[data-story-ready]') || document.querySelector<HTMLButtonElement>('button[aria-label="Choose a chapter"]')?.disabled === false);
   await page.mouse.move(1000,400);
   await page.mouse.wheel(0,120);
   await expect.poll(() => page.evaluate(() => (window as any).storyWheel.length)).toBeGreaterThan(0);
