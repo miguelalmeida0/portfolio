@@ -22,11 +22,12 @@ function setup({ reduced = false, mobile = true } = {}) {
   const link = { href: 'https://portfolio.test/work/leu', download: '', target: '', dataset: {}, parentElement: menu };
   const body = {};
   const document = { body, activeElement: body, visibilityState: 'visible', documentElement: { dataset: {} },
-    querySelectorAll: () => [], getElementById: () => null };
+    querySelectorAll: () => [], getElementById: id => id === 'work' ? { id } : null };
   const modules = {
     '$app/navigation': {
       beforeNavigate: fn => hooks.before = fn, onNavigate: fn => hooks.on = fn,
       preloadData: async () => events.push('preload'),
+      pushState: url => events.push('push:' + url.hash),
       goto: url => {
         events.push('goto');
         hooks.before({ type: 'goto', willUnload: false, cancel() { throw Error('own navigation cancelled'); } });
@@ -37,11 +38,11 @@ function setup({ reduced = false, mobile = true } = {}) {
     svelte: { onDestroy: fn => hooks.destroy = fn, tick: async () => { events.push('tick'); } },
     'svelte/store': { writable: initial => { let state = initial; return { set(value) { state = value; }, subscribe(fn) { fn(state); return () => {}; }, get value() { return state; } }; } },
     './policy': { motionSnapshot: () => ({ reduced }) },
-    './smooth-scroll': { resetScrollMotion() {}, syncScrollPosition: () => events.push('scroll-synced') }
+    './smooth-scroll': { resetScrollMotion() {}, syncScrollPosition: () => events.push('scroll-synced'), scrollToElement: (target, options) => events.push('scroll:' + target.id + ':' + options.focus) }
   };
   const exports = {};
   vm.runInNewContext(source, { exports, require: name => modules[name], document, URL,
-    location: { origin: 'https://portfolio.test', hash: '' }, matchMedia: () => ({ matches: mobile }),
+    location: { origin: 'https://portfolio.test', pathname: '/', search: '', hash: '' }, matchMedia: () => ({ matches: mobile }),
     requestAnimationFrame: fn => frames.push(fn), window: {} });
   const owner = exports.installRouteTransitions(() => veil);
   const click = (fields = {}) => ({ currentTarget: link, button: 0, defaultPrevented: false,
@@ -159,5 +160,17 @@ test('mobile history cover releases the Kit hook before awaiting navigation.comp
   s.navigation.resolve(); await flush();
   assert.equal(s.owner.mobileState.value, 'covered');
   s.frames.shift()(); await flush();
+  assert.equal(s.owner.mobileState.value, 'idle');
+});
+
+test('same-page work menu link closes, updates history and scrolls with focus without a route veil', async () => {
+  const s = setup();
+  const event = s.click();
+  event.currentTarget.href = 'https://portfolio.test/#work';
+  void s.owner.navigateFromMenu(event, () => s.events.push('closed-anchor'));
+  await flush();
+  assert.equal(event.defaultPrevented, true);
+  assert.deepEqual(s.events, ['closed-anchor', 'tick', 'push:#work', 'scroll:work:true']);
+  assert.equal(s.animations.length, 0);
   assert.equal(s.owner.mobileState.value, 'idle');
 });

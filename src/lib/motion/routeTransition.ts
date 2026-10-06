@@ -1,8 +1,8 @@
-import { beforeNavigate, goto, onNavigate, preloadData } from '$app/navigation';
+import { beforeNavigate, goto, onNavigate, preloadData, pushState } from '$app/navigation';
 import { onDestroy, tick } from 'svelte';
 import { writable } from 'svelte/store';
 import { motionSnapshot } from './policy';
-import { resetScrollMotion, syncScrollPosition } from './smooth-scroll';
+import { resetScrollMotion, scrollToElement, syncScrollPosition } from './smooth-scroll';
 
 /**
  * Progressive-enhancement route continuity built on the native View Transitions API.
@@ -153,6 +153,18 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey ||
       event.shiftKey || event.altKey || link.download || (link.target && link.target !== '_self')) return;
     const url = new URL(link.href);
+    if (url.origin === location.origin && url.pathname === location.pathname && url.search === location.search && url.hash) {
+      let target: HTMLElement | null;
+      try { target = document.getElementById(decodeURIComponent(url.hash.slice(1))); } catch { return; }
+      if (target) {
+        event.preventDefault();
+        close();
+        await tick();
+        if (location.hash !== url.hash) pushState(url, {});
+        scrollToElement(target, { focus: true });
+        return;
+      }
+    }
     if (url.origin !== location.origin || !matchMedia('(max-width: 719px)').matches) return;
     event.preventDefault();
     if (active) return;
@@ -221,6 +233,7 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
     }
 
     document.documentElement.dataset.routeTransition = 'active';
+    document.documentElement.dataset.routeDestination = to.pathname;
 
     return new Promise<void>((resolve) => {
       // Navigation must still complete when a background tab or browser policy
@@ -230,6 +243,7 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
         window.clearTimeout(failSafe);
         resolve();
         delete document.documentElement.dataset.routeTransition;
+        delete document.documentElement.dataset.routeDestination;
         releaseClaimedFrames();
       };
       try {

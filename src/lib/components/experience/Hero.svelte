@@ -10,6 +10,7 @@
         <p class="greeting" data-ask-id="hi">Hi, I’m Miguel.</p>
       </div>
       <WindHeadline />
+      <p class="experience font-semibold">4+ years building production software.</p>
       <p class="hero-stack" data-ask-id="stack">React&nbsp;· TypeScript&nbsp;· Svelte&nbsp;· JavaScript</p>
     </div>
     <div class="bottom-group">

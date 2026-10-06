@@ -139,3 +139,17 @@ for (const type of ['navigate', 'reload']) {
     assert.equal(window.listeners.size, 0);
   });
 }
+
+// A deliberate swipe must survive the interval before Svelte hydrates.
+test('prehydration touch contact leaves the intro pending until deliberate movement', () => {
+  const { root, window } = boot();
+  const target = eventTarget();
+  window.emit('pointerdown', { pointerType: 'touch' });
+  window.emit('touchstart', { target, touches: [{ clientY: 100 }] });
+  assert.equal(root.dataset.presentation, 'pending');
+  window.emit('touchmove', { target, touches: [{ clientY: 97 }] });
+  assert.equal(root.dataset.presentation, 'pending');
+  const move = window.emit('touchmove', { target, touches: [{ clientY: 70 }] });
+  assert.equal(move.defaultPrevented, true);
+  assert.equal(root.dataset.presentation, 'complete');
+});
