@@ -14,6 +14,16 @@ try {
     for (const reducedMotion of ['no-preference', 'reduce']) {
       const context = await browser.newContext({viewport, reducedMotion, isMobile:viewport.width<500, hasTouch:viewport.width<1024});
       await context.addInitScript(() => sessionStorage.setItem('seen-intro', 'true'));
+      await context.addInitScript(() => {
+        window.__scrollCalls=[];
+        const original=window.scrollTo.bind(window);
+        window.scrollTo=(...args)=>{
+          const record={path:location.pathname,before:scrollY,args,stack:new Error().stack};
+          original(...args); record.after=scrollY;
+          window.__scrollCalls.push(record);
+          if(window.__scrollCalls.length>40)window.__scrollCalls.shift();
+        };
+      });
       const page = await context.newPage();
       const errors = [];
       page.on('pageerror', error => errors.push(error.message));
@@ -42,6 +52,7 @@ try {
         assert.ok(await page.evaluate(()=>scrollY<2), `${slug} -> ${href}: opens at bottom`);
         await page.goBack(); await settle(page);
         const restored=await page.evaluate(()=>({y:scrollY,height:document.documentElement.scrollHeight}));
+        await writeFile(`${out}/${viewport.width}-${reducedMotion}-${slug}-scroll.json`,JSON.stringify(await page.evaluate(()=>window.__scrollCalls),null,2));
         await page.screenshot({path:`${out}/${viewport.width}-${reducedMotion}-${slug}-history.png`});
         assert.ok(Math.abs(restored.y-departureY)<5, `${slug}: history position lost ${JSON.stringify({previousY,departureY,previousHeight,restored})}`);
         await page.goForward(); await settle(page);
