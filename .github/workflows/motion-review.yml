@@ -38,6 +38,8 @@ jobs:
           exit 1
       - name: Motion survey and measurements
         run: node scripts/motion-survey.mjs ${{ matrix.phase }}
+      - name: Repeated cold loads and mobile CPU measurements
+        run: node scripts/motion-performance.mjs ${{ matrix.phase }}
       - name: Focused motion acceptance
         if: matrix.phase == 'after'
         run: |

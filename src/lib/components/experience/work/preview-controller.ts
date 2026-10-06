@@ -48,7 +48,7 @@ export function createPreviewController(section: HTMLElement, projects: Selected
   }, { threshold: [0, 0.15] });
   for (const video of section.querySelectorAll<HTMLVideoElement>('video[data-project-preview]')) {
     const project = projects.find(item => item.id === video.dataset.projectPreview)!;
-    const entry: Entry = { video, frame: video.parentElement!, sources: project.sources.filter(source => video.canPlayType(source.type) !== '').map(source => source.src), index: 0, visible: false, failed: false, pending: false, token: 0, dispose: () => {} };
+    const entry: Entry = { video, frame: video.closest<HTMLElement>('[data-preview]')!, sources: project.sources.filter(source => video.canPlayType(source.type) !== '').map(source => source.src), index: 0, visible: false, failed: false, pending: false, token: 0, dispose: () => {} };
     video.muted = true; video.defaultMuted = true;
     const playing = () => {
       if (!eligible(entry)) { video.pause(); return; }

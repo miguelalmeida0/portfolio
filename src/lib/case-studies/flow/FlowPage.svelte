@@ -1,8 +1,9 @@
 <svelte:options preserveWhitespace={true} />
 <script>
+import { chapterTitles } from "$lib/motion/actions/chapterTitles";
 import ProductNav from '../shared/ProductNav.svelte';import CommandHero from './CommandHero.svelte';import CapabilityBento from './CapabilityBento.svelte';import FlowDemo from './FlowDemo.svelte';import LatencyCompare from './LatencyCompare.svelte';import InvestigationStory from './InvestigationStory.svelte';import FlowSpecs from './FlowSpecs.svelte';import {createDemo} from './demo.svelte';import './flow.css';const demo=createDemo();
 </script>
-<div class="cs-flow"><ProductNav name="Flow" links={[['overview','Overview'],['latency','Latency'],['engineering','Engineering'],['specs','Specs']]}/><main class="wrap" id="main"><section class="hero" id="overview" aria-labelledby="hero-h">
+<div use:chapterTitles class="cs-flow"><ProductNav name="Flow" links={[['overview','Overview'],['latency','Latency'],['engineering','Engineering'],['specs','Specs']]}/><main class="wrap" id="main"><section class="hero" id="overview" aria-labelledby="hero-h">
     <p class="kicker">Flow, a voice-first personal interface</p>
     <h1 id="hero-h">From speech to deterministic state.</h1>
     <p class="sub">Conversation controls your calendar and personal life. Every change is proposed, checked and reversible before it happens.</p>

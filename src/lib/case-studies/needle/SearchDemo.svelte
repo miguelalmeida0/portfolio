@@ -1,6 +1,7 @@
 <script lang="ts">
   import data from './examples.json';
   import { destinationLink } from '$lib/navigation/destination-link';
+  import { artworkMotion } from './artwork-motion';
   let selected = $state(0);
   let resultIndex = $state(0);
   let failed = $state<string[]>([]);
@@ -9,7 +10,7 @@
   function choose(index: number) { selected = index; resultIndex = 0; }
 </script>
 
-<section class="frame search-demo" id="try" aria-label="Explore a Needle search" data-needle-demo>
+<section class="frame search-demo" id="try" aria-label="Explore a Needle search" data-needle-demo use:artworkMotion>
   <div class="demo-toolbar"><span class="demo-name">Needle <span class="quiet">/ Collection search</span></span><span class="small-label">10,000 Met artworks</span></div>
   <div class="query-controls" role="group" aria-label="Prepared search queries">
     {#each data.examples as item, i}<button type="button" class="chip" aria-pressed={selected === i} onclick={() => choose(i)}>{item.query}</button>{/each}

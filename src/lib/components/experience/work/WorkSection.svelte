@@ -5,6 +5,8 @@
   import PreviewMedia from './PreviewMedia.svelte';
   import { selectedProjects } from './selected-projects';
   import { createPreviewController } from './preview-controller';
+  import { workMotion } from './work-motion';
+  import { chapterTitles } from '$lib/motion/actions/chapterTitles';
   let section: HTMLElement;
   let paused = $state(true);
   let ready = $state(false);
@@ -16,9 +18,9 @@
   });
 </script>
 
-<section id="work" class="selected-work bg-[var(--forest)] text-[var(--paper)]" aria-labelledby="work-title" bind:this={section}>
+<section id="work" class="selected-work bg-[var(--forest)] text-[var(--paper)]" aria-labelledby="work-title" bind:this={section} use:workMotion>
   <div class="selected-inner mx-auto">
-    <header class="selected-heading flex flex-wrap items-end justify-between gap-6">
+    <header class="selected-heading flex flex-wrap items-end justify-between gap-6" use:chapterTitles={'h2'}>
       <h2 id="work-title" data-ask-id="selwork" class="font-extrabold tracking-tight">Selected Work</h2>
       <p>Professional experience.<br />Independent ideas, built.</p>
     </header>
@@ -65,7 +67,7 @@
   .selected-heading h2 { font-size: clamp(42px, 4.8vw, 76px); line-height: 1.05; }
   .selected-heading > p { font-size: 20px; line-height: 1.4; color: var(--sage); }
   .f24-feature { display: grid; grid-template-columns: minmax(0,1.7fr) minmax(0,1fr); gap: 40px; align-items: center; }
-  .f24-photo-link { display: block; min-width: 0; border-radius: var(--r-media); }
+  .f24-photo-link { display: block; min-width: 0; border-radius: var(--r-media); overflow: hidden; }
   .f24-photo { width: 100%; height: auto; aspect-ratio: 1.72; object-fit: cover; border-radius: var(--r-media); }
   .f24-editorial { min-width: 0; }
   .feature-label, .preview-heading > p { font-size: 14px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--sage); }
