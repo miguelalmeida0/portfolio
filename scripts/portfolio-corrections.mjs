@@ -34,11 +34,14 @@ try {
         const href=await next.getAttribute('href');
         await next.scrollIntoViewIfNeeded(); await settle(page);
         const previousY=await page.evaluate(()=>scrollY);
+        const previousHeight=await page.evaluate(()=>document.documentElement.scrollHeight);
         assert.ok(previousY>500);
         await next.click(); await page.waitForURL(new URL(href,base).href); await settle(page);
         assert.ok(await page.evaluate(()=>scrollY<2), `${slug} -> ${href}: opens at bottom`);
         await page.goBack(); await settle(page);
-        assert.ok(Math.abs(await page.evaluate(()=>scrollY)-previousY)<5, `${slug}: history position lost`);
+        const restored=await page.evaluate(()=>({y:scrollY,height:document.documentElement.scrollHeight}));
+        await page.screenshot({path:`${out}/${viewport.width}-${reducedMotion}-${slug}-history.png`});
+        assert.ok(Math.abs(restored.y-previousY)<5, `${slug}: history position lost ${JSON.stringify({previousY,previousHeight,restored})}`);
         await page.goForward(); await settle(page);
         assert.ok(await page.evaluate(()=>scrollY<2), `${slug}: forward position wrong`);
         results.push({viewport,reducedMotion,slug,next:href,previousY,dimensions});
