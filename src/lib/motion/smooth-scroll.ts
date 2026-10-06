@@ -34,10 +34,21 @@ export function installSmoothScroll({ smoothWheel = true } = {}) {
     if (location.hash !== url.hash) pushState(url, {});
     scrollToElement(target, { focus: true, duration: target.id === 'main' ? 0 : undefined });
   };
+  // Native keyboard scrolling must take ownership immediately, even halfway
+  // through a wheel tween. Otherwise its next frame restores the wheel target.
+  const keyboard = (event: KeyboardEvent) => {
+    if (event.defaultPrevented || !['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) return;
+    const target = event.target instanceof Element ? event.target : null;
+    if (target?.closest('input,textarea,select,[contenteditable="true"],[role="slider"],[role="scrollbar"]')) return;
+    if (event.key === ' ' && target?.closest('button,a')) return;
+    resetScrollMotion();
+  };
   document.addEventListener('click', click, true);
+  window.addEventListener('keydown', keyboard, true);
   return () => {
     cancelJourney?.(); unsubscribe(); lenis?.destroy(); lenis = undefined;
     document.removeEventListener('click', click, true);
+    window.removeEventListener('keydown', keyboard, true);
   };
 }
 

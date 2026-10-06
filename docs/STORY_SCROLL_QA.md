@@ -9,6 +9,9 @@ scaled movement to 28%, and waited for another gesture before releasing.
 
 - Delete the reward input interceptor. Native document scroll remains the only
   reading surface, with the site's existing Lenis owner for desktop wheel input.
+- Stop outstanding wheel momentum when a native scrolling key is pressed,
+  without cancelling the keyboard event. The first test run caught Page Down
+  being pulled back to the previous wheel target; editing controls are excluded.
 - Keep the desktop two-column composition based on width, including ordinary
   laptop heights. Size the visual stage for the existing 80% desktop presentation.
 - Add a persistent Home link, previous/next controls and a chapter disclosure.
@@ -37,7 +40,8 @@ interactive scenes, next-chapter focus, full reward reveal, continued movement
 and immediate reversal during the desktop reward, contact/Home, Back, breakpoint
 resizing, horizontal overflow and page errors. Screenshots are uploaded with CI.
 
-No new GSAP animations or ScrollTriggers were introduced. The two capture-phase
-wheel/keyboard handlers were removed. An IntersectionObserver is disconnected
+No new GSAP animations or ScrollTriggers were introduced. The reward wheel/key
+interceptors were removed; the shared keyboard handoff never prevents default.
+An IntersectionObserver is disconnected
 on unmount; dock listeners are also removed on unmount. This change does not
 claim a new measured field INP/LCP result.
