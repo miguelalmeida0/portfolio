@@ -100,6 +100,15 @@ for (const [width, height] of [[1920,1080],[1440,900],[1280,800],[1440,685],[768
     await expect(page.locator('html')).not.toHaveAttribute('data-route-transition','active');
     await page.goBack();
     await expect(picker).toBeEnabled();
+    if(width===1920) {
+      await picker.click();
+      await page.locator('#story-chapters button').first().click();
+      await expect(sections.first()).toBeFocused();
+      await page.keyboard.press('PageDown');
+      await expect(sections.nth(1)).toHaveAttribute('data-current');
+      await page.keyboard.press('PageUp');
+      await expect(sections.first()).toHaveAttribute('data-current');
+    }
     await page.setViewportSize({width:width<1100?1280:390,height:844});
     await expect(page.locator('.story-panel.inline')).toHaveCount(width<1100?0:8);
     await expect.poll(overflow).toBe(false);

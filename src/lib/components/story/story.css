@@ -4,7 +4,7 @@
 .story-inline-placeholder { display:none; }
 .story-split :focus-visible { outline:3px solid var(--story-plum); outline-offset:3px; }
 .story-scroll { grid-column:2; grid-row:1; min-width:0; }
-.story-visual { --story-panel-inset:80px; grid-column:1; grid-row:1; position:sticky; top:var(--story-panel-inset); height:calc(125svh - 205px); min-height:0; margin:48px 12px 40px 0; }
+.story-visual { --story-panel-inset:80px; grid-column:1; grid-row:1; position:sticky; top:var(--story-panel-inset); height:calc(125svh - 205px); min-height:0; margin:0 12px 0 0; }
 .story-visual > .story-panel { inset:0; width:100%; }
 .story-reading { padding:0 0 0 70px; }
 .story-question { min-height:calc(125svh - 205px); display:flex; flex-direction:column; justify-content:center; padding-block:48px; }
@@ -114,7 +114,7 @@
   .story-ring.complete .ring-disc { transform:scale(1); }.story-ring.complete .ring-check { stroke-dashoffset:0; }.ring-burst { display:none; }.short-version.complete li { opacity:1; transform:none; }
 }
 
-/* Reading stays native; the final viewport lingers through space, never wheel interception. */
+/* Chapter travel has one scoped input owner; direct exits always remain available. */
 .ending-content { position:static; }
 .reward-cue { margin-top:36px; color:var(--story-muted); font-size:15px; line-height:1.5; }
 .story-navigation.reached .next-icon { animation:none; }

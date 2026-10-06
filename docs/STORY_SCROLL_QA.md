@@ -1,4 +1,7 @@
-# Story reading correction — 6 October 2026
+# Superseded Story reading correction — 6 October 2026
+
+The user subsequently requested deliberate chapter stepping and a timed final reveal.
+See [STORY_PACING_QA.md](./STORY_PACING_QA.md) for the current contract.
 
 The deployed baseline at 1512×685 used the mobile layout on a laptop: a height
 media query capped the reading surface at 608 physical pixels. Its reward
