@@ -9,7 +9,7 @@ const output = path.resolve('artifacts/recruiter-audit-implementation/links');
 test('hero presents the role, stack and exact footer portrait', async ({ page }) => {
   await openPortfolioHome(page);
   const hero = page.locator('[aria-labelledby="intro-heading"]');
-  await expect(hero.locator("h1")).toHaveAccessibleName("Frontend developer & design engineer.");
+  await expect(hero.locator("h1")).toHaveAccessibleName("Frontend engineer & design engineer.");
   await expect(hero.locator(".facts")).toContainText("JavaScript");
   await expect(hero.locator(".facts dt")).toHaveText(["F24", "Stack", "Quality"]);
   const portrait = hero.locator(".portrait");

@@ -37,7 +37,7 @@
     name: 'Miguel Almeida',
     url: SITE_ORIGIN,
     image: SITE_IMAGE_URL,
-    jobTitle: 'Frontend developer & design engineer',
+    jobTitle: 'Frontend engineer & design engineer',
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Berlin',

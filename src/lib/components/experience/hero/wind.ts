@@ -1,4 +1,4 @@
-export const LINES = ['Frontend developer', '& design engineer.'] as const;
+export const LINES = ['Frontend engineer', '& design engineer.'] as const;
 export const WIND = {
   radius: 8, translate: 1.5, skew: 4, scaleYFloor: 0.985, hotThreshold: 0.72,
   graceMs: 1400, start: -8, span: 38, passMs: 8000, ease: 0.08

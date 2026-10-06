@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { openPortfolioHome } from '../helpers/portfolio';
 
 const routes = [
-  ['/', /Frontend developer\s*& design engineer\./],
+  ['/', /Frontend engineer\s*& design engineer\./],
   ['/cv', /Miguel\s*Almeida\./],
   ['/story', /I started in UX\.\s*Then built the frontend\./],
   ['/work/second-voice-ai', /^Second Voice$/],

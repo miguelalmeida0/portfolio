@@ -73,8 +73,8 @@
   .cv-intro-line { margin-top: 28px; max-width: 30ch; font-size: 22px; line-height: 1.35; }
   .cv-summary-text { font-size: 18px; line-height: 1.6; }
   .cv-download { min-height: 44px; display: inline-flex; align-items: center; margin-top: 8px; }
-  .cv-highlights { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 24px; margin-top: 36px; padding-inline: var(--cv-content-inset); }
-  .cv-highlights > div { display: flex; flex-direction: column; border-top: 1px solid var(--rule-ink); padding-top: 18px; }
+  .cv-highlights { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 0 24px; margin-top: 36px; padding-inline: var(--cv-content-inset); }
+  .cv-highlights > div { display: grid; grid-template-rows: subgrid; grid-row: span 3; text-align: center; border-top: 1px solid var(--rule-ink); padding-top: 18px; }
   .cv-highlights dt { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; }
   .cv-highlights dd { display: contents; }
   .cv-highlights strong { order: -1; font-size: clamp(30px,3vw,46px); letter-spacing: -.04em; line-height: 1.2; margin-bottom: 8px; }
@@ -107,16 +107,6 @@
   .cv-education h3 { margin-top: 8px; font-size: 20px; line-height: 1.35; letter-spacing: -.01em; }
   .cv-sidebar .profile-meta + ul:not(.cv-skills) { margin-top: 22px; }
   .cv-sidebar > .profile-link { margin-top: 24px; }
-  @media (min-width: 900px) {
-    /* Align each pair with the content inside its neighboring cards, including
-       their shared responsive inset, rather than with the outer card edges. */
-    .cv-highlights { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); grid-template-rows: auto auto auto; gap: 0 var(--card-gap); padding-inline: 0; }
-    .cv-highlights > div { display: grid; grid-template-rows: subgrid; grid-row: 1 / span 3; width: calc((100% - var(--card-gap)) / 2 - var(--cv-content-inset)); }
-    .cv-highlights > div:nth-child(-n+2) { grid-column: 1; }
-    .cv-highlights > div:nth-child(n+3) { grid-column: 2; }
-    .cv-highlights > div:nth-child(odd) { margin-left: var(--cv-content-inset); }
-    .cv-highlights > div:nth-child(even) { justify-self: end; margin-right: var(--cv-content-inset); }
-  }
   @media (max-width: 1023px) {
     .cv-page { --cv-content-inset: var(--s-6); }
   }

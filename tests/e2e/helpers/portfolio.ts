@@ -9,7 +9,7 @@ export async function openPortfolioHome(page: Page) {
     await page.keyboard.press('Escape');
     await expect(intro).toBeHidden({ timeout: 3_000 });
   }
-  await expect(page.getByRole('heading', { level: 1, name: /Frontend developer.*design engineer/i })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: /Frontend engineer.*design engineer/i })).toBeVisible();
   // The current first paint renders before hydration attaches menu/tab handlers.
   await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
 }

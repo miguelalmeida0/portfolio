@@ -5,7 +5,7 @@
       "id": "hi",
       "question": "So, who are you?",
       "lead": "I’m Miguel.",
-      "answer": "A frontend developer in Berlin who started out in UX. I like interfaces that stay calm when things go wrong.",
+      "answer": "A frontend engineer in Berlin who started out in UX. I like interfaces that stay calm when things go wrong.",
       "scene": {
         "caption": "Two views of the same person",
         "actions": [
@@ -142,7 +142,7 @@
     "kicker": "The short version",
     "title": "Miguel Almeida",
     "lines": [
-      "Frontend developer in Berlin, with a UX background",
+      "Frontend engineer in Berlin, with a UX background",
       "Four years at F24 — built the original Svelte frontend, now delivering in React",
       "Designs every state, not just the happy path",
       "Keeps data on failed requests, rejects stale responses, restores focus",
@@ -152,7 +152,7 @@
       "Explains complicated systems simply — DNS, TLS, a single request"
     ],
     "copyLabel": "Copy the short version",
-    "copyText": "Miguel Almeida — the short version\n01. Frontend developer in Berlin, with a UX background\n02. Four years at F24 — built the original Svelte frontend, now delivering in React\n03. Designs every state, not just the happy path\n04. Keeps data on failed requests, rejects stale responses, restores focus\n05. Builds crisis-management software, where clarity matters most\n06. Validates data at the boundary — typed contracts, real end-to-end tests\n07. Builds his own products end to end: Second Voice and Flow\n08. Explains complicated systems simply — DNS, TLS, a single request\nmiguelalmeida1592@gmail.com"
+    "copyText": "Miguel Almeida — the short version\n01. Frontend engineer in Berlin, with a UX background\n02. Four years at F24 — built the original Svelte frontend, now delivering in React\n03. Designs every state, not just the happy path\n04. Keeps data on failed requests, rejects stale responses, restores focus\n05. Builds crisis-management software, where clarity matters most\n06. Validates data at the boundary — typed contracts, real end-to-end tests\n07. Builds his own products end to end: Second Voice and Flow\n08. Explains complicated systems simply — DNS, TLS, a single request\nmiguelalmeida1592@gmail.com"
   },
   "progress": {
     "format": "Question {n} of {total} · {left} left",
@@ -181,7 +181,7 @@
       "recruiter": [
         [
           "Role",
-          "Frontend developer"
+          "Frontend engineer"
         ],
         [
           "Based in",

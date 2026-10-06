@@ -6,6 +6,10 @@ test('current portfolio shell and published work routes are reachable', async ({
   expect(homeResponse!.status(), 'homepage should not return an HTTP error').toBeLessThan(400);
   await expect(page.locator('main')).toBeVisible();
 
+  await expect(page.locator("h1")).toHaveAccessibleName("Frontend engineer & design engineer.");
+  await expect(page).toHaveTitle("Miguel Almeida — Frontend engineer & design engineer");
+  await expect(page.locator("meta[name=description]")).toHaveAttribute("content", /frontend engineer and design engineer/);
+
   const workRoutes = await page.locator('a[href^="/work/"]').evaluateAll((anchors) => {
     const hrefs = anchors
       .map((anchor) => anchor.getAttribute('href'))

@@ -14,7 +14,7 @@ for (const [width, height] of sizes) test(`full frames and stable media geometry
   page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
   await openPortfolioHome(page);
   await page.evaluate(() => document.fonts.ready);
-  await expect(page).toHaveTitle('Miguel Almeida — Frontend developer & design engineer');
+  await expect(page).toHaveTitle('Miguel Almeida — Frontend engineer & design engineer');
   await expect(page.locator('vite-error-overlay')).toHaveCount(0);
   await expect(page.locator('#project-f24 img')).toHaveAttribute('src', '/projects/f24/hackathon.webp');
   await expect(page.locator('#project-leu .media-link')).toHaveCSS('background-color', 'rgb(250, 247, 237)');

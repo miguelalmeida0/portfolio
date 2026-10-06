@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 for (const width of [1440, 390]) for (const [route, area, answer] of [
-  ['/cv', 'cv-job-0', 'production'], ['/story', 'story-hi', 'frontend developer'],
+  ['/cv', 'cv-job-0', 'production'], ['/story', 'story-hi', 'frontend engineer'],
   ['/work/f24', 'project-f24', 'Svelte'], ['/work/flow', 'project-flow', 'Flow'],
   ['/work/leu', 'project-leu', 'PDF'], ['/work/second-voice-ai', 'project-second-voice-ai', 'rewrite']
 ]) test(`shared Ask on ${route} at ${width}px`, async ({ page }) => {

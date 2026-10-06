@@ -120,7 +120,7 @@ export function buildFallbackAnswer(question: string, mode: MiguelLLMMode, _rece
     return make(brief.problem, [`My ownership: ${brief.ownership}`, brief.result], [source('Personal contribution', 'contribution'), source('Result', 'result')], followups, slug === 'ghostwriter' || slug === 'atlas' ? 'medium' : 'high');
   }
 
-  if (/who|tell me about|summarize|summary|30 seconds/.test(q)) return make('Miguel is a Portuguese frontend developer and design engineer in Berlin with a product-design background. He works with React, TypeScript, and Svelte. His current portfolio covers Needle, F24, Second Voice AI, Flow and Leu.',
+  if (/who|tell me about|summarize|summary|30 seconds/.test(q)) return make('Miguel is a Portuguese frontend engineer and design engineer in Berlin with a product-design background. He works with React, TypeScript, and Svelte. His current portfolio covers Needle, F24, Second Voice AI, Flow and Leu.',
     [], ['Résumé|/cv', 'About Miguel|/story'], suggestions[mode]);
   if (/design|ux|frontend|react|typescript|svelte|stack|skills/.test(q)) return make('Miguel combines product-design judgment with frontend implementation: shaping flows, building reusable UI, and making loading, failure, and recovery understandable.',
     ['Core tools: React, TypeScript, and Svelte.', 'His production work at F24 connects that background to production delivery; Second Voice AI shows it in an independent writing interface.'],
