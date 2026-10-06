@@ -2,7 +2,7 @@ import { motionOwner, refreshMotion } from '$lib/motion/runtime';
 import { motion } from '$lib/motion/tokens';
 
 export function sectionMotion(node: HTMLElement) {
-  return motionOwner(node, 'section-navigation', ({ gsap, ScrollTrigger }, context, { desktop }) => {
+  return motionOwner(node, 'section-navigation', ({ gsap, ScrollTrigger }, context, { desktop, fine }) => {
     const list = node.querySelector('ul');
     const indicator = node.querySelector<HTMLElement>('[data-section-indicator]');
     const progress = node.querySelector<HTMLElement>('[data-reading-progress]');
@@ -29,7 +29,7 @@ export function sectionMotion(node: HTMLElement) {
     observer.observe(list, { attributes: true, subtree: true, attributeFilter: ['aria-current'] });
     const resize = new ResizeObserver(update);
     resize.observe(list);
-    gsap.fromTo(progress, { scaleX: 0 }, { scaleX: 1, ease: 'none', scrollTrigger: { trigger: main, start: 'top top', end: 'bottom bottom', scrub: desktop ? motion.scrub : true } });
+    gsap.fromTo(progress, { scaleX: 0 }, { scaleX: 1, ease: 'none', scrollTrigger: { trigger: main, start: 'top top', end: 'bottom bottom', scrub: desktop && fine ? motion.scrub : true } });
     update();
     refreshMotion({ gsap, ScrollTrigger });
     return () => { observer.disconnect(); resize.disconnect(); delete node.dataset.navMotion; indicator.removeAttribute('style'); };

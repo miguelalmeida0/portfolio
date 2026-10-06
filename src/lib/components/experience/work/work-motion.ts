@@ -7,10 +7,10 @@ export function workMotion(node: HTMLElement) {
     const photo = node.querySelector<HTMLImageElement>('.f24-photo');
     const photoFrame = node.querySelector<HTMLElement>('.f24-photo-link');
     if (photo && photoFrame) {
-      const travel = () => Math.min(desktop ? motion.photoTravel : motion.mobilePhotoTravel, photoFrame.clientHeight * .018);
+      const travel = () => Math.min(desktop && fine ? motion.photoTravel : motion.mobilePhotoTravel, photoFrame.clientHeight * .018);
       gsap.fromTo(photo, { scale: 1.06, y: () => -travel() }, {
         scale: 1.04, y: travel, ease: 'none',
-        scrollTrigger: { trigger: photoFrame, start: 'top bottom', end: 'bottom top', scrub: desktop ? motion.scrub : true, invalidateOnRefresh: true }
+        scrollTrigger: { trigger: photoFrame, start: 'top bottom', end: 'bottom top', scrub: desktop && fine ? motion.scrub : true, invalidateOnRefresh: true }
       });
       const loaded = () => refreshMotion({ gsap, ScrollTrigger });
       photo.addEventListener('load', loaded, { once: true });
