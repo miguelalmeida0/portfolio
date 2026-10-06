@@ -130,6 +130,17 @@
     animation-timing-function: var(--motion-settle);
     mix-blend-mode: normal;
   }
+
+  ::view-transition-group(project-identity) {
+    animation-duration: var(--motion-media-reveal);
+    animation-timing-function: var(--motion-settle);
+  }
+  ::view-transition-old(project-identity),
+  ::view-transition-new(project-identity) {
+    animation-duration: var(--motion-route);
+    animation-timing-function: var(--motion-settle);
+    mix-blend-mode: normal;
+  }
 }
 
 /* ---------------------------------------------------------------------------

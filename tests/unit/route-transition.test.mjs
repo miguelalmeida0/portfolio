@@ -35,9 +35,10 @@ function setup({ reduced = false, mobile = true } = {}) {
         return navigation.promise;
       }
     },
-    svelte: { onDestroy: fn => hooks.destroy = fn, tick: async () => { events.push('tick'); } },
+    svelte: { onMount: fn => hooks.mount = fn, onDestroy: fn => hooks.destroy = fn, tick: async () => { events.push('tick'); } },
     'svelte/store': { writable: initial => { let state = initial; return { set(value) { state = value; }, subscribe(fn) { fn(state); return () => {}; }, get value() { return state; } }; } },
     './policy': { motionSnapshot: () => ({ reduced }) },
+    './tokens': { easing: { settle: 'cubic-bezier(0.22,1,0.36,1)' } },
     './smooth-scroll': { resetScrollMotion() {}, syncScrollPosition: () => events.push('scroll-synced'), scrollToElement: (target, options) => events.push('scroll:' + target.id + ':' + options.focus) }
   };
   const exports = {};

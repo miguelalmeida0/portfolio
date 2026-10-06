@@ -1,4 +1,5 @@
 <script>
+import { chapterTitles } from "$lib/motion/actions/chapterTitles";
 import './f24.css';import ProductNav from '../shared/ProductNav.svelte';
 import LegalBar from './LegalBar.svelte';
 import SituationStory from './SituationStory.svelte';
@@ -11,7 +12,7 @@ import TeamSection from './TeamSection.svelte';
 import F24Specs from './F24Specs.svelte';
 import NoticeFull from './NoticeFull.svelte';
 </script>
-<div class="cs-f24"><LegalBar/><ProductNav name="F24 Connectivity Hub" links={[["overview","Overview"],["states","States"],["migration","Migration"],["decisions","Decisions"],["testing","Testing"]]}/><main class="wrap" id="main">  <section class="hero" id="overview" aria-labelledby="hero-h">
+<div use:chapterTitles class="cs-f24"><LegalBar/><ProductNav name="F24 Connectivity Hub" links={[["overview","Overview"],["states","States"],["migration","Migration"],["decisions","Decisions"],["testing","Testing"]]}/><main class="wrap" id="main">  <section class="hero" id="overview" aria-labelledby="hero-h">
     <p class="kicker">F24, frontend architecture and product delivery, 2022-now</p>
     <h1 id="hero-h">From mockup to production system.</h1>
     <p class="sub">Built Connectivity Hub's original Svelte frontend within the product team, and continued shipping as React joined the architecture.</p>

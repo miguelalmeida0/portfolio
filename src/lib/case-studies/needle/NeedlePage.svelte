@@ -1,4 +1,5 @@
 <script>
+import { chapterTitles } from "$lib/motion/actions/chapterTitles";
   import ProductNav from '../shared/ProductNav.svelte';
   import SearchDemo from './SearchDemo.svelte';
   import SearchPipeline from './SearchPipeline.svelte';
@@ -19,7 +20,7 @@
 
 {#snippet source(href, label)}<a class="source-link" {href} {...destinationLink(href)}>{label} ↗</a>{/snippet}
 
-<div class="cs-needle" data-needle-study>
+<div use:chapterTitles class="cs-needle" data-needle-study>
   <ProductNav name="Needle" links={[["overview", "Overview"], ["engineering", "Search"], ["images", "Images"], ["cache", "Cache"], ["rendering", "Rendering"], ["specs", "Specs"]]} />
   <main class="wrap" id="main">
     <section class="hero" id="overview" aria-labelledby="hero-h">

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { installWind, LINES } from './wind';
+  import { motionState } from '$lib/motion/policy';
   let { lines = LINES, label = lines.join(' '), debugPos }: {
     lines?: readonly string[]; label?: string;
     debugPos?: { line: number; pos: number };
@@ -9,15 +10,17 @@
   onMount(() => {
     let mounted = true;
     let fontReady = false;
+    let policyReduced = true;
     const media = matchMedia('(min-width: 768px) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
-    const update = () => { enabled = media.matches && fontReady; };
+    const update = () => { enabled = media.matches && fontReady && !policyReduced; };
+    const unsubscribe = motionState.subscribe(state => { policyReduced = state.reduced; update(); });
     // Keep the server-rendered text until the real font is ready; never mount
     // individual fallback glyphs whose widths would shift during font swap.
     document.fonts.load('800 52px Figtree').then(() => {
       if (mounted) { fontReady = true; update(); }
     });
     update(); media.addEventListener('change', update);
-    return () => { mounted = false; media.removeEventListener('change', update); };
+    return () => { mounted = false; unsubscribe(); media.removeEventListener('change', update); };
   });
   function windAction(node: HTMLElement) { return { destroy: installWind(node, debugPos) }; }
 </script>
