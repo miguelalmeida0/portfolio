@@ -40,6 +40,13 @@ interactive scenes, next-chapter focus, full reward reveal, continued movement
 and immediate reversal during the desktop reward, contact/Home, Back, breakpoint
 resizing, horizontal overflow and page errors. Screenshots are uploaded with CI.
 
+Final candidate `cd6d029`: **12/12 browser journeys passed**, check and lint had
+zero errors/warnings, all 80 unit tests passed, and the production build passed.
+Evidence: GitHub Actions run `37458584991`. The first run (`37457914304`) passed
+all mobile/tablet and reduced-motion journeys but exposed the desktop
+wheel-to-keyboard ownership bug; the final run keeps that assertion unchanged.
+The opacity-only route fade was separately verified by run `37456359559`.
+
 No new GSAP animations or ScrollTriggers were introduced. The reward wheel/key
 interceptors were removed; the shared keyboard handoff never prevents default.
 An IntersectionObserver is disconnected
