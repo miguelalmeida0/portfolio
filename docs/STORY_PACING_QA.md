@@ -59,3 +59,9 @@ It failed in both normal and reduced motion against `74ee595` in run
 37468855823; the previous 14 journeys still passed. The fix removes the elapsed
 time fallback and waits for a quiet interval. The original failing fling fixture
 is retained unchanged for verification.
+
+Corrected candidate `aff48b4` passed both formerly failing momentum journeys
+and the full matrix: **16/16**, plus typecheck and lint (zero Svelte warnings),
+**80/80 unit tests**, and production build in
+[run 37469914707](https://github.com/miguelalmeida0/portfolio/actions/runs/37469914707).
+Desktop and 375px reward screenshots were visually reviewed before publishing.
