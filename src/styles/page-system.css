@@ -77,7 +77,7 @@
   --story-gutter: var(--content-inset);
   padding-inline: var(--content-inset);
 }
-#portfolio-content .story-visual { margin-top: var(--page-start); }
+#portfolio-content .story-visual { margin-top: 0; }
 #portfolio-content .story-panel { border-radius: var(--r-card); }
 #portfolio-content .story-question h2 { font-size: var(--section-title-size); line-height: 1.12; letter-spacing: -.03em; }
 #portfolio-content .story-answer { max-width: 60ch; }

@@ -4,6 +4,7 @@
   import { createSceneRunner, autoplay, type SceneId } from '$lib/story/scenes';
   import { format } from '$lib/story/reading';
   import { scrollToElement } from '$lib/motion/smooth-scroll';
+  import { installChapterScroll } from '$lib/story/chapter-scroll';
   import { destinationLink } from '$lib/navigation/destination-link';
   import ScenePanel from './ScenePanel.svelte';
   import ShortVersion from './ShortVersion.svelte';
@@ -13,6 +14,8 @@
   import './scenes.css';
   let root: HTMLElement;
   let current = $state(0), mobile = $state(false), reduced = $state(false), mounted = $state(false);
+  let holding = $state(false);
+  let chapters: ReturnType<typeof installChapterScroll> | undefined;
   const runners = data.questions.map(question => createSceneRunner(question.id as SceneId));
   const seen = new Set<number>();
   let previous = -1;
@@ -28,6 +31,7 @@
   function run(index: number, action: number) { void runners[index].run([action], reduced); }
   function sections() { return Array.from(root.querySelectorAll<HTMLElement>('[data-story-section]')); }
   function go(index: number) {
+    if (chapters) { chapters.go(index); return; }
     const next = Math.max(0, Math.min(8, index)), section = sections()[next];
     if (!section) return;
     scrollToElement(section, { offset: 40, focus: true, duration: reduced ? 0 : undefined });
@@ -35,17 +39,23 @@
   onMount(() => {
     const size = matchMedia('(max-width: 1099px)'), motion = matchMedia('(prefers-reduced-motion: reduce)');
     const layout = () => { mobile = size.matches; };
-    const preference = () => { reduced = motion.matches; if (reduced) runners.forEach(r => r.cancel()); };
+    const preference = () => { reduced = motion.matches; if (reduced) runners.forEach(r => r.cancel()); chapters?.preference(); };
     layout(); preference(); mounted = true;
+    chapters = installChapterScroll(root, {
+      index: () => current, reduced: () => reduced,
+      settled: index => { current = index; }, holding: value => { holding = value; }
+    });
     let frame = 0;
     const update = () => {
       frame = 0;
+      if (chapters?.animating()) return;
       const elements = sections();
-      const line = innerHeight * .42;
+      const line = (innerHeight - 36) / 2;
       let index = 0, distance = Infinity;
-      elements.forEach((element, i) => { const box = element.getBoundingClientRect(); const d = Math.abs(box.top + Math.min(box.height, innerHeight) * .35 - line); if (d < distance) { distance = d; index = i; } });
+      elements.forEach((element, i) => { const box = element.getBoundingClientRect(); const d = box.top <= line && box.bottom >= line ? 0 : Math.min(Math.abs(box.top - line), Math.abs(box.bottom - line)); if (d < distance) { distance = d; index = i; } });
       if (root.getBoundingClientRect().bottom <= innerHeight + 4) index = 8;
       current = index;
+      chapters?.arrived(index);
     };
     const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
     const resize = async () => { layout(); await tick(); schedule(); };
@@ -55,6 +65,7 @@
     motion.addEventListener('change', preference); size.addEventListener('change', resize); document.addEventListener('visibilitychange', hidden);
     schedule();
     return () => {
+      chapters?.destroy(); chapters = undefined;
       runners.forEach(r => r.cancel()); cancelAnimationFrame(frame);
       window.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', resize);
@@ -62,10 +73,10 @@
     };
   });
 </script>
-<article bind:this={root} class="story-split" aria-label={data.ui.title}>
+<article bind:this={root} class="story-split" data-story-holding={holding || undefined} aria-label={data.ui.title}>
   <h1 class="sr-only">{data.ui.title}</h1>
   {#if !mobile}<div class="story-visual"><ScenePanel index={Math.min(current, 7)} complete={current === 8} {runners} {run} /></div>{/if}
-  <Progress {current} {go} ready={mounted} />
+  <Progress {current} {go} {holding} ready={mounted} />
   <div class="story-scroll"><div class="story-reading">
     {#each data.questions as question, i}
       <section class="story-question" data-story-section data-current={current === i || undefined} aria-labelledby={`story-${question.id}`}>
@@ -78,7 +89,7 @@
     <section class="story-question story-ending" data-story-section data-current={current === 8 || undefined} aria-labelledby="story-end">
       <div class="ending-content"><p class="question-number">{data.ending.label}</p><h2 id="story-end">{data.ending.question}</h2><p class="story-answer">{data.ending.answer}</p>
       <div class="ending-actions"><StoryNavigation ready={mounted} index={8} {go} current={current === 8} ending />{#each data.ending.ctas as cta}<a class:primary={'primary' in cta && cta.primary} href={cta.href} {...destinationLink(cta.href)}>{cta.label}</a>{/each}</div>
-      <p class="reward-cue">The short version. Keep scrolling when you’re ready.</p></div>
+      <p class="reward-cue" role="status">{holding ? 'Your short version is coming together…' : 'The short version. Continue when you’re ready.'}</p></div>
       {#if mobile}<div class="mobile-summary" data-story-panel data-complete={current === 8 || undefined}><ShortVersion complete={current === 8} /></div>{/if}
     </section>
   </div></div>
