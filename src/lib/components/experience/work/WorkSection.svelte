@@ -88,7 +88,7 @@
   .case-action { min-height: 58px; padding: 12px 28px; border-radius: var(--r-pill); background: var(--lime); color: var(--ink); font-size: 21px; font-weight: 750; margin-top: 30px; }
   .preview-heading { margin: 36px 0 18px; min-height: 48px; }
   .preview-toggle { font-size: 16px; min-height: 48px; padding: 10px 2px; text-decoration: underline; text-underline-offset: 6px; cursor: pointer; }
-  .project-gallery { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 24px; }
+  .project-gallery { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 48px 32px; }
   .project-gallery article { min-width: 0; display: flex; flex-direction: column; }
   .preview-link { border-radius: var(--r-media); }
   .project-gallery h3 { font-size: 28px; line-height: 1.2; margin-top: 12px; }

@@ -22,7 +22,8 @@ additional visual effects. Taste dials: variance 6, motion 4, density 4.
 - Ask retains site navigation and puts supporting answer detail in a disclosure.
 - Contact separates email composition and clipboard actions with live feedback.
 - Open Graph and Twitter metadata identify each route and use its product media.
-- Preview proportions follow desktop screens and the native Leu portrait.
+- Two-column desktop previews make the actual interfaces readable; proportions
+  follow desktop screens and the native Leu portrait.
 - CV summary covers scope; metrics retain their equal tracks and state attribution.
 - Story starts with the short version; PDF reader offers the responsive web CV.
 

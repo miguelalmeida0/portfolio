@@ -37,7 +37,7 @@
             </ul>
           </div>
         {/each}
-        <a href="/work/f24#production-decision" class="profile-link" {...destinationLink("/work/f24#production-decision")}>Read about my work at F24 </a>
+        <a href="/work/f24#decisions" class="profile-link" {...destinationLink("/work/f24#decisions")}>Read about my work at F24 </a>
       </section>
       <section class="cv-projects" aria-labelledby="projects-title">
         <h2 id="projects-title" class="profile-meta">Selected engineering work</h2>
