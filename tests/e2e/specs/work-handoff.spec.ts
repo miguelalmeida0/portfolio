@@ -224,7 +224,7 @@ test('no JavaScript leaves four posters and working links', async ({ browser }) 
   await expect(page.locator('.static-projects article')).toHaveCount(4);
   await expect(page.locator('.static-projects img')).toHaveCount(4);
   await expect(page.locator('.static-projects a')).toHaveCount(8);
-  await expect(page.locator('h1')).toHaveAccessibleName('Frontend engineer & design engineer.');
+  await expect(page.locator('h1')).toHaveAccessibleName('Frontend engineer & product designer.');
   await expect(page.locator('[data-pixel-intro]')).toBeHidden();
   await context.close();
 });

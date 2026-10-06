@@ -37,5 +37,5 @@ test('case studies expose ownership and hero media immediately before architectu
     }
   }
   const schemas = await page.locator('script[type="application/ld+json"]').allTextContents();
-  expect(schemas.join(' ')).toContain('Frontend engineer & design engineer');
+  expect(schemas.join(' ')).toContain('Frontend engineer & product designer');
 });

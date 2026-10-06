@@ -5,7 +5,7 @@ const projects = ['second-voice-ai', 'f24', 'leu', 'flow'];
 
 test('recruiter sees identity and exactly four real projects without an accordion', async ({ page }) => {
   await openPortfolioHome(page);
-  await expect(page.getByRole('heading', { level: 1, name: /Frontend engineer.*design engineer/i })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: /Frontend engineer.*product designer/i })).toBeVisible();
   await expect(page.locator('[data-identity-name]')).toHaveText('MIGUEL ALMEIDA');
   await expect(page.locator('[data-identity-location]')).toHaveText('Berlin');
   await expect(page.locator('main img[src*="miguel"]')).toHaveCount(1);
@@ -80,7 +80,7 @@ test('legacy product URL redirects and removed projects return an honest 404', a
   const missing = await page.goto('/work/camera-harness');
   expect(missing?.status()).toBe(404);
   await page.getByRole('link', { name: 'Back to the work' }).click();
-  await expect(page.getByRole('heading', { level: 1, name: /Frontend engineer.*design engineer/i })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: /Frontend engineer.*product designer/i })).toBeVisible();
 });
 
 test('CV download contains a real PDF and sitemap lists only selected projects', async ({ request }) => {

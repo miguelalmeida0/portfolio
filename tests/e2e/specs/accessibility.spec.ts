@@ -26,7 +26,7 @@ test('intro is decorative, skippable and never creates a second page heading', a
 test('reduced motion keeps content visible and disables decorative transitions', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
-  await expect(page.getByRole('heading', { level: 1, name: /Frontend engineer.*design engineer/i })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: /Frontend engineer.*product designer/i })).toBeVisible();
   const mark = page.locator('mark').first();
   await expect(mark).toBeVisible();
   const styles = await mark.evaluate(el => ({ duration: getComputedStyle(el).animationDuration, opacity: getComputedStyle(el).opacity }));

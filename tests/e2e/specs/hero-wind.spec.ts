@@ -12,7 +12,7 @@ test.beforeEach(async ({ page }) => {
 
 test('one accessible headline and exact desktop geometry', async ({ page }) => {
   await expect(page.locator('h1')).toHaveCount(1);
-  await expect(page.locator('h1')).toHaveAccessibleName('Frontend engineer & design engineer.');
+  await expect(page.locator('h1')).toHaveAccessibleName('Frontend engineer & product designer.');
   await expect(page.locator('h1')).toBeInViewport();
   expect(await page.locator('.wind-hero').boundingBox()).toEqual({ x: 108, y: 128, width: 1224, height: 500 });
   expect(await page.locator('.content-card').boundingBox()).toEqual({ x: 108, y: 128, width: 673, height: 500 });
@@ -52,7 +52,7 @@ for (const [width, height] of [[1440,900],[1366,768],[1280,800],[1024,768],[834,
     expect(img.width / img.height).toBeCloseTo(1086 / 1448, 2);
     await expect(page.locator('.greeting-row')).toHaveText('Hi, I’m Miguel.');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    await expect(page.locator('h1')).toHaveAccessibleName('Frontend engineer & design engineer.');
+    await expect(page.locator('h1')).toHaveAccessibleName('Frontend engineer & product designer.');
     await expect(page.locator('[data-glyph]')).toHaveCount(0);
     await page.screenshot({ path: `/tmp/hero-polish-${width}.png` });
     if (width === 834) await page.locator('.wind-hero').screenshot({ path: '/tmp/hero-polish-834-full.png' });
@@ -117,7 +117,7 @@ test('coarse pointer at desktop width has no glyph DOM', async ({ browser, brows
   await touchPage.goto(page.url());
   expect(await touchPage.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(true);
   await expect(touchPage.locator('[data-glyph]')).toHaveCount(0);
-  await expect(touchPage.locator('h1')).toHaveAccessibleName('Frontend engineer & design engineer.');
+  await expect(touchPage.locator('h1')).toHaveAccessibleName('Frontend engineer & product designer.');
   await context.close();
 });
 
