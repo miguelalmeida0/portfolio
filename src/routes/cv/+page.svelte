@@ -106,6 +106,15 @@
   .cv-education h3 { margin-top: 8px; font-size: 20px; line-height: 1.35; letter-spacing: -.01em; }
   .cv-sidebar .profile-meta + ul:not(.cv-skills) { margin-top: 22px; }
   .cv-sidebar > .profile-link { margin-top: 24px; }
+  @media (min-width: 900px) {
+    /* Two metrics share each of the page's existing card columns. Keep their
+       center gutter aligned with the intro and experience/sidebar gutters. */
+    .cv-highlights { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: var(--card-gap); }
+    .cv-highlights > div { grid-row: 1; width: calc((100% - var(--card-gap)) / 2); }
+    .cv-highlights > div:nth-child(-n+2) { grid-column: 1; }
+    .cv-highlights > div:nth-child(n+3) { grid-column: 2; }
+    .cv-highlights > div:nth-child(even) { justify-self: end; }
+  }
   @media (min-width: 768px) and (max-width: 1099px) {
     .cv-evidence { gap: 24px; }
     .cv-role { font-size: 30px; }
