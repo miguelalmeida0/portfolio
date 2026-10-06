@@ -15,7 +15,6 @@
   .preview-plane { position: absolute; inset: 0; }
   [data-treatment='needle'], [data-treatment='second-voice-ai'], [data-treatment='leu'] { background: var(--paper); }
   img, video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
-  [data-treatment='flow'] img, [data-treatment='flow'] video { object-fit: cover; }
   img { z-index: 1; }
   video { opacity: 0; }
   .preview-frame:global([data-preview-status='playing']) img { visibility: hidden; }
