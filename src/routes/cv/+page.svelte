@@ -3,7 +3,7 @@
   import '$lib/components/experience/profile-pages.css';
   import ArrowUpRight from '@lucide/svelte/icons/arrow-up-right';
   import { cvExperience, cvEducation, cvLanguages, cvSkills, professionalRecommendation, site } from '$lib/content/folio';
-  import { projects } from '$lib/experience/projects';
+  import { cvProjects } from '$lib/content/cv-projects';
 </script>
 <svelte:head>
   <title>CV — Miguel Almeida</title>
@@ -16,7 +16,6 @@
     <div class="profile-surface profile-support cv-summary">
       <p class="profile-lead" data-ask-id="f24">Four years at F24: original Svelte frontend through production, then continued delivery in React.</p>
       <a href="/portfolio.pdf" class="profile-button" {...destinationLink("/portfolio.pdf")}><ArrowUpRight size={18} aria-hidden="true" /> Open CV PDF</a>
-      <p class="pdf-note">PDF: earlier project selection. Current work is below.</p>
       <a href={'mailto:'+site.email} class="profile-link cv-email" {...destinationLink('mailto:'+site.email)}>{site.email}</a>
     </div>
   </header>
@@ -37,10 +36,14 @@
       </section>
       <section class="cv-projects" aria-labelledby="projects-title">
         <h2 id="projects-title" class="profile-meta">Independent work</h2>
-        {#each ['second-voice-ai', 'flow', 'leu'].map(slug => projects.find(p => p.slug === slug)!) as project}
-          <a href={'/work/'+project.slug} class="cv-project" data-ask-id={`project-${project.slug}`} {...destinationLink('/work/'+project.slug)}>
-            <div><h3 class="cv-project-title">{project.name}</h3><p class="cv-project-description">{project.summary}</p></div>
-          </a>
+        {#each cvProjects as project}
+          <div class="cv-project" data-ask-id={`project-${project.slug}`}>
+            <h3 class="cv-project-title"><a href={project.href} {...destinationLink(project.href)}>{project.name}</a></h3>
+            <p class="cv-project-description">{project.description}</p>
+            {#if project.live}
+              <a href={project.live} class="profile-link cv-live" {...destinationLink(project.live)}>Live app <ArrowUpRight size={16} aria-hidden="true" /></a>
+            {/if}
+          </div>
         {/each}
       </section>
     </div>
@@ -60,7 +63,6 @@
   .cv-stack > span { white-space: nowrap; }
   .cv-summary { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; }
   .cv-summary .profile-button { margin-top: 24px; }
-  .pdf-note { margin-top: 12px; font-size: 12px; line-height: 1.5; color: var(--muted); }
   .cv-email { margin-top: 8px; max-width: 100%; overflow-wrap: anywhere; font-size: 15px; }
   .cv-evidence { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: var(--card-gap); align-items: start; margin-top: 60px; }
   .cv-date { font-size: 14px; line-height: 1.5; color: var(--muted); }
@@ -74,7 +76,8 @@
   .cv-projects { margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--rule-ink); }
   .cv-project { display: block; padding-top: 24px; }
   .cv-project h3 { font-size: 24px; }
-  .cv-project:hover h3 { color: var(--plum); text-decoration: underline; text-underline-offset: 5px; }
+  .cv-project h3 a:hover { color: var(--plum); text-decoration: underline; text-underline-offset: 5px; }
+  .cv-live { min-height: 44px; margin-top: 8px; display: inline-flex; align-items: center; gap: 8px; }
   .cv-project-description { margin-top: 8px; font-size: 16px; line-height: 1.55; color: var(--muted); }
   .cv-sidebar > section + section, .cv-recommendation { margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--rule-ink); }
   .cv-skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; margin-top: 22px; font-size: 17px; line-height: 1.45; }

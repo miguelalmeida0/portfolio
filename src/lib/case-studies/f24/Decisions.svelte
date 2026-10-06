@@ -4,7 +4,7 @@ import {DEC} from './data';let selected=$state(0);function key(e,i){const d=e.ke
   <section class="chapter" id="decisions" aria-labelledby="dec-h">
     <div class="head">
       <h2 id="dec-h">The architecture decisions behind it.</h2>
-      <p>Seven decisions shaped how the frontend stays modular as workflows grow and a second stack arrives. Pick one to see which layers it governs. Shown at the level of principles, not internal design.</p>
+      <p>These decisions shaped how the frontend stays modular as workflows grow and a second stack arrives. Pick one to see which layers it governs. Shown at the level of principles, not internal design.</p>
     </div>
     <div class="layers-d focus" id="layersD" aria-hidden="true">
       <div class="ld wide" data-l="shell" class:on={DEC[selected].l.includes('shell')}><b>Shared app shell</b><small>Auth, session, routing, layout, navigation, providers, tokens, global assets, build and deploy conventions</small></div>

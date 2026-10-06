@@ -9,13 +9,13 @@ export const SCROLL_TRANSITION_MS = 320;
 const easeTravel = (t: number) => (1 - Math.cos(Math.PI * t)) / 2;
 
 /** One scroll owner for wheel input, project changes, and in-page links. */
-export function installSmoothScroll() {
+export function installSmoothScroll({ smoothWheel = true } = {}) {
   const unsubscribe = motionState.subscribe(({ reduced }) => {
     cancelJourney?.();
     if (reduced) { lenis?.destroy(); lenis = undefined; return; }
     lenis ??= new Lenis({
       // Gentle wheel response with a short, controlled settling tail.
-      autoRaf: true, smoothWheel: true, syncTouch: false, lerp: 0.18,
+      autoRaf: true, smoothWheel, syncTouch: false, lerp: 0.18,
       wheelMultiplier: 0.9,
       anchors: false, stopInertiaOnNavigate: true,
       prevent: node => ['TEXTAREA', 'SELECT'].includes(node.tagName) || node.hasAttribute('data-scroll-native')
@@ -80,8 +80,10 @@ export function scrollToPosition(top: number, duration = SCROLL_TRANSITION_MS, o
 
 export function scrollToElement(target: HTMLElement, options: { offset?: number; duration?: number; focus?: boolean } = {}) {
   const top = window.scrollY + target.getBoundingClientRect().top - (options.offset ?? 40);
-  const duration = options.duration ?? Math.min(420, Math.max(240, Math.abs(top - window.scrollY) * 0.2));
-  return scrollToPosition(top, duration, options.focus ? () => focusTarget(target) : undefined);
+  // Time the actual reachable distance, including pages shorter than the viewport.
+  const destination = Math.max(0, Math.min(top, document.documentElement.scrollHeight - window.innerHeight));
+  const duration = options.duration ?? Math.min(1250, Math.max(650, Math.abs(destination - window.scrollY) * 0.65));
+  return scrollToPosition(destination, duration, options.focus ? () => focusTarget(target) : undefined);
 }
 
 /** Stop the outgoing page's inertia before SvelteKit restores the next position. */

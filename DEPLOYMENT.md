@@ -23,3 +23,13 @@ Before publishing:
 
 Keep the recovered source and tests in Git. Do not publish a branch that omits
 `src/lib/case-studies` or `src/styles/desktop-density.css`.
+
+On 6 October, the completed 5 October reconciliation, Selected Work cards,
+supplied Needle/Second Voice loops and posters, hero experience line, and CV
+updates were recovered from the saved handoff into this checkout. The original
+temporary preview checkout no longer exists. The CV PDF also includes Leu's
+verified desktop app URL. Preserve these files together in future releases.
+
+GitHub `main` pushes automatically deploy to the same Cloudflare Pages project.
+Use one deployment path per release and wait for its Cloudflare Pages check
+before verifying the public domain. Do not run a parallel direct deployment.
