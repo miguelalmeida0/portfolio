@@ -59,6 +59,7 @@ try {
       await settle(page);
       assert.equal(new URL(page.url()).hash,'#try');
       assert.ok(await page.locator('#try').evaluate(n=>Math.abs(n.getBoundingClientRect().top)<100));
+      assert.ok(await page.locator('#try').evaluate(n=>n.getBoundingClientRect().top>=document.querySelector('.pnav').getBoundingClientRect().bottom),'anchor hidden by sticky navigation');
       assert.deepEqual(errors,[]);
       await context.close();
     }

@@ -79,7 +79,9 @@ export function scrollToPosition(top: number, duration = SCROLL_TRANSITION_MS, o
 }
 
 export function scrollToElement(target: HTMLElement, options: { offset?: number; duration?: number; focus?: boolean } = {}) {
-  const top = window.scrollY + target.getBoundingClientRect().top - (options.offset ?? 40);
+  // Honor case-study sticky navigation while keeping the homepage's 40px inset.
+  const pageInset = Math.max(40, parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0);
+  const top = window.scrollY + target.getBoundingClientRect().top - (options.offset ?? pageInset);
   // Time the actual reachable distance, including pages shorter than the viewport.
   const destination = Math.max(0, Math.min(top, document.documentElement.scrollHeight - window.innerHeight));
   const duration = options.duration ?? Math.min(1250, Math.max(650, Math.abs(destination - window.scrollY) * 0.65));

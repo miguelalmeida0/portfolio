@@ -4,6 +4,9 @@ on:
     branches: ['portfolio-corrections/**']
 permissions:
   contents: read
+concurrency:
+  group: portfolio-corrections-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   verify:
     runs-on: ubuntu-latest
