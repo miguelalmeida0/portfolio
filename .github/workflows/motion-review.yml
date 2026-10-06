@@ -50,8 +50,8 @@ jobs:
           PARITY_IMPL_BASE: http://127.0.0.1:4398
         run: |
           node --test tests/f24-sv/data-diff.test.mjs
-          npx playwright test -c tests/case-studies/tests/parity/playwright.parity.config.ts --workers=1 --grep 'behaviour|motion' --reporter=list
-          npx playwright test -c tests/f24-sv/tests/parity/playwright.parity.config.ts --workers=1 --grep 'behaviour|motion' --reporter=list
+          PARITY_REF_DIR="$PWD/tests/case-studies/reference" npx playwright test -c tests/case-studies/tests/parity/playwright.parity.config.ts --workers=1 --grep 'behaviour|motion' --reporter=list
+          PARITY_REF_DIR="$PWD/tests/f24-sv/reference" npx playwright test -c tests/f24-sv/tests/parity/playwright.parity.config.ts --workers=1 --grep 'behaviour|motion' --reporter=list
       - uses: actions/upload-artifact@v5
         if: always()
         with:
