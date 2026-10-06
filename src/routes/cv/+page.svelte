@@ -66,13 +66,14 @@
   </div>
 </article>
 <style>
+  .cv-page { --cv-content-inset: var(--s-7); }
   h1 { margin-top: 24px; font-size: clamp(40px, 3.62vw, 58px); }
   .cv-role { margin-top: 22px; font-size: 34px; font-weight: 600; line-height: 1.15; letter-spacing: -.025em; color: var(--forest); }
   .cv-stack { margin-top: 28px; font-size: 18px; font-weight: 600; line-height: 1.5; }
   .cv-intro-line { margin-top: 28px; max-width: 30ch; font-size: 22px; line-height: 1.35; }
   .cv-summary-text { font-size: 18px; line-height: 1.6; }
   .cv-download { min-height: 44px; display: inline-flex; align-items: center; margin-top: 8px; }
-  .cv-highlights { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 24px; margin-top: 36px; }
+  .cv-highlights { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 24px; margin-top: 36px; padding-inline: var(--cv-content-inset); }
   .cv-highlights > div { display: flex; flex-direction: column; border-top: 1px solid var(--rule-ink); padding-top: 18px; }
   .cv-highlights dt { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; }
   .cv-highlights dd { display: contents; }
@@ -107,13 +108,17 @@
   .cv-sidebar .profile-meta + ul:not(.cv-skills) { margin-top: 22px; }
   .cv-sidebar > .profile-link { margin-top: 24px; }
   @media (min-width: 900px) {
-    /* Two metrics share each of the page's existing card columns. Keep their
-       center gutter aligned with the intro and experience/sidebar gutters. */
-    .cv-highlights { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: var(--card-gap); }
-    .cv-highlights > div { grid-row: 1; width: calc((100% - var(--card-gap)) / 2); }
+    /* Align each pair with the content inside its neighboring cards, including
+       their shared responsive inset, rather than with the outer card edges. */
+    .cv-highlights { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); grid-template-rows: auto auto auto; gap: 0 var(--card-gap); padding-inline: 0; }
+    .cv-highlights > div { display: grid; grid-template-rows: subgrid; grid-row: 1 / span 3; width: calc((100% - var(--card-gap)) / 2 - var(--cv-content-inset)); }
     .cv-highlights > div:nth-child(-n+2) { grid-column: 1; }
     .cv-highlights > div:nth-child(n+3) { grid-column: 2; }
-    .cv-highlights > div:nth-child(even) { justify-self: end; }
+    .cv-highlights > div:nth-child(odd) { margin-left: var(--cv-content-inset); }
+    .cv-highlights > div:nth-child(even) { justify-self: end; margin-right: var(--cv-content-inset); }
+  }
+  @media (max-width: 1023px) {
+    .cv-page { --cv-content-inset: var(--s-6); }
   }
   @media (min-width: 768px) and (max-width: 1099px) {
     .cv-evidence { gap: 24px; }
@@ -122,6 +127,7 @@
     .cv-skills { grid-template-columns: minmax(0, 1fr); }
   }
   @media (max-width: 767px) {
+    .cv-page { --cv-content-inset: var(--s-4); }
     h1 { margin-top: 20px; font-size: clamp(32px, 8.7vw, 44px); }
     .cv-role { margin-top: 18px; font-size: 28px; }
     .cv-stack { margin-top: 22px; font-size: 16px; max-width: 27ch; }
