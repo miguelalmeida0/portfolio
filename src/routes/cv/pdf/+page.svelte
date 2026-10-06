@@ -45,6 +45,32 @@
         const { PDFViewer, PDFLinkService, EventBus, LinkTarget } = await import('pdfjs-dist/web/pdf_viewer.mjs');
         if (disposed) return;
         const eventBus = new EventBus();
+        eventBus.on('annotationlayerrendered', () => {
+          if (disposed) return;
+          // PDF links have no text children. Name them for assistive technology
+          // without the native URL tooltip obscuring adjacent content.
+          for (const link of pages.querySelectorAll<HTMLAnchorElement>('.linkAnnotation > a[href]')) {
+            const url = new URL(link.href);
+            const names: Record<string, string> = {
+              'www.linkedin.com': 'LinkedIn',
+              'github.com': 'GitHub',
+              'miguelalmeida.is-a.dev': 'Portfolio',
+              'needle.miguelalmeida.xyz': 'Needle',
+              'secondvoice-ai.vercel.app': 'Second Voice',
+              'leu-desktop.vercel.app': 'Leu'
+            };
+            const email = url.protocol === 'mailto:';
+            link.setAttribute('aria-label', email
+              ? `Email ${url.pathname} — opens your email app`
+              : `${names[url.hostname] || url.hostname} — opens in a new tab`);
+            link.removeAttribute('title');
+            // The four contact cards are 128 × 39 PDF points, radius 8.
+            const section = link.parentElement!;
+            const contact = ['www.linkedin.com', 'github.com'].includes(url.hostname)
+              || email || (url.hostname === 'miguelalmeida.is-a.dev' && url.pathname === '/');
+            section.classList.toggle('contact-link', contact);
+          }
+        });
         const links = new PDFLinkService({
           eventBus,
           externalLinkTarget: LinkTarget.BLANK,
@@ -135,50 +161,37 @@
   .reader-message { position: relative; z-index: 1; margin: 24px; padding: 20px; background: #f5f6ed; }
   .reader-message a { display: inline-block; margin: 12px 20px 0 0; text-decoration: underline; }
   .cv-reader :global(a:focus-visible) { outline: 3px solid #610d3d; outline-offset: 3px; }
-
-  /* PDF.js link annotations sit above the rendered PDF. A translucent fill makes
-     their rectangular hitboxes visible and fights the rounded artwork below.
-     Keep the overlay transparent; use an inset ring instead so hover reinforces
-     the existing control without repainting or spilling beyond the hit area. */
+  /* PDF.js measures the page content, excluding its 9px border. Tailwind's
+     border-box reset otherwise shrinks only the canvas by 18px, leaving both
+     annotations and selectable text displaced from the printed artwork. */
+  .cv-reader :global(.pdfViewer .page) { box-sizing: content-box; }
   .cv-reader :global(.annotationLayer .linkAnnotation > a) {
-    background: transparent !important;
-    border-radius: 10px;
+    border-radius: 3px;
+    background: transparent;
+    opacity: 1;
     cursor: pointer;
-    transition: box-shadow 140ms ease;
   }
-
-  @media (hover: hover) and (pointer: fine) {
-    .cv-reader :global(.annotationLayer .linkAnnotation > a:hover) {
-      background: transparent !important;
-      box-shadow: inset 0 0 0 2px rgb(30 58 49 / 72%);
+  .cv-reader :global(.annotationLayer .contact-link > a) {
+    border-radius: calc(8px * var(--total-scale-factor));
+  }
+  .cv-reader :global(.pdfViewer .annotationLayer .linkAnnotation > a:hover) {
+    opacity: 1;
+    background: transparent;
+    box-shadow: inset 0 0 0 2px #12372d, inset 0 0 0 4px #fffdf8;
+  }
+  .cv-reader :global(.pdfViewer .annotationLayer .linkAnnotation > a:focus-visible) {
+    opacity: 1;
+    background: transparent;
+    outline: 3px solid #12372d;
+    outline-offset: 0;
+    box-shadow: inset 0 0 0 3px #fffdf8;
+  }
+  @media (forced-colors: active) {
+    .cv-reader :global(.annotationLayer .linkAnnotation:has(> a:focus-visible)) {
+      outline: 3px solid Highlight;
+      outline-offset: 2px;
     }
-
-    /* Contact controls live on the dark green header. Use a light ring there;
-       project links stay on the ivory page and use the dark forest ring above. */
-    .cv-reader :global(.annotationLayer .linkAnnotation > a[href*="linkedin.com"]:hover),
-    .cv-reader :global(.annotationLayer .linkAnnotation > a[href="https://github.com/miguelalmeida0/"]:hover),
-    .cv-reader :global(.annotationLayer .linkAnnotation > a[href="https://miguelalmeida.is-a.dev/"]:hover),
-    .cv-reader :global(.annotationLayer .linkAnnotation > a[href^="mailto:"]:hover) {
-      box-shadow: inset 0 0 0 2px rgb(255 253 248 / 86%);
-    }
   }
-
-  .cv-reader :global(.annotationLayer .linkAnnotation > a:focus-visible) {
-    background: transparent !important;
-    outline: 3px solid #1e3a31;
-    outline-offset: -3px;
-  }
-
-  .cv-reader :global(.annotationLayer .linkAnnotation > a[href*="linkedin.com"]:focus-visible),
-  .cv-reader :global(.annotationLayer .linkAnnotation > a[href="https://github.com/miguelalmeida0/"]:focus-visible),
-  .cv-reader :global(.annotationLayer .linkAnnotation > a[href="https://miguelalmeida.is-a.dev/"]:focus-visible),
-  .cv-reader :global(.annotationLayer .linkAnnotation > a[href^="mailto:"]:focus-visible) {
-    outline-color: #e59a72;
-  }
-
   @media (max-width: 600px) { .reader-toolbar { padding: 12px; } .reader-actions { gap: 12px; } }
-  @media (prefers-reduced-motion: reduce) {
-    .download,
-    .cv-reader :global(.annotationLayer .linkAnnotation > a) { transition: none; }
-  }
+  @media (prefers-reduced-motion: reduce) { .download { transition: none; } }
 </style>
