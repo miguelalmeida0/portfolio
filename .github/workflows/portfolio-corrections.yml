@@ -49,4 +49,6 @@ jobs:
         if: always()
         with:
           name: portfolio-corrections
-          path: artifacts/portfolio-corrections
+          path: |
+            artifacts/portfolio-corrections
+            test-results

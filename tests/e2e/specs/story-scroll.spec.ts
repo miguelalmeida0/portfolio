@@ -88,7 +88,13 @@ for (const [width, height] of sizes) for (const reduced of [false, true]) {
     await expect(dock.getByRole('link', { name: 'Home', exact: true })).toBeInViewport();
     await dock.getByRole('link', { name: 'Home', exact: true }).click();
     await expect(page).toHaveURL(/\/#top$/);
+    // URL publication precedes the completed visual arrival. Verify Home itself
+    // before starting the next, independent history navigation.
+    await expect(page.locator('#portfolio-content[data-homepage]')).toHaveCount(1);
+    await expect(dock).toHaveCount(0);
+    await expect(page.locator('html')).not.toHaveAttribute('data-route-transition', 'active');
     await page.goBack();
+    await expect(page).toHaveURL(/\/story(?:#contact)?$/);
     await expect(picker).toBeEnabled();
     expect(await overflow()).toBe(false);
     await page.setViewportSize({ width: width < 1100 ? 1280 : 390, height: 844 });
