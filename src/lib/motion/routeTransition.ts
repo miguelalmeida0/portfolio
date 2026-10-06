@@ -198,6 +198,15 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
     resetScrollMotion();
     // Never snapshot the outgoing menu/page into a competing native transition.
     if (active) return;
+    const from = navigation.from?.url;
+    const to = navigation.to?.url;
+    // The editorial reader uses ordinary route/history navigation as well as
+    // native scrolling. A snapshot or mobile history veil must not delay Back.
+    if (from?.pathname === '/story' || to?.pathname === '/story') {
+      nativeTransition?.skipTransition();
+      releaseClaimedFrames();
+      return;
+    }
     if (navigation.type === 'popstate' && matchMedia('(max-width: 719px)').matches &&
       navigation.from?.url.pathname !== navigation.to?.url.pathname) {
       return cover().then(() => {
@@ -213,9 +222,6 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
       releaseClaimedFrames();
       return;
     }
-
-    const from = navigation.from?.url;
-    const to = navigation.to?.url;
 
     // A pure hash change on the same page is a scroll, not a route change.
     if (!to || (from && from.pathname === to.pathname)) {
