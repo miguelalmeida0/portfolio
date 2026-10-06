@@ -19,7 +19,7 @@
   --ok:var(--forest); --err:var(--fail); --rule:var(--line); --panel:var(--sagebg); --bg:var(--paper);
 }
 .cs-flow{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html:has(.cs-flow){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);background:#EFF3E3;scroll-behavior:smooth}
+html:has(.cs-flow){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);background:#EFF3E3;scroll-behavior:auto}
 .cs-flow *,.cs-flow *::before,.cs-flow *::after{box-sizing:inherit}
 .cs-flow{margin:0;background:var(--canvas);color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
 .cs-flow a{color:inherit}

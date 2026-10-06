@@ -17,7 +17,7 @@ export function installSmoothScroll({ smoothWheel = true } = {}) {
       // Gentle wheel response with a short, controlled settling tail.
       autoRaf: true, smoothWheel, syncTouch: false, lerp: 0.18,
       wheelMultiplier: 0.9,
-      anchors: false, stopInertiaOnNavigate: true,
+      anchors: false, stopInertiaOnNavigate: true, allowNestedScroll: true,
       prevent: node => ['TEXTAREA', 'SELECT'].includes(node.tagName) || node.hasAttribute('data-scroll-native')
     });
   });

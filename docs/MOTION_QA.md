@@ -3,12 +3,34 @@
 Source of truth: `.cache/leu-flow-pages`. Baseline: `914c8a4`.
 The audit and priority matrix are in [MOTION_AUDIT.md](MOTION_AUDIT.md).
 
+## Follow-up corrections — 6 October
+
+The user rejected added motion on personal photographs. Removed the portrait
+pointer action and the F24 photo's scroll transform. The existing initial arrival
+sequence is unchanged. The F24 case-study placeholder now uses the same authentic
+hackathon asset as the homepage, at its natural aspect ratio.
+
+Reproduced live F24 → Second Voice opening at scrollY 5073. The case studies'
+document-wide CSS smooth scrolling competed with SvelteKit route restoration.
+The document now scrolls instantly for route restoration; one Lenis owner handles
+wheel and deliberate anchor journeys across home and case studies. Touch stays
+native, nested scroll surfaces retain their own input, and reduced motion disables
+Lenis. Connected Chrome verified next-project scrollY 0 and Back restoring 6687.
+
+Desktop case-study canvases now share the site gutters instead of a 1312px cap
+shrunk to 1050 physical pixels by the approved 80% density. At a 1512px viewport,
+the canvas grows from 1049.6px to 1339.2px. Paragraph measures remain constrained.
+
+Regression runner: `scripts/portfolio-corrections.mjs`. Evidence is written to
+`artifacts/portfolio-corrections`. The measurements below describe the earlier
+motion release, not a fresh performance benchmark of these follow-up changes.
+
 ## Implemented decisions
 
 | System | Why it exists | Ownership / primitive | Compact and reduced motion |
 |---|---|---|---|
-| Portrait depth | Gives the first viewport a precise response after the existing arrival completes | Portrait action, GSAP quickTo, matchMedia; existing wind animation now follows the shared preference policy | No portrait pointer movement on compact or coarse-pointer devices; reduced mode also stops wind |
-| Selected Work entrance | Marks the change from introduction to evidence | SplitText line mask on the chapter title; ScrollTrigger transforms the F24 photograph inside its existing crop | Shorter title timing and at most 4px photo travel; reduced mode restores original typography and photo |
+| Static personal photography | Keeps the portrait and team photograph calm, as requested | No added portrait pointer action or F24 photo ScrollTrigger; existing wind text follows the shared preference policy | Photos stay static in all modes |
+| Selected Work entrance | Marks the change from introduction to evidence | SplitText line mask on the chapter title | Shorter title timing; reduced mode restores original typography |
 | Project attention | Makes a preview acknowledge focus while preserving its hit target | quickTo on the inner media plane and title arrow; existing video controller still owns playback | Touch press/release feedback, no hover simulation; reduced mode retains normal focus/color feedback |
 | Needle selection | Preserves the identity of the artwork chosen from the results | Flip.fit on one disposable image; decoded intrinsic dimensions preserve the artwork's proportions despite different padding and desktop CSS zoom | No cross-screen flight on touch/compact layouts; short local opacity settle if the inspector is visible; reduced mode uses the original immediate selection |
 | Case-study chapter punctuation | Separates problem, decision and evidence without moving reading copy | Shared SplitText action, masked lines, once-only ScrollTriggers; accessible heading labels and responsive re-splitting | Shorter timing/stagger; reduced mode removes wrappers and restores original headings |

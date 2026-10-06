@@ -1,21 +1,9 @@
-import { motionOwner, refreshMotion } from '$lib/motion/runtime';
+import { motionOwner } from '$lib/motion/runtime';
 import { motion } from '$lib/motion/tokens';
 
 export function workMotion(node: HTMLElement) {
-  return motionOwner(node, 'selected-work', ({ gsap, ScrollTrigger }, context, { desktop, fine }) => {
+  return motionOwner(node, 'selected-work', ({ gsap }, context, { fine }) => {
     const cleanups: (() => void)[] = [];
-    const photo = node.querySelector<HTMLImageElement>('.f24-photo');
-    const photoFrame = node.querySelector<HTMLElement>('.f24-photo-link');
-    if (photo && photoFrame) {
-      const travel = () => Math.min(desktop && fine ? motion.photoTravel : motion.mobilePhotoTravel, photoFrame.clientHeight * .018);
-      gsap.fromTo(photo, { scale: 1.06, y: () => -travel() }, {
-        scale: 1.04, y: travel, ease: 'none',
-        scrollTrigger: { trigger: photoFrame, start: 'top bottom', end: 'bottom top', scrub: desktop && fine ? motion.scrub : true, invalidateOnRefresh: true }
-      });
-      const loaded = () => refreshMotion({ gsap, ScrollTrigger });
-      photo.addEventListener('load', loaded, { once: true });
-      cleanups.push(() => photo.removeEventListener('load', loaded));
-    }
     for (const article of node.querySelectorAll<HTMLElement>('[data-selected-project]')) {
       const frame = article.querySelector<HTMLElement>('[data-preview]');
       const plane = article.querySelector<HTMLElement>('[data-preview-plane]');

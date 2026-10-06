@@ -1,0 +1,39 @@
+name: Portfolio corrections
+on:
+  push:
+    branches: ['portfolio-corrections/**']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run check && npm run lint && npm run test:unit && npm run build
+      - name: Serve production build
+        run: |
+          mkdir -p .cache/tmp artifacts/portfolio-corrections
+          TMPDIR=$PWD/.cache/tmp WRANGLER_LOG_PATH=$PWD/.cache/wrangler.log npx wrangler pages dev .svelte-kit/cloudflare --ip 127.0.0.1 --port 4398 --log-level error --show-interactive-dev-session=false > artifacts/portfolio-corrections/server.log 2>&1 &
+          for i in $(seq 1 40); do curl -sf http://127.0.0.1:4398/ >/dev/null && exit 0; sleep 1; done
+          cat artifacts/portfolio-corrections/server.log
+          exit 1
+      - run: node scripts/portfolio-corrections.mjs
+      - name: Existing case-study interactions
+        env:
+          PARITY_IMPL_BASE: http://127.0.0.1:4398
+        run: |
+          node --test tests/f24-sv/data-diff.test.mjs
+          PARITY_REF_DIR="$PWD/tests/case-studies/reference" npx playwright test -c tests/case-studies/tests/parity/playwright.parity.config.ts --workers=1 --grep 'behaviour|motion' --reporter=list
+          PARITY_REF_DIR="$PWD/tests/f24-sv/reference" npx playwright test -c tests/f24-sv/tests/parity/playwright.parity.config.ts --workers=1 --grep 'behaviour|motion' --reporter=list
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: portfolio-corrections
+          path: artifacts/portfolio-corrections

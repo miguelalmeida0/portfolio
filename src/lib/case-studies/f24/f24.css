@@ -13,7 +13,7 @@
   color-scheme:light;
 }
 .cs-f24{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html:has(.cs-f24){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);background:#EFF3E3;scroll-behavior:smooth}
+html:has(.cs-f24){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);background:#EFF3E3;scroll-behavior:auto}
 .cs-f24 *,.cs-f24 *::before,.cs-f24 *::after{box-sizing:inherit}
 .cs-f24{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
 .cs-f24 a{color:inherit}
@@ -279,7 +279,7 @@ html:has(.cs-f24){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);b
 
 /* ---------- team ---------- */
 .cs-f24 .team{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,64px);align-items:start}
-.cs-f24 .photo{background:var(--sage);border-radius:28px;aspect-ratio:4/3;display:grid;place-items:center;text-align:center;padding:24px;color:var(--muted);font-size:14.5px}
+.cs-f24 .photo{background:var(--sage);border-radius:28px;display:block;width:100%;height:auto;aspect-ratio:1024/685;object-fit:contain}
 .cs-f24 .photo-cap{font-size:14px;color:var(--muted);margin:10px 0 0}
 .cs-f24 .outcome{font-weight:800;font-size:clamp(30px,3.2vw,46px);letter-spacing:-.045em;line-height:1.04;margin:0 0 10px}
 .cs-f24 .outcome+p{margin:0 0 24px;color:var(--forest)}

@@ -71,8 +71,7 @@
       if (current.url.pathname === scrollPath) return;
       scrollPath = current.url.pathname;
       disposeScroll?.();
-      disposeScroll = current.url.pathname === '/' ? installSmoothScroll({ smoothWheel: false })
-        : ['/work/flow','/work/leu','/work/f24','/work/second-voice','/work/needle'].includes(current.url.pathname) ? undefined : installSmoothScroll();
+      disposeScroll = current.url.pathname === '/cv/pdf' ? undefined : installSmoothScroll();
     });
     return () => { controller.destroy(); askController.set(undefined); window.removeEventListener('miguel-llm:open', openGuide); presentation.disconnect(); disposePage(); disposeScroll?.(); disposePolicy(); };
   });

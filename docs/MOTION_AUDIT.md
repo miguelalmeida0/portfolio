@@ -1,5 +1,10 @@
 # Portfolio motion audit — 6 October 2026
 
+Follow-up direction: personal photographs must remain static. The portrait depth
+and F24 photo parallax ideas below are superseded and rejected; both were removed.
+See `MOTION_QA.md` for the scroll ownership, route restoration, authentic F24 photo
+and desktop canvas-width corrections requested after reviewing the live release.
+
 ## Authority and evidence
 
 Production source: `.cache/leu-flow-pages`; starting product commit `914c8a4`.

@@ -1,9 +1,8 @@
 <script lang="ts">
   import AskExperience from '$lib/components/ask/AskExperience.svelte';
-  import { portraitMotion } from './portrait-motion';
   // Use the complete transparent source directly over the sage field.
 </script>
-<div class="portrait-card" data-landing-target data-portrait-card use:portraitMotion>
+<div class="portrait-card" data-landing-target data-portrait-card>
   <picture>
     <source type="image/avif" srcset="/images/wind-full-720.avif 720w, /images/wind-full-1086.avif 1086w" sizes="(max-width: 767px) 250px, 357px" />
     <source type="image/webp" srcset="/images/wind-full-720.webp 720w, /images/wind-full-1086.webp 1086w" sizes="(max-width: 767px) 250px, 357px" />

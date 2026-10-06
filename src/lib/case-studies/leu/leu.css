@@ -17,7 +17,7 @@
   --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
 }
 .cs-leu{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html:has(.cs-leu){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);background:#EFF3E3;scroll-behavior:smooth}
+html:has(.cs-leu){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);background:#EFF3E3;scroll-behavior:auto}
 .cs-leu *,.cs-leu *::before,.cs-leu *::after{box-sizing:inherit}
 .cs-leu{margin:0;background:var(--canvas);color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
 .cs-leu a{color:inherit}

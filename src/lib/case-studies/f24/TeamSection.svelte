@@ -4,7 +4,7 @@
   <section class="chapter" id="team" aria-labelledby="team-h">
     <div class="head"><h2 id="team-h">A team product, and the contribution to it.</h2></div>
     <div class="team">
-      <figure style="margin:0"><div class="photo">Approved team hackathon photo</div><figcaption class="photo-cap">F24 hackathon, with the product team.</figcaption></figure>
+      <figure style="margin:0"><img class="photo" src="/projects/f24/hackathon.webp" alt="Colleagues gathered for a presentation at an F24 hackathon." width="1024" height="685" loading="lazy" /><figcaption class="photo-cap">F24 hackathon, with the product team.</figcaption></figure>
       <div>
         <p class="outcome">Used by hundreds of companies.</p>
         <p>That is a team outcome. Product, design, backend, QA and frontend built it together. Contributions included:</p>

@@ -13,7 +13,7 @@
   color-scheme:light;
 }
 .cs-sv{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html:has(.cs-sv){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);background:#EFF3E3;scroll-behavior:smooth}
+html:has(.cs-sv){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);background:#EFF3E3;scroll-behavior:auto}
 .cs-sv *,.cs-sv *::before,.cs-sv *::after{box-sizing:inherit}
 .cs-sv{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
 .cs-sv a{color:inherit}

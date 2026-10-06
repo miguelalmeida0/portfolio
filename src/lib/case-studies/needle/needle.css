@@ -4,7 +4,7 @@
 .cs-needle,.cs-needle *:where(:not(svg *)),.cs-needle *::before,.cs-needle *::after{all:revert}
 .cs-needle{--canvas:#EFF3E3;--ink:#0B2B22;--forest:#12372D;--plum:#610D3D;--sage:#E4EAD3;--ivory:#FAF7ED;--line:#9fae9b8c;--muted:#506353;--highlight:#E2EDBA;--blush:#F1E3E8;--ease:cubic-bezier(.2,0,0,1);--sans:Figtree,"Helvetica Neue",Arial,system-ui,sans-serif;display:block;box-sizing:border-box;margin:0;background:var(--canvas);color:var(--ink);font:400 17px/1.6 var(--sans);text-rendering:auto;font-kerning:auto;-webkit-font-smoothing:antialiased;overflow-x:clip}
 .cs-needle *,.cs-needle *::before,.cs-needle *::after{box-sizing:inherit}
-html:has(.cs-needle){scroll-padding-top:72px;scroll-behavior:smooth}
+html:has(.cs-needle){scroll-padding-top:72px;scroll-behavior:auto}
 .cs-needle :focus-visible{outline:2px solid var(--plum);outline-offset:4px}
 .cs-needle ::selection{background:var(--plum);color:var(--ivory)}
 .cs-needle a{color:inherit}

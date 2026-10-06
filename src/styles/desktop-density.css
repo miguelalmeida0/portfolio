@@ -9,6 +9,11 @@
    * portrait proportions relative to the expanded content area.
    */
   #portfolio-content { --page-x: clamp(20px, 9.375vw, 108px); }
+  /* Case-study canvases share the site gutters. The former 1312px cap became
+   * only 1050 physical pixels after desktop zoom, leaving wide empty margins. */
+  #portfolio-content :is(.cs-f24, .cs-sv, .cs-flow, .cs-leu, .cs-needle) .wrap {
+    width: calc(100% - 2 * var(--page-x));
+  }
   #portfolio-content[data-homepage] {
     --portrait-width: min(calc(125vw - 913px), 56%);
     --content-inset: var(--page-x);
