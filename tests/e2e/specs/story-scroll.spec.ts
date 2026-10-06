@@ -1,5 +1,34 @@
 import { expect, test } from '@playwright/test';
 
+for (const reduced of [false, true]) test(`one trackpad gesture advances one chapter reduced=${reduced}`, async ({ browser }) => {
+  const context = await browser.newContext({viewport:{width:1440,height:900},reducedMotion:reduced?'reduce':'no-preference'});
+  const page = await context.newPage();
+  await page.goto(`${process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:4398'}/story`);
+  const picker=page.getByRole('button',{name:'Choose a chapter',exact:true});
+  const sections=page.locator('[data-story-section]');
+  await expect(picker).toBeEnabled();
+  await picker.click();
+  await page.locator('#story-chapters button').first().click();
+  await expect(sections.first()).toBeFocused();
+  await page.mouse.move(1100,450);
+  // A single macOS-style fling keeps delivering a decaying tail after travel ends.
+  const fling = async (direction:number) => {
+    for(const delta of [640,420,280,190,125,85,58,39,26,18,12,8,5,3,2,1]) {
+      await page.mouse.wheel(0,direction*delta);
+      await page.waitForTimeout(100);
+    }
+  };
+  await fling(1);
+  await expect(sections.nth(1)).toHaveAttribute('data-current');
+  // Once that gesture has ended, a distinct gesture must advance normally.
+  await page.waitForTimeout(400);
+  await fling(1);
+  await expect(sections.nth(2)).toHaveAttribute('data-current');
+  await fling(-1);
+  await expect(sections.nth(1)).toHaveAttribute('data-current');
+  await context.close();
+});
+
 for (const [width, height] of [[1920,1080],[1440,900],[1280,800],[1440,685],[768,1024],[390,844],[375,812]]) for (const reduced of [false,true]) {
   test(`paced Story ${width}x${height} reduced=${reduced}`, async ({ browser }) => {
     test.setTimeout(90000);
