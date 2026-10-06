@@ -11,7 +11,7 @@ const webDescriptions: Record<string, string> = {
   'second-voice-ai': 'Designed and engineered an AI writing product that makes literary rewrites inspectable and recoverable. Built voice and intensity controls, word-level edit comparison and explicit request-state management, preserving drafts and previous results through failures. Integrated bounded, cancellable provider requests and generation safeguards to keep writers in control.'
 };
 
-export const cvProjects = ['needle', 'second-voice-ai', 'flow', 'leu'].map(slug => {
+export const cvProjects = ['needle', 'second-voice-ai', 'leu'].map(slug => {
   const project = projects.find(project => project.slug === slug)!;
   return {
     slug,
