@@ -8,8 +8,8 @@ export type SelectedProject = {
 const treatments = [
   { id: 'needle', name: 'Needle', line: 'Search 10,000 artworks. A semantic search engine.', tags: ['Semantic search', 'Web Workers', 'HNSW retrieval'] },
   { id: 'second-voice-ai', name: 'Second Voice AI', line: 'Choose a literary voice. See exactly what changes.', tags: ['AI rewriting', 'Edit comparison', 'Request recovery'] },
-  { id: 'flow', name: 'Flow', line: 'Move a meeting. Inspect the change. Undo it.', tags: ['Voice-first actions', 'Undo / redo', 'Persistent state'] },
-  { id: 'leu', name: 'Leu', line: 'Read a passage. Find the gap. Return to the exact source.', tags: ['Source-linked learning', 'SwiftUI', 'On-device narration'] }
+  { id: 'leu', name: 'Leu', line: 'Read a passage. Find the gap. Return to the exact source.', tags: ['Source-linked learning', 'SwiftUI', 'On-device narration'] },
+  { id: 'flow', name: 'Flow', line: 'Move a meeting. Inspect the change. Undo it.', tags: ['Voice-first actions', 'Undo / redo', 'Persistent state'] }
 ];
 export const selectedProjects: SelectedProject[] = treatments.map(item => {
   const project = projects.find(p => p.slug === item.id)!;

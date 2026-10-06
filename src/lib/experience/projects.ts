@@ -110,6 +110,7 @@ export const projects: Project[] = [
     ownership: 'Designed and built the native learning experience, from reader interaction and source-linked learning to on-device neural narration.',
     stack: ['SwiftUI', 'PDFKit', 'iOS', 'ONNX Runtime'],
     source: 'https://github.com/miguelalmeida0/leu',
+    live: { href: 'https://leu-desktop.vercel.app/', label: 'Open Leu desktop' },
     image: leuMedia.poster, alt: leuMedia.label,
     caption: leuMedia.caption, video: leuMedia.src,
     problem: 'Reading a PDF is not the same as understanding it. Generic AI explanations can drift away from the source, while quiz flows often test recall without helping the learner repair the exact gap.',

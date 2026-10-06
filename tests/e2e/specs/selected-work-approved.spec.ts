@@ -1,19 +1,26 @@
 import {test,expect,type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-const cards = ['needle','second-voice-ai','flow','leu'];
+const cards = ['needle','second-voice-ai','leu','flow'];
 const videos = ['needle','second-voice-ai','flow','leu'];
 async function home(page: Page) { await page.goto('/#work'); await expect(page.locator('#work h2')).toHaveText('Selected Work'); }
 async function gallery(page: Page) { await home(page); await page.locator('[data-selected-project="flow"]').scrollIntoViewIfNeeded(); }
 test('permanent static F24 and four independent projects expose honest links', async ({page})=>{
  await home(page);const f=page.locator('[data-f24-feature]');await expect(f).toBeVisible();await expect(f).toHaveCount(1);
- await expect(f.locator('img')).toHaveAttribute('src','/projects/f24/hackathon.webp');
- await expect.poll(()=>f.locator('img').evaluate((x:HTMLImageElement)=>x.complete&&x.naturalWidth>0)).toBe(true);
+ await expect(f.locator('img')).toHaveCount(2);
+ await expect(f.locator('img').first()).toHaveAttribute('src','/projects/f24/hackathon-working.webp');
+ await expect(f.locator('img').last()).toHaveAttribute('src','/projects/f24/hackathon-team.webp');
+ for(const image of await f.locator('img').all())await expect.poll(()=>image.evaluate((x:HTMLImageElement)=>x.complete&&x.naturalWidth>0)).toBe(true);
  await expect(f.locator('a')).toHaveCount(2);await expect(f.getByRole('link',{name:'View case study'})).toHaveAttribute('href','/work/f24');
  await expect(f.getByRole('link',{name:'F24 case study',exact:true})).toHaveAttribute('href','/work/f24');
  await expect(f.locator('video,button')).toHaveCount(0);
  expect(await page.locator('[data-selected-project]').evaluateAll(es=>es.map(e=>e.getAttribute('data-selected-project')))).toEqual(cards);
  for(const id of cards)await expect(page.locator(`[data-selected-project="${id}"] a[href="/work/${id}"]`).first()).toBeVisible();
- for(const id of ['flow','leu'])await expect(page.locator(`[data-selected-project="${id}"]`).getByRole('link',{name:'Live app',exact:true})).toHaveCount(0);
+ await expect(page.locator('[data-selected-project="flow"]').getByRole('link',{name:'Live app',exact:true})).toHaveCount(0);
+ const leu=page.locator('[data-selected-project="leu"]').getByRole('link',{name:'Live app',exact:true});
+ await expect(leu).toHaveAttribute('href','https://leu-desktop.vercel.app/');
+ await expect(leu).toHaveAttribute('target','_blank');
+ await expect(page.locator('[data-selected-project="flow"] video')).toHaveCSS('object-fit','cover');
+ await expect(page.locator('[data-selected-project="flow"] img')).toHaveCSS('object-fit','cover');
  await expect(page.locator('[data-selected-project="needle"] img')).toHaveAttribute('src','/projects/needle/needle-loop-poster.png');
  await expect(page.locator('[data-selected-project="second-voice-ai"] img')).toHaveAttribute('src','/projects/ghostwriter/second-voice-poster-1500.jpg');
  const external=page.locator('#work a[target="_blank"]');for(const link of await external.all())await expect(link).toHaveAttribute('rel',/noopener/);
