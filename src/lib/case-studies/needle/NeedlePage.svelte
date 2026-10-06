@@ -1,6 +1,6 @@
 <script>
 import CaseOverview from '../shared/CaseOverview.svelte';
-import DesignDecisions from '../shared/DesignDecisions.svelte';
+import '../shared/case-artifact.css';
 import { chapterTitles } from "$lib/motion/actions/chapterTitles";
   import ProductNav from '../shared/ProductNav.svelte';
   import SearchDemo from './SearchDemo.svelte';
@@ -23,13 +23,14 @@ import { chapterTitles } from "$lib/motion/actions/chapterTitles";
 {#snippet source(href, label)}<a class="source-link" {href} {...destinationLink(href)}>{label} ↗</a>{/snippet}
 
 <div use:chapterTitles class="cs-needle" data-needle-study>
-  <ProductNav name="Needle" links={[["overview", "Overview"], ["design-rationale", "Design"], ["engineering", "Search"], ["images", "Images"], ["cache", "Cache"], ["rendering", "Rendering"], ["specs", "Specs"]]} />
+  <ProductNav name="Needle" links={[["overview", "Overview"], ["engineering", "Search"], ["images", "Images"], ["cache", "Cache"], ["rendering", "Rendering"], ["specs", "Specs"]]} />
   <main class="wrap" id="main">
     <section class="hero" id="overview" aria-labelledby="hero-h"><div class="case-pitch">
-      <h1 id="hero-h" data-ask-id="project-needle">Find art in your own words.</h1>
-      <p class="sub">Explore 10,000 museum artworks through search and a visual collection. Open a result to inspect the work and its source.</p>
+      <p class="kicker">Needle, a visual search engine for 10,000 artworks</p>
+      <h1 id="hero-h" data-ask-id="project-needle">From a query to a visible artwork.</h1>
+      <p class="sub">Find a work in the collection. Follow the search, the image and the decisions that make it appear.</p>
       <dl class="hero-stack"><dt>Built with</dt><dd>React, TypeScript, HNSW, Web Workers, Node.js, Sharp and Docker.</dd></dl>
-      <div class="ctas"><a class="btn primary" href="#try">Explore demo</a><a class="tlink" href="#engineering">How it’s built</a><a class="tlink" href="https://needle.miguelalmeida.xyz" {...destinationLink('https://needle.miguelalmeida.xyz')}>Open Needle ↗</a></div>
+      <div class="ctas"><a class="btn primary" href="#try">Try it</a><a class="tlink" href="#engineering">How it’s built</a><a class="tlink" href="https://needle.miguelalmeida.xyz" {...destinationLink('https://needle.miguelalmeida.xyz')}>Open Needle ↗</a></div>
     </div><CaseOverview slug="needle"/></section>
 
     <SearchDemo />
@@ -85,6 +86,6 @@ import { chapterTitles } from "$lib/motion/actions/chapterTitles";
       <div class="stories"><div class="story"><div><h3>The graph still has to arrive.</h3></div><dl><dt>Cold visit</dt><dd>Precomputation moves work earlier. A worker moves it away from the interface. The corpus and graph still have to cross the network.</dd><dt>Public host</dt><dd>Host startup is a separate clock from browser initialization. Local captures do not establish public-host latency or uptime.</dd></dl></div><div class="story"><div><h3>Evidence with a boundary.</h3></div><dl><dt>Verified source</dt><dd>The manifest declares 10,000 records and 120 opening images. The graph checksum matches the corpus. The mechanisms above are linked to the pinned release.</dd><dt>Image sample</dt><dd>The encoded file sizes are reproducible from one bundled artwork. They do not establish a whole-page transfer reduction.</dd><dt>Historical performance</dt><dd>The original before/after artifacts are absent from the public package. Startup, LCP, heap, scroll and slow-network gains are not quantified here.</dd></dl></div></div>
       <div class="source-row">{@render source(needleSources.pack, 'Frozen pack manifest')}{@render source(needleSources.docker, 'Deployment package')}</div>
     </section>
-    <DesignDecisions slug="needle"/><nav class="next" aria-label="Next project"><span>Next project</span><a href="/work/second-voice">Second Voice</a></nav>
+    <nav class="next" aria-label="Next project"><span>Next project</span><a href="/work/second-voice">Second Voice</a></nav>
   </main>
 </div>

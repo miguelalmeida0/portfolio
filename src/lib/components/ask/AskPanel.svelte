@@ -17,31 +17,26 @@
     if (start && touch.clientY - start.y > 80 && Math.abs(touch.clientX - start.x) < 60) controller.close();
     start = undefined;
   }
+  const announcement = $derived(view.error || (view.complete ? view.refusal ? REFUSAL : [...(view.knowledge?.paragraphs ?? []), ...(view.knowledge?.bullets ?? []), ...view.fragments.map(f => `“${f.step.quote}” ${f.number}`), ...(view.knowledge?.conversational ? [] : [FOOTER])].join(' ') : ''));
 </script>
 <section class="ask-panel" data-ask-panel aria-label="Ask MiguelLLM" inert={view.state === 'closing'} data-scroll-native>
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div class="ask-panel-top" ontouchstart={swipeStart} ontouchend={swipeEnd} ontouchcancel={() => start = undefined}>
     <div class="ask-handle" aria-hidden="true"></div>
   </div>
-  <p class="ask-mode-label">Ask MiguelLLM · portfolio guide</p>
   <div class="ask-heading" role="status" aria-live="polite" aria-atomic="true">{view.question}</div>
   <!-- Keyboard users need to focus this region to scroll long answers. -->
   <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
   <div class="ask-answer-scroll" data-scroll-native tabindex="0" role="region" aria-label="Answer and sources">
-    <div class="ask-answer" data-ask-answer>
+    <div class="ask-answer" data-ask-answer aria-hidden="true">
       {#if !view.knowledge && !view.complete && !view.loading && !view.error}<p class="ask-intro">{INTRO}</p>{/if}
       {#if view.error}<p class="ask-intro">{view.error}</p>{/if}
       {#if view.loading}<p class="ask-intro">Connecting this topic to Miguel’s work…</p>{/if}
       {#if view.refusal}<p class="ask-intro">{REFUSAL}</p>{/if}
       {#if view.knowledge}
         <div class="ask-knowledge" data-ask-knowledge>
-          <p class="ask-phrase">{view.knowledge.paragraphs[0]}</p>
-          {#if view.knowledge.paragraphs.length > 1 || view.knowledge.bullets.length}
-            {#key view.question}<details class="ask-detail"><summary>Read the detail</summary>
-              {#each view.knowledge.paragraphs.slice(1) as paragraph}<p>{paragraph}</p>{/each}
-              {#if view.knowledge.bullets.length}<ul>{#each view.knowledge.bullets as bullet}<li>{bullet}</li>{/each}</ul>{/if}
-            </details>{/key}
-          {/if}
+          {#each view.knowledge.paragraphs as paragraph}<p class="ask-phrase">{paragraph}</p>{/each}
+          {#if view.knowledge.bullets.length}<ul>{#each view.knowledge.bullets as bullet}<li class="ask-phrase">{bullet}</li>{/each}</ul>{/if}
         </div>
       {/if}
       {#if view.fragments.some(f => f.quoted)}<p class="ask-context">On this page:
@@ -51,7 +46,7 @@
       </p>{/if}
       {#if view.complete && !view.refusal && !view.knowledge?.conversational}<p class="ask-answer-footer ask-phrase">{FOOTER}</p>{/if}
     </div>
-    <div class="sr-only" aria-live="polite" aria-atomic="true" data-ask-announcement>{view.complete ? 'Answer ready. Details and sources are available below.' : view.error || (view.question === DEFAULT_HEADING ? INTRO : '')}</div>
+    <div class="sr-only" aria-live="polite" aria-atomic="true" data-ask-announcement>{announcement || (view.question === DEFAULT_HEADING ? INTRO : '')}</div>
     {#if view.error}<button class="ink-link" type="button" onclick={() => controller.free(view.question)}>Try again</button>{/if}
     {#if view.knowledge?.sources.length}<nav class="ask-sources" aria-label="Answer sources">{#each view.knowledge.sources as source}
       <a href={source.split('|')[1]} {...destinationLink(source.split('|')[1])}>{source.split('|')[0]}</a>
@@ -72,10 +67,6 @@
 <button type="button" class="ask-close" aria-label="Close and return to the page — Back to the page Esc" onclick={controller.close}>Back to the page <kbd>Esc</kbd></button>
 
 <style>
-  .ask-mode-label { margin:0 0 12px; color:var(--color-plum); font-size:14px; font-weight:600; }
-  .ask-detail { margin-top:12px; }
-  .ask-detail summary { min-height:44px; display:list-item; cursor:pointer; padding:10px 0; color:var(--color-plum); text-decoration:underline; text-underline-offset:4px; }
-  .ask-detail p, .ask-detail li { margin-top:12px; }
   .ask-followups { display: flex; flex-direction: column; align-items: flex-start; gap: .2rem; margin-top: .5rem; }
   .ask-followups button { min-height: 28px; text-align: left; font: inherit; font-size: .9rem; color: var(--color-plum); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
   @media (max-width: 767px) { .ask-followups button { min-height: 40px; } }

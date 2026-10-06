@@ -3,7 +3,6 @@
   import { onMount, tick } from 'svelte';
   import { primaryNavigation } from '$lib/content/navigation';
   import ArrowRight from '@lucide/svelte/icons/arrow-right';
-  import { askController } from '$lib/ask/state';
   let { navigateFromMenu, navigationTransitionActive, guideOpen = false, guideReady = false, homepage = false, askActive = false, story = false }: {
     navigateFromMenu: (event: MouseEvent, close: () => void) => Promise<void>;
     navigationTransitionActive: boolean;
@@ -38,32 +37,32 @@
     }
     window.dispatchEvent(new CustomEvent('miguel-llm:open'));
   }
-  function leaveAsk() { if (askActive) $askController?.dismiss(); }
 </script>
 <svelte:window onkeydown={escape} />
 <header id="top" class="wind-header shell relative z-30 no-print" data-align="left" data-story={story || undefined}>
   <div class="flex items-center justify-between gap-4">
-    <a href="/#top" onclick={leaveAsk} data-identity-home class="group flex min-h-11 min-w-0 shrink-0 items-center gap-3 rounded-lg sm:gap-4" aria-label="Miguel Almeida, Berlin — home">
+    <a href="/#top" data-identity-home class="group flex min-h-11 min-w-0 shrink-0 items-center gap-3 rounded-lg sm:gap-4" aria-label="Miguel Almeida, Berlin — home">
       <span class="flex min-w-0 flex-col items-start sm:flex-row sm:items-center sm:gap-7">
         <span data-identity-name class="identity-name font-wordmark relative inline-block origin-top-left whitespace-nowrap text-base leading-tight font-bold tracking-[-.035em] transition-colors group-hover:text-plum min-[24rem]:text-lg sm:text-xl"><span data-identity-first class="inline-block">MIGUEL</span> <span data-identity-last class="inline-block">ALMEIDA</span><span data-identity-rule aria-hidden="true" class="pointer-events-none absolute inset-x-0 -bottom-1 h-0.5 origin-left bg-plum"></span></span>
-        <span data-identity-location  class="mt-1 text-xs sm:mt-0 sm:text-sm">Berlin</span>
+        <span data-identity-location data-ask-id={homepage ? 'city' : undefined} class="mt-1 text-xs sm:mt-0 sm:text-sm">Berlin</span>
       </span>
     </a>
-    <nav aria-label="Main navigation" class="hidden shrink-0 items-center gap-7 text-sm min-[64rem]:flex">
+    {#if !story}<nav aria-label="Main navigation" class="hidden shrink-0 items-center gap-7 text-sm min-[64rem]:flex">
       {#each primaryNavigation as link}
-        <a onclick={leaveAsk} class="group ink-link hover:text-plum hover:underline" href={link.href}>{link.label}{#if link.label === 'CV'} <ArrowRight size={18} aria-hidden="true" class="transition-transform group-hover:translate-x-0.5" />{/if}</a>
+        <a data-ask-id={homepage ? `nav-${link.label.toLowerCase()}` : undefined} class="group ink-link hover:text-plum hover:underline" href={link.href}>{link.label}{#if link.label === 'CV'} <ArrowRight size={18} aria-hidden="true" class="transition-transform group-hover:translate-x-0.5" />{/if}</a>
       {/each}
       <button class="guide-trigger" data-ask-trigger type="button" aria-expanded={askActive} disabled={!guideReady || navigationTransitionActive} onclick={openGuide}>Ask MiguelLLM</button>
     </nav>
     <button bind:this={trigger} type="button" onclick={() => open = !open} disabled={!guideReady || navigationTransitionActive} aria-label={open ? 'Close' : 'Menu'} aria-expanded={open} aria-controls="mobile-navigation" class="menu-toggle">
       <span class="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
     </button>
+    {/if}
   </div>
   {#if open}
     <nav id="mobile-navigation" aria-label="Mobile navigation" aria-busy={navigationTransitionActive} class="mobile-navigation absolute inset-x-0 top-full max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-xl border px-5 py-2 shadow-sm min-[64rem]:hidden" data-scroll-native>
       <div data-mobile-menu-content>
       {#each primaryNavigation as link}
-        <a href={link.href} data-mobile-route-link data-sveltekit-preload-data="tap" aria-disabled={navigationTransitionActive} onclick={event => { leaveAsk(); return navigateFromMenu(event, () => open = false); }} class="flex min-h-12 items-center text-lg hover:text-plum data-[selected=true]:text-plum">{link.label}</a>
+        <a data-ask-id={homepage ? `nav-${link.label.toLowerCase()}` : undefined} href={link.href} data-mobile-route-link data-sveltekit-preload-data="tap" aria-disabled={navigationTransitionActive} onclick={event => navigateFromMenu(event, () => open = false)} class="flex min-h-12 items-center text-lg hover:text-plum data-[selected=true]:text-plum">{link.label}</a>
       {/each}
       <button class="guide-trigger mobile-guide-trigger" data-ask-trigger type="button" aria-expanded={askActive} disabled={!guideReady || navigationTransitionActive} onclick={openGuide}>Ask MiguelLLM</button>
       </div>

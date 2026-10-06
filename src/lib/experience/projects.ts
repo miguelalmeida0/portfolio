@@ -24,11 +24,7 @@ export const projects: Project[] = [
     contribution: 'Prepared the search graph ahead of a visit, moved retrieval into a worker and built bounded image derivatives with explicit source identity, HTTP validation and viewport-aware rendering.',
     outcome: 'A public deployable release with 10,000 Met catalog records, 120 local opening images, a corpus-bound graph and a windowed collection wall. The case study connects the shipped mechanisms to their source.',
     limitation: 'Historical before/after reports are not included in the public release, so timing improvements are not certified here. Remote imagery and cold corpus transfer remain separate costs. Experimental neural retrieval is not enabled on public hosts.',
-    decisions: [
-      { title: 'Let the artwork lead.', detail: 'Results use visual previews with a separate inspector for the selected work. The museum record stays one link away, so the image and its provenance can be explored together.', tradeoff: 'Visual search depends on image delivery as well as ranking. Responsive derivatives and explicit unavailable states are part of the interface.' },
-      { title: 'Show detail when it is useful.', detail: 'Small tiles request small images. Opening the inspector requests a larger version, with the preview retained while detail arrives.', tradeoff: 'The interface must distinguish a useful preview from a finished detail image and recover when the remote source is unavailable.' },
-      { title: 'Keep the collection navigable.', detail: 'A windowed collection wall mounts the visible rows with overscan. The full catalog remains available in the model without putting every artwork on screen at once.', tradeoff: 'Viewport size changes the rendering budget. Transfer, decoded images and scroll behavior each need their own limits.' }
-    ]
+    decisions: []
   },
   {
     slug: 'second-voice-ai', name: 'Second Voice', category: 'Product design & frontend', type: 'Personal project', number: '02',

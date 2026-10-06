@@ -22,7 +22,7 @@ export const selectedProjects: SelectedProject[] = treatments.map(item => {
       : project.video ? [{ src: project.video, type: 'video/mp4' }] : [];
   const poster = item.id === 'needle'
     ? '/projects/needle/needle-loop-poster.png'
-    : item.id === 'second-voice-ai' ? '/projects/ghostwriter/second-voice-poster-1500.jpg' : item.id === 'leu' ? leuMedia.posterFallback : project.image;
+    : item.id === 'second-voice-ai' ? '/projects/ghostwriter/second-voice-poster-1500.jpg' : project.image;
   const alt = item.id === 'needle'
     ? 'Needle semantic artwork search with clustered results and an artwork inspector.'
     : item.id === 'second-voice-ai' ? 'Second Voice writing interface with author voices and rewrite controls.' : project.alt;

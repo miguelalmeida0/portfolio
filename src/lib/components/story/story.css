@@ -92,3 +92,11 @@
 @media (prefers-reduced-motion:reduce) {
   .story-split *, .story-split *::before, .story-split *::after { animation:none!important; transition:none!important; }
 }
+
+/* Keep the short version above the chapters. */
+.story-summary-first { padding-top:0; margin-block:24px 64px; max-width:100%; }
+.story-summary-first .short-version { padding:28px; }
+@media (min-width:1024px) {
+  .story-summary-first .short-version li { font-size:20px; }
+  .story-summary-first .short-actions button { font-size:18px; }
+}

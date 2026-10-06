@@ -45,7 +45,7 @@
     <a href="/#top" aria-label="Back to home"><span aria-hidden="true">‹</span> Back</a>
   </nav>
   <header class="story-intro">
-
+    <p class="story-eyebrow">{data.editorial.eyebrow}</p>
     <h1 id="story-title">{data.editorial.title}</h1>
     <p class="story-intro-copy">{data.editorial.intro}</p>
   </header>
@@ -73,7 +73,6 @@
           <ScenePanel index={i} {runners} {run} {ready} />
         </section>
       {/each}
-
       <section class="story-ending" aria-labelledby="story-end">
         <p class="story-eyebrow">{data.ending.label}</p>
         <h2 id="story-end">{data.ending.question}</h2>

@@ -16,11 +16,10 @@
     <div class="bottom-group">
       <div class="supporting-copy">
         <p class="experience" data-ask-id="f24">Built a product used by hundreds of companies.</p>
-        <p class="quality" data-ask-id="quality">Playwright · accessibility</p>
       </div>
       <div class="hero-actions">
         <a href="/cv" class="primary" data-ask-id="cv" {...destinationLink("/cv")}>View CV <span aria-hidden="true">→</span></a>
-        <a href="#work" class="secondary" {...destinationLink("#work")}>Explore my work <span aria-hidden="true">→</span></a>
+        <a href="#contact" class="secondary" data-ask-id="touch" {...destinationLink("#contact")}>Get in touch <span aria-hidden="true">→</span></a>
       </div>
     </div>
   </div>
@@ -36,7 +35,6 @@
   .hero-stack { font-size: 24px; line-height: 1.35; font-weight: 600; color: var(--ink); text-wrap: balance; }
   .supporting-copy { display: flex; flex-direction: column; gap: 6px; }
   .experience { font-size: 18px; line-height: 1.4; }
-  .quality { font-size: 15px; line-height: 1.4; color: var(--muted); }
   .hero-actions { display: flex; align-items: center; gap: 24px; }
   .hero-actions a { display: inline-flex; align-items: center; justify-content: center; gap: 5px; font-size: 17px; line-height: 1; min-height: 52px; }
   .primary { padding: 0 24px; border-radius: 10px; background: var(--plum); color: var(--paper); font-weight: 700; }

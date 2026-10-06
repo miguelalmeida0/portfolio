@@ -177,7 +177,7 @@ export const conversationFlows: ConversationFlow[] = [
 ];
 
 export const cvBio =
-  'Frontend engineer in Berlin with a background in UX design. At F24, I work across frontend architecture, business logic, resilience and release quality, collaborating with product, design, backend and QA. My independent products bring that same care to search, writing, learning and voice interfaces.';
+  'At F24 I cut request volume by 75% in a key alerting workflow, expanded regression test files 10x from 3 to 30, shipped message assistance across 13 languages, and helped raise the frontend suite to 7,000+ passing tests across 954 files. My scope spans architecture, business logic, resilience and release quality. I build product systems, not just screens.';
 
 export const professionalRecommendation = {
   name: 'Richard Nespithal',
@@ -202,10 +202,10 @@ export const cvContactPills: MetaLink[] = [
 ];
 
 export const cvHighlights = [
-  { value: '5,500+', label: 'F24 customer reach', detail: 'company-wide, worldwide' },
-  { value: '75%', label: 'Workflow gain', detail: 'fewer requests in one workflow' },
+  { value: '5,500+', label: 'Customer reach', detail: 'customers worldwide' },
+  { value: '75%', label: 'Workflow gain', detail: 'fewer alerting requests' },
   { value: '10x', label: 'Regression tests', detail: 'test files: 3 to 30' },
-  { value: '7,000+', label: 'Automated tests', detail: 'frontend suite, 954 files' }
+  { value: '7,000+', label: 'Automated tests', detail: 'across 954 test files' }
 ];
 
 export const cvSignals = [

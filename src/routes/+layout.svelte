@@ -5,7 +5,6 @@
   import { afterNavigate, beforeNavigate } from '$app/navigation';
   import { installSmoothScroll, syncScrollPosition } from '$lib/motion/smooth-scroll';
   import { page } from '$app/stores';
-  import { pageMeta } from '$lib/config/page-meta';
   import { initMotionPolicy } from '$lib/motion/policy';
   import { installRouteTransitions } from '$lib/motion/routeTransition';
   import {
@@ -48,7 +47,6 @@
   });
 
   $: canonicalUrl = `${SITE_ORIGIN}${$page.url.pathname}`;
-  $: share = pageMeta($page.url.pathname);
 
   // `onNavigate` has to be registered while the layout initialises.
   let routeVeil: HTMLDivElement;
@@ -85,14 +83,12 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content={SITE_NAME} />
   <meta property="og:url" content={canonicalUrl} />
-  <meta property="og:title" content={share.title} />
-  <meta property="og:description" content={share.description} />
-  <meta property="og:image" content={share.image} />
-  <meta property="og:image:alt" content={share.alt} />
+  <meta property="og:image" content={SITE_IMAGE_URL} />
+  <meta property="og:image:alt" content="Portrait of Miguel Almeida" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={share.title} />
-  <meta name="twitter:description" content={share.description} />
-  <meta name="twitter:image" content={share.image} />
+  <meta name="twitter:title" content={SITE_NAME} />
+  <meta name="twitter:description" content={SITE_DESCRIPTION} />
+  <meta name="twitter:image" content={SITE_IMAGE_URL} />
   {@html `<script type="application/ld+json">${personStructuredData}</script>`}
 </svelte:head>
 
