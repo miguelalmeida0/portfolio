@@ -77,6 +77,52 @@ better than the existing content.
 
 ## Verification status
 
-Final candidate evidence and production verification are recorded here after
-the browser and performance runs complete. This working report is not yet a
-production acceptance claim.
+Final source candidate: `50e9b95`. [Full passing workflow](https://github.com/miguelalmeida0/portfolio/actions/runs/37442005099).
+
+- Build, typecheck and repository lint: PASS, zero Svelte diagnostics.
+- Unit tests: 80/80. Authored data/diff tests: 11/11.
+- Existing Flow/Leu behavior and motion tests: 21/21; F24/Second Voice: 14/14.
+- Motion acceptance: PASS, 45 route/viewport combinations plus lifecycle, initial/runtime reduced motion, keyboard, history, resize, first arrival, pointer, touch and scrollbar checks.
+- All 18 before/after survey captures retain identical page heights and heading content. No horizontal overflow, page exceptions or console warnings/errors were recorded in the final production-build surveys.
+- Repeated Needle mounts started with seven triggers on every visit: `7, 7, 7, 7, 7`. Every return to CV had zero triggers and zero temporary artwork layers.
+- After warming the modules, collected JS heap changed from 3.99MB to 4.78MB across the navigation exercise. Per-cycle samples are retained in `acceptance/results.json`; this is a measured residency increase, not a claim of zero memory growth or an exhaustive leak proof.
+
+### Final controlled performance comparison
+
+Three fresh contexts per condition; medians for LCP/long-task totals, maximum
+sampled interaction duration. Mobile uses 390×844 and 4× CPU slowdown; desktop
+uses 1440×900. All numbers below are milliseconds.
+
+| Route / device | LCP before → after | Max interaction before → after | Long-task total before → after |
+|---|---:|---:|---:|
+| Home / desktop | 312 → 376 | 32 → 40 | 0 → 55 |
+| Home / mobile 4× | 280 → 340 | 24 → 24 | 70 → 201 |
+| Needle / desktop | 272 → 256 | 24 → 40 | 0 → 0 |
+| Needle / mobile 4× | 456 → 492 | 32 → 40 | 277 → 484 |
+
+Scroll-frame p95 remained 16.7–16.8ms. The highest after-run interaction sample
+was 40ms; the longest after-run task was 135ms. The maximum layout-shift sum in
+the full route survey was 0.02151, on Second Voice, equal to its baseline value.
+
+The largest median LCP increase in this run was 64ms. The preceding passing
+comparison (`3db5f8b`, run `37440392870`) had flat or lower medians in all four
+conditions, so these small samples also show runner variance. Initial parsing
+and setup still add work, particularly on throttled Needle. Optional GSAP loading
+was moved after the first paint when an earlier draft showed a larger startup
+cost. These results do not establish field INP or a universal zero LCP regression.
+
+Raw final evidence: `artifacts/motion/review-50e9b95-before` and
+`artifacts/motion/review-50e9b95-after`, including JSON measurements, screenshots
+and WebM recordings. The evidence is local and also attached to the workflow;
+large recordings are intentionally not stored in Git.
+
+### Corrections made during verification
+
+- Used explicit `scaleX`/`scaleY` quickTo properties after the stronger hover assertion exposed an unsupported combined-scale reset and its browser warning.
+- Waited for Svelte's delegated selection and the new image's decode before measuring Needle artwork; source/target padding and CSS zoom no longer distort the flight.
+- Kept every already-visible heading unsplit during lazy startup or restored navigation.
+- Kept wide touch screens on the smaller, directly tracked scroll interpretation.
+- Supplied explicit fixture directories to the existing behavior suites in ESM CI. Their assertions were not weakened.
+
+Production publication and the public-domain spot check follow this accepted
+source candidate. The final delivery message records that deployment outcome.

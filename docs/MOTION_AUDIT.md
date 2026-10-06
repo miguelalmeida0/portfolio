@@ -3,8 +3,8 @@
 ## Authority and evidence
 
 Production source: `.cache/leu-flow-pages`; starting product commit `914c8a4`.
-Svelte 5.57 / SvelteKit 2.70; GSAP 3.15 is already installed but is not used by
-the active route components. Existing motion is primarily WAAPI, CSS and scoped
+Svelte 5.57 / SvelteKit 2.70; at baseline, GSAP 3.15 was already installed but unused by
+the active route components. Existing motion was primarily WAAPI, CSS and scoped
 requestAnimationFrame controllers. Keep their working state machines.
 
 Inspected the actual local application at `127.0.0.1:4397`, all nine meaningful
@@ -39,7 +39,7 @@ status and measurement limits; do not interpret this audit as a performance pass
 | SECTION | CURRENT EXPERIENCE | PROBLEM | MOTION OPPORTUNITY | TRIGGER | GSAP/WEB PRIMITIVE | EXPECTED UX PAYOFF | PERFORMANCE RISK | MOBILE VERSION | REDUCED-MOTION VERSION | PRIORITY |
 |---|---|---|---|---|---|---|---|---|---|---|
 | First visit / introduction | Existing measured silhouette-to-portrait transfer, interruptible, session-scoped | Already distinctive; a second entrance would compete | Preserve; new hero ownership starts after its completion | Existing presentation completion | Existing WAAPI + mutation observation | Keep the established arrival and immediate escape | Avoid duplicate portrait transforms during transfer | Preserve existing shortened/interruptible path | Existing bypass | REJECT adding another intro |
-| Hero portrait | Authentic cutout on a static sage field; wind headline already lives | Portrait has no relationship to precise pointer movement | Very small photographic depth with soft return; original crop/geometry remain authoritative | Fine pointer inside portrait, only while visible | quickTo, matchMedia, context | Immediate material response within the first viewport | Two transforms on one photographic layer; no new pointermove tweens | Static portrait; no hover emulation | Original image, no transforms | P1 |
+| Hero portrait | Authentic cutout on a static sage field; wind headline already lives | Portrait has no relationship to precise pointer movement | Very small photographic depth with soft return; original crop/geometry remain authoritative | Fine pointer inside portrait, only while visible | quickTo, matchMedia, context | Immediate material response within the first viewport | One moving photographic layer; no new pointermove tweens | Static portrait; no hover emulation | Original image, no transforms | P1 |
 | Wind typography | Subtle periodic pass + pointer response, observer/visibility suspension | Existing motion is purposeful; its policy ignores the site's manual Reduced setting | Preserve choreography; connect its enablement to the common policy | Preference change | Existing rAF, motionState | Consistent accessibility without another text effect | Existing per-glyph work, not increased | Existing static text | Static semantic heading | P1 policy only |
 | Hero → Selected Work | Hard boundary followed by static heading and large photo | The first major change of subject has no choreography | Major title line aperture; photo crop resolves with scroll, without moving the section or copy | Viewport entry / natural scroll | SplitText masks, ScrollTrigger scrub | The forest chapter feels entered, not simply encountered | One image transform; bounded photo scale, no pin | Short title mask + smaller photo transform | All content immediately visible, static photo | P0 |
 | F24 feature photo | Authentic static photograph links to case study | Largest still image lacks depth and attention response | Slow scroll-linked crop inside the fixed frame | Scroll | ScrollTrigger | Connect the production story to a physical artifact | No filters, no continuous layout reads | Scroll amplitude reduced, no pointer layer | Original crop | P1 |
