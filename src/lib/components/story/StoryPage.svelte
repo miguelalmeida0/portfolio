@@ -1,96 +1,86 @@
 <script lang="ts">
-  import { onMount, tick } from 'svelte';
+  import { onMount } from 'svelte';
   import data from '$lib/story/story.json';
-  import { createSceneRunner, autoplay, type SceneId } from '$lib/story/scenes';
-  import { format } from '$lib/story/reading';
-  import { scrollToElement } from '$lib/motion/smooth-scroll';
-  import { installChapterScroll } from '$lib/story/chapter-scroll';
+  import { createSceneRunner, type SceneId } from '$lib/story/scenes';
+  import { prefersReducedMotion } from '$lib/motion/policy';
   import { destinationLink } from '$lib/navigation/destination-link';
   import ScenePanel from './ScenePanel.svelte';
   import ShortVersion from './ShortVersion.svelte';
-  import Progress from './Progress.svelte';
-  import StoryNavigation from './StoryNavigation.svelte';
   import './story.css';
   import './scenes.css';
   let root: HTMLElement;
-  let current = $state(0), mobile = $state(false), reduced = $state(false), mounted = $state(false);
-  let holding = $state(false);
-  let chapters: ReturnType<typeof installChapterScroll> | undefined;
+  let current = $state('hi');
+  let ready = $state(false);
   const runners = data.questions.map(question => createSceneRunner(question.id as SceneId));
-  const seen = new Set<number>();
-  let previous = -1;
-  $effect(() => {
-    if (!mounted) return;
-    if (previous >= 0 && previous < 8) runners[previous].cancel();
-    previous = current;
-    if (current < 8 && !seen.has(current)) {
-      seen.add(current);
-      if (!reduced && !document.hidden) void runners[current].run(autoplay[data.questions[current].id as SceneId]);
-    }
-  });
-  function run(index: number, action: number) { void runners[index].run([action], reduced); }
-  function sections() { return Array.from(root.querySelectorAll<HTMLElement>('[data-story-section]')); }
-  function go(index: number) {
-    if (chapters) { chapters.go(index); return; }
-    const next = Math.max(0, Math.min(8, index)), section = sections()[next];
-    if (!section) return;
-    scrollToElement(section, { offset: 40, focus: true, duration: reduced ? 0 : undefined });
+  function run(index: number, action: number) {
+    void runners[index].run([action], prefersReducedMotion());
   }
   onMount(() => {
-    const size = matchMedia('(max-width: 1099px)'), motion = matchMedia('(prefers-reduced-motion: reduce)');
-    const layout = () => { mobile = size.matches; };
-    const preference = () => { reduced = motion.matches; if (reduced) runners.forEach(r => r.cancel()); chapters?.preference(); };
-    layout(); preference(); mounted = true;
-    chapters = installChapterScroll(root, {
-      index: () => current, reduced: () => reduced,
-      settled: index => { current = index; }, holding: value => { holding = value; }
-    });
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      if (chapters?.animating()) return;
-      const elements = sections();
-      const line = (innerHeight - 36) / 2;
-      let index = 0, distance = Infinity;
-      elements.forEach((element, i) => { const box = element.getBoundingClientRect(); const d = box.top <= line && box.bottom >= line ? 0 : Math.min(Math.abs(box.top - line), Math.abs(box.bottom - line)); if (d < distance) { distance = d; index = i; } });
-      if (root.getBoundingClientRect().bottom <= innerHeight + 4) index = 8;
-      current = index;
-      chapters?.arrived(index);
-    };
-    const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
-    const resize = async () => { layout(); await tick(); schedule(); };
-    const hidden = () => { if (document.hidden) runners.forEach(r => r.cancel()); };
-    window.addEventListener('scroll', schedule, { passive: true });
-    window.addEventListener('resize', resize);
-    motion.addEventListener('change', preference); size.addEventListener('change', resize); document.addEventListener('visibilitychange', hidden);
-    schedule();
+    ready = true;
+    const visible = new Set<HTMLElement>();
+    // Observation only: no input listeners, scroll writes, snapping or timed holds.
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        const section = entry.target as HTMLElement;
+        if (entry.isIntersecting) visible.add(section);
+        else { visible.delete(section); runners[Number(section.dataset.storyIndex)]?.cancel(); }
+      }
+      const nearest = [...visible].sort((a, b) =>
+        Math.abs(a.getBoundingClientRect().top - 100) - Math.abs(b.getBoundingClientRect().top - 100))[0];
+      if (nearest) current = nearest.dataset.chapter || 'hi';
+    }, { rootMargin: '-80px 0px -35% 0px', threshold: 0 });
+    root.querySelectorAll<HTMLElement>('[data-story-section]').forEach(section => observer.observe(section));
+    const hidden = () => { if (document.hidden) runners.forEach(runner => runner.cancel()); };
+    document.addEventListener('visibilitychange', hidden);
     return () => {
-      chapters?.destroy(); chapters = undefined;
-      runners.forEach(r => r.cancel()); cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', schedule);
-      window.removeEventListener('resize', resize);
-      motion.removeEventListener('change', preference); size.removeEventListener('change', resize); document.removeEventListener('visibilitychange', hidden);
+      observer.disconnect();
+      runners.forEach(runner => runner.cancel());
+      document.removeEventListener('visibilitychange', hidden);
     };
   });
 </script>
-<article bind:this={root} class="story-split" data-story-holding={holding || undefined} aria-label={data.ui.title}>
-  <h1 class="sr-only">{data.ui.title}</h1>
-  {#if !mobile}<div class="story-visual"><ScenePanel index={Math.min(current, 7)} complete={current === 8} {runners} {run} /></div>{/if}
-  <Progress {current} {go} {holding} ready={mounted} />
-  <div class="story-scroll"><div class="story-reading">
-    {#each data.questions as question, i}
-      <section class="story-question" data-story-section data-current={current === i || undefined} aria-labelledby={`story-${question.id}`}>
-        <p class="question-number">{format(data.ui.question, { n: i + 1, total: 8 })}</p><h2 id={`story-${question.id}`}>{question.question}</h2><p class="story-lead">{question.lead}</p><p class="story-answer" data-ask-id={`story-${question.id}`}>{question.answer}</p>
-        {#if i === 7}<ul class="story-tools">{#each data.tools as tool}<li>{tool}</li>{/each}</ul>{/if}
-        {#if mobile}<ScenePanel index={i} inline active={current === i} {runners} {run} />{:else}<div class="story-inline-placeholder" aria-hidden="true"></div>{/if}
-        <StoryNavigation ready={mounted} index={i} {go} current={current === i} />
+
+<article bind:this={root} class="story-split story-editorial" data-story-ready={ready || undefined} aria-labelledby="story-title">
+  <nav class="story-exits" aria-label="Story exits">
+    <a href="/#top" aria-label="Back to home"><span aria-hidden="true">‹</span> Back</a>
+  </nav>
+  <header class="story-intro">
+    <p class="story-eyebrow">{data.editorial.eyebrow}</p>
+    <h1 id="story-title">{data.editorial.title}</h1>
+    <p class="story-intro-copy">{data.editorial.intro}</p>
+  </header>
+  <div class="story-layout">
+    <aside class="story-index">
+      <p class="story-eyebrow">{data.editorial.indexTitle}</p>
+      <nav aria-label="Story chapters">
+        {#each data.questions as question, i}
+          <a href={`#story-${question.id}`} aria-current={current === question.id ? 'location' : undefined}><span>{String(i + 1).padStart(2, '0')}</span>{data.editorial.topics[i]}</a>
+        {/each}
+        <a class="summary-link" href="#story-summary" aria-current={current === 'summary' ? 'location' : undefined}><span aria-hidden="true">↳</span>{data.editorial.summaryLink}</a>
+      </nav>
+    </aside>
+    <div class="story-chapters">
+      {#each data.questions as question, i}
+        <section class="story-question" id={`story-${question.id}`} tabindex="-1" data-story-section data-story-index={i} data-chapter={question.id} aria-labelledby={`story-${question.id}-title`}>
+          <div class="story-copy">
+            <p class="question-number">{String(i + 1).padStart(2, '0')} / 08</p>
+            <h2 id={`story-${question.id}-title`}>{question.question}</h2>
+            <p class="story-lead">{question.lead}</p>
+            <p class="story-answer" data-ask-id={`story-${question.id}`}>{question.answer}</p>
+            {#if i === 7}<ul class="story-tools">{#each data.tools as tool}<li>{tool}</li>{/each}</ul>{/if}
+          </div>
+          <ScenePanel index={i} {runners} {run} {ready} />
+        </section>
+      {/each}
+      <section class="story-summary" data-story-section data-chapter="summary" aria-labelledby="story-summary">
+        <ShortVersion />
       </section>
-    {/each}
-    <section class="story-question story-ending" data-story-section data-current={current === 8 || undefined} aria-labelledby="story-end">
-      <div class="ending-content"><p class="question-number">{data.ending.label}</p><h2 id="story-end">{data.ending.question}</h2><p class="story-answer">{data.ending.answer}</p>
-      <div class="ending-actions"><StoryNavigation ready={mounted} index={8} {go} current={current === 8} ending />{#each data.ending.ctas as cta}<a class:primary={'primary' in cta && cta.primary} href={cta.href} {...destinationLink(cta.href)}>{cta.label}</a>{/each}</div>
-      <p class="reward-cue" role="status">{holding ? 'Your short version is coming together…' : 'The short version. Continue when you’re ready.'}</p></div>
-      {#if mobile}<div class="mobile-summary" data-story-panel data-complete={current === 8 || undefined}><ShortVersion complete={current === 8} /></div>{/if}
-    </section>
-  </div></div>
+      <section class="story-ending" aria-labelledby="story-end">
+        <p class="story-eyebrow">{data.ending.label}</p>
+        <h2 id="story-end">{data.ending.question}</h2>
+        <p class="story-answer">{data.ending.answer}</p>
+        <div class="ending-actions">{#each data.ending.ctas as cta}<a class:primary={'primary' in cta && cta.primary} href={cta.href} {...destinationLink(cta.href)}>{cta.label}<span aria-hidden="true">↗</span></a>{/each}</div>
+      </section>
+    </div>
+  </div>
 </article>

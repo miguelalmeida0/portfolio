@@ -1,5 +1,8 @@
 # Story chapter pacing — 6 October 2026, afternoon
 
+Historical: superseded by STORY_NATIVE_QA.md after the user rejected paced
+scrolling and requested an editorial redesign with native browser behavior.
+
 This replaces the earlier free-scroll decision in STORY_SCROLL_QA.md following
 the user's explicit request for step-by-step progression and a final reveal pause.
 

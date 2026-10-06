@@ -33,7 +33,7 @@ jobs:
         if: startsWith(github.ref, 'refs/heads/portfolio-corrections/')
       - run: node scripts/route-fade-review.mjs
         if: startsWith(github.ref, 'refs/heads/route-fade/')
-      - name: Story reading and reward
+      - name: Story native reading and interactive examples
         if: startsWith(github.ref, 'refs/heads/story-flow/')
         env:
           PLAYWRIGHT_BASE_URL: http://127.0.0.1:4398

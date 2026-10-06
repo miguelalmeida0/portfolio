@@ -69,7 +69,7 @@
 #portfolio-content .cv-stack { font-weight: 500; color: var(--muted); }
 #portfolio-content .cv-stack .stack-divider { margin-inline: 4px; }
 
-/* Story keeps its split reading flow and interactive scenes on the same grid. */
+/* Story uses the portfolio tokens with a native editorial reading flow. */
 #portfolio-content .story-split {
   --story-page: var(--page); --story-lime: var(--lime); --story-sage: var(--sage);
   --story-paper: var(--paper); --story-ink: var(--ink); --story-plum: var(--plum);
@@ -77,9 +77,8 @@
   --story-gutter: var(--content-inset);
   padding-inline: var(--content-inset);
 }
-#portfolio-content .story-visual { margin-top: 0; }
 #portfolio-content .story-panel { border-radius: var(--r-card); }
-#portfolio-content .story-question h2 { font-size: var(--section-title-size); line-height: 1.12; letter-spacing: -.03em; }
+#portfolio-content .story-question h2 { font-size: clamp(28px,2.4vw,40px); line-height: 1.12; letter-spacing: -.03em; }
 #portfolio-content .story-answer { max-width: 60ch; }
 #portfolio-content .scene-controls button { min-height: 44px; }
 

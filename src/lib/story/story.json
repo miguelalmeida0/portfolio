@@ -139,7 +139,7 @@
     ]
   },
   "shortVersion": {
-    "kicker": "You read all eight — here’s the short version",
+    "kicker": "The short version",
     "title": "Miguel Almeida",
     "lines": [
       "Frontend developer in Berlin, with a UX background",
@@ -357,5 +357,22 @@
         "Page stays usable"
       ]
     }
+  },
+  "editorial": {
+    "eyebrow": "About / Miguel Almeida",
+    "title": "The story behind the work.",
+    "intro": "Eight questions about how I work, what I build, and what matters to me.",
+    "indexTitle": "On this page",
+    "topics": [
+      "Hello",
+      "A UX beginning",
+      "Learning to build",
+      "At F24",
+      "When things fail",
+      "My own products",
+      "Making things clear",
+      "What matters"
+    ],
+    "summaryLink": "The short version"
   }
 }
