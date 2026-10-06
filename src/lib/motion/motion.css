@@ -113,17 +113,10 @@
    --------------------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: no-preference) {
-  /* Keep each page in place. Navigation changes opacity, never title geometry. */
-  ::view-transition-group(root) { animation: none; }
   ::view-transition-old(root),
   ::view-transition-new(root) {
-    mix-blend-mode: normal;
-  }
-  ::view-transition-old(root) {
-    animation: route-fade-out var(--motion-press) ease-out both;
-  }
-  ::view-transition-new(root) {
-    animation: route-fade-in var(--motion-route) var(--motion-settle) var(--motion-press) both;
+    animation-duration: var(--motion-route);
+    animation-timing-function: var(--motion-settle);
   }
 
   ::view-transition-group(project-media) {
@@ -138,10 +131,8 @@
     mix-blend-mode: normal;
   }
 
-}
 
-@keyframes route-fade-out { from { opacity: 1; } to { opacity: 0; } }
-@keyframes route-fade-in { from { opacity: 0; } to { opacity: 1; } }
+}
 
 /* ---------------------------------------------------------------------------
    Reduced motion

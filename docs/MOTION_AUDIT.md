@@ -2,6 +2,8 @@
 
 Follow-up direction: personal photographs must remain static. The portrait depth
 and F24 photo parallax ideas below are superseded and rejected; both were removed.
+Project-title flights were also rejected after live review. They are replaced
+with a short opacity-only page fade; titles no longer interpolate across routes.
 See `MOTION_QA.md` for the scroll ownership, route restoration, authentic F24 photo
 and desktop canvas-width corrections requested after reviewing the live release.
 

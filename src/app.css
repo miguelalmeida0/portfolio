@@ -42,16 +42,16 @@
   [id] { scroll-margin-top: 1.5rem; }
   textarea { field-sizing: content; }
   input[type='range'] { accent-color: var(--color-plum); }
-  ::view-transition-old(root) { animation: route-out 160ms ease both; }
-  ::view-transition-new(root) { animation: route-in 240ms cubic-bezier(.22,1,.36,1) both; }
-  ::view-transition-group(root) { animation-duration: 240ms; }
-  html[data-route-destination='/cv']::view-transition-old(root) { animation: route-out 420ms ease-in-out both; }
-  html[data-route-destination='/cv']::view-transition-new(root) { animation: cv-route-in 420ms ease-in-out both; }
-  html[data-route-destination='/cv']::view-transition-group(root) { animation-duration: 420ms; }
-  @keyframes cv-route-in { from { opacity: 0; } to { opacity: 1; } }
+  /* Shared press/route durations from lib/motion/tokens.ts. Fade through paper
+     so outgoing and incoming reading surfaces never overlap. */
+  :root { --motion-press: 110ms; --motion-route: 360ms; }
+  ::view-transition-group(root) { animation: none; }
+  ::view-transition-old(root), ::view-transition-new(root) { mix-blend-mode: normal; }
+  ::view-transition-old(root) { animation: route-fade-out var(--motion-press) ease-out both; }
+  ::view-transition-new(root) { animation: route-fade-in var(--motion-route) var(--ease-settle) var(--motion-press) both; }
   ::view-transition { pointer-events: none; }
-  @keyframes route-out { to { opacity: 0; } }
-  @keyframes route-in { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes route-fade-out { from { opacity: 1; } to { opacity: 0; } }
+  @keyframes route-fade-in { from { opacity: 0; } to { opacity: 1; } }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
