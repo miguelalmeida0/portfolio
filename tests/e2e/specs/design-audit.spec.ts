@@ -35,6 +35,9 @@ test('Ask retains real site navigation', async ({ page, isMobile }) => {
   test.skip(isMobile, 'Desktop navigation; the mobile menu has its own route coverage.');
   await openPortfolioHome(page);
   await page.locator('.wind-header [data-ask-trigger]').click();
+  await page.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('link', { name: 'Work', exact: true }).click();
+  await expect(page.locator('[data-ask-panel]')).toHaveCount(0);
+  await page.locator('.wind-header [data-ask-trigger]').click();
   const cv = page.getByRole('navigation', { name: 'Main navigation', exact: true }).getByRole('link', { name: 'CV' });
   await expect(cv).toHaveAttribute('href', '/cv');
   await cv.click();
