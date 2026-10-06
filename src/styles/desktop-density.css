@@ -1,3 +1,7 @@
+/* SvelteKit restores route positions; do not let browser anchor selection in the
+ * shared footer independently adjust that position while route content mounts. */
+#portfolio-content { overflow-anchor: none; }
+
 /* The requested 80% desktop presentation. Keep mobile and print at natural size.
  * Scope this to page content so viewport-positioned intro, route and guide layers
  * continue using the same coordinates as their pointer/scroll measurements.
