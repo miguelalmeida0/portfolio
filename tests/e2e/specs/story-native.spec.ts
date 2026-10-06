@@ -3,9 +3,9 @@ import { expect, test } from '@playwright/test';
 test('Story leaves wheel input under native browser control', async ({ page }) => {
   await page.addInitScript(() => {
     (window as any).storyWheel = [];
-    window.addEventListener('wheel', event => queueMicrotask(() => {
+    window.addEventListener('wheel', event => setTimeout(() => {
       (window as any).storyWheel.push({ prevented: event.defaultPrevented });
-    }), { capture: true });
+    }, 0), { capture: true });
   });
   await page.goto('/story');
   await page.getByRole('link', {name:'Back to home',exact:true}).waitFor();
