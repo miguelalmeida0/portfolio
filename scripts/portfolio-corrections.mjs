@@ -36,12 +36,14 @@ try {
         const previousY=await page.evaluate(()=>scrollY);
         const previousHeight=await page.evaluate(()=>document.documentElement.scrollHeight);
         assert.ok(previousY>500);
+        await page.evaluate(()=>document.addEventListener('click',()=>{window.__departureY=scrollY;},{once:true,capture:true}));
         await next.click(); await page.waitForURL(new URL(href,base).href); await settle(page);
+        const departureY=await page.evaluate(()=>window.__departureY);
         assert.ok(await page.evaluate(()=>scrollY<2), `${slug} -> ${href}: opens at bottom`);
         await page.goBack(); await settle(page);
         const restored=await page.evaluate(()=>({y:scrollY,height:document.documentElement.scrollHeight}));
         await page.screenshot({path:`${out}/${viewport.width}-${reducedMotion}-${slug}-history.png`});
-        assert.ok(Math.abs(restored.y-previousY)<5, `${slug}: history position lost ${JSON.stringify({previousY,previousHeight,restored})}`);
+        assert.ok(Math.abs(restored.y-departureY)<5, `${slug}: history position lost ${JSON.stringify({previousY,departureY,previousHeight,restored})}`);
         await page.goForward(); await settle(page);
         assert.ok(await page.evaluate(()=>scrollY<2), `${slug}: forward position wrong`);
         results.push({viewport,reducedMotion,slug,next:href,previousY,dimensions});

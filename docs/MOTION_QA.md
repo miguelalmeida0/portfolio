@@ -7,8 +7,9 @@ The audit and priority matrix are in [MOTION_AUDIT.md](MOTION_AUDIT.md).
 
 The user rejected added motion on personal photographs. Removed the portrait
 pointer action and the F24 photo's scroll transform. The existing initial arrival
-sequence is unchanged. The F24 case-study placeholder now uses the same authentic
-hackathon asset as the homepage, at its natural aspect ratio.
+sequence is unchanged. The F24 case-study placeholder now uses the supplied
+6 October desk photograph, at its natural 944×1260 aspect ratio. The homepage
+retains its existing hackathon photograph. Neither photograph has added motion.
 
 Reproduced live F24 → Second Voice opening at scrollY 5073. The case studies'
 document-wide CSS smooth scrolling competed with SvelteKit route restoration.
