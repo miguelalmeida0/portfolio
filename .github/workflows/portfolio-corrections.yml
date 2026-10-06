@@ -1,7 +1,7 @@
 name: Portfolio corrections
 on:
   push:
-    branches: ['portfolio-corrections/**']
+    branches: ['portfolio-corrections/**', 'route-fade/**']
 permissions:
   contents: read
 concurrency:
@@ -28,7 +28,11 @@ jobs:
           cat artifacts/portfolio-corrections/server.log
           exit 1
       - run: node scripts/portfolio-corrections.mjs
+        if: startsWith(github.ref, 'refs/heads/portfolio-corrections/')
+      - run: node scripts/route-fade-review.mjs
+        if: startsWith(github.ref, 'refs/heads/route-fade/')
       - name: Existing case-study interactions
+        if: startsWith(github.ref, 'refs/heads/portfolio-corrections/')
         env:
           PARITY_IMPL_BASE: http://127.0.0.1:4398
         run: |

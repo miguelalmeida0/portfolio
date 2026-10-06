@@ -1,5 +1,5 @@
 import { beforeNavigate, goto, onNavigate, preloadData, pushState } from '$app/navigation';
-import { onDestroy, onMount, tick } from 'svelte';
+import { onDestroy, tick } from 'svelte';
 import { writable } from 'svelte/store';
 import { motionSnapshot } from './policy';
 import { resetScrollMotion, scrollToElement, syncScrollPosition } from './smooth-scroll';
@@ -25,18 +25,6 @@ import { easing } from './tokens';
 export const SHARED_MEDIA_SLUGS = ['ghostwriter'] as const;
 
 export const PROJECT_MEDIA_TRANSITION_NAME = 'project-media';
-const IDENTITY_NAME = 'project-identity';
-const projectPath = /^\/work\/(needle|f24|flow|leu|second-voice(?:-ai)?)\/?$/;
-
-function claimIdentity(element: HTMLElement | null | undefined) {
-  if (!element) return false;
-  const box = element.getBoundingClientRect();
-  if (!box.width || box.bottom < 0 || box.top > innerHeight) return false;
-  element.style.viewTransitionName = IDENTITY_NAME;
-  element.dataset.vtClaimed = 'true';
-  return true;
-}
-
 type StartViewTransition = (callback: () => Promise<void> | void) => {
   finished: Promise<void>;
   ready: Promise<void>;
@@ -87,22 +75,6 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
   const animations = new Set<Animation>();
   const ease = easing.settle;
   const frame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
-
-  onMount(() => {
-    const selectProject = (event: MouseEvent) => {
-      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || motionSnapshot().reduced || !viewTransitionsSupported()) return;
-      const link = (event.target as Element)?.closest<HTMLAnchorElement>('a[href]');
-      if (!link || link.target === '_blank' || link.download) return;
-      const url = new URL(link.href);
-      if (url.origin !== location.origin || !projectPath.test(url.pathname)) return;
-      const title = link.closest('[data-selected-project]')?.querySelector<HTMLElement>('h3 a')
-        ?? link.closest('[data-f24-feature]')?.querySelector<HTMLElement>('h3')
-        ?? (link.closest('.next') ? link : null);
-      if (title) { releaseClaimedFrames(); claimIdentity(title); }
-    };
-    document.addEventListener('click', selectProject, true);
-    return () => document.removeEventListener('click', selectProject, true);
-  });
 
   async function animate(node: HTMLElement, frames: Keyframe[], duration: number, delay = 0) {
     if (motionSnapshot().reduced) return;
@@ -251,13 +223,6 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
       return;
     }
 
-    const fromProject = from?.pathname.match(projectPath)?.[1];
-    const toProject = to.pathname.match(projectPath)?.[1];
-    let identity = Boolean(document.querySelector(`[data-vt-claimed][style*="${IDENTITY_NAME}"]`));
-    if (!identity && fromProject && (toProject || to.pathname === '/')) {
-      identity = claimIdentity(document.querySelector<HTMLElement>('[data-project-identity]'));
-    }
-
     const startViewTransition = (
       document as Document & { startViewTransition?: StartViewTransition }
     ).startViewTransition;
@@ -287,13 +252,6 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
           resolve();
           await navigation.complete;
           syncScrollPosition();
-          if (identity) {
-            const key = fromProject === 'second-voice' ? 'second-voice-ai' : fromProject;
-            const target = toProject ? document.querySelector<HTMLElement>('[data-project-identity]')
-              : key === 'f24' ? document.querySelector<HTMLElement>('[data-f24-feature] h3')
-              : document.querySelector<HTMLElement>(`[data-selected-project="${key}"] h3 a`);
-            claimIdentity(target);
-          }
         });
         transition.ready.catch(cleanup);
         transition.finished.then(cleanup, cleanup);

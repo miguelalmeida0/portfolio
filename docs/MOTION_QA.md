@@ -5,6 +5,12 @@ The audit and priority matrix are in [MOTION_AUDIT.md](MOTION_AUDIT.md).
 
 ## Follow-up corrections — 6 October
 
+Route direction revised after live feedback: removed the project-title shared
+element, including the capture listener and all title geometry interpolation.
+Navigation now uses an opacity-only root fade: 170ms outgoing, 360ms incoming,
+with the shared settle ease. Reduced motion remains immediate. The existing
+mobile menu/history opacity veil and SvelteKit scroll restoration are preserved.
+
 The user rejected added motion on personal photographs. Removed the portrait
 pointer action and the F24 photo's scroll transform. The existing initial arrival
 sequence is unchanged. The F24 case-study placeholder now uses the supplied
@@ -58,7 +64,7 @@ Chrome supplied the local visual checks, and Linux CI ran the automated suite.
 | Needle selection | Preserves the identity of the artwork chosen from the results | Flip.fit on one disposable image; decoded intrinsic dimensions preserve the artwork's proportions despite different padding and desktop CSS zoom | No cross-screen flight on touch/compact layouts; short local opacity settle if the inspector is visible; reduced mode uses the original immediate selection |
 | Case-study chapter punctuation | Separates problem, decision and evidence without moving reading copy | Shared SplitText action, masked lines, once-only ScrollTriggers; accessible heading labels and responsive re-splitting | Shorter timing/stagger; reduced mode removes wrappers and restores original headings |
 | Reading orientation | Makes the existing active chapter and reading position continuous | ProductNav owns an animated active surface and transform-only progress rule | Existing compact navigation remains unchanged with a progress rule; reduced mode restores the original instantaneous active state |
-| Project identity across routes | Connects project selection to the next reading context | Existing native View Transition owner shares a visible project label; does not introduce a second routing mechanism | Existing mobile menu/history veil remains authoritative; reduced mode uses ordinary navigation |
+| Quiet route fade | Makes arrival legible without moving titles through the viewport | Existing native View Transition owner fades root snapshots; no shared project-title element | Existing mobile menu/history opacity veil remains authoritative; reduced mode uses ordinary navigation |
 
 Timing derives from the existing motion tokens: 170ms feedback, 360ms state
 change, 520ms chapter and 620ms object transfer. CustomEase defines the common
