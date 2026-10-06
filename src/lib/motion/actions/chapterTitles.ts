@@ -4,6 +4,9 @@ import { motion } from '../tokens';
 /** Chapter punctuation only. Reading copy and already-read headings stay untouched. */
 export function chapterTitles(node: HTMLElement, selector = '.chapter > .head h2') {
   return motionOwner(node, 'chapter-titles', (runtime, context, { desktop }) => {
+    // Temporary line masks must not become the browser's scroll anchor and
+    // shift a position that SvelteKit has just restored during Back navigation.
+    runtime.gsap.set(node, { overflowAnchor: 'none' });
     let alive = true;
     const splits: import('gsap/SplitText').SplitText[] = [];
     void Promise.all([import('gsap/SplitText'), document.fonts.ready]).then(([{ SplitText }]) => {
