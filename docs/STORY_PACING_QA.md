@@ -37,7 +37,10 @@ PageDown/PageUp, browser Back, responsive remounts, overflow and page errors.
 First candidate run 37466110080 passed all six phone/tablet journeys. All eight
 desktop journeys exposed a 32px offset at the final sticky boundary; the old
 40px (80% density) bottom margin caused it and was removed. The strict centering
-assertion is retained. Final verification is recorded after the corrected run.
+assertion is retained. Corrected candidate `2aea841` passed **14/14 browser
+journeys**, typecheck, lint, all **80 unit tests**, and production build in
+[run 37467160542](https://github.com/miguelalmeida0/portfolio/actions/runs/37467160542).
+Only this evidence note changed after that tested candidate.
 
 CI screenshots live under artifacts/portfolio-corrections/steps. The previous
 free-scroll baseline remains at artifacts/portfolio-corrections/story/before-laptop.png.
