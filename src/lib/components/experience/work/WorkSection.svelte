@@ -26,7 +26,14 @@
     </header>
     <article class="f24-feature" data-f24-feature aria-labelledby="f24-title">
       <a class="f24-photo-link" href="/work/f24" aria-label="F24 case study" {...destinationLink('/work/f24')}>
-        <img class="f24-photo" src="/projects/f24/hackathon.webp" alt="Colleagues gathered for a presentation at an F24 hackathon." width="1024" height="685" loading="lazy" />
+        <figure class="f24-moment f24-working">
+          <img src="/projects/f24/hackathon-working.webp" alt="Miguel and a colleague working together at their desks during the F24 hackathon." width="640" height="854" loading="lazy" />
+          <figcaption>Building together.</figcaption>
+        </figure>
+        <figure class="f24-moment f24-team">
+          <img src="/projects/f24/hackathon-team.webp" alt="The F24 hackathon team gathered beside their presentation, with a colleague joining remotely." width="1000" height="749" loading="lazy" />
+          <figcaption>A team effort.</figcaption>
+        </figure>
       </a>
       <div class="f24-editorial">
         <p class="feature-label">Professional experience</p>
@@ -66,9 +73,11 @@
   .selected-heading { margin-bottom: 28px; }
   .selected-heading h2 { font-size: clamp(42px, 4.8vw, 76px); line-height: 1.05; }
   .selected-heading > p { font-size: 20px; line-height: 1.4; color: var(--sage); }
-  .f24-feature { display: grid; grid-template-columns: minmax(0,1.7fr) minmax(0,1fr); gap: 40px; align-items: center; }
-  .f24-photo-link { display: block; min-width: 0; border-radius: var(--r-media); overflow: hidden; }
-  .f24-photo { width: 100%; height: auto; aspect-ratio: 1.72; object-fit: cover; border-radius: var(--r-media); }
+  .f24-feature { display: grid; grid-template-columns: minmax(0,1.35fr) minmax(0,1fr); gap: clamp(32px,4vw,72px); align-items: center; padding-block: 24px; }
+  .f24-photo-link { display: grid; grid-template-columns: .8fr 1.2fr; align-items: end; gap: clamp(12px,1.5vw,24px); min-width: 0; max-width: 860px; border-radius: var(--r-media); }
+  .f24-moment { margin: 0; min-width: 0; }
+  .f24-moment img { display: block; width: 100%; height: auto; border-radius: var(--r-media); }
+  .f24-moment figcaption { margin-top: 12px; font-size: 14px; line-height: 1.4; color: var(--sage); }
   .f24-editorial { min-width: 0; }
   .feature-label, .preview-heading > p { font-size: 14px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--sage); }
   .f24-editorial h3 { font-size: clamp(64px,7vw,112px); line-height: 1; margin-top: 20px; }
@@ -92,6 +101,6 @@
   .selected-work :global(a:focus-visible), .selected-work button:focus-visible { outline: 3px solid var(--lime); outline-offset: 5px; }
   .selected-work .case-action:focus-visible { outline-color: var(--paper); }
   @media (max-width: 1279px) { .project-gallery { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 32px 24px; } .f24-feature { grid-template-columns: 1.2fr 1fr; gap: 28px; } }
-  @media (max-width: 899px) { .f24-feature { grid-template-columns: 1fr; } .f24-editorial { max-width: 650px; } .feature-label { margin-top: 6px; } .f24-editorial h3 { margin-top: 12px; } }
+  @media (max-width: 899px) { .f24-feature { grid-template-columns: 1fr; padding-block: 8px; } .f24-photo-link { max-width: 650px; } .f24-editorial { max-width: 650px; } .feature-label { margin-top: 6px; } .f24-editorial h3 { margin-top: 12px; } }
   @media (max-width: 679px) { .selected-work { padding: 36px 20px 48px; } .selected-heading > p { font-size: 17px; } .project-gallery { grid-template-columns: 1fr; gap: 36px; } .selected-heading h2 { font-size: 42px; } .feature-body { font-size: 18px; } .project-line { font-size: 18px; } }
 </style>

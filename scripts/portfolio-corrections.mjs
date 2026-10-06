@@ -66,7 +66,7 @@ try {
       assert.equal(await picture.evaluate(n=>getComputedStyle(n).transform),'none');
       await page.mouse.wheel(0,550); await settle(page);
       assert.ok(await page.evaluate(()=>scrollY>50),'homepage wheel blocked');
-      const photo=page.locator('.f24-photo');
+      const photo=page.locator('.f24-moment img').first();
       await photo.scrollIntoViewIfNeeded(); await settle(page);
       assert.equal(await photo.evaluate(n=>getComputedStyle(n).transform),'none');
       await page.locator('.f24-photo-link').click(); await page.waitForURL('**/work/f24'); await settle(page);

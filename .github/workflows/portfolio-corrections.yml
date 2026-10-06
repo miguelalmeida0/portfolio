@@ -29,6 +29,8 @@ jobs:
           exit 1
       - run: node scripts/portfolio-corrections.mjs
         if: startsWith(github.ref, 'refs/heads/portfolio-corrections/')
+      - run: node scripts/f24-cv-review.mjs
+        if: startsWith(github.ref, 'refs/heads/portfolio-corrections/')
       - run: node scripts/route-fade-review.mjs
         if: startsWith(github.ref, 'refs/heads/route-fade/')
       - name: Story reading and reward

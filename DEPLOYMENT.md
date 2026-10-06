@@ -36,5 +36,7 @@ before verifying the public domain. Do not run a parallel direct deployment.
 
 CV reading links use `/cv/pdf`, a dedicated PDF.js reader whose PDF annotations
 open in new tabs. Keep `/portfolio.pdf` and `/files/miguel-almeida-cv.pdf` as raw
-PDF endpoints for downloads and existing external links. Regenerating the PDF
-automatically updates the reader; it renders the actual file, not a separate CV.
+PDF endpoints for downloads and existing external links. The production file is
+the exact user-supplied `Miguel_Almeida_CV_OPEN.pdf` from 6 October 2026. Preserve
+its bytes and embedded links. The web CV mirrors its authored information; do
+not run the legacy generator over this file. The reader renders the actual PDF.

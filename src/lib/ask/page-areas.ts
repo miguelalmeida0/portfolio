@@ -1,5 +1,6 @@
 import story from '$lib/story/story.json' with { type: 'json' };
-import { cvExperience, cvEducation, cvLanguages, cvSkills, professionalRecommendation } from '$lib/content/folio';
+import { cvBio, cvExperience, cvEducation, cvLanguages, cvSkills, professionalRecommendation } from '$lib/content/folio';
+import { cvProjects } from '$lib/content/cv-projects';
 import { projects } from '$lib/experience/projects';
 import { flowIncidents } from '$lib/content/flow-investigation';
 import { incidents as leuIncidents } from '$lib/content/leu-investigation';
@@ -7,6 +8,8 @@ import { incidents as leuIncidents } from '$lib/content/leu-investigation';
 // Facts come from the same authored records rendered by CV, Story and Work.
 // Page text is only used for highlighting, never accepted as new knowledge.
 export const pageAreas = [
+  { id: 'cv-summary', question: 'What is Miguel’s frontend engineering experience?', label: 'CV summary', text: cvBio, sources: ['CV|/cv'] },
+  ...cvProjects.map(p => ({ id: `cv-project-${p.slug}`, question: `What is on Miguel’s CV about ${p.name}?`, label: p.name, text: `${p.description}. ${p.stack}. ${p.bullets.join(' ')}`, sources: [`CV projects|/cv#projects-title`] })),
   ...story.questions.map(q => ({ id: `story-${q.id}`, question: q.question, label: q.question, text: `${q.lead} ${q.answer}`, sources: ['Story|/story'] })),
   ...cvExperience.map((role, i) => ({ id: `cv-job-${i}`, question: `What did Miguel do as ${role.role} at ${role.company}?`, label: role.role, text: `${role.years}: ${role.role}, ${role.company}, ${role.location}. ${role.bullets.join(' ')}`, sources: ['Professional experience|/cv#experience'] })),
   { id: 'cv-education', question: 'What did Miguel study?', label: 'Education', text: cvEducation.map(e => `${e.year}: ${e.title}, ${e.place}.`).join(' '), sources: ['Education|/cv#education'] },

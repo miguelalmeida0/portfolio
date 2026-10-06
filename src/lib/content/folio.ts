@@ -177,7 +177,7 @@ export const conversationFlows: ConversationFlow[] = [
 ];
 
 export const cvBio =
-  'Frontend engineer with a product-design background. Built a business application’s original production frontend in Svelte from initial mockups through production, then continued product delivery in React with the wider team. The application is now used by hundreds of companies. I work across product design, TypeScript, reusable UI, and AI interfaces.';
+  'At F24 I cut request volume by 75% in a key alerting workflow, expanded regression test files 10x from 3 to 30, shipped message assistance across 13 languages, and helped raise the frontend suite to 7,000+ passing tests across 954 files. My scope spans architecture, business logic, resilience and release quality. I build product systems, not just screens.';
 
 export const professionalRecommendation = {
   name: 'Richard Nespithal',
@@ -202,31 +202,31 @@ export const cvContactPills: MetaLink[] = [
 ];
 
 export const cvHighlights = [
-  {
-    value: '2022 — now',
-    label: 'production frontend at F24'
-  },
-  {
-    value: 'Svelte + React',
-    label: 'production product UI across both codebases'
-  },
-  {
-    value: 'Mid-level',
-    label: 'frontend/product UI engineer'
-  }
+  { value: '5,500+', label: 'Customer reach', detail: 'customers worldwide' },
+  { value: '75%', label: 'Workflow gain', detail: 'fewer alerting requests' },
+  { value: '10x', label: 'Regression tests', detail: 'test files: 3 to 30' },
+  { value: '7,000+', label: 'Automated tests', detail: 'across 954 test files' }
+];
+
+export const cvSignals = [
+  { title: 'Product engineering', detail: 'UI + business logic' },
+  { title: 'Frontend architecture', detail: 'boundaries + contracts' },
+  { title: 'Security + resilience', detail: 'high-stakes workflows' },
+  { title: 'Design systems', detail: 'tokens + reusable UI' },
+  { title: 'AI interfaces', detail: 'validated workflows' }
 ];
 
 export const cvExperience: CvExperienceEntry[] = [
   {
-    years: '2022 — now',
-    role: 'Software Engineer · Frontend',
+    years: 'Aug 2022 – Present',
+    role: 'Software Engineer | Frontend & Product Systems',
     company: 'F24',
     location: 'Berlin',
     bullets: [
-      'Built the original production frontend in Svelte from scratch, taking initial mockups and product design through to production. The application is now used by hundreds of companies.',
-      'Contributed to the progressive React evolution while Svelte product delivery continued, including activity-history filters, detail views and failure recovery.',
-      'Worked with product, design, backend and QA from interaction requirements through implementation, testing and release.',
-      'Led the frontend for F24’s first shared AI service during an internal hackathon, connecting the service to its first end-to-end interface.'
+      'Improved enterprise alerting and operational tooling, cutting request volume by 75% in a key alerting workflow, expanding regression test files 10x from 3 to 30, and shipping message assistance across 13 languages.',
+      'Built core alerting workflows from product mockups to production, owning frontend architecture, business rules and interaction/state logic in Svelte and TypeScript.',
+      'Migrated major workflows into React while delivery continued; defined shared UI patterns and typed contracts with Product, Design, Backend and QA.',
+      'Authored 2,000+ automated checks inside a frontend suite with 7,000+ passing tests across 954 files, covering end-to-end flows, accessibility, regression and resilience.'
     ]
   },
   {
@@ -235,8 +235,7 @@ export const cvExperience: CvExperienceEntry[] = [
     company: 'Independent',
     location: 'Berlin',
     bullets: [
-      'Delivered responsive websites and product UI for clients, working directly from problem definition through implementation.',
-      'Built the frontend and visual-design fundamentals that now shape my production work.'
+      'Delivered responsive client products end to end, translating UX decisions into maintainable frontend systems from problem definition through implementation.'
     ]
   }
 ];
@@ -252,13 +251,13 @@ export const cvStack = [
   'Tailwind CSS'
 ];
 
-export const cvSkills = ['React', 'Svelte', 'TypeScript', 'JavaScript', 'Tailwind CSS', 'Playwright', 'Design systems', 'Accessibility', 'Product UI', 'Figma'];
+export const cvSkills = ['React', 'TypeScript', 'JavaScript', 'Svelte', 'Next.js', 'Tailwind', 'Playwright', 'Vite', 'Docker', 'GitLab CI', 'Figma', 'Supabase'];
 
 export const cvEducation: CvEducationEntry[] = [
   {
-    year: '2020 — 2021',
+    year: 'Aug 2021',
     title: 'Professional Diploma in UX Design',
-    place: 'UX Design Institute · awarded 30 Aug 2021'
+    place: 'UX Design Institute'
   },
   {
     year: '2021',

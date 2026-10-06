@@ -1,5 +1,5 @@
 import { redirect } from '@sveltejs/kit';
 
-// The searchable, font-embedded PDF is generated from the shared CV content.
-// Run `node scripts/generate-cv.mjs` after changing that content.
+// Preserve the exact user-supplied Miguel_Almeida_CV_OPEN.pdf (6 October 2026).
+// The web CV is transcribed from it; do not regenerate this download.
 export const GET = () => redirect(307, '/files/miguel-almeida-cv.pdf');
