@@ -3,16 +3,17 @@
   import { onMount, tick } from 'svelte';
   import { primaryNavigation } from '$lib/content/navigation';
   import ArrowRight from '@lucide/svelte/icons/arrow-right';
-  let { navigateFromMenu, navigationTransitionActive, guideOpen = false, guideReady = false, homepage = false, askActive = false }: {
+  let { navigateFromMenu, navigationTransitionActive, guideOpen = false, guideReady = false, homepage = false, askActive = false, story = false }: {
     navigateFromMenu: (event: MouseEvent, close: () => void) => Promise<void>;
     navigationTransitionActive: boolean;
     guideOpen?: boolean;
     guideReady?: boolean;
     homepage?: boolean;
     askActive?: boolean;
+    story?: boolean;
   } = $props();
   let open = $state(false);
-  let trigger: HTMLButtonElement;
+  let trigger = $state<HTMLButtonElement>();
   afterNavigate(() => { open = false; });
   onMount(() => {
     const restoreAsk = async () => { open = true; await tick(); document.querySelector<HTMLButtonElement>('.mobile-guide-trigger')?.focus({ preventScroll: true }); };
@@ -38,7 +39,7 @@
   }
 </script>
 <svelte:window onkeydown={escape} />
-<header id="top" class="wind-header shell relative z-30 no-print" data-align="left">
+<header id="top" class="wind-header shell relative z-30 no-print" data-align="left" data-story={story || undefined}>
   <div class="flex items-center justify-between gap-4">
     <a href="/#top" data-identity-home class="group flex min-h-11 min-w-0 shrink-0 items-center gap-3 rounded-lg sm:gap-4" aria-label="Miguel Almeida, Berlin — home">
       <span class="flex min-w-0 flex-col items-start sm:flex-row sm:items-center sm:gap-7">
@@ -46,7 +47,7 @@
         <span data-identity-location data-ask-id={homepage ? 'city' : undefined} class="mt-1 text-xs sm:mt-0 sm:text-sm">Berlin</span>
       </span>
     </a>
-    <nav aria-label="Main navigation" class="hidden shrink-0 items-center gap-7 text-sm min-[64rem]:flex">
+    {#if !story}<nav aria-label="Main navigation" class="hidden shrink-0 items-center gap-7 text-sm min-[64rem]:flex">
       {#each primaryNavigation as link}
         <a data-ask-id={homepage ? `nav-${link.label.toLowerCase()}` : undefined} class="group ink-link hover:text-plum hover:underline" href={link.href}>{link.label}{#if link.label === 'CV'} <ArrowRight size={18} aria-hidden="true" class="transition-transform group-hover:translate-x-0.5" />{/if}</a>
       {/each}
@@ -55,6 +56,7 @@
     <button bind:this={trigger} type="button" onclick={() => open = !open} disabled={!guideReady || navigationTransitionActive} aria-label={open ? 'Close' : 'Menu'} aria-expanded={open} aria-controls="mobile-navigation" class="menu-toggle">
       <span class="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
     </button>
+    {/if}
   </div>
   {#if open}
     <nav id="mobile-navigation" aria-label="Mobile navigation" aria-busy={navigationTransitionActive} class="mobile-navigation absolute inset-x-0 top-full max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-xl border px-5 py-2 shadow-sm min-[64rem]:hidden" data-scroll-native>
@@ -96,6 +98,7 @@
   .wind-header [data-identity-home] > span { flex-direction: row; align-items: center; gap: 24px; }
   .wind-header :global(svg) { transition: none; transform: none; }
   @media (max-width: 767px) {
+    .wind-header[data-story] [data-identity-location] { display:none; }
     .wind-header [data-identity-home] > span { gap: 14px; }
     .wind-header [data-identity-name] { font-size: 22px; }
     .wind-header [data-identity-location] { font-size: 14px; }

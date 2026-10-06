@@ -48,6 +48,11 @@ for (const [width, height] of [[1920,1080],[1440,900],[1280,800],[1440,685],[768
     await page.locator('#story-chapters button').first().click();
     await expect(sections.first()).toBeFocused();
     await expect.poll(overflow).toBe(false);
+    const back=exits.getByRole('link',{name:'Back to home',exact:true});
+    await expect(back).toBeInViewport();
+    const backBox=(await back.boundingBox())!;
+    expect(backBox.x).toBeGreaterThan(width*.7);
+    expect(backBox.y).toBeLessThan(60);
     if (width>=1100) {
       for (let i=1; i<=8; i++) {
         await page.mouse.move(width*.75,height*.5);
@@ -64,10 +69,10 @@ for (const [width, height] of [[1920,1080],[1440,900],[1280,800],[1440,685],[768
         });
         expect(alignment.centers).toBeLessThan(2);
         expect(alignment.art).toBeLessThan(2);
-        await expect(exits.getByRole('link',{name:'← Home',exact:true})).toBeInViewport();
-        await expect(exits.getByRole('button',{name:'↑ Back',exact:true})).toBeInViewport();
+        await expect(exits.getByRole('link',{name:'Back to home',exact:true})).toBeInViewport();
+        await expect(exits.getByRole('link')).toHaveCount(1);
         if(i===2) await page.screenshot({path:`artifacts/portfolio-corrections/steps/${width}-${height}-${reduced}-centered.png`});
-        if (i<8) await page.waitForTimeout(210);
+        if (i<8) await page.waitForTimeout(400);
       }
     } else {
       // Touch on a tall chapter advances a readable segment, not the entire page.
@@ -88,7 +93,7 @@ for (const [width, height] of [[1920,1080],[1440,900],[1280,800],[1440,685],[768
         await dock.getByRole('button',{name:'Next chapter',exact:true}).click();
         await expect(sections.nth(i)).toBeFocused();
         await expect(sections.nth(i)).toHaveAttribute('data-current');
-        await expect(dock.getByRole('link',{name:'Home',exact:true})).toBeInViewport();
+        await expect(exits.getByRole('link',{name:'Back to home',exact:true})).toBeInViewport();
       }
     }
     const summary=page.locator('.short-version');
@@ -118,11 +123,11 @@ for (const [width, height] of [[1920,1080],[1440,900],[1280,800],[1440,685],[768
     await expect(sections.nth(7)).toBeFocused();
     await dock.getByRole('button',{name:'Next chapter',exact:true}).click();
     await expect(sections.nth(8)).toBeFocused();
-    await exits.getByRole('button',{name:'↑ Back',exact:true}).click();
+    await dock.getByRole('button',{name:'Previous chapter',exact:true}).click();
     await expect(sections.nth(7)).toBeFocused();
     await dock.getByRole('button',{name:'Next chapter',exact:true}).click();
     await expect(sections.nth(8)).toBeFocused();
-    await exits.getByRole('link',{name:'← Home',exact:true}).click();
+    await exits.getByRole('link',{name:'Back to home',exact:true}).click();
     await expect(page).toHaveURL(/\/#top$/);
     await expect(page.locator('#portfolio-content[data-homepage]')).toHaveCount(1);
     await expect(dock).toHaveCount(0);

@@ -1,3 +1,9 @@
+# Working process
+
+Use Superpowers for every task. Read the applicable skills before implementation;
+for bugs, reproduce the failure, add a regression test, and verify the fix before
+claiming completion.
+
 # Portfolio typography
 
 Use the portfolio's clean, professional typography. Do not add handwritten,

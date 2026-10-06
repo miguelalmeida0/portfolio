@@ -3,7 +3,7 @@ import { motion } from '$lib/motion/tokens';
 import { resetScrollMotion, syncScrollPosition } from '$lib/motion/smooth-scroll';
 
 export const REWARD_HOLD_MS = 2200;
-const GESTURE_GAP_MS = 180;
+const GESTURE_GAP_MS = 300;
 const STEP_INTERVAL_MS = 850;
 const TOP = 64;
 const BOTTOM = 100;
@@ -117,7 +117,9 @@ export function installChapterScroll(root: HTMLElement, options: {
     const fresh = now - lastInput > GESTURE_GAP_MS;
     const reverse = direction !== lastDirection;
     lastInput = now;
-    if (reverse || (!tween && (fresh || now - lastStep > STEP_INTERVAL_MS))) {
+    // Momentum can outlive the tween. Only silence, never elapsed travel time,
+    // re-arms forward movement; otherwise one trackpad fling skips chapters.
+    if (reverse || (!tween && fresh)) {
       lastDirection = direction; lastStep = now; advance(direction);
     }
   }
