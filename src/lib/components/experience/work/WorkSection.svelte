@@ -23,7 +23,9 @@
       <p>Professional experience.<br />Independent ideas, built.</p>
     </header>
     <article class="f24-feature" data-f24-feature aria-labelledby="f24-title">
-      <img class="f24-photo" src="/projects/f24/hackathon.webp" alt="Colleagues gathered for a presentation at an F24 hackathon." width="1024" height="685" loading="lazy" />
+      <a class="f24-photo-link" href="/work/f24" aria-label="F24 case study" {...destinationLink('/work/f24')}>
+        <img class="f24-photo" src="/projects/f24/hackathon.webp" alt="Colleagues gathered for a presentation at an F24 hackathon." width="1024" height="685" loading="lazy" />
+      </a>
       <div class="f24-editorial">
         <p class="feature-label">Professional experience</p>
         <h3 id="f24-title" class="font-extrabold tracking-tight">F24</h3>
@@ -63,6 +65,7 @@
   .selected-heading h2 { font-size: clamp(42px, 4.8vw, 76px); line-height: 1.05; }
   .selected-heading > p { font-size: 20px; line-height: 1.4; color: var(--sage); }
   .f24-feature { display: grid; grid-template-columns: minmax(0,1.7fr) minmax(0,1fr); gap: 40px; align-items: center; }
+  .f24-photo-link { display: block; min-width: 0; border-radius: var(--r-media); }
   .f24-photo { width: 100%; height: auto; aspect-ratio: 1.72; object-fit: cover; border-radius: var(--r-media); }
   .f24-editorial { min-width: 0; }
   .feature-label, .preview-heading > p { font-size: 14px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--sage); }

@@ -8,7 +8,8 @@ test('permanent static F24 and four independent projects expose honest links', a
  await home(page);const f=page.locator('[data-f24-feature]');await expect(f).toBeVisible();await expect(f).toHaveCount(1);
  await expect(f.locator('img')).toHaveAttribute('src','/projects/f24/hackathon.webp');
  await expect.poll(()=>f.locator('img').evaluate((x:HTMLImageElement)=>x.complete&&x.naturalWidth>0)).toBe(true);
- await expect(f.locator('a')).toHaveCount(1);await expect(f.getByRole('link',{name:'View case study'})).toHaveAttribute('href','/work/f24');
+ await expect(f.locator('a')).toHaveCount(2);await expect(f.getByRole('link',{name:'View case study'})).toHaveAttribute('href','/work/f24');
+ await expect(f.getByRole('link',{name:'F24 case study',exact:true})).toHaveAttribute('href','/work/f24');
  await expect(f.locator('video,button')).toHaveCount(0);
  expect(await page.locator('[data-selected-project]').evaluateAll(es=>es.map(e=>e.getAttribute('data-selected-project')))).toEqual(cards);
  for(const id of cards)await expect(page.locator(`[data-selected-project="${id}"] a[href="/work/${id}"]`).first()).toBeVisible();
@@ -55,7 +56,7 @@ test('missing media remains a usable poster card',async({page})=>{
 });
 test('no JavaScript retains F24 privacy, all project posters and links',async({browser})=>{
  const context=await browser.newContext({javaScriptEnabled:false});const page=await context.newPage();await page.goto('http://127.0.0.1:4397/#work');
- await expect(page.locator('[data-f24-feature] a')).toHaveCount(1);await expect(page.locator('[data-selected-project]')).toHaveCount(4);await expect(page.locator('#work video[src]')).toHaveCount(0);await expect(page.locator('#work img')).toHaveCount(5);for(const img of await page.locator('#work img').all()){await img.scrollIntoViewIfNeeded();await expect(img).toBeVisible();await expect.poll(()=>img.evaluate((x:HTMLImageElement)=>x.complete&&x.naturalWidth>0)).toBe(true);}await context.close();
+ await expect(page.locator('[data-f24-feature] a')).toHaveCount(2);await expect(page.locator('[data-selected-project]')).toHaveCount(4);await expect(page.locator('#work video[src]')).toHaveCount(0);await expect(page.locator('#work img')).toHaveCount(5);for(const img of await page.locator('#work img').all()){await img.scrollIntoViewIfNeeded();await expect(img).toBeVisible();await expect.poll(()=>img.evaluate((x:HTMLImageElement)=>x.complete&&x.naturalWidth>0)).toBe(true);}await context.close();
 });
 for(const width of [320,375,390,768,1024,1280,1440,1920])test(`section fits at ${width}px`,async({page})=>{
  await page.setViewportSize({width,height:1000});await page.emulateMedia({reducedMotion:'reduce'});await home(page);
@@ -66,7 +67,7 @@ for(const width of [320,375,390,768,1024,1280,1440,1920])test(`section fits at $
 });
 test('section passes axe and has visible keyboard focus',async({page})=>{
  await gallery(page);expect((await new AxeBuilder({page}).include('#work').analyze()).violations).toEqual([]);
- const a=page.locator('[data-f24-feature] a');await a.focus();expect(await a.evaluate(el=>getComputedStyle(el).outlineStyle)).not.toBe('none');
+ const a=page.getByRole('link',{name:'F24 case study',exact:true});await a.focus();expect(await a.evaluate(el=>getComputedStyle(el).outlineStyle)).not.toBe('none');
 });
 
 test('offscreen videos transfer nothing before their first visible entry',async({page})=>{
@@ -112,7 +113,7 @@ test('section remains usable at 200 percent content zoom',async({page})=>{
 });
 
 test('keyboard activation reaches every case study independently',async({page})=>{
- for(const id of ['f24',...cards]){await home(page);const a=id==='f24'?page.locator('[data-f24-feature] a'):page.locator(`[data-selected-project="${id}"] h3 a`);await a.focus();await page.keyboard.press('Enter');await expect(page).toHaveURL(new RegExp(`/work/${id==='second-voice-ai'?'second-voice':id}$`));await expect(page.locator('h1')).toBeVisible();expect(page.context().pages()).toHaveLength(1);}
+ for(const id of ['f24',...cards]){await home(page);const a=id==='f24'?page.getByRole('link',{name:'F24 case study',exact:true}):page.locator(`[data-selected-project="${id}"] h3 a`);await a.focus();await page.keyboard.press('Enter');await expect(page).toHaveURL(new RegExp(`/work/${id==='second-voice-ai'?'second-voice':id}$`));await expect(page.locator('h1')).toBeVisible();expect(page.context().pages()).toHaveLength(1);}
 });
 test('touch activates media links and separate public actions without hijacking',async({browser})=>{
  const context=await browser.newContext({viewport:{width:390,height:844},hasTouch:true});const page=await context.newPage();
