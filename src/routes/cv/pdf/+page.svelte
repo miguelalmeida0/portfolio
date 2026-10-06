@@ -135,7 +135,50 @@
   .reader-message { position: relative; z-index: 1; margin: 24px; padding: 20px; background: #f5f6ed; }
   .reader-message a { display: inline-block; margin: 12px 20px 0 0; text-decoration: underline; }
   .cv-reader :global(a:focus-visible) { outline: 3px solid #610d3d; outline-offset: 3px; }
-  .cv-reader :global(.annotationLayer .linkAnnotation > a:hover) { background: rgb(97 13 61 / 10%); }
+
+  /* PDF.js link annotations sit above the rendered PDF. A translucent fill makes
+     their rectangular hitboxes visible and fights the rounded artwork below.
+     Keep the overlay transparent; use an inset ring instead so hover reinforces
+     the existing control without repainting or spilling beyond the hit area. */
+  .cv-reader :global(.annotationLayer .linkAnnotation > a) {
+    background: transparent !important;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: box-shadow 140ms ease;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cv-reader :global(.annotationLayer .linkAnnotation > a:hover) {
+      background: transparent !important;
+      box-shadow: inset 0 0 0 2px rgb(30 58 49 / 72%);
+    }
+
+    /* Contact controls live on the dark green header. Use a light ring there;
+       project links stay on the ivory page and use the dark forest ring above. */
+    .cv-reader :global(.annotationLayer .linkAnnotation > a[href*="linkedin.com"]:hover),
+    .cv-reader :global(.annotationLayer .linkAnnotation > a[href="https://github.com/miguelalmeida0/"]:hover),
+    .cv-reader :global(.annotationLayer .linkAnnotation > a[href="https://miguelalmeida.is-a.dev/"]:hover),
+    .cv-reader :global(.annotationLayer .linkAnnotation > a[href^="mailto:"]:hover) {
+      box-shadow: inset 0 0 0 2px rgb(255 253 248 / 86%);
+    }
+  }
+
+  .cv-reader :global(.annotationLayer .linkAnnotation > a:focus-visible) {
+    background: transparent !important;
+    outline: 3px solid #1e3a31;
+    outline-offset: -3px;
+  }
+
+  .cv-reader :global(.annotationLayer .linkAnnotation > a[href*="linkedin.com"]:focus-visible),
+  .cv-reader :global(.annotationLayer .linkAnnotation > a[href="https://github.com/miguelalmeida0/"]:focus-visible),
+  .cv-reader :global(.annotationLayer .linkAnnotation > a[href="https://miguelalmeida.is-a.dev/"]:focus-visible),
+  .cv-reader :global(.annotationLayer .linkAnnotation > a[href^="mailto:"]:focus-visible) {
+    outline-color: #e59a72;
+  }
+
   @media (max-width: 600px) { .reader-toolbar { padding: 12px; } .reader-actions { gap: 12px; } }
-  @media (prefers-reduced-motion: reduce) { .download { transition: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .download,
+    .cv-reader :global(.annotationLayer .linkAnnotation > a) { transition: none; }
+  }
 </style>
