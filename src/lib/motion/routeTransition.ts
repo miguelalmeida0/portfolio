@@ -254,6 +254,10 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
           syncScrollPosition();
         });
         transition.ready.catch(cleanup);
+        // A rapid Back/reload can abort Kit's navigation while the snapshot
+        // callback is awaiting it. Each ViewTransition promise rejects
+        // independently; own the callback rejection as well as ready/finished.
+        transition.updateCallbackDone.catch(cleanup);
         transition.finished.then(cleanup, cleanup);
       } catch { cleanup(); }
     });
