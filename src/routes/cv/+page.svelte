@@ -7,8 +7,7 @@
 </script>
 <svelte:head>
   <title>CV — Miguel Almeida</title>
-  <meta name="description" content="Miguel Almeida’s experience, skills and education. Frontend development at F24, independent products, and a background in UX design." />
-  <meta property="og:title" content="CV — Miguel Almeida" />
+  <meta name="description" content="Miguel Almeida’s experience, skills and education. Frontend engineering at F24, independent products, and a background in UX design." />
 </svelte:head>
 <article class="wind-shell profile-page cv-page">
   <header class="profile-top">
@@ -49,7 +48,7 @@
             <p class="cv-project-stack">{project.stack}</p>
             <ul class="cv-bullets">{#each project.bullets as bullet}<li>{bullet}</li>{/each}</ul>
             {#if project.live}
-              <a href={project.live} class="profile-link cv-live" {...destinationLink(project.live)}>Live app <ArrowUpRight size={16} aria-hidden="true" /></a>
+              <a href={project.live} class="profile-link cv-live" {...destinationLink(project.live)}>{project.slug === 'leu' ? 'Desktop companion' : 'Open app'} <ArrowUpRight size={16} aria-hidden="true" /></a>
             {/if}
           </div>
         {/each}

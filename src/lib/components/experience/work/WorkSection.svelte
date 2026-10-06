@@ -58,7 +58,7 @@
           <p class="project-line">{project.line}</p>
           <ul class="capabilities flex flex-wrap gap-2" aria-label={`${project.name} capabilities`}>{#each project.tags as tag}<li>{tag}</li>{/each}</ul>
           <div class="project-actions flex flex-wrap gap-x-8 gap-y-2">
-            {#if project.live}<a href={project.live} {...destinationLink(project.live)}>Live app <span aria-hidden="true">↗</span></a>{/if}
+            {#if project.live}<a href={project.live} {...destinationLink(project.live)}>{project.id === 'leu' ? 'Desktop companion' : 'Open app'} <span aria-hidden="true">↗</span></a>{/if}
             {#if project.code}<a href={project.code} {...destinationLink(project.code)}>Code <span aria-hidden="true">↗</span></a>{/if}
           </div>
         </article>

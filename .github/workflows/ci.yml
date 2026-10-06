@@ -46,7 +46,7 @@ jobs:
       - name: Run critical desktop and mobile browser smoke
         run: |
           mkdir -p .cache/tmp
-          TMPDIR=$PWD/.cache/tmp npx playwright test tests/e2e/specs/ci-smoke.spec.ts tests/e2e/specs/cv-highlights-alignment.spec.ts \
+          TMPDIR=$PWD/.cache/tmp npx playwright test tests/e2e/specs/ci-smoke.spec.ts tests/e2e/specs/cv-highlights-alignment.spec.ts tests/e2e/specs/design-audit.spec.ts \
             --project=chromium-desktop \
             --project=chromium-mobile \
             --workers=2

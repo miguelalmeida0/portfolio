@@ -20,7 +20,7 @@
       </div>
       <div class="hero-actions">
         <a href="/cv" class="primary" data-ask-id="cv" {...destinationLink("/cv")}>View CV <span aria-hidden="true">→</span></a>
-        <a href="#contact" class="secondary" data-ask-id="touch" {...destinationLink("#contact")}>Get in touch <span aria-hidden="true">→</span></a>
+        <a href="#work" class="secondary" {...destinationLink("#work")}>Explore my work <span aria-hidden="true">→</span></a>
       </div>
     </div>
   </div>

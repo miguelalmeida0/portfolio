@@ -23,11 +23,6 @@ export function sourceMap() {
 
 export function activateRegistry(added: (el: HTMLElement) => void = () => {}) {
   const originals = new Map<HTMLElement, Record<string, string | null>>();
-  const identity = document.querySelector<HTMLElement>('[data-identity-home]');
-  if (identity) {
-    originals.set(identity, Object.fromEntries(['href', 'role', 'tabindex'].map(key => [key, identity.getAttribute(key)])));
-    identity.removeAttribute('href'); identity.setAttribute('role', 'group'); identity.tabIndex = -1;
-  }
   function update() {
     document.querySelectorAll<HTMLElement>('[data-ask-id]').forEach(el => {
       if (originals.has(el)) return;

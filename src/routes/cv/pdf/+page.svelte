@@ -122,7 +122,7 @@
 
 <main class="cv-reader" aria-label="Miguel Almeida CV PDF">
   <header class="reader-toolbar">
-    <div class="reader-title"><h1>Miguel Almeida · CV</h1><p>Links open in new tabs.</p></div>
+    <div class="reader-title"><h1>Miguel Almeida · CV</h1><p><a class="web-cv" href="/cv">Read web CV</a> · Links open in new tabs.</p></div>
     <div class="reader-actions">
       <CvZoom ready={ready && !failed} {percent} mode={scale} onscale={changeScale} />
       <a class="download" href="/files/miguel-almeida-cv.pdf" download="Miguel-Almeida-CV.pdf">Download PDF</a>
@@ -148,6 +148,7 @@
 
 <style>
   .cv-reader { height: 100dvh; display: flex; flex-direction: column; color: #12372d; background: #e8ecdf; font-family: Figtree, Arial, sans-serif; }
+  .web-cv { display:inline-flex; align-items:center; min-height:44px; color:#12372d; text-decoration:underline; text-underline-offset:4px; }
   .reader-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; padding: 12px 24px; background: #f5f6ed; border-bottom: 1px solid #c5ccba; }
   h1 { margin: 0; font-size: 17px; font-weight: 600; line-height: 1.4; }
   .reader-title p { margin: 3px 0 0; font-size: 13px; color: #506353; }

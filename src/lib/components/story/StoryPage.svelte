@@ -45,10 +45,11 @@
     <a href="/#top" aria-label="Back to home"><span aria-hidden="true">‹</span> Back</a>
   </nav>
   <header class="story-intro">
-    <p class="story-eyebrow">{data.editorial.eyebrow}</p>
+
     <h1 id="story-title">{data.editorial.title}</h1>
     <p class="story-intro-copy">{data.editorial.intro}</p>
   </header>
+  <section class="story-summary story-summary-first" data-story-section data-chapter="summary" aria-labelledby="story-summary"><ShortVersion /></section>
   <div class="story-layout">
     <aside class="story-index">
       <p class="story-eyebrow">{data.editorial.indexTitle}</p>
@@ -72,9 +73,7 @@
           <ScenePanel index={i} {runners} {run} {ready} />
         </section>
       {/each}
-      <section class="story-summary" data-story-section data-chapter="summary" aria-labelledby="story-summary">
-        <ShortVersion />
-      </section>
+
       <section class="story-ending" aria-labelledby="story-end">
         <p class="story-eyebrow">{data.ending.label}</p>
         <h2 id="story-end">{data.ending.question}</h2>

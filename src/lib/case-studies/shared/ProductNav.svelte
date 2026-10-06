@@ -4,6 +4,7 @@
   let { name, links } = $props();
   let sentinel, nav;
   let stuck = $state(false), current = $state('');
+  let expanded = $state(false);
   onMount(() => {
     const io = new IntersectionObserver(([e]) => stuck = !e.isIntersecting);
     io.observe(sentinel);
@@ -13,7 +14,18 @@
   });
 </script>
 <div id="sentinel" bind:this={sentinel}></div>
-<nav aria-label={name+' sections'} class="pnav" class:stuck id="pnav" bind:this={nav} use:sectionMotion><div class="wrap"><a class="pname" data-project-identity href="#overview">{name}</a><ul><li data-section-indicator aria-hidden="true"></li>{#each links as [id, label]}<li><a href={'#' + id} aria-current={current ? String(current === id) : undefined}>{label}</a></li>{/each}</ul><a class="btn primary sm" href="#try">Try it</a></div><span data-reading-progress aria-hidden="true"></span></nav>
+<nav aria-label={name+' sections'} class="pnav" class:stuck id="pnav" bind:this={nav} use:sectionMotion>
+  <div class="wrap">
+    <a class="case-back" href="/#work" aria-label="Back to selected work">Work</a>
+    <a class="pname" data-project-identity href="#overview">{name}</a>
+    <ul><li data-section-indicator aria-hidden="true"></li>{#each links as [id, label]}<li><a href={'#' + id} aria-current={current ? String(current === id) : undefined}>{label}</a></li>{/each}</ul>
+    <details class="case-mobile-menu" bind:open={expanded}>
+      <summary>On this page<span>{links.find(([id]) => id === current)?.[1] ?? 'Overview'}</span></summary>
+      <div>{#each links as [id, label]}<a href={'#' + id} aria-current={current === id ? 'location' : undefined} onclick={() => expanded = false}>{label}</a>{/each}<a href="#try" onclick={() => expanded = false}>Explore demo</a></div>
+    </details>
+    <a class="btn primary sm case-demo-link" href="#try">Explore demo</a>
+  </div><span data-reading-progress aria-hidden="true"></span>
+</nav>
 <style>
   .pnav :global([data-section-indicator]) { display: none; border-radius: 999px; background: var(--sagebg, var(--sage, #E4EAD3)); }
   .pnav:global([data-nav-motion]) :global([data-section-indicator]) { display: block; }
