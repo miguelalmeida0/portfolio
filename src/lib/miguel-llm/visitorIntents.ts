@@ -15,7 +15,7 @@ export type IntentResponse = { intent: VisitorIntent; facts: AskFact[]; followup
 
 const cv = ['CV · Professional experience|/cv#experience'];
 const skills = ['CV · Technical skills|/cv#skills'];
-const education = ['CV · Education|/cv#education'];
+const education = ['Education|/cv#education'];
 const story = ['My background|/story'];
 const work = ['My selected projects|/#work'];
 const f24 = ['F24 case study|/work/f24'];

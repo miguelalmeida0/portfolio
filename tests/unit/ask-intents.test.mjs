@@ -90,7 +90,7 @@ test('education questions give the real institutions, qualifications and dates',
   assert.match(text, /Professional Diploma in UX Design at the UX Design Institute \(Aug 2021\)/);
   assert.match(text, /Full-Stack Web Development at CareerFoundry \(2021\)/);
   assert.doesNotMatch(text, /Bachelor|Master of Science|Computer Science degree|F24 Frontend Engineer/);
-  assert.ok(result.sources.includes('CV · Education|/cv#education'));
+  assert.ok(result.sources.includes('Education|/cv#education'));
   assert.deepEqual(validateConversationAnswer(result, 'Where did you study?'), result);
 });
 
