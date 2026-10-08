@@ -1,87 +1,148 @@
 import type { SelectedProject } from './selected-projects';
 
 type Connection = EventTarget & { saveData?: boolean };
-type Entry = { video: HTMLVideoElement; frame: HTMLElement; sources: string[]; index: number; visible: boolean; failed: boolean; pending: boolean; token: number; dispose: () => void };
-const pauseKey = 'selected-work-previews-paused';
+type Entry = {
+  video: HTMLVideoElement;
+  frame: HTMLElement;
+  sources: string[];
+  index: number;
+  token: number;
+  pending: boolean;
+  failed: boolean;
+  dispose: () => void;
+};
 
-/** A section owner: no source transfer or autoplay until a visible preview is eligible. */
-export function createPreviewController(section: HTMLElement, projects: SelectedProject[], changed: (paused: boolean) => void) {
+/**
+ * Silent previews are automatic, independent loops. A previous session's
+ * Pause Previews setting must never prevent them from playing.
+ *
+ * Start every film while the page is active; scrolling never pauses it.
+ * Reduced Motion, Save-Data and background-tab policies are still respected.
+ */
+export function createPreviewController(section: HTMLElement, projects: SelectedProject[]) {
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const connection = (navigator as Navigator & { connection?: Connection }).connection;
-  let userPaused = false;
-  try { userPaused = sessionStorage.getItem(pauseKey) === 'true'; } catch { /* Storage can be unavailable. */ }
-  let override = false;
-  let alive = true;
   const entries: Entry[] = [];
-  const paused = () => userPaused || (!override && (motion.matches || Boolean(connection?.saveData)));
-  const eligible = (entry: Entry) => alive && !paused() && !document.hidden && entry.visible;
-  const status = (entry: Entry, value: string) => { entry.frame.dataset.previewStatus = value; };
-  function sync(entry: Entry) {
-    if (!eligible(entry)) {
-      entry.token++; entry.pending = false; entry.video.autoplay = false; entry.video.pause();
+  let alive = true;
+
+  const canPlay = () => alive && !document.hidden && !motion.matches && !connection?.saveData;
+  const setStatus = (entry: Entry, status: string) => { entry.frame.dataset.previewStatus = status; };
+
+  function play(entry: Entry) {
+    const video = entry.video;
+    if (!canPlay()) {
+      ++entry.token;
+      entry.pending = false;
+      video.autoplay = false;
+      video.pause();
       return;
     }
-    if (entry.failed || entry.pending || !entry.video.paused) return;
-    const video = entry.video;
-    if (!entry.sources.length) { entry.failed = true; status(entry, 'unavailable'); return; }
-    video.muted = true; video.defaultMuted = true; video.autoplay = true;
-    if (!video.getAttribute('src')) { video.src = entry.sources[entry.index]; video.load(); }
+    if (entry.failed || entry.pending || !video.paused) return;
+    if (!entry.sources.length) {
+      entry.failed = true;
+      setStatus(entry, 'unavailable');
+      return;
+    }
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.autoplay = true;
+    video.preload = 'auto';
+    if (!video.getAttribute('src')) {
+      video.src = entry.sources[entry.index];
+      video.load();
+    }
+
     const token = ++entry.token;
     entry.pending = true;
     void video.play().then(() => {
-      if (!eligible(entry)) video.pause();
       if (!alive || token !== entry.token) return;
       entry.pending = false;
+      if (!canPlay()) video.pause();
     }).catch(() => {
       if (!alive || token !== entry.token) return;
       entry.pending = false;
-      if (!eligible(entry)) return;
-      entry.failed = true; video.autoplay = false; video.pause(); status(entry, 'blocked');
+      if (!canPlay()) return;
+      // Browser autoplay can be disallowed even for muted media. Keep the
+      // real poster rather than presenting a motionless or broken video.
+      entry.failed = true;
+      video.autoplay = false;
+      video.pause();
+      setStatus(entry, 'blocked');
     });
   }
-  function syncAll() { changed(paused()); entries.forEach(sync); }
-  const observer = new IntersectionObserver(records => {
-    for (const record of records) {
-      const entry = entries.find(item => item.video === record.target);
-      if (entry) { entry.visible = record.isIntersecting && record.intersectionRatio >= 0.15; sync(entry); }
-    }
-  }, { threshold: [0, 0.15] });
+
+  function syncAll() { for (const entry of entries) play(entry); }
+
   for (const video of section.querySelectorAll<HTMLVideoElement>('video[data-project-preview]')) {
-    const project = projects.find(item => item.id === video.dataset.projectPreview)!;
-    const entry: Entry = { video, frame: video.closest<HTMLElement>('[data-preview]')!, sources: project.sources.filter(source => video.canPlayType(source.type) !== '').map(source => source.src), index: 0, visible: false, failed: false, pending: false, token: 0, dispose: () => {} };
-    video.muted = true; video.defaultMuted = true;
+    const project = projects.find(item => item.id === video.dataset.projectPreview);
+    if (!project) continue;
+    const frame = video.closest<HTMLElement>('[data-preview]');
+    if (!frame) continue;
+    const sources = project.sources
+      .filter(source => video.canPlayType(source.type) !== '')
+      .map(source => source.src);
+    const entry: Entry = {
+      video, frame, sources, index: 0, token: 0,
+      pending: false, failed: false, dispose: () => {}
+    };
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+
     const playing = () => {
-      if (!eligible(entry)) { video.pause(); return; }
-      status(entry, 'playing');
+      if (!canPlay()) { video.pause(); return; }
+      setStatus(entry, 'playing');
     };
     const error = () => {
       if (!alive) return;
-      entry.token++; entry.pending = false; video.autoplay = false; video.pause();
+      ++entry.token;
+      entry.pending = false;
+      video.pause();
       if (entry.index + 1 < entry.sources.length) {
-        entry.index++; entry.failed = false; video.removeAttribute('src'); status(entry, 'poster'); sync(entry);
-      } else { entry.failed = true; status(entry, 'unavailable'); }
+        ++entry.index;
+        entry.failed = false;
+        video.removeAttribute('src');
+        setStatus(entry, 'poster');
+        play(entry);
+      } else {
+        entry.failed = true;
+        setStatus(entry, 'unavailable');
+      }
     };
-    video.addEventListener('playing', playing); video.addEventListener('error', error);
-    entry.dispose = () => { video.removeEventListener('playing', playing); video.removeEventListener('error', error); };
-    entries.push(entry); observer.observe(video);
+
+    video.addEventListener('playing', playing);
+    video.addEventListener('error', error);
+    entry.dispose = () => {
+      video.removeEventListener('playing', playing);
+      video.removeEventListener('error', error);
+    };
+    entries.push(entry);
   }
-  const policyChanged = () => { override = false; syncAll(); };
-  motion.addEventListener('change', policyChanged);
-  connection?.addEventListener('change', policyChanged);
+
+  motion.addEventListener('change', syncAll);
+  connection?.addEventListener('change', syncAll);
   document.addEventListener('visibilitychange', syncAll);
+  // The poster is server-rendered; video playback starts immediately after
+  // hydration without a click, an intersection threshold or stored pause state.
   syncAll();
+
   return {
-    toggle() {
-      if (paused()) { userPaused = false; override = true; entries.forEach(entry => { entry.failed = false; }); }
-      else { userPaused = true; override = false; }
-      try { sessionStorage.setItem(pauseKey, String(userPaused)); } catch { /* Playback does not depend on storage. */ }
-      syncAll();
-    },
     destroy() {
-      alive = false; observer.disconnect();
-      motion.removeEventListener('change', policyChanged); connection?.removeEventListener('change', policyChanged);
+      alive = false;
+      motion.removeEventListener('change', syncAll);
+      connection?.removeEventListener('change', syncAll);
       document.removeEventListener('visibilitychange', syncAll);
-      for (const entry of entries) { entry.token++; entry.dispose(); entry.video.autoplay = false; entry.video.pause(); entry.video.removeAttribute('src'); entry.video.load(); }
+      for (const entry of entries) {
+        ++entry.token;
+        entry.dispose();
+        entry.video.autoplay = false;
+        entry.video.pause();
+        entry.video.removeAttribute('src');
+        entry.video.load();
+      }
     }
   };
 }

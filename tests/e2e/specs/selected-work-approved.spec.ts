@@ -40,17 +40,27 @@ for(const id of videos)test(`${id}: actual silent autoplay advances and crosses 
  await expect.poll(()=>v.evaluate((x:HTMLVideoElement)=>x.currentTime<1.5&&!x.paused),{timeout:5000}).toBe(true);
  await testInfo.attach('actual-media', {body:JSON.stringify(await v.evaluate((x:HTMLVideoElement)=>({source:x.currentSrc,width:x.videoWidth,height:x.videoHeight,ready:x.readyState,time:x.currentTime,muted:x.muted,loop:x.loop,paused:x.paused}))),contentType:'application/json'});expect(errors).toEqual([]);
 });
-test('pause persists across scroll, return and a same-visit reload',async({page})=>{
- await gallery(page);const v=page.locator('[data-selected-project="flow"] video');await expect.poll(()=>v.evaluate((x:HTMLVideoElement)=>!x.paused)).toBe(true);
- await page.getByRole('button',{name:'Pause previews',exact:true}).click();await expect.poll(()=>v.evaluate((x:HTMLVideoElement)=>x.paused)).toBe(true);
- await page.evaluate(()=>scrollTo(0,0));await v.scrollIntoViewIfNeeded();await expect(v).toHaveJSProperty('paused',true);
- await page.reload();await v.scrollIntoViewIfNeeded();await expect(page.getByRole('button',{name:'Resume previews',exact:true})).toBeVisible();await expect(v).toHaveJSProperty('paused',true);
- await page.getByRole('button',{name:'Resume previews',exact:true}).click();await v.scrollIntoViewIfNeeded();await expect.poll(()=>v.evaluate((x:HTMLVideoElement)=>!x.paused)).toBe(true);
- await page.evaluate(()=>scrollTo(0,0));await expect.poll(()=>v.evaluate((x:HTMLVideoElement)=>x.paused)).toBe(true);
+test('all four films autoplay without a control and continue offscreen',async({page})=>{
+ await home(page);
+ await expect(page.locator('#work .preview-toggle')).toHaveCount(0);
+ for(const id of videos) {
+  const video=page.locator(`[data-selected-project="${id}"] video`);
+  await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>!v.paused&&v.readyState>=2&&v.videoWidth>0),{timeout:30000}).toBe(true);
+ }
+ const video=page.locator('[data-selected-project="needle"] video');
+ await video.scrollIntoViewIfNeeded();
+ const start=await video.evaluate((v:HTMLVideoElement)=>v.currentTime);
+ await page.evaluate(()=>scrollTo(0,document.body.scrollHeight));
+ await page.waitForTimeout(750);
+ expect(await video.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeGreaterThan(start);
 });
-test('reduced motion starts on posters and can deliberately enable previews',async({page})=>{
- await page.emulateMedia({reducedMotion:'reduce'});await gallery(page);const v=page.locator('[data-selected-project="flow"] video');await expect(v).toHaveJSProperty('paused',true);await expect(v).not.toHaveAttribute('src',/./);
- await page.getByRole('button',{name:'Resume previews',exact:true}).click();await v.scrollIntoViewIfNeeded();await expect.poll(()=>v.evaluate((x:HTMLVideoElement)=>!x.paused)).toBe(true);
+test('reduced-motion visitors see posters without forced autoplay',async({page})=>{
+ await page.emulateMedia({reducedMotion:'reduce'});await home(page);
+ for(const id of videos) {
+  const video=page.locator(`[data-selected-project="${id}"] video`);
+  await expect(video).toHaveJSProperty('paused',true);
+  await expect(video).not.toHaveAttribute('src',/./);
+ }
 });
 test('blocked playback and failed media retain real posters and destinations',async({page})=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
@@ -69,14 +79,17 @@ for(const width of [320,375,390,768,1024,1280,1440,1920])test(`section fits at $
  await page.setViewportSize({width,height:1000});await page.emulateMedia({reducedMotion:'reduce'});await home(page);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  const boxes=await page.locator('[data-selected-project]').evaluateAll(es=>es.map(e=>({x:e.getBoundingClientRect().x,y:e.getBoundingClientRect().y,width:e.getBoundingClientRect().width})));
- const columns=new Set(boxes.map(b=>Math.round(b.x))).size;expect(columns).toBe(1);
+ expect(boxes).toHaveLength(4);
  for(const id of cards) {
   const chapter=page.locator(`[data-selected-project="${id}"]`);
-  const copy=await chapter.locator('.project-copy').boundingBox();
+  const copy=await chapter.locator('.project-info').boundingBox();
   const media=await chapter.locator('.preview-link').boundingBox();
   expect(copy).not.toBeNull();expect(media).not.toBeNull();
-  if(width>=1100) expect(id==='second-voice-ai'||id==='flow' ? media!.x<copy!.x : copy!.x<media!.x).toBe(true);
-  else {expect(copy!.y<media!.y).toBe(true);expect(media!.x).toBeGreaterThanOrEqual(0);expect(media!.x+media!.width).toBeLessThanOrEqual(width+1);}
+  if(width>=980) expect(id==='second-voice-ai'||id==='flow' ? media!.x<copy!.x : copy!.x<media!.x).toBe(true);
+  else {expect(media!.y<copy!.y).toBe(true);expect(media!.x).toBeGreaterThanOrEqual(0);expect(media!.x+media!.width).toBeLessThanOrEqual(width+1);}
+  await expect(chapter.locator('.project-tags')).toHaveCSS('display','flex');
+  await expect(chapter.locator('.project-stack')).toHaveCSS('font-style','normal');
+  await expect(chapter.locator('[data-preview]')).toHaveCSS('border-top-width','0px');
   await expect(chapter.locator('[data-preview] img')).toHaveCSS('object-fit','contain');
   await expect(chapter.locator('[data-preview] video')).toHaveCSS('object-fit','contain');
  }
@@ -87,23 +100,27 @@ test('section passes axe and has visible keyboard focus',async({page})=>{
  const a=page.getByRole('link',{name:'F24 case study',exact:true});await a.focus();expect(await a.evaluate(el=>getComputedStyle(el).outlineStyle)).not.toBe('none');
 });
 
-test('offscreen videos transfer nothing before their first visible entry',async({page})=>{
- const media:string[]=[];page.on('request',r=>{if(/\.(mp4|webm)(\?|$)/.test(r.url()))media.push(r.url());});
- await page.goto('/');await expect(page.locator('#work button')).toBeAttached();await page.waitForTimeout(300);
- await expect(page.locator('#work video[src]')).toHaveCount(0);expect(media).toEqual([]);
+test('videos start loading independently of viewport visibility',async({page})=>{
+ await home(page);
+ for(const id of videos) {
+  await expect.poll(()=>page.locator(`[data-selected-project="${id}"] video`).evaluate((v:HTMLVideoElement)=>Boolean(v.currentSrc)),{timeout:10000}).toBe(true);
+ }
 });
-test('Save-Data preference starts on posters and changes pause eligible playback',async({page})=>{
- await page.addInitScript(()=>{const connection=Object.assign(new EventTarget(),{saveData:true});Object.defineProperty(navigator,'connection',{value:connection,configurable:true});});
- await gallery(page);const v=page.locator('[data-selected-project="flow"] video');await expect(v).not.toHaveAttribute('src',/./);
- await expect(page.getByRole('button',{name:'Resume previews',exact:true})).toBeVisible();
- await page.getByRole('button',{name:'Resume previews',exact:true}).click();await v.scrollIntoViewIfNeeded();await expect.poll(()=>v.evaluate((x:HTMLVideoElement)=>!x.paused)).toBe(true);
- await page.evaluate(()=>{(navigator as Navigator & {connection:EventTarget}).connection.dispatchEvent(new Event('change'));});await expect(v).toHaveJSProperty('paused',true);
+test('Save-Data visitors get posters rather than four automatic downloads',async({page})=>{
+ await page.addInitScript(()=>{
+  const connection=Object.assign(new EventTarget(),{saveData:true});
+  Object.defineProperty(navigator,'connection',{value:connection,configurable:true});
+ });
+ await home(page);
+ for(const id of videos) await expect(page.locator(`[data-selected-project="${id}"] video`)).not.toHaveAttribute('src',/./);
 });
-test('visibility policy pauses and resumes without undoing explicit pause',async({page})=>{
- await gallery(page);const v=page.locator('[data-selected-project="flow"] video');await expect.poll(()=>v.evaluate((x:HTMLVideoElement)=>!x.paused)).toBe(true);
+test('background tabs pause video and resume on return',async({page})=>{
+ await home(page);
+ const video=page.locator('[data-selected-project="flow"] video');
+ await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>!v.paused),{timeout:25000}).toBe(true);
  const visibility=async(hidden:boolean)=>page.evaluate(value=>{Object.defineProperty(document,'hidden',{configurable:true,value});document.dispatchEvent(new Event('visibilitychange'));},hidden);
- await visibility(true);await expect(v).toHaveJSProperty('paused',true);await visibility(false);await expect.poll(()=>v.evaluate((x:HTMLVideoElement)=>!x.paused)).toBe(true);
- await page.getByRole('button',{name:'Pause previews',exact:true}).click();await visibility(true);await visibility(false);await expect(v).toHaveJSProperty('paused',true);
+ await visibility(true);await expect(video).toHaveJSProperty('paused',true);
+ await visibility(false);await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>!v.paused),{timeout:25000}).toBe(true);
 });
 test('Leu falls back from its failed preferred source to real MP4 playback',async({page})=>{
  await page.route(/\.webm(\?|$)/,r=>r.fulfill({status:404,body:'missing preferred source'}));await gallery(page);
@@ -114,11 +131,16 @@ test('slow responses preserve posters and links until real playback begins',asyn
  await gallery(page);const frame=page.locator('[data-selected-project="flow"] [data-preview]');await expect(frame.locator('img')).toBeVisible();await expect(frame.locator('video')).toHaveCSS('opacity','0');await expect(page.locator('[data-selected-project="flow"] a[href="/work/flow"]').first()).toBeVisible();release();
  await expect.poll(()=>frame.locator('video').evaluate((x:HTMLVideoElement)=>!x.paused&&x.readyState>=2),{timeout:20000}).toBe(true);await expect(frame.locator('video')).toHaveCSS('opacity','1');
 });
-test('late native play completion cannot undo pause or leak after navigation',async({page})=>{
- const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await page.addInitScript(()=>{const native=HTMLMediaElement.prototype.play;HTMLMediaElement.prototype.play=function(){return native.call(this).then(()=>new Promise<void>(resolve=>setTimeout(resolve,1200)));};});
- await gallery(page);const v=page.locator('[data-selected-project="flow"] video');await expect.poll(()=>v.evaluate((x:HTMLVideoElement)=>!x.paused)).toBe(true);await page.getByRole('button',{name:'Pause previews',exact:true}).click();await page.waitForTimeout(1400);await expect(v).toHaveJSProperty('paused',true);
- await page.getByRole('button',{name:'Resume previews',exact:true}).click();await v.scrollIntoViewIfNeeded();await expect.poll(()=>v.evaluate((x:HTMLVideoElement)=>!x.paused)).toBe(true);
- await page.locator('[data-selected-project="flow"] h4 a').click();await expect(page).toHaveURL(/\/work\/flow$/);await page.waitForTimeout(1400);expect(errors).toEqual([]);
+test('unmounting an active loop leaves no client errors',async({page})=>{
+ const errors:string[]=[];
+ page.on('pageerror',e=>errors.push(e.message));
+ await home(page);
+ const video=page.locator('[data-selected-project="flow"] video');
+ await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>!v.paused),{timeout:25000}).toBe(true);
+ await page.locator('[data-selected-project="flow"] h4 a').click();
+ await expect(page).toHaveURL(/\/work\/flow$/);
+ await page.waitForTimeout(250);
+ expect(errors).toEqual([]);
 });
 test('each chapter film plays uncropped on desktop and mobile',async({page})=>{
  await gallery(page);

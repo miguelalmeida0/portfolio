@@ -24,7 +24,7 @@
 </div>
 
 <style>
-  .preview-frame { position: relative; display: block; width: 100%; min-width: 0; overflow: hidden; isolation: isolate; border: 1px solid color-mix(in srgb, var(--paper) 24%, transparent); border-radius: var(--r-media); background: #f6f3ec; }
+  .preview-frame { position: relative; display: block; width: 100%; min-width: 0; overflow: hidden; isolation: isolate; border: 0; border-radius: 12px; background: #f6f3ec; }
   .preview-plane { position: absolute; inset: 0; min-width: 0; }
   img, video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; }
   img { z-index: 1; }
