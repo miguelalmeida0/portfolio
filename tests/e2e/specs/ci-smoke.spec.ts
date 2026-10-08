@@ -485,6 +485,28 @@ test('Ask answers actual tools and education questions directly on mobile and de
   }
 });
 
+test('framework preference stays relevant and grammatical on desktop and mobile', async ({page}) => {
+  await page.addInitScript(() => sessionStorage.setItem('seen-intro','true'));
+  await page.emulateMedia({reducedMotion:'reduce'});
+  for (const width of [1440,390]) {
+    await page.setViewportSize({width,height:900});
+    await page.goto('/');
+    const menu = page.getByRole('button',{name:'Menu',exact:true});
+    if (await menu.isVisible()) await menu.click();
+    await page.locator('[data-ask-trigger]:visible').click();
+    const input = page.getByRole('textbox',{name:'Type your own question'});
+    await input.fill('Which framework do you prefer?');
+    await input.press('Enter');
+    const answer = page.locator('[data-ask-knowledge]');
+    await expect(answer).toContainText('I reach for React with TypeScript most often',{timeout:15000});
+    await expect(answer).toContainText('soft spot for Svelte');
+    await expect(answer).not.toContainText(/I does|I loses|I combines|does not want a role|no possibility to apply|role would not|voice chats|image-to-text workflows/i);
+    await expect(page.locator('.ask-sources a').first()).toHaveAttribute('href','/cv#skills');
+    await page.keyboard.press('Escape');
+    await expect(page.locator('[data-ask-panel]')).toHaveCount(0);
+  }
+});
+
 test('primary routes render without uncaught client exceptions', async ({ page }) => {
   const pageErrors: string[] = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));

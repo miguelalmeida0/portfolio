@@ -1,65 +1,92 @@
 /**
- * Present approved portfolio evidence in Miguel's prepared first-person voice.
- * This is a deterministic point-of-view edit, not a generated claim. Keep any
- * quoted recommendation intact and preserve the factual content and source ID.
+ * Transform documented portfolio prose into a prepared first-person voice.
+ *
+ * Never substitute a subject in isolation: that previously produced grammar
+ * such as "I does not want" and "I loses track". A clause is rewritten only
+ * when its verb can be converted with a known grammatical rule. Unrecognized
+ * clauses stay intact rather than becoming malformed assertions.
+ *
+ * Verbatim recommendation quotes remain untouched.
  */
-const verbForms: Array<[RegExp,string]> = [
-  [/\bI is\b/g, 'I am'], [/\bI has\b/g, 'I have'],
-  [/\bI works\b/g, 'I work'], [/\bI likes\b/g, 'I like'],
-  [/\bI enjoys\b/g, 'I enjoy'], [/\bI prefers\b/g, 'I prefer'],
-  [/\bI wants\b/g, 'I want'], [/\bI gets\b/g, 'I get'],
-  [/\bI thinks\b/g, 'I think'], [/\bI keeps\b/g, 'I keep'],
-  [/\bI reports\b/g, 'I report'], [/\bI describes\b/g, 'I describe'],
-  [/\bI builds\b/g, 'I build'], [/\bI designs\b/g, 'I design'],
-  [/\bI uses\b/g, 'I use'], [/\bI tends\b/g, 'I tend'],
-  [/\bI demonstrates\b/g, 'I demonstrate'], [/\bI continues\b/g,'I continue'],
-  [/\bI helps\b/g,'I help'], [/\bI cares\b/g,'I care'],
-  [/\bI combines\b/g, 'I combine'], [/\bI maintains\b/g, 'I maintain'],
-  [/\bI establishes\b/g, 'I establish'], [/\bI shapes\b/g, 'I shape'],
-  [/\bI connects\b/g, 'I connect'], [/\bI delivers\b/g, 'I deliver'],
-  [/\bI ships\b/g, 'I ship'], [/\bI supports\b/g, 'I support'],
-  [/\bI improves\b/g, 'I improve'], [/\bI focuses\b/g, 'I focus'],
-  [/\bI explores\b/g, 'I explore'], [/\bI handles\b/g, 'I handle'],
-  [/\bI creates\b/g, 'I create'], [/\bI writes\b/g, 'I write'],
-  [/\bI offers\b/g, 'I offer'], [/\bI documents\b/g, 'I document'],
-  [/\bI tests\b/g, 'I test'], [/\bI collaborates\b/g, 'I collaborate'],
-  [/\bI maps\b/g, 'I map'], [/\bI starts\b/g, 'I start'],
-  [/\bI solves\b/g, 'I solve'], [/\bI moves\b/g, 'I move'],
-  [/\bI carries\b/g,'I carry'], [/\bI takes\b/g,'I take']
-];
-export function inMyVoice(input: string): string {
-  // A testimonial is somebody else's voice: never rewrite its quotation.
-  const parts = input.split(/(“[^”]*”|\u0022[^\u0022]*\u0022)/g);
-  return parts.map((part, index) => {
-    if (index % 2 === 1) return part;
-    let value = part
-      .replace(/\b(contact|reach|email|ask|about|with|to|from|for) Miguel(?: Almeida)?\b/gi, (_, verb: string) => `${verb} me`)
-      .replace(/\bMiguel(?: Almeida)?[’']s\b/g, 'my')
-      .replace(/\bMiguel(?: Almeida)?\b/g, (name: string, offset: number, whole: string) => {
-        const preceding = whole.slice(Math.max(0, offset - 8), offset);
-        return /(?:I['’]m|I am)\s$/.test(preceding) ? name : 'I';
-      })
-      .replace(/\bHis\b/g, 'My')
-      .replace(/\bhis\b/g, 'my')
-      .replace(/\bHe\b/g, 'I')
-      .replace(/\bhe\b/g, 'I')
-      .replace(/\bhimself\b/g, 'myself')
-      .replace(/\bhim\b/g, 'me');
-    for (const [pattern, replacement] of verbForms) value = value.replace(pattern, replacement);
-    return value.replace(/^my\b/, 'My');
-  }).join('');
+const irregular = new Map<string, string>([
+  ['is', 'am'], ['isn\'t', 'am not'], ['has', 'have'],
+  ['hasn\'t', 'haven\'t'], ['does', 'do'], ['doesn\'t', 'don\'t'],
+  ['goes', 'go'], ['loses', 'lose'], ['uses', 'use'], ['focuses', 'focus'],
+  ['chooses', 'choose'], ['watches', 'watch'], ['catches', 'catch'],
+  ['teaches', 'teach'], ['fixes', 'fix'], ['passes', 'pass'],
+  ['studies', 'study'], ['tries', 'try'], ['carries', 'carry']
+]);
+
+const unchanged = new Set([
+  'am', 'are', 'was', 'were', 'wasn\'t', 'weren\'t', 'had', 'hadn\'t',
+  'have', 'haven\'t', 'do', 'don\'t', 'did', 'didn\'t',
+  'can', 'cannot', 'can\'t', 'could', 'couldn\'t', 'will', 'won\'t',
+  'would', 'wouldn\'t', 'should', 'shouldn\'t', 'must', 'may',
+  'might', 'need', 'built', 'said', 'made', 'wrote', 'went', 'found',
+  'learned', 'learnt', 'taught', 'led', 'saw', 'felt', 'became', 'grew'
+]);
+
+/** Returns null for any verb whose first-person form cannot be established. */
+function firstPersonVerb(raw: string): string | null {
+  const word = raw.replace(/’/g, "'").toLowerCase();
+  const converted = irregular.get(word);
+  if (converted) return converted;
+  if (unchanged.has(word) || /^[a-z]+ed$/.test(word)) return raw;
+  if (/^[a-z]+ies$/.test(word)) return raw.slice(0, -3) + 'y';
+  if (/^[a-z]+(?:sses|ches|shes|xes|zzes)$/.test(word)) return raw.slice(0, -2);
+  if (/^[a-z]+s$/.test(word) && !/(?:ss|us|is)$/.test(word)) return raw.slice(0, -1);
+  // Ordinary base verbs are safe only when they appear in an explicit list.
+  return null;
 }
 
-export function asFirstPersonAnswer(text: string, first = false, context: 'cv' | 'story' | 'flow' | 'leu' | 'work' = 'work'): string {
+function convertUnquoted(input: string): string {
+  let text = input
+    .replace(/\b(?:ask|contact|email|reach) Miguel(?: Almeida)?\b/gi, match => match.replace(/Miguel(?: Almeida)?/i, 'me'))
+    .replace(/\b(?:Miguel(?: Almeida)?|He|he)[’']s\s+(?=a\b|an\b|the\b|working\b|based\b|been\b)/g, 'I am ');
+
+  // Replace the subject and verb together; preserve capitalisation after
+  // a sentence boundary without affecting a person's quoted words.
+  text = text.replace(/\b(Miguel(?: Almeida)?|He|he)\s+([A-Za-z]+(?:[’'][A-Za-z]+)?)\b/g,
+    (match, _name: string, rawVerb: string) => {
+      const verb = firstPersonVerb(rawVerb);
+      return verb === null ? match : `I ${verb}`;
+    });
+
+  text = text
+    .replace(/\bMiguel(?: Almeida)?[’']s\b/g, 'my')
+    .replace(/\bHis\b/g, 'My')
+    .replace(/\bhis\b/g, 'my')
+    .replace(/\bhimself\b/g, 'myself');
+
+  // Repair previously authored first-person clauses as well.
+  text = text.replace(/\bI\s+([A-Za-z]+(?:[’'][A-Za-z]+)?)\b/g,
+    (match, rawVerb: string) => {
+      const verb = firstPersonVerb(rawVerb);
+      return verb === null ? match : `I ${verb}`;
+    });
+
+  // A name in a proper self-introduction is correct: "I'm Miguel".
+  return text.replace(/^my\b/, 'My');
+}
+
+export function inMyVoice(input: string): string {
+  // Curly/straight-double quoted recommendations are source quotations.
+  const sections = input.split(/(“[^”]*”|"[^"]*")/g);
+  return sections.map((section, index) => index % 2 === 1 ? section : convertUnquoted(section)).join('');
+}
+
+export function asFirstPersonAnswer(
+  text: string,
+  first = false,
+  context: 'cv' | 'story' | 'flow' | 'leu' | 'work' = 'work'
+): string {
   const spoken = inMyVoice(text);
   if (!first || /\b(I|I'm|I’m|I've|I’ve|my|mine|me)\b/i.test(spoken)) return spoken;
-  // An evidence excerpt can be exact while its introduction remains personal.
-  // No metric, quotation, or attribution is changed to manufacture an answer.
   const openings = {
     cv: 'From my CV:',
     story: 'From my story:',
-    flow: 'In Flow, I found this:',
-    leu: 'In Leu, I found this:',
+    flow: 'In Flow, I documented:',
+    leu: 'In Leu, I documented:',
     work: 'From my work:'
   };
   return `${openings[context]} ${spoken}`;

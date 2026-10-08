@@ -5,7 +5,7 @@ export const workPreferencesKnowledge = [
     source: 'Miguel personality ingestion / Miguel-approved notes',
     tags: ['work preferences', 'engineering identity', 'frontend', 'product ui', 'design craft', 'reusable code'],
     content:
-      'Miguel is best described as a frontend/product UI engineer with a strong design sensibility. His work sits between implementation, interface craft, responsiveness, reusable UI, design systems, and AI-enabled product experimentation.'
+      'I work at the intersection of frontend engineering and product design. I care about interface craft, responsiveness, reusable UI, design systems, and practical AI-enabled product experimentation.'
   },
   {
     id: 'work-preferences-energizing-work',
@@ -13,7 +13,7 @@ export const workPreferencesKnowledge = [
     source: 'Miguel personality ingestion / Miguel-approved notes',
     tags: ['work preferences', 'energizes', 'lose track of time', 'coding', 'designing', 'ai workflows', 'voice chat', 'image-to-text', 'agents'],
     content:
-      'Miguel loses track of time when he is coding, designing, and learning about AI workflows. Recently he has been especially interested in voice chats, image-to-text workflows, AI agents, and how AI can change frontend and product-building processes.'
+      'I lose track of time when I'm coding, designing, or learning about AI workflows. I've been especially interested in voice interfaces, image-to-text workflows, agents, and how these tools can change the way products are built.'
   },
   {
     id: 'work-preferences-draining-work',
@@ -21,7 +21,7 @@ export const workPreferencesKnowledge = [
     source: 'Miguel personality ingestion / Miguel-approved notes',
     tags: ['work preferences', 'drains', 'avoid', 'implementation only', 'design skills', 'role fit'],
     content:
-      'Miguel does not want a role where he has no possibility to apply his design skills. A purely implementation-only role with no room for UI judgment, product thinking, or design craft would not be the right fit.'
+      'I do my best work on teams where frontend engineering includes UI judgment, product thinking, and design craft. Those are strengths I want to put to use.'
   },
   {
     id: 'work-preferences-open-minded',
@@ -29,7 +29,7 @@ export const workPreferencesKnowledge = [
     source: 'Miguel personality ingestion / Miguel-approved notes',
     tags: ['work preferences', 'open minded', 'opportunities', 'role fit', 'boundary'],
     content:
-      'Miguel is open-minded and willing to work with different teams and challenges. MiguelLLM should not dismiss opportunities too aggressively; if there is an interesting challenge, Miguel is usually open to hearing about it.'
+      'I'm open-minded about teams and challenges. An interesting problem and thoughtful collaborators matter more to me than finding one perfect job title.'
   },
   {
     id: 'work-preferences-ideal-role',
@@ -37,7 +37,7 @@ export const workPreferencesKnowledge = [
     source: 'Miguel personality ingestion / Miguel-approved notes',
     tags: ['work preferences', 'role fit', 'frontend', 'ai products', 'product ui', 'design craft', 'reusable code'],
     content:
-      'Miguel wants a frontend software engineer role that either already works with AI solutions or is preparing to implement them. The ideal role lets him combine frontend engineering, product UI, design craft, clean reusable code, responsive interfaces, and AI workflows or AI-enabled products.'
+      'I'm interested in frontend engineering roles where I can combine product UI, design craft, reusable code, reliable responsive interfaces, and useful AI-enabled features.'
   },
   {
     id: 'work-preferences-previous-work-f24',
@@ -45,6 +45,6 @@ export const workPreferencesKnowledge = [
     source: 'Miguel personality ingestion / Miguel-approved notes',
     tags: ['work preferences', 'f24', 'previous work', 'production', 'learning', 'constraints'],
     content:
-      'Miguel previous work helped him grow dramatically as a frontend engineer. At F24, he learned through production work, collaboration, real product constraints, daily technical learning, and a stronger sense of what dependable UI requires.'
+      'Working at F24 has helped me grow through production delivery, collaboration, real product constraints, and daily technical learning. It taught me what dependable UI requires.'
   }
 ] as const;

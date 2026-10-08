@@ -10,7 +10,7 @@ import type { AskFact } from './askConversation';
  * Two short, canonical facts are intentional: a provider never needs to remix
  * these into a loosely related biography.
  */
-export type VisitorIntent = 'role' | 'stack' | 'education' | 'quality' | 'work' | 'f24';
+export type VisitorIntent = 'role' | 'stack' | 'framework-preference' | 'education' | 'quality' | 'work' | 'f24';
 export type IntentResponse = { intent: VisitorIntent; facts: AskFact[]; followups: string[] };
 
 const cv = ['CV · Professional experience|/cv#experience'];
@@ -48,6 +48,13 @@ function intentFor(question: string, area?: string, projectSlug?: string): Visit
   if (area === 'quality') return 'quality';
   if (area === 'f24') return 'f24';
   if (area === 'nav-work' || area === 'selwork') return 'work';
+
+  // Framework preference is a direct question about tools, not job fit.
+  // Never retrieve work-preference notes for a question about React or Svelte.
+  const frameworkSubject = /\b(frameworks?|react|svelte|nextjs|next js|javascript|typescript)\b/.test(q);
+  const preferenceVerb = /\b(prefer|preference|favou?rite|enjoy|like|choose|pick|lean toward)\b/.test(q);
+  const frameworkComparison = /\b(?:react (?:or|versus|vs) svelte|svelte (?:or|versus|vs) react)\b/.test(q);
+  if (!projectSlug && frameworkSubject && (preferenceVerb || frameworkComparison)) return 'framework-preference';
 
   // Do not replace detailed, quantitative answers with an introductory blurb.
   if (isExperienceTimeline(q) || /\b(favou?rite|prefer|preference|most comfortable)\b/.test(q)) return;
@@ -95,6 +102,12 @@ export function visitorIntentAnswer(question: string, area?: string, projectSlug
         [`Depending on the product, I also use ${supporting.join(', ')}. Needle uses Web Workers for search; Leu is my native SwiftUI and PDFKit project.`, [...skills, ...needle, ...leu]]
       ], ['Which framework do you prefer?', 'How much React experience do you have?', 'How do you test your products?']);
     }
+
+    case 'framework-preference':
+      return create([
+        ["For my recent web projects, I reach for React with TypeScript most often. I also have a soft spot for Svelte; I used it for production frontend work at F24.", [...skills, ...cv, ...f24]],
+        ["I don't see one framework as universally better. I choose based on the product, its interaction needs, and what the team can maintain. Needle and Second Voice show my React work; F24 shows my Svelte experience.", [...needle, ...work, ...f24]]
+      ], ['What have you built with React?', 'What was your Svelte work at F24?', 'How do you choose a tech stack?']);
 
     case 'education': {
       const ux = cvEducation.find(item => item.place === 'UX Design Institute');
