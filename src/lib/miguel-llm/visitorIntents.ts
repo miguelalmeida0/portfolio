@@ -105,7 +105,7 @@ export function visitorIntentAnswer(question: string, area?: string, projectSlug
 
     case 'framework-preference':
       return create([
-        ["For my recent web projects, I reach for React with TypeScript most often. I also have a soft spot for Svelte; I used it for production frontend work at F24.", [...skills, ...cv, ...f24]],
+        ["I reach for React with TypeScript most often in my recent web projects. I also have a soft spot for Svelte; I used it for production frontend work at F24.", [...skills, ...cv, ...f24]],
         ["I don't see one framework as universally better. I choose based on the product, its interaction needs, and what the team can maintain. Needle and Second Voice show my React work; F24 shows my Svelte experience.", [...needle, ...work, ...f24]]
       ], ['What have you built with React?', 'What was your Svelte work at F24?', 'How do you choose a tech stack?']);
 
