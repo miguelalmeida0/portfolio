@@ -12,6 +12,6 @@
 <style>
   .leu-film { width: 100%; max-width: 30rem; margin-inline: auto; }
   .compact { max-width: 22rem; }
-  .film-stage { height: clamp(25rem, 45vw, 35rem); overflow: hidden; border-radius: 16px; }
+  .film-stage { aspect-ratio: 16 / 10; overflow: hidden; border-radius: 16px; }
   figcaption { margin-top: 1rem; color: var(--color-muted); font-size: .75rem; line-height: 1.6; }
 </style>
