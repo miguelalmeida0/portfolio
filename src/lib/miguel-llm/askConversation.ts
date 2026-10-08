@@ -54,7 +54,7 @@ function greeting(q: string): boolean { return /^(hello|hi|hey|hiya|hi there|hey
 function social(question: string): { text: string; followups: string[] } | undefined {
   const q = normal(question);
   if (greeting(q) || /^(help|what can (?:i ask|you do|you answer)|how does this work|what is this)$/.test(q)) return {
-    text: 'Hi! I’m MiguelLLM, a guide to my published work. I can show you what I built, why I made particular decisions, or what I’m like to work with. Where should we start?', followups: suggestions
+    text: 'Hi! I’m MiguelLLM, a portfolio guide to my published work. I can show you what I built, why I made particular decisions, or what I’m like to work with. Where should we start?', followups: suggestions
   };
   if (/^(thanks|thank you|thank you so much|cheers|great thanks|ok thanks|cool|nice|great|awesome)$/.test(q)) return { text: 'Anytime. If a project catches your eye, I can show you the choices behind it and link the actual work.', followups: suggestions };
   if (/^(how are you|how is it going|hows it going|whats up)$/.test(q)) return { text: 'Doing well, thanks for asking! I can take you through my work at F24 or one of the projects I built for myself. What are you curious about?', followups: suggestions };

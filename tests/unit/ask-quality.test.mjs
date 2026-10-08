@@ -35,7 +35,7 @@ const cases = [
   ['Tell me about Second Voice', /original stays visible.*rewrite/s, /microphone accuracy/i],
   ['Tell me about Flow', /spoken instruction.*structured.*undo/s, /certified speech recognition/i],
   ['Tell me about Leu', /PDF.*SwiftUI.*PDFKit/s, /physically verified on iPhone/i],
-  ['What is Second Voice built with?', /In Second Voice AI, I use.*(Next.js|React)/s, /SwiftUI/i],
+  ['What is Second Voice built with?', /In Second Voice, I use React.*TypeScript/s, /SwiftUI/i],
   ['What went wrong in Flow?', /flexible events.*draft.*rollback/s, /10 million/i],
   ['How does Flow handle Journal dictation?', /context.*dictation/s, /Kubernetes/i],
   ['What does the Flow wake benchmark measure?', /42.1 ms.*not ASR latency/s, /100% accuracy/i],
@@ -81,9 +81,12 @@ test('follow-up history determines the topic but never supplies facts', () => {
 
 test('clicked CV and Story areas preserve the exact canonical excerpt', async () => {
   const { pageAreas } = await loadLocalTs('src/lib/ask/page-areas.ts');
+  const { asFirstPersonAnswer } = await loadLocalTs('src/lib/miguel-llm/firstPersonVoice.ts');
   for (const area of pageAreas.filter(item => ['cv-summary','cv-education','cv-job-0','story-hi'].includes(item.id))) {
     const result = answer(area.question, [], area.id);
-    assert.equal(fullText(result), area.text);
+    const context = area.id.startsWith('cv-') ? 'cv' : area.id.startsWith('story-') ? 'story' : 'work';
+    assert.equal(fullText(result), asFirstPersonAnswer(area.text, true, context));
+    assert.deepEqual(validateConversationAnswer(result, area.question, [], area.id), result);
   }
 });
 

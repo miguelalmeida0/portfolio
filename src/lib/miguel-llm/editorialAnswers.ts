@@ -50,7 +50,7 @@ export function editorialAnswer(question: string, projectSlug?: string): Editori
 
   if (match(q, /\b(impact|results|outcomes|achievement|metrics|measurable|numbers|improve|improved|improvement|accomplished|shipped)\b/) && (aboutCareer || match(q, /\bf24\b/))) {
     return make('impact', [
-      [`At F24 I cut request volume by 75% in one alerting workflow, expanded regression-test files from 3 to 30, and helped ship message assistance across 13 languages. These are the figures in my public CV.`, cv],
+      [`At F24 I cut request volume by 75% in one alerting workflow, expanded regression-test files 10× (from 3 to 30), and helped ship message assistance across 13 languages. These are the figures in my public CV.`, cv],
       [`I also wrote 2,000+ checks within a wider frontend suite reporting 7,000+ passing tests across 954 files. That suite is team work, not something I claim to have built alone.`, cv]
     ], ['Which parts did Miguel own at F24?', 'How does he test important workflows?', 'What did he build independently?']);
   }
@@ -72,12 +72,12 @@ export function editorialAnswer(question: string, projectSlug?: string): Editori
   if (match(q, /\b(how much react|years of react|react experience|svelte experience|how long.*svelte)\b/) && !projectSlug) {
     if (q.includes('svelte') && !q.includes('react')) {
       return make('framework-svelte', [
-        ['I worked with Svelte in production from 2022 through my subsequent frontend delivery work in 2023–2025. My current role also includes React.', cv],
+        ['I worked with Svelte and TypeScript from 2022 to 2023, then continued frontend delivery from 2023 to 2025. My current role also includes React.', cv],
         ['The important part for me is delivering production features as stacks evolve, not inflating the number of years I have used a particular framework.', [...cv, ...f24]]
       ], ['What changed between Svelte and React?', 'Which React project is best to review?']);
     }
     return make('framework-react', [
-      ['My documented React role starts in 2026, so I would not claim four years of professional React experience. I began my production frontend work with Svelte and TypeScript at F24 in 2022.', cv],
+      ['My documented React role starts in 2026—not four years of React experience. I would rather give you an accurate timeline. I began my production frontend work with Svelte and TypeScript at F24 in 2022.', cv],
       ['Needle, Second Voice, and Flow also show how I use React and TypeScript across quite different product problems.', [...needle, ...sv, ...flow]]
     ], ['Which React project is best to review?', 'How does he structure reusable UI?']);
   }
@@ -106,14 +106,14 @@ export function editorialAnswer(question: string, projectSlug?: string): Editori
 
   if (match(q, /\b(design philosophy|design taste|ux approach|ux philosophy|visual hierarchy|interface design|what (does he|do you) care about in (design|ux)|motion design|animations|responsive design|good ux)\b/)) {
     return make('design', [
-      ['My first instinct is to remove friction before adding anything decorative. I care about hierarchy, breathing room, meaningful motion, and states that behave predictably.', story],
+      ['My first instinct is to remove friction before adding anything decorative. I care about hierarchy, spacing, meaningful motion, and states that behave predictably.', story],
       ['I learned UX before frontend, so my design decisions stay connected to the implementation. In Second Voice that means showing what AI changed; in Leu it means never losing the source passage.', [...sv, ...leu]]
     ], ['How does Second Voice show changes?', 'How does Leu preserve source context?', 'What does he consider good frontend engineering?']);
   }
 
   if (match(q, /\b(how does (?:he|miguel) (debug|test|handle bugs|handle failure|ensure quality|build)|testing strategy|quality|accessibility|reliability|edge case|failure states?|production readiness|resilien|maintainab|readability|architecture practices)\b/) && !projectSlug) {
     return make('engineering', [
-      ['I treat the difficult states as part of the product: a failed request shouldn’t erase useful work, a stale response shouldn’t overwrite new data, and an overlay should return keyboard focus when it closes.', [...story, ...f24]],
+      ['I treat the difficult states as part of the product: failed requests shouldn’t erase useful work, stale responses shouldn’t overwrite new data, and an overlay should return keyboard focus when it closes.', [...story, ...f24]],
       ['I use typed contracts, Playwright and regression tests. In Flow I make actions undoable; in Leu I preserve source-linked state. I want people to be able to inspect and recover from what software does.', [...cv, ...flow, ...leu]]
     ], ['What did he improve at F24?', 'How does Flow undo a change?', 'How does he handle AI mistakes?']);
   }
@@ -169,7 +169,7 @@ export function editorialAnswer(question: string, projectSlug?: string): Editori
 
   if (match(q, /\b(who is miguel|tell me about miguel|tell me about yourself|describe miguel|introduce miguel|who are you|quick introduction|thirty second intro|30 second intro|in a nutshell)\b/) && !projectSlug) {
     return make('introduction', [
-      ['I’m a Portuguese frontend engineer based in Berlin. I started in UX, have worked on production software at F24 since 2022, and love building independent products.', [...story, ...cv]],
+      ['I’m a Portuguese frontend engineer based in Berlin. I started in UX design, have worked on production software at F24 since 2022, and love building independent products.', [...story, ...cv]],
       ['I care about small details: interactions that make sense, resilient frontend systems, and AI features you can actually understand. I’m also always up for a good film or a stubborn technical puzzle.', [...story, ...needle, ...sv]]
     ], ['What did he build at F24?', 'Which project should I start with?', 'How did UX shape his work?']);
   }
@@ -207,7 +207,7 @@ export function projectIntroduction(slug: string): EditorialAnswer | undefined {
   const source = [`${item.name} case study|/work/${item.slug}`];
   const openings: Record<string, string> = {
     needle: 'I built Needle to make 10,000 artworks searchable by meaning. It combines hybrid HNSW/exact retrieval, Web Workers, and a visual result view that stays usable even when the collection gets dense.',
-    'second-voice-ai': 'I built Second Voice around a simple rule: you should always see your original writing and exactly what AI changed. I designed the editing experience, comparison, and recovery states around that.',
+    'second-voice-ai': 'I built Second Voice around a simple rule: your original stays visible, and every rewrite shows exactly what AI changed. I designed the editing experience, comparison, and recovery states around that.',
     leu: 'I built Leu to help people understand what they read without losing their place. Questions, feedback, learner state, and narration all link back to the PDF passage in a native SwiftUI/PDFKit interface.',
     flow: 'I built Flow to turn spoken instructions into structured, editable actions. The hard part is making those actions safe to inspect, confirm, undo, and correct—not simply recognizing a sentence.',
     f24: 'At F24 I helped build the original production Svelte/TypeScript frontend, then continued shipping features and shared UI architecture as React became part of the codebase.'

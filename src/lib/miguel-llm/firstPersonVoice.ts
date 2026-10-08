@@ -24,7 +24,10 @@ export function inMyVoice(input: string): string {
     let value = part
       .replace(/\b(contact|reach|email|ask|about|with|to|from|for) Miguel(?: Almeida)?\b/gi, (_, verb: string) => `${verb} me`)
       .replace(/\bMiguel(?: Almeida)?[’']s\b/g, 'my')
-      .replace(/\bMiguel(?: Almeida)?\b/g, 'I')
+      .replace(/\bMiguel(?: Almeida)?\b/g, (name: string, offset: number, whole: string) => {
+        const preceding = whole.slice(Math.max(0, offset - 8), offset);
+        return /(?:I['’]m|I am)\s$/.test(preceding) ? name : 'I';
+      })
       .replace(/\bHis\b/g, 'My')
       .replace(/\bhis\b/g, 'my')
       .replace(/\bHe\b/g, 'I')
