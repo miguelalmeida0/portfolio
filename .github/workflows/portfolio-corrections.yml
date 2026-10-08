@@ -12,8 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: .node-version
           cache: npm
@@ -53,7 +55,7 @@ jobs:
           node --test tests/f24-sv/data-diff.test.mjs
           PARITY_REF_DIR="$PWD/tests/case-studies/reference" npx playwright test -c tests/case-studies/tests/parity/playwright.parity.config.ts --workers=1 --grep 'behaviour|motion' --reporter=list
           PARITY_REF_DIR="$PWD/tests/f24-sv/reference" npx playwright test -c tests/f24-sv/tests/parity/playwright.parity.config.ts --workers=1 --grep 'behaviour|motion' --reporter=list
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         if: always()
         with:
           name: portfolio-corrections
