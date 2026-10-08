@@ -24,7 +24,7 @@
       {#if project?.source}<a class="btn sm code" href={project.source} {...destinationLink(project.source)}>Code</a>{/if}
       {#if project?.live}
         <a class="btn primary sm" href={project.live.href} {...destinationLink(project.live.href)}>Try it</a>
-      {:else}
+      {:else if !project?.source}
         <a class="btn primary sm" href="#try">Explore demo</a>
       {/if}
     </div>
