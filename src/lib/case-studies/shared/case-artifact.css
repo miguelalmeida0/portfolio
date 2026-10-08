@@ -4,7 +4,7 @@
   gap:36px 48px; align-items:center; text-align:left;
 }
 #portfolio-content .hero .case-pitch { min-width:0; }
-#portfolio-content .hero .case-pitch h1 { font-size:clamp(40px,4.4vw,72px); }
+#portfolio-content .hero .case-pitch h1 { font-size:var(--type-case-display, clamp(40px,4.4vw,72px)); }
 #portfolio-content .hero .case-pitch .ctas { justify-content:flex-start; }
 #portfolio-content .case-artifact { margin:0; min-width:0; }
 #portfolio-content .case-artifact img { display:block; width:100%; height:auto; aspect-ratio:1.44; object-fit:contain; background:var(--sagebg); border-radius:14px; }
@@ -15,9 +15,9 @@
   background: transparent;
   border: 0;
 }
-#portfolio-content .case-artifact figcaption { font:400 18px/1.45 var(--sans); color:var(--muted); margin:12px 0 0; max-width:65ch; }
+#portfolio-content .case-artifact figcaption { font:400 var(--type-caption,14px)/1.5 var(--sans); color:var(--muted); margin:12px 0 0; max-width:65ch; }
 @media (max-width:767px) {
   #portfolio-content :is(.cs-f24,.cs-sv,.cs-flow,.cs-leu,.cs-needle) .hero { grid-template-columns:minmax(0,1fr); gap:28px; }
   #portfolio-content .hero .case-pitch h1 { font-size:clamp(34px,9vw,48px); }
-  #portfolio-content .case-artifact figcaption { font-size:14px; }
+  #portfolio-content .case-artifact figcaption { font-size:var(--type-caption,14px); }
 }

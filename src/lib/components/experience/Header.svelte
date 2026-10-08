@@ -93,7 +93,7 @@
   .wind-header nav[aria-label="Main navigation"] { gap: var(--s-7); }
   .wind-header [data-identity-name] { font: 700 26px/1 'Antonio', sans-serif; letter-spacing: -.01em; }
   .wind-header [data-identity-rule] { height: 2px; background: var(--plum); }
-  .wind-header [data-identity-location], .wind-header nav { font-size: 17px; line-height: 1.4; font-weight: 400; }
+  .wind-header [data-identity-location], .wind-header nav { font-size: var(--type-ui,17px); line-height: 1.4; font-weight: 400; }
   .wind-header [data-identity-location] { margin: 0; }
   .wind-header [data-identity-home] > span { flex-direction: row; align-items: center; gap: 24px; }
   .wind-header :global(svg) { transition: none; transform: none; }

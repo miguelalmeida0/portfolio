@@ -216,6 +216,111 @@ for (const slug of ['leu', 'flow'] as const) {
   });
 }
 
+test('homepage typography has a consistent descending hierarchy at responsive widths', async ({ page }) => {
+  for (const width of [320, 390, 768, 1024, 1440]) {
+    await page.setViewportSize({width, height:960});
+    await page.goto('/#work', {waitUntil:'domcontentloaded'});
+    const m = await page.evaluate(() => {
+      const px = (selector: string) => {
+        const node = document.querySelector(selector);
+        if (!node) throw Error('Missing hierarchy node: ' + selector);
+        return Number.parseFloat(getComputedStyle(node).fontSize);
+      };
+      return {
+        hero: px('#intro-heading'),
+        section: px('#work-title'),
+        collection: px('#projects-heading'),
+        project: px('[data-selected-project="needle"] .project-title'),
+        lead: px('.wind-hero .hero-stack'),
+        body: px('[data-selected-project="needle"] .project-line'),
+        stack: px('[data-selected-project="needle"] .project-stack'),
+        kicker: px('[data-selected-project="needle"] .project-number'),
+        feature: px('[data-f24-feature] h3'),
+        overflow: document.documentElement.scrollWidth > innerWidth
+      };
+    });
+    expect(m.hero, `hero vs section at ${width}px`).toBeGreaterThan(m.section);
+    expect(m.section, `section vs collection at ${width}px`).toBeGreaterThan(m.collection);
+    expect(m.collection, `collection vs project at ${width}px`).toBeGreaterThan(m.project);
+    expect(m.lead).toBeGreaterThan(m.body);
+    expect(m.stack).toBeGreaterThanOrEqual(13);
+    expect(m.kicker).toBeGreaterThanOrEqual(13);
+    expect(m.feature).toBeLessThanOrEqual(68);
+    expect(m.overflow).toBe(false);
+    console.log(`TYPE HOME ${width}px ${JSON.stringify(m)}`);
+  }
+});
+
+test('all five case studies share headline, section and metadata scales', async ({ page }) => {
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({width, height:980});
+    const titles: number[] = [];
+    for (const route of ['/work/needle','/work/second-voice','/work/f24','/work/leu','/work/flow']) {
+      await page.goto(route, {waitUntil:'domcontentloaded'});
+      const values = await page.evaluate(() => {
+        const size = (node: Element) => Number.parseFloat(getComputedStyle(node).fontSize);
+        const hero = document.querySelector('main .hero h1');
+        const lead = document.querySelector('main .hero .sub');
+        const label = document.querySelector('main .hero .kicker');
+        const section = document.querySelector('main .head h2');
+        const caption = document.querySelector('main .case-artifact figcaption');
+        if (!hero || !lead || !label || !caption) throw Error('Missing case study text role');
+        return {
+          hero: size(hero), lead: size(lead), label: size(label),
+          section: section ? size(section) : null, caption: size(caption),
+          overflow: document.documentElement.scrollWidth > innerWidth
+        };
+      });
+      titles.push(values.hero);
+      expect(values.hero, `${route} headline ${width}px`).toBeGreaterThan(40);
+      expect(values.hero).toBeGreaterThan(values.lead);
+      expect(values.lead).toBeGreaterThan(values.label);
+      expect(values.label).toBeGreaterThanOrEqual(14);
+      expect(values.caption).toBe(14);
+      if (values.section !== null) {
+        expect(values.hero).toBeGreaterThan(values.section);
+        expect(values.section).toBeGreaterThan(values.lead);
+      }
+      expect(values.overflow, `${route} overflow at ${width}px`).toBe(false);
+      console.log(`TYPE CASE ${route} ${width}px ${JSON.stringify(values)}`);
+    }
+    expect(Math.max(...titles) - Math.min(...titles), `case-study H1 alignment at ${width}px`).toBeLessThan(1.5);
+  }
+});
+
+test('Story and web CV keep clear reading and heading contrast', async ({ page }) => {
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({width, height:980});
+    await page.goto('/story', {waitUntil:'domcontentloaded'});
+    const story = await page.evaluate(() => {
+      const px = (selector: string) => Number.parseFloat(getComputedStyle(document.querySelector(selector)!).fontSize);
+      return {
+        hero: px('#story-title'), section: px('.story-question h2'),
+        body: px('.story-intro-copy'), label: px('.story-eyebrow'),
+        overflow: document.documentElement.scrollWidth > innerWidth
+      };
+    });
+    expect(story.hero).toBeGreaterThan(story.section);
+    expect(story.section).toBeGreaterThan(story.body);
+    expect(story.body).toBeGreaterThan(story.label);
+    expect(story.overflow).toBe(false);
+    await page.goto('/cv', {waitUntil:'domcontentloaded'});
+    const cv = await page.evaluate(() => {
+      const px = (selector: string) => Number.parseFloat(getComputedStyle(document.querySelector(selector)!).fontSize);
+      return {
+        name: px('.cv-name'),
+        section: px('#experience-title'),
+        role: px('.cv-job-title'),
+        overflow: document.documentElement.scrollWidth > innerWidth
+      };
+    });
+    expect(cv.name).toBeGreaterThan(cv.section);
+    expect(cv.section).toBeGreaterThan(cv.role);
+    expect(cv.overflow).toBe(false);
+    console.log(`TYPE READING ${width}px ${JSON.stringify({story,cv})}`);
+  }
+});
+
 test('primary routes render without uncaught client exceptions', async ({ page }) => {
   const pageErrors: string[] = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));

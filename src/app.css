@@ -63,15 +63,15 @@
 @utility shell { width: min(calc(100% - 2 * var(--page-x)), var(--content-max)); margin-inline: auto; }
 @utility display-type { font-weight: 700; letter-spacing: -.035em; line-height: .98; }
 /* Shared page hierarchy. Applied explicitly so embedded product UI keeps its own design. */
-@utility page-title { font-size: clamp(2.5rem, 1.7rem + 2.5vw, 4rem); font-weight: 700; letter-spacing: -.035em; line-height: 1.04; }
-@utility role-title { font-size: clamp(1.5rem, 1.15rem + 1vw, 2rem); font-weight: 600; letter-spacing: -.025em; line-height: 1.2; }
-@utility section-title { font-size: clamp(1.5rem, 1.2rem + .8vw, 2rem); font-weight: 700; letter-spacing: -.03em; line-height: 1.15; }
-@utility page-lead { max-width: 65ch; font-size: clamp(1rem, .9rem + .3vw, 1.25rem); line-height: 1.6; }
+@utility page-title { font-size: var(--type-page-title, clamp(2.5rem, 1.7rem + 2.5vw, 4rem)); font-weight: 700; letter-spacing: -.035em; line-height: 1.04; }
+@utility role-title { font-size: var(--type-subsection, clamp(1.5rem, 1.15rem + 1vw, 2rem)); font-weight: 600; letter-spacing: -.025em; line-height: 1.2; }
+@utility section-title { font-size: var(--type-section, clamp(1.5rem, 1.2rem + .8vw, 2rem)); font-weight: 700; letter-spacing: -.03em; line-height: 1.15; }
+@utility page-lead { max-width: 65ch; font-size: var(--type-lead, clamp(1rem, .9rem + .3vw, 1.25rem)); line-height: 1.6; }
 @utility page-start { padding-top: 2rem; @media (min-width: 64rem) { padding-top: 4rem; } }
 @utility hero-end { padding-bottom: 3rem; @media (min-width: 64rem) { padding-bottom: 4rem; } }
 @utility section-space { padding-block: 2.5rem; @media (min-width: 64rem) { padding-block: 3rem; } }
 @utility project-hero { display: grid; align-items: center; gap: 2rem; padding-block: 2rem 3rem; @media (min-width: 64rem) { grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); gap: 3rem; padding-block: 2rem 4rem; } }
-@utility label-type { font-family: var(--font-sans); font-size: .8125rem; font-weight: 600; letter-spacing: .01em; line-height: 1.35; text-transform: none; }
+@utility label-type { font-family: var(--font-sans); font-size: var(--type-meta, .8125rem); font-weight: 600; letter-spacing: .01em; line-height: 1.35; text-transform: none; }
 @utility action-button { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: .75rem; border-radius: 8px; background: var(--color-plum); color: var(--color-ivory); padding: .75rem 1.25rem; font-size: 1rem; font-weight: 600; transition: transform 180ms var(--ease-settle), background-color 180ms ease; }
 @utility ink-link { display: inline-flex; min-height: 44px; align-items: center; gap: .55rem; text-underline-offset: .3em; }
 

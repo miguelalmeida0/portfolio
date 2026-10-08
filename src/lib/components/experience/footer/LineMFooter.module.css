@@ -15,8 +15,8 @@
 .top { position: absolute; left: 108px; right: 108px; top: 48px; display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; }
 .head { flex: 1 1 auto; max-width: 760px; margin-top: 8px; }
 .titleRow { display: flex; align-items: center; gap: 14px; }
-.h { font: 700 44px/1.08 var(--ui); letter-spacing: -.03em; margin: 0; }
-.sub { margin: 14px 0 0; max-width: 640px; font: 400 21px/1.4 var(--ui); color: var(--muted); }
+.h { font: 700 var(--type-section, 44px)/1.08 var(--ui); letter-spacing: -.03em; margin: 0; }
+.sub { margin: 14px 0 0; max-width: 640px; font: 400 var(--type-lead, 21px)/1.4 var(--ui); color: var(--muted); }
 .rnd { width: 30px; height: 30px; border-radius: 7px; background: var(--plum); color: var(--paper); display: grid; place-items: center; font: 800 17px/1 var(--ui); flex-shrink: 0; }
 .rndL { width: 44px; height: 44px; border-radius: 10px; font-size: 24px; }
 .rndS { width: 26px; height: 26px; font-size: 13px; }
@@ -99,7 +99,7 @@
 /* ═════════════ extension · < 900 px: the line runs down the page ═════════════ */
 @media (max-width: 899px) {
   .root { padding: 40px 24px 64px; }
-  .h { font-size: 34px; }
+  .h { font-size: var(--type-section, 34px); }
   .rndL { width: 36px; height: 36px; font-size: 20px; }
   .board { display: none; }                              /* the stops carry every detail on their own */
   .line { width: 12px; height: auto; min-height: 560px; margin: 56px 0 32px 38px; }

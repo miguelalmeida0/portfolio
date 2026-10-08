@@ -5,9 +5,9 @@
 .story-split h2 { scroll-margin-top:100px; }
 .story-split [data-story-section] { scroll-margin-top:88px; }
 .story-intro { padding:56px 0 64px; max-width:1000px; }
-.story-eyebrow { font-size:13px; line-height:1.4; text-transform:uppercase; letter-spacing:.1em; color:var(--story-muted); font-weight:600; }
-.story-intro h1 { font-size:clamp(46px,5.5vw,88px); max-width:13ch; font-weight:800; line-height:1.02; letter-spacing:-.045em; margin-top:20px; }
-.story-intro-copy { max-width:46ch; margin-top:24px; font-size:21px; line-height:1.5; color:var(--story-muted); }
+.story-eyebrow { font-size:var(--type-small,13px); line-height:1.4; text-transform:uppercase; letter-spacing:.1em; color:var(--story-muted); font-weight:600; }
+.story-intro h1 { font-size:var(--type-case-display, clamp(46px,5.5vw,88px)); max-width:13ch; font-weight:800; line-height:1.02; letter-spacing:-.045em; margin-top:20px; }
+.story-intro-copy { max-width:46ch; margin-top:24px; font-size:var(--type-lead, 21px); line-height:1.5; color:var(--story-muted); }
 .story-layout { display:grid; grid-template-columns:190px minmax(0,1fr); gap:clamp(32px,4vw,72px); align-items:start; border-top:1px solid var(--story-line); }
 .story-index { position:sticky; top:88px; padding-top:32px; }
 .story-index nav { display:grid; margin-top:16px; }
@@ -23,7 +23,7 @@
 .question-number { font-size:13px; line-height:1.4; font-weight:600; color:var(--story-plum); font-variant-numeric:tabular-nums; letter-spacing:.08em; }
 .story-question h2 { margin-top:18px; font-weight:800; }
 .story-lead { margin-top:24px; font-size:23px; line-height:1.3; font-weight:700; letter-spacing:-.015em; }
-.story-answer { margin-top:12px; font-size:19px; line-height:1.6; color:var(--story-muted); }
+.story-answer { margin-top:12px; font-size:var(--type-reading,19px); line-height:1.6; color:var(--story-muted); }
 .story-tools { display:flex; flex-wrap:wrap; gap:8px; margin-top:22px; padding:0; list-style:none; }
 .story-tools li { padding:7px 10px; border:1px solid var(--story-line); border-radius:999px; font-size:12px; }
 .story-panel { position:relative; min-width:0; padding:24px; border-radius:20px; background:var(--story-sage); }
@@ -76,7 +76,7 @@
   .story-exits a { font-size:16px; min-height:44px; padding-inline:8px; }
 }
 @media (max-width:599px) {
-  .story-intro h1 { font-size:46px; }
+  .story-intro h1 { font-size:var(--type-case-display,46px); }
   .story-intro-copy { font-size:18px; }
   .story-index a { font-size:13px; gap:8px; }
   .story-lead { font-size:22px; }

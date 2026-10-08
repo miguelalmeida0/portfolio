@@ -32,12 +32,12 @@
   <h1 id="intro-heading" aria-label={label}><span class="ask-role" data-ask-id="role">{#each lines as line}<span class="line" aria-hidden="true">{line}</span>{' '}{/each}</span></h1>
 {/if}
 <style>
-  h1 { margin: 0; font: 800 52px/1.1 var(--hero-font); letter-spacing: -.03em; color: var(--ink); text-wrap: initial; }
+  h1 { margin: 0; font: 800 var(--type-home-display, 52px)/1.1 var(--hero-font); letter-spacing: -.03em; color: var(--ink); text-wrap: initial; }
   .line { display: block; }
   .ask-role { display: block; }
   .glyph { display: inline-block; white-space: pre; transform-origin: 50% 100%; transition: transform .7s cubic-bezier(.16,1,.3,1), color .55s cubic-bezier(.16,1,.3,1); }
-  @media (min-width: 1024px) and (max-width: 1279px) { h1 { font-size: clamp(2.25rem, 3.6vw, 3.25rem); } }
-  @media (min-width: 768px) and (max-width: 1023px) { h1 { font-size: 44px; } }
-  @media (max-width: 767px) { h1 { font-size: clamp(2rem, 9vw, 2.75rem); } }
+  @media (min-width: 1024px) and (max-width: 1279px) { h1 { font-size: var(--type-home-display, clamp(2.25rem, 3.6vw, 3.25rem)); } }
+  @media (min-width: 768px) and (max-width: 1023px) { h1 { font-size: var(--type-home-display-tablet, 44px); } }
+  @media (max-width: 767px) { h1 { font-size: var(--type-home-display-mobile, clamp(2rem, 9vw, 2.75rem)); } }
   @media (prefers-reduced-motion: reduce), (pointer: coarse), (max-width: 767px) { .glyph { transform: none !important; color: var(--ink) !important; transition: none !important; } }
 </style>

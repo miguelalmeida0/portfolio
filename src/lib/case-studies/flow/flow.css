@@ -56,9 +56,9 @@ html:has(.cs-flow){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);
 
 /* hero */
 .cs-flow .hero{text-align:center;padding:clamp(40px,6vw,88px) 0 clamp(36px,4vw,56px)}
-.cs-flow .kicker{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:15px;color:var(--label);margin:0 0 22px}
-.cs-flow .hero h1{font:400 clamp(48px,7vw,100px)/1 var(--serif);letter-spacing:-.025em;margin:0 auto;max-width:15ch;text-wrap:balance}
-.cs-flow .hero .sub{font-size:clamp(18px,1.6vw,21px);line-height:1.5;color:var(--ink-2);max-width:46ch;text-wrap:balance;margin:26px auto 34px}
+.cs-flow .kicker{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:var(--type-meta,15px);color:var(--label);margin:0 0 22px}
+.cs-flow .hero h1{font:400 var(--type-case-display,clamp(48px,7vw,100px))/1 var(--serif);letter-spacing:-.025em;margin:0 auto;max-width:15ch;text-wrap:balance}
+.cs-flow .hero .sub{font-size:var(--type-lead,clamp(18px,1.6vw,21px));line-height:1.5;color:var(--ink-2);max-width:46ch;text-wrap:balance;margin:26px auto 34px}
 .cs-flow .ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .cs-flow sup a{text-decoration:none;color:var(--blue-ink);font-weight:600;font-size:.72em;padding:0 1px}
 
@@ -121,8 +121,8 @@ html:has(.cs-flow){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);
 .cs-flow .chapter{padding-top:clamp(88px,11vw,168px)}
 .cs-flow .head{text-align:center;max-width:840px;margin:0 auto clamp(36px,4.5vw,64px)}
 .cs-flow .head .eyebrow{font-weight:600;font-size:15px;color:var(--label);margin:0 0 14px}
-.cs-flow .head h2{font:400 clamp(38px,5vw,68px)/1.04 var(--serif);letter-spacing:-.02em;margin:0}
-.cs-flow .head p{font-size:clamp(17px,1.4vw,19px);color:var(--ink-2);margin:20px auto 0;max-width:58ch}
+.cs-flow .head h2{font:400 var(--type-case-section,clamp(38px,5vw,68px))/1.04 var(--serif);letter-spacing:-.02em;margin:0}
+.cs-flow .head p{font-size:var(--type-reading,clamp(17px,1.4vw,19px));color:var(--ink-2);margin:20px auto 0;max-width:58ch}
 
 /* bento */
 .cs-flow .bento{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px}
@@ -405,14 +405,14 @@ html:has(.cs-flow){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);
 .cs-flow p,.cs-flow dd,.cs-flow li{text-wrap:pretty}
 .cs-flow h1,.cs-flow h2,.cs-flow h3{text-wrap:balance}
 .cs-flow .hero{text-align:left!important;padding-bottom:clamp(28px,3vw,44px)!important}
-.cs-flow .hero h1{font-size:clamp(44px,5.8vw,84px)!important;max-width:19ch!important;margin:0!important;line-height:1!important}
+.cs-flow .hero h1{font-size:var(--type-case-display,clamp(44px,5.8vw,84px))!important;max-width:19ch!important;margin:0!important;line-height:1!important}
 .cs-flow .hero .sub{margin:22px 0 28px!important;max-width:44ch!important}
 .cs-flow .ctas{justify-content:flex-start!important;align-items:center;gap:22px!important}
 .cs-flow .tlink{color:var(--plum);font-weight:600;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px}
 .cs-flow .tlink:hover{text-decoration-thickness:2.5px}
 .cs-flow .cap{text-align:left!important;margin:14px 0 0!important}
 .cs-flow .head{text-align:left!important;margin:0 0 clamp(28px,3.5vw,48px)!important;max-width:none!important}
-.cs-flow .head h2{font-size:clamp(32px,3.6vw,52px)!important;max-width:20ch}
+.cs-flow .head h2{font-size:var(--type-case-section,clamp(32px,3.6vw,52px))!important;max-width:20ch}
 .cs-flow .head p{margin:16px 0 0!important;max-width:60ch!important}
 .cs-flow .early{justify-content:flex-start!important}
 .cs-flow .quote{text-align:left!important;margin:28px 0 0!important;max-width:56ch!important;font-size:clamp(19px,1.6vw,23px)!important}
@@ -440,7 +440,7 @@ html:has(.cs-flow){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);
 .cs-flow .pipe li.commit,.cs-flow .pipe li.commit span{background:none!important;color:var(--plum)!important}
 .cs-flow .stories{margin-top:clamp(48px,6vw,88px)}
 .cs-flow .story{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:clamp(24px,5vw,88px);padding:clamp(32px,4vw,56px) 0;border-top:1px solid var(--line)}
-.cs-flow .story h3{font-weight:800;font-size:clamp(26px,2.6vw,36px);letter-spacing:-.04em;line-height:1.08;margin:0 0 14px}
+.cs-flow .story h3{font-weight:800;font-size:var(--type-case-subsection,clamp(26px,2.6vw,36px));letter-spacing:-.04em;line-height:1.08;margin:0 0 14px}
 .cs-flow .story .said{font-style:italic;color:var(--mutedc);font-size:18px;margin:0}
 .cs-flow .story dl{margin:0;display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px 24px}
 .cs-flow .story dt{font-weight:700;font-size:14.5px;color:var(--plum);padding-top:2px}
