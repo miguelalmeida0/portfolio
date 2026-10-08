@@ -43,8 +43,8 @@ export function editorialAnswer(question: string, projectSlug?: string): Editori
 
   if (match(q, /\b(which|what)\s+(project|work|case study).*(start|first|look at|recommend|most impressive)|where should i start|what should i inspect first/)) {
     return make('start', [
-      ['I'd start with Needle if you want to see my technical work. I built a semantic search experience for 10,000 artworks, including retrieval, visual exploration, and performance work. You can try the live app.', needle],
-      ['For AI interface design, I'd show you Second Voice next. Flow and Leu go deeper into state, reliability, and decisions that need to be explainable.', [...sv, ...flow, ...leu]]
+      ['I’d start with Needle if you want to see my technical work. I built a semantic search experience for 10,000 artworks, including retrieval, visual exploration, and performance work. You can try the live app.', needle],
+      ['For AI interface design, I’d show you Second Voice next. Flow and Leu go deeper into state, reliability, and decisions that need to be explainable.', [...sv, ...flow, ...leu]]
     ], ['How does Needle search artworks?', 'What did Miguel build at F24?', 'How does Second Voice handle AI output?']);
   }
 
@@ -92,7 +92,7 @@ export function editorialAnswer(question: string, projectSlug?: string): Editori
 
   if (match(q, /\b(recommendation|references|former manager|team lead say|colleague say)\b/)) {
     return make('reference', [
-      ['I have a recommendation in my CV, with its original attribution. I'd rather you read my former teammate's exact words than have this guide dress them up.', ['Professional recommendation|/cv#recommendation']],
+      ['I have a recommendation in my CV, with its original attribution. I’d rather you read my former teammate’s exact words than have this guide dress them up.', ['Professional recommendation|/cv#recommendation']],
       ['My work samples show how I document decisions, test risky states, and separate shipped behavior from things I still need to verify.', [...work, ...cv]]
     ], ['What did Miguel own at F24?', 'How does he collaborate?', 'What should a senior engineer review first?']);
   }
@@ -113,7 +113,7 @@ export function editorialAnswer(question: string, projectSlug?: string): Editori
 
   if (match(q, /\b(how does (?:he|miguel) (debug|test|handle bugs|handle failure|ensure quality|build)|testing strategy|quality|accessibility|reliability|edge case|failure states?|production readiness|resilien|maintainab|readability|architecture practices)\b/) && !projectSlug) {
     return make('engineering', [
-      ['I treat the difficult states as part of the product: a failed request shouldn't erase useful work, a stale response shouldn't overwrite new data, and an overlay should return keyboard focus when it closes.', [...story, ...f24]],
+      ['I treat the difficult states as part of the product: a failed request shouldn’t erase useful work, a stale response shouldn’t overwrite new data, and an overlay should return keyboard focus when it closes.', [...story, ...f24]],
       ['I use typed contracts, Playwright and regression tests. In Flow I make actions undoable; in Leu I preserve source-linked state. I want people to be able to inspect and recover from what software does.', [...cv, ...flow, ...leu]]
     ], ['What did he improve at F24?', 'How does Flow undo a change?', 'How does he handle AI mistakes?']);
   }
@@ -121,56 +121,56 @@ export function editorialAnswer(question: string, projectSlug?: string): Editori
   if (match(q, /\b(ai interests|interested in ai|ai workflows|ai products|machine learning|on.device ai|agents|future of frontend|why ai|ai career)\b/) && !projectSlug) {
     return make('ai-interest', [
       ['What draws me to AI is what happens in the interface: asking better questions, checking an answer, editing a result, and recovering when a model gets things wrong.', [...story, ...sv, ...leu]],
-      ['I explore that in Second Voice's inspectable rewrites and Leu's source-grounded learning loop. I'm also curious about voice, image-to-text, and AI workflows, particularly where they meet thoughtful frontend engineering.', [...sv, ...leu, ...cv]]
+      ['I explore that in Second Voice’s inspectable rewrites and Leu’s source-grounded learning loop. I’m also curious about voice, image-to-text, and AI workflows, particularly where they meet thoughtful frontend engineering.', [...sv, ...leu, ...cv]]
     ], ['What did he build in Second Voice?', 'Does Leu run narration on device?', 'What kind of role is he looking for?']);
   }
 
   if (match(q, /\b(ideal (team|role|job)|next role|looking for|opportunities|job fit|why this team|why hire|hire miguel|good fit|best suited|what kind of company)\b/) && !projectSlug) {
     return make('role-fit', [
-      ['I'm happiest where frontend engineering and product judgment meet. I enjoy teams that care about design quality, reusable code, dependable interactions, and useful AI.', [...cv, ...story]],
-      ['F24 has taught me about production constraints and collaboration. Needle, Second Voice, Leu, and Flow let me explore different product ideas end to end. I'm open-minded about good teams and interesting problems.', [...f24, ...needle, ...sv, ...leu, ...flow]]
+      ['I’m happiest where frontend engineering and product judgment meet. I enjoy teams that care about design quality, reusable code, dependable interactions, and useful AI.', [...cv, ...story]],
+      ['F24 has taught me about production constraints and collaboration. Needle, Second Voice, Leu, and Flow let me explore different product ideas end to end. I’m open-minded about good teams and interesting problems.', [...f24, ...needle, ...sv, ...leu, ...flow]]
     ], ['What did he own at F24?', 'Which independent project should I inspect?', 'How does he collaborate?']);
   }
 
   if (match(q, /\b(strengths|what makes him different|stands out|why should i interview|what is special|unique about miguel|what can he bring)\b/) && !projectSlug) {
     return make('strengths', [
       ['I bring both design judgment and implementation ownership. I can work through a dense interface, build the frontend contracts behind it, and stay with the work through edge cases and verification.', [...cv, ...story]],
-      ['For examples, look at my production work at F24, Needle's visual search, Second Voice's transparent rewrite UI, and Flow's reversible actions. The problems differ, but I apply the same care to clarity and behavior.', [...f24, ...needle, ...sv, ...flow]]
+      ['For examples, look at my production work at F24, Needle’s visual search, Second Voice’s transparent rewrite UI, and Flow’s reversible actions. The problems differ, but I apply the same care to clarity and behavior.', [...f24, ...needle, ...sv, ...flow]]
     ], ['What did Miguel improve at F24?', 'Which project best shows his technical depth?', 'How does he handle difficult UX?']);
   }
 
   if (match(q, /\b(weakness|growth area|what would he improve|still learning|gets better|working on personally|working on improving|working to improve)\b/) && !projectSlug) {
     return make('growth', [
-      ['I'm working on knowing when to stop polishing. I can spend longer than planned refining an interaction because I genuinely care about how it feels.', story],
+      ['I’m working on knowing when to stop polishing. I can spend longer than planned refining an interaction because I genuinely care about how it feels.', story],
       ['What helps me is defining the acceptance bar early: make the critical behavior reliable, verify edge cases, and plan optional polish for a separate pass.', [...story, ...cv]]
     ], ['What motivates him?', 'How does he decide something is ready?', 'How does he approach UI reliability?']);
   }
 
   if (match(q, /\b(what does he do for fun|hobbies|outside (?:of )?work|free time|music|films|movies|tv shows|personal interests|as a person)\b/) && !projectSlug) {
     return make('personal', [
-      ['Outside work, I'm a pretty relaxed homebody. I love music, films, and TV, and I keep finding new technology to explore. Sometimes a tiny side project turns into a rather detailed experiment.', story],
-      ['I'm especially drawn to AI workflows and those small interface details that make something feel right. Curiosity isn't just a line on my CV.', [...story, ...work]]
+      ['Outside work, I’m a pretty relaxed homebody. I love music, films, and TV, and I keep finding new technology to explore. Sometimes a tiny side project turns into a rather detailed experiment.', story],
+      ['I’m especially drawn to AI workflows and those small interface details that make something feel right. Curiosity isn’t just a line on my CV.', [...story, ...work]]
     ], ['How did he start in UX?', 'What inspires his projects?', 'Which project feels most personal?']);
   }
 
   if (match(q, /\b(lisbon|portugal|portuguese|berlin|where is he from|where did he grow up|where is he based|location)\b/) && !projectSlug) {
     return make('origin', [
-      ['I'm Portuguese, grew up in Lisbon, and now live in Berlin. I work where frontend engineering and product design overlap.', [...story, ...cv]],
+      ['I’m Portuguese, grew up in Lisbon, and now live in Berlin. I work where frontend engineering and product design overlap.', [...story, ...cv]],
       ['For relocation, availability, or contract details, please contact me directly. This guide uses my public notes, not my live calendar or personal commitments.', ['Contact Miguel|/#contact']]
     ], ['How did he get into frontend?', 'What is his work background?', 'How can I contact him?']);
   }
 
   if (match(q, /\b(how to contact|contact miguel|email miguel|reach miguel|talk to miguel|book an interview|set up an interview)\b/)) {
     return make('contact', [
-      ['You can reach me through the Contact section or LinkedIn, or read my CV if you'd like more background first.', ['Contact Miguel|/#contact', ...cv]],
+      ['You can reach me through the Contact section or LinkedIn, or read my CV if you’d like more background first.', ['Contact Miguel|/#contact', ...cv]],
       ['This is a portfolio guide using my prepared answers, not a live chat with me. Please email me for interview scheduling or availability.', ['Contact Miguel|/#contact']]
     ], ['Which project should I review first?', 'What did he work on at F24?']);
   }
 
   if (match(q, /\b(who is miguel|tell me about miguel|tell me about yourself|describe miguel|introduce miguel|who are you|quick introduction|thirty second intro|30 second intro|in a nutshell)\b/) && !projectSlug) {
     return make('introduction', [
-      ['I'm a Portuguese frontend engineer based in Berlin. I started in UX, have worked on production software at F24 since 2022, and love building independent products.', [...story, ...cv]],
-      ['I care about small details: interactions that make sense, resilient frontend systems, and AI features you can actually understand. I'm also always up for a good film or a stubborn technical puzzle.', [...story, ...needle, ...sv]]
+      ['I’m a Portuguese frontend engineer based in Berlin. I started in UX, have worked on production software at F24 since 2022, and love building independent products.', [...story, ...cv]],
+      ['I care about small details: interactions that make sense, resilient frontend systems, and AI features you can actually understand. I’m also always up for a good film or a stubborn technical puzzle.', [...story, ...needle, ...sv]]
     ], ['What did he build at F24?', 'Which project should I start with?', 'How did UX shape his work?']);
   }
 
@@ -182,8 +182,8 @@ export function editorialAnswer(question: string, projectSlug?: string): Editori
 
   if (match(q, /\b(favou?rite (?:tech(?:nology)? )?(?:stack|tools|frameworks|languages)|(?:stack|tools|frameworks) (?:do you|does he) (?:prefer|love|like)|which (?:tech|tools|frameworks) (?:do you|does he) (?:prefer|like)|what (?:is|are) (?:your|his|miguel's) favou?rite (?:tech(?:nology)? )?(?:stack|tools|frameworks))\b/)) {
     return make('favorite-stack', [
-      ["I reach for React and TypeScript most often, and I have a soft spot for Svelte too. I also love the design side of frontend—that's as important to me as choosing the framework.", [...cv, ...story]],
-      ["I prefer a lean, maintainable stack. I'll bring in a library when it solves a real problem, but I don't want the product to depend on packages it doesn't need. For native work I use SwiftUI and PDFKit in Leu.", [...story, ...leu]]
+      ["I reach for React and TypeScript most often, and I have a soft spot for Svelte too. I also love the design side of frontend—that’s as important to me as choosing the framework.", [...cv, ...story]],
+      ["I prefer a lean, maintainable stack. I’ll bring in a library when it solves a real problem, but I don't want the product to depend on packages it doesn’t need. For native work I use SwiftUI and PDFKit in Leu.", [...story, ...leu]]
     ], ['How much React experience do you have?', 'How do you decide which libraries to use?', 'What did you build with Svelte?']);
   }
 
