@@ -14,6 +14,17 @@ const verbForms: Array<[RegExp,string]> = [
   [/\bI uses\b/g, 'I use'], [/\bI tends\b/g, 'I tend'],
   [/\bI demonstrates\b/g, 'I demonstrate'], [/\bI continues\b/g,'I continue'],
   [/\bI helps\b/g,'I help'], [/\bI cares\b/g,'I care'],
+  [/\bI combines\b/g, 'I combine'], [/\bI maintains\b/g, 'I maintain'],
+  [/\bI establishes\b/g, 'I establish'], [/\bI shapes\b/g, 'I shape'],
+  [/\bI connects\b/g, 'I connect'], [/\bI delivers\b/g, 'I deliver'],
+  [/\bI ships\b/g, 'I ship'], [/\bI supports\b/g, 'I support'],
+  [/\bI improves\b/g, 'I improve'], [/\bI focuses\b/g, 'I focus'],
+  [/\bI explores\b/g, 'I explore'], [/\bI handles\b/g, 'I handle'],
+  [/\bI creates\b/g, 'I create'], [/\bI writes\b/g, 'I write'],
+  [/\bI offers\b/g, 'I offer'], [/\bI documents\b/g, 'I document'],
+  [/\bI tests\b/g, 'I test'], [/\bI collaborates\b/g, 'I collaborate'],
+  [/\bI maps\b/g, 'I map'], [/\bI starts\b/g, 'I start'],
+  [/\bI solves\b/g, 'I solve'], [/\bI moves\b/g, 'I move'],
   [/\bI carries\b/g,'I carry'], [/\bI takes\b/g,'I take']
 ];
 export function inMyVoice(input: string): string {

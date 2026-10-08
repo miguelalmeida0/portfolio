@@ -5,6 +5,7 @@ import { publicSources } from './publicSources';
 import { retrieveMiguelContext } from './retrieve';
 import { isBoundaryQuestion } from './guardrails';
 import { editorialAnswer, projectIntroduction } from './editorialAnswers';
+import { visitorIntentAnswer } from './visitorIntents';
 import { asFirstPersonAnswer } from './firstPersonVoice';
 import { flowIncidents } from '$lib/content/flow-investigation';
 import { incidents as leuIncidents } from '$lib/content/leu-investigation';
@@ -70,6 +71,24 @@ export function prepareAskAnswer(input: string, history: string[] = [], area?: A
     prepared.defaults = [add('conversation', friendly.text, [])]; prepared.followups = friendly.followups; prepared.conversational = true; prepared.area = undefined; return prepared;
   }
   if (isBoundaryQuestion(input) || /\b(graphql|kubernetes|visa|married|children|age|rust|birthday)\b/.test(q) || /\b(how old|what age|when born|date of birth)\b/.test(q)) return prepared;
+
+  // First classify what the visitor means. The click target can suggest a
+  // subject, but it must not substitute career chronology for a stack answer.
+  // Keep clicked CV/Story evidence excerpts on their existing exact-source path.
+  const visitor = visitorIntentAnswer(question, area, resolveProject(question));
+  if (visitor) {
+    prepared.facts = visitor.facts;
+    prepared.defaults = visitor.facts.map(fact => fact.id);
+    prepared.followups = visitor.followups;
+    // Keep the source spotlight only where its content genuinely supports
+    // the answer. A homepage stack question highlights the actual stack,
+    // never the F24 timeline or an unrelated biography excerpt.
+    const spotlight: Partial<Record<typeof visitor.intent, AreaId>> = {
+      role: 'role', stack: 'stack', quality: 'quality', work: 'selwork', f24: 'f24'
+    };
+    prepared.area = area ?? spotlight[visitor.intent];
+    return prepared;
+  }
   // Clicked source areas keep their exact on-page evidence, rather than
   // replacing a highlighted record with a looser editorial summary.
   const explicitProject = resolveProject(question);
@@ -125,7 +144,7 @@ export function prepareAskAnswer(input: string, history: string[] = [], area?: A
     prepared.followups = slug === 'flow' ? ['How does Flow avoid partial changes?', 'What did the wake benchmark measure?', 'What remains unverified in Flow?'] : ['Why did Leu replace V36?', 'How does Leu prevent false mastery?', 'What remains unverified on iPhone in Leu?'];
     return prepared;
   }
-  if (project && /stack|technolog|framework|tools|built with|uses what|which libraries/.test(q)) {
+  if (project && /stack|technolog|framework|tools|build.*with|built with|uses what|which libraries/.test(q)) {
     prepared.defaults = [add('project-stack', `In ${project.name}, I use ${project.stack.join(', ')}. ${project.ownership}`, [`${project.name}|/work/${slug}`]), add('project-stack-context', `My design decision here: ${project.decisions[0].detail} ${project.decisions[0].tradeoff}`, [`${project.name}|/work/${slug}`])]; return prepared;
   }
   if (project && !area && /^(?:tell me (?:a bit )?about|what is|describe|introduce|overview of|how does .* work|explain the project|what did miguel build in)/.test(q) && !/tradeoff|failed|benchmark|accuracy|issue|risk|unverified|specific|stack|technology/.test(q)) {

@@ -47,7 +47,7 @@ test('structured endpoint reuses guardrails, validates submitted sources, refuse
   const body = await response.json();
   assert.equal(body.question, 'What is his stack?');
   assert.equal(body.steps.length, 1);
-  assert.match(body.knowledge.paragraphs.join(' '), /2022 to 2023/);
+  assert.match(body.knowledge.paragraphs.join(' '), /My main frontend stack is React, TypeScript, JavaScript, Svelte/);
   for (const item of body.steps) assert.equal(validateStep(item, areas[item.source]), true);
   assert.deepEqual((await (await request({ question: 'Does he know GraphQL?', areas })).json()).steps, []);
   assert.deepEqual((await (await request({ question: 'What is his stack?', areas: { stack: 'No evidence' } })).json()).steps, []);

@@ -440,6 +440,51 @@ test('Ask MiguelLLM answers a favorite-stack question in first person on desktop
   }
 });
 
+test('Ask interprets the clicked job title and stack instead of reciting CV chronology', async ({page}) => {
+  await page.setViewportSize({width:1440,height:900});
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.addInitScript(() => sessionStorage.setItem('seen-intro','true'));
+  await page.goto('/');
+  await page.locator('nav[aria-label="Main navigation"] [data-ask-trigger]').click();
+  const role=page.locator('[data-ask-id="role"]');
+  await role.click();
+  const text=page.locator('[data-ask-knowledge]');
+  await expect(text).toContainText("I'm a frontend engineer and product designer", {timeout:15000});
+  await expect(text).toContainText('critical-communication interfaces');
+  await expect(text).not.toContainText(/Connectivity Hub|UX Design Institute|CareerFoundry|I combines/);
+  await page.locator('[data-ask-id="stack"]').click();
+  await expect(text).toContainText('My main frontend stack is React, TypeScript, JavaScript, Svelte', {timeout:15000});
+  await expect(text).toContainText('Next.js');
+  await expect(text).toContainText('Playwright');
+  await expect(text).not.toContainText(/From 2022 to 2023|Mid-level|UX Design Institute|career timeline/);
+  await expect(page.locator('.ask-sources a').first()).toHaveAttribute('href','/cv#skills');
+});
+
+test('Ask answers actual tools and education questions directly on mobile and desktop', async ({page}) => {
+  await page.addInitScript(() => sessionStorage.setItem('seen-intro','true'));
+  await page.emulateMedia({reducedMotion:'reduce'});
+  for (const width of [1440,390]) {
+    await page.setViewportSize({width,height:900});
+    await page.goto('/');
+    const menu=page.getByRole('button',{name:'Menu',exact:true});
+    if (await menu.isVisible()) await menu.click();
+    await page.locator('[data-ask-trigger]:visible').click();
+    const input=page.getByRole('textbox',{name:'Type your own question'});
+    const text=page.locator('[data-ask-knowledge]');
+    await input.fill('What does he build with?');
+    await input.press('Enter');
+    await expect(text).toContainText('My main frontend stack is React, TypeScript, JavaScript, Svelte',{timeout:15000});
+    await expect(text).not.toContainText(/From 2022 to 2023|UX Design Institute/);
+    await input.fill('Where did you study?');
+    await input.press('Enter');
+    await expect(text).toContainText('Professional Diploma in UX Design at the UX Design Institute',{timeout:15000});
+    await expect(text).toContainText('Full-Stack Web Development at CareerFoundry');
+    await expect(page.locator('.ask-sources a').first()).toHaveAttribute('href','/cv#education');
+    await page.keyboard.press('Escape');
+    await expect(page.locator('[data-ask-panel]')).toHaveCount(0);
+  }
+});
+
 test('primary routes render without uncaught client exceptions', async ({ page }) => {
   const pageErrors: string[] = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));
