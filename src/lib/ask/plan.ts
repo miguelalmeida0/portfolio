@@ -5,9 +5,9 @@ import { pageAreas } from './page-areas';
 export const areas = data.areas as Area[];
 export const groups = data.groups as AreaId[][];
 export { DEFAULT_HEADING } from './view';
-export const INTRO = 'Click his role, a skill or a project to go deeper. MiguelLLM connects each topic to his experience, responsibilities and project decisions. Page highlights show the context; linked sources support the explanation.';
-export const FOOTER = 'Grounded in Miguel’s portfolio knowledge. Page quotes light up where they live.';
-export const REFUSAL = 'That detail is not established in Miguel’s portfolio knowledge. Ask him directly: miguelalmeida1592@gmail.com';
+export const INTRO = 'Ask me about my work, design decisions, or something I built. I’ll show you the relevant evidence, and I’ll say when a detail isn’t documented.';
+export const FOOTER = 'Based on my published work. You can check the linked sources.';
+export const REFUSAL = 'I haven’t documented that publicly, so I won’t guess. If you need the answer, please email me at miguelalmeida1592@gmail.com.';
 export const areaPlan = (id: string): Area | undefined => areas.find(area => area.id === id) ?? (() => {
   const area = pageAreas.find(area => area.id === id);
   return area ? { id: area.id as AreaId, question: area.question, label: area.label, group: 0, steps: [] } : undefined;

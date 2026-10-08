@@ -414,6 +414,32 @@ test('closing Ask mid-answer does not leave a delayed answer or reopen', async (
   await expect(page.locator('html')).not.toHaveClass(/ask-on|ask-present|ask-closing/);
 });
 
+test('Ask MiguelLLM answers a favorite-stack question in first person on desktop and mobile', async ({page}) => {
+  await page.addInitScript(() => sessionStorage.setItem('seen-intro','true'));
+  await page.emulateMedia({reducedMotion:'reduce'});
+  for (const width of [1440,390]) {
+    await page.setViewportSize({width,height:900});
+    await page.goto('/');
+    const menu=page.getByRole('button',{name:'Menu',exact:true});
+    if (await menu.isVisible()) await menu.click();
+    const trigger=page.locator('[data-ask-trigger]:visible');
+    await expect(trigger).toBeEnabled();
+    await trigger.click();
+    await expect(page.locator('.ask-disclosure')).toContainText('Not a live chat');
+    const input=page.getByRole('textbox',{name:'Type your own question'});
+    await input.fill('what is your favorite tech stack?');
+    await input.press('Enter');
+    await expect(page.locator('[data-ask-knowledge]')).toBeVisible({timeout:15000});
+    const answer=page.locator('[data-ask-knowledge]');
+    await expect(answer.locator('p').first()).toContainText('I reach for React and TypeScript');
+    await expect(answer).toContainText('Svelte');
+    await expect(answer).not.toContainText(/\bMiguel\b|\bhe\b|\bhis\b/i);
+    await expect(page.locator('.ask-sources a').first()).toHaveAttribute('href','/cv');
+    await page.keyboard.press('Escape');
+    await expect(page.locator('[data-ask-panel]')).toHaveCount(0);
+  }
+});
+
 test('primary routes render without uncaught client exceptions', async ({ page }) => {
   const pageErrors: string[] = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));

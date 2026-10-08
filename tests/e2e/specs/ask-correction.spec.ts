@@ -69,7 +69,7 @@ test('portrait stays recognisable on the right and returns without drift over te
   }
 });
 test('rich answers retain whole-page accessibility',async({page})=>{
-  await page.keyboard.press('/'); await page.getByRole('button',{name:'His stack',exact:true}).click();
+  await page.keyboard.press('/'); await page.getByRole('button',{name:'My stack',exact:true}).click();
   await expect(page.locator('[data-ask-announcement]')).toContainText('2026');
   const result=await new AxeBuilder({page}).analyze(); expect(result.violations.map(v=>v.id)).toEqual([]);
 });

@@ -25,6 +25,7 @@
     <div class="ask-handle" aria-hidden="true"></div>
   </div>
   <div class="ask-heading" role="status" aria-live="polite" aria-atomic="true">{view.question}</div>
+  <p class="ask-disclosure">My public portfolio, in my voice · Not a live chat</p>
   <!-- Keyboard users need to focus this region to scroll long answers. -->
   <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
   <div class="ask-answer-scroll" data-scroll-native tabindex="0" role="region" aria-label="Answer and sources">
@@ -56,8 +57,8 @@
   <div class="ask-try"><span>Try</span>
     <button data-ask-try type="button" onclick={() => controller.ask('w-f24')}>F24</button>
     <button data-ask-try type="button" onclick={() => controller.ask('w-sv')}>Second Voice</button>
-    <button data-ask-try type="button" onclick={() => controller.ask('stack')}>His stack</button>
-    <button data-ask-try type="button" onclick={() => controller.ask('role')}>Design background</button>
+    <button data-ask-try type="button" onclick={() => controller.ask('stack')}>My stack</button>
+    <button data-ask-try type="button" onclick={() => controller.ask('role')}>My design background</button>
   </div>
   <form class="ask-form" onsubmit={submit}>
     <input aria-label="Type your own question" placeholder="Or type your own question…" autocomplete="off" maxlength="320" bind:value={question} />

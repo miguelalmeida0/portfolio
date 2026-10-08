@@ -35,7 +35,7 @@ const cases = [
   ['Tell me about Second Voice', /original stays visible.*rewrite/s, /microphone accuracy/i],
   ['Tell me about Flow', /spoken instruction.*structured.*undo/s, /certified speech recognition/i],
   ['Tell me about Leu', /PDF.*SwiftUI.*PDFKit/s, /physically verified on iPhone/i],
-  ['What is Second Voice built with?', /Second Voice(?: AI)? uses.*(Next.js|React)/s, /SwiftUI/i],
+  ['What is Second Voice built with?', /In Second Voice AI, I use.*(Next.js|React)/s, /SwiftUI/i],
   ['What went wrong in Flow?', /flexible events.*draft.*rollback/s, /10 million/i],
   ['How does Flow handle Journal dictation?', /context.*dictation/s, /Kubernetes/i],
   ['What does the Flow wake benchmark measure?', /42.1 ms.*not ASR latency/s, /100% accuracy/i],
@@ -85,4 +85,49 @@ test('clicked CV and Story areas preserve the exact canonical excerpt', async ()
     const result = answer(area.question, [], area.id);
     assert.equal(fullText(result), area.text);
   }
+});
+
+test('the favorite-stack question uses my voice, not a third-person CV timeline', () => {
+  for (const question of [
+    'what is your favorite tech stack?',
+    "what's your favourite stack?",
+    "what is Miguel's favorite tech stack?",
+    'Which frameworks do you prefer?'
+  ]) {
+    const result = answer(question);
+    assert.ok(result, question);
+    const paragraphs = result.paragraphs.join(' ');
+    assert.match(paragraphs, /^I (reach|prefer|love|use)/, question);
+    assert.match(paragraphs, /React.*TypeScript.*Svelte/s);
+    assert.doesNotMatch(paragraphs, /\b(?:Miguel|he|his)\b/i);
+    assert.doesNotMatch(paragraphs, /From 2022 to 2023/);
+    assert.ok(result.sources.includes('Experience & CV|/cv'));
+    assert.deepEqual(validateConversationAnswer(result, question), result);
+  }
+});
+
+test('the guide consistently speaks in the first person across real answer types', () => {
+  const questions = [
+    'Who is Miguel?', 'What did Miguel own at F24?', 'What did Miguel improve at F24?',
+    'What is his stack?', 'What did Miguel study?', 'Which languages does Miguel speak?',
+    'Tell me about Flow', 'Tell me about Leu', 'What went wrong in Flow?',
+    'Why did Leu replace V36?', 'What kind of team would suit Miguel?',
+    'What does he do outside work?', 'Where did he grow up?'
+  ];
+  for (const question of questions) {
+    const result = answer(question);
+    assert.ok(result, question);
+    assert.match(result.paragraphs[0], /\b(I|I'm|I’m|I've|I’ve|my|me)\b/i, question);
+    assert.doesNotMatch(result.paragraphs.join(' ') + ' ' + result.bullets.join(' '), /\b(?:Miguel|he|his)\b/i, question);
+    assert.deepEqual(validateConversationAnswer(result, question), result);
+  }
+});
+
+test('the first-person converter keeps quoted recommendations verbatim and fixes grammatical subjects', async () => {
+  const { inMyVoice, asFirstPersonAnswer } = await loadLocalTs('src/lib/miguel-llm/firstPersonVoice.ts');
+  assert.equal(inMyVoice('Miguel is a frontend engineer. He works with React. His experience shows care.'), 'I am a frontend engineer. I work with React. My experience shows care.');
+  assert.equal(inMyVoice('Ask Miguel about it.'), 'Ask me about it.');
+  const quoted = inMyVoice('A teammate wrote: “Miguel is thoughtful.” He worked with QA.');
+  assert.equal(quoted, 'A teammate wrote: “Miguel is thoughtful.” I worked with QA.');
+  assert.equal(asFirstPersonAnswer('The test checks the evidence.', true), 'From my work: The test checks the evidence.');
 });

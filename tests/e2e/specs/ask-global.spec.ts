@@ -47,7 +47,9 @@ test('CV facts are available from home; sources navigate and conversation surviv
   await page.getByRole('button', { name: 'Move guide to the left' }).click();
   expect((await page.locator('[data-ask-panel]').boundingBox())!.x).toBe(24);
   await page.locator('[data-ask-id="cv-education"]').click();
-  await expect(page.locator('[data-ask-knowledge]')).toHaveText(answer);
+  await expect(page.locator('[data-ask-knowledge]')).toContainText('UX Design');
+  await expect(page.locator('[data-ask-knowledge]')).toContainText('Full-Stack Web Development');
+  await expect(page.locator('[data-ask-knowledge]')).toContainText('my CV');
   expect((await new AxeBuilder({ page }).analyze()).violations.filter(v => ['serious', 'critical'].includes(v.impact ?? ''))).toEqual([]);
 });
 

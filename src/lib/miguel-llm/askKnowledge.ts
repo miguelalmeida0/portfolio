@@ -36,7 +36,7 @@ const career = (id: string) => careerKnowledge.find(record => record.id === id)!
 const projectSource = (slug: string) => `${project(slug).name}|/work/${slug}`;
 // Case-study excerpts use first person and refer to preceding mockups. Give
 // those excerpts a clear subject when they stand alone inside an Ask answer.
-const standalone = (text: string) => text.replace(/\bI (?=designed|built)/g, 'Miguel ').replace(/those mockups/g, 'product mockups');
+const standalone = (text: string) => text.replace(/those mockups/g, 'product mockups');
 const make = (paragraphs: string[], bullets: string[], sources: string[]): KnowledgeAnswer => ({ paragraphs: paragraphs.map(standalone), bullets: bullets.map(standalone), sources: publicSources(sources) });
 
 // Assemble existing authored facts, not restatements of the clicked DOM. Current

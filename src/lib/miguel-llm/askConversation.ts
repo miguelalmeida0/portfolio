@@ -5,6 +5,7 @@ import { publicSources } from './publicSources';
 import { retrieveMiguelContext } from './retrieve';
 import { isBoundaryQuestion } from './guardrails';
 import { editorialAnswer, projectIntroduction } from './editorialAnswers';
+import { asFirstPersonAnswer } from './firstPersonVoice';
 import { flowIncidents } from '$lib/content/flow-investigation';
 import { incidents as leuIncidents } from '$lib/content/leu-investigation';
 import { workPreferencesKnowledge } from '../../data/miguel-llm/work-preferences';
@@ -14,7 +15,7 @@ import { pageAreas, pageAreaForQuestion } from '$lib/ask/page-areas';
 
 export type AskFact = { id: string; text: string; sources: string[] };
 export type PreparedAnswer = { question: string; facts: AskFact[]; defaults: string[]; followups: string[]; area?: AreaId; conversational?: boolean };
-const suggestions = ['What did Miguel improve at F24?', 'Which project should I see first?', 'What is Miguel like to work with?'];
+const suggestions = ['What did you improve at F24?', 'What went wrong in Flow?', 'What are you like to work with?'];
 const normal = (text: string) => text.toLowerCase().replace(/[’']/g, '').replace(/[^\p{L}\p{N}\s]/gu, ' ').replace(/\s+/g, ' ').trim();
 const elaboration = (q: string) => /^(why|how so|tell me more|go deeper|more detail|can you elaborate|can you expand|give me an example|shorter|summarize)$/.test(normal(q));
 export function sanitizeAskHistory(value: unknown): string[] {
@@ -53,10 +54,10 @@ function greeting(q: string): boolean { return /^(hello|hi|hey|hiya|hi there|hey
 function social(question: string): { text: string; followups: string[] } | undefined {
   const q = normal(question);
   if (greeting(q) || /^(help|what can (?:i ask|you do|you answer)|how does this work|what is this)$/.test(q)) return {
-    text: 'Hi! I’m Miguel’s portfolio guide. Lovely to meet you. I can show you what he built, why he made particular decisions, or what he’s like to work with. Where should we start?', followups: suggestions
+    text: 'Hi! I’m MiguelLLM, a guide to my published work. I can show you what I built, why I made particular decisions, or what I’m like to work with. Where should we start?', followups: suggestions
   };
   if (/^(thanks|thank you|thank you so much|cheers|great thanks|ok thanks|cool|nice|great|awesome)$/.test(q)) return { text: 'Anytime. If a project catches your eye, I can show you the choices behind it and link the actual work.', followups: suggestions };
-  if (/^(how are you|how is it going|hows it going|whats up)$/.test(q)) return { text: 'Doing well, thanks for asking! I’m here with Miguel’s public notes and projects. Want to start with his work at F24 or one of the things he built for himself?', followups: suggestions };
+  if (/^(how are you|how is it going|hows it going|whats up)$/.test(q)) return { text: 'Doing well, thanks for asking! I can take you through my work at F24 or one of the projects I built for myself. What are you curious about?', followups: suggestions };
 }
 
 export function prepareAskAnswer(input: string, history: string[] = [], area?: AreaId): PreparedAnswer {
@@ -92,7 +93,7 @@ export function prepareAskAnswer(input: string, history: string[] = [], area?: A
   // Questions about missing private terms are not answered from loosely related facts.
   const projects = currentGuideProjects.filter(p => normal(question).includes(normal(p.name)) || new RegExp(`\\b${p.slug}\\b`).test(q) || (p.slug === 'second-voice-ai' && /\bsecond voice\b/.test(q)));
   if (/compar|difference|versus|\bvs\b/.test(q) && projects.length > 1) {
-    prepared.defaults = projects.map(p => add(`compare:${p.slug}`, `${p.name}: ${p.problem} ${p.ownership}`, [`${p.name}|/work/${p.slug}`]));
+    prepared.defaults = projects.map(p => add(`compare:${p.slug}`, `${p.name}: I designed and built this product to solve a specific problem. ${p.problem} ${p.ownership}`, [`${p.name}|/work/${p.slug}`]));
     prepared.followups = projects.slice(0, 3).map(p => `What were the tradeoffs in ${p.name}?`); return prepared;
   }
   const slug = resolveProject(question);
@@ -125,7 +126,7 @@ export function prepareAskAnswer(input: string, history: string[] = [], area?: A
     return prepared;
   }
   if (project && /stack|technolog|framework|tools|built with|uses what|which libraries/.test(q)) {
-    prepared.defaults = [add('project-stack', `${project.name} uses ${project.stack.join(', ')}. ${project.ownership}`, [`${project.name}|/work/${slug}`]), add('project-stack-context', `${project.decisions[0].detail} ${project.decisions[0].tradeoff}`, [`${project.name}|/work/${slug}`])]; return prepared;
+    prepared.defaults = [add('project-stack', `In ${project.name}, I use ${project.stack.join(', ')}. ${project.ownership}`, [`${project.name}|/work/${slug}`]), add('project-stack-context', `My design decision here: ${project.decisions[0].detail} ${project.decisions[0].tradeoff}`, [`${project.name}|/work/${slug}`])]; return prepared;
   }
   if (project && !area && /^(?:tell me (?:a bit )?about|what is|describe|introduce|overview of|how does .* work|explain the project|what did miguel build in)/.test(q) && !/tradeoff|failed|benchmark|accuracy|issue|risk|unverified|specific|stack|technology/.test(q)) {
     const intro = projectIntroduction(project.slug);
@@ -165,7 +166,7 @@ export function prepareAskAnswer(input: string, history: string[] = [], area?: A
   if (!prepared.defaults.length && prepared.facts.length) prepared.defaults = prepared.facts.slice(0, 2).map(f => f.id);
   // No unsupported answer is manufactured just because the user used a pronoun.
   if (!prepared.defaults.length && /^(and |what about |why|how|tell me more|more|go deeper|what did he|what does he)/.test(q) && !slug) {
-    prepared.defaults = [add('clarify', 'Which part would you like to explore—his work at F24, Second Voice, Flow or Leu? I can explain his role, the technical decisions and the evidence for each.', [])];
+    prepared.defaults = [add('clarify', 'Which part would you like to explore—my F24 work, Second Voice, Flow, or Leu? I can explain what I built, the technical decisions, and the evidence for each.', [])];
     prepared.conversational = true;
   }
   return prepared;
@@ -176,7 +177,19 @@ export function assembleAskAnswer(prepared: PreparedAnswer, ids: unknown = prepa
   const selected = [...new Set(ids)].map(id => prepared.facts.find(fact => fact.id === id));
   if (selected.some(fact => !fact)) return null;
   const facts = selected as AskFact[];
-  return { paragraphs: facts.slice(0, 3).map(f => f.text), bullets: facts.slice(3).map(f => f.text), sources: publicSources(facts.flatMap(f => f.sources)), factIds: facts.map(f => f.id), followups: prepared.followups, conversational: prepared.conversational ?? false };
+  const context =
+    prepared.area?.startsWith('cv-') || prepared.area === 'cv' || prepared.area === 'nav-cv' ? 'cv'
+    : prepared.area?.startsWith('story-') || prepared.area === 'nav-story' ? 'story'
+    : prepared.area === 'w-flow' ? 'flow'
+    : prepared.area === 'w-leu' ? 'leu' : 'work';
+  return {
+    paragraphs: facts.slice(0, 3).map((fact, index) => asFirstPersonAnswer(fact.text, index === 0 && !prepared.conversational, context)),
+    bullets: facts.slice(3).map(fact => asFirstPersonAnswer(fact.text)),
+    sources: publicSources(facts.flatMap(fact => fact.sources)),
+    factIds: facts.map(fact => fact.id),
+    followups: prepared.followups,
+    conversational: prepared.conversational ?? false
+  };
 }
 
 export function validateConversationAnswer(value: unknown, question: string, history: string[] = [], area?: AreaId): KnowledgeAnswer | null {

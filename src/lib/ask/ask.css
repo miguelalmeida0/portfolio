@@ -60,6 +60,7 @@ html.ask-present [data-ask-id].is-asked, html.ask-on [data-ask-id]:focus-visible
 .ask-on .ask-close { opacity: 1; transform: none; pointer-events: auto; transition-delay: .55s, .55s; }
 .ask-close kbd { min-width: 34px; height: 26px; padding: 0 8px; border-radius: 999px; background: rgb(18 42 34 / .07); display: inline-grid; place-items: center; font: 500 12px/1 var(--ask-ui); color: var(--ask-muted); }
 .ask-heading { flex-shrink: 0; font: 700 26px/1.2 var(--ask-ui); letter-spacing: -.02em; text-transform: none; }
+.ask-disclosure { flex-shrink: 0; margin: -7px 0 0; color: var(--ask-muted); font: 500 12px/1.35 var(--ask-ui); }
 .ask-answer-scroll { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; }
 .ask-answer { font: 400 21px/1.55 var(--ask-read); }
 .ask-knowledge { font: 400 17px/1.55 var(--ask-ui); }

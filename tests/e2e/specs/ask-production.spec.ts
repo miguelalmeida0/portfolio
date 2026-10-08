@@ -61,7 +61,7 @@ test('every source is keyboard reachable; slash respects inputs; announcements o
   const cv = page.locator('[data-ask-id="cv"]'); await cv.focus(); await page.keyboard.press('Space');
   await expect(page.locator('.ask-heading')).toHaveText('Can I see his CV?');
   await expect(page.locator('[data-ask-announcement]')).toHaveText('');
-  await expect(page.locator('[data-ask-announcement]')).toContainText('Grounded in Miguel', { timeout: 6000 });
+  await expect(page.locator('[data-ask-announcement]')).toContainText('Based on my published work', { timeout: 6000 });
   const input = page.getByRole('textbox', { name: 'Type your own question' }); await input.fill('How / why'); await input.press('/'); await expect(input).toHaveValue('How / why/');
   await close(page); await expect(page.locator('[data-ask-trigger]:visible')).toBeFocused();
   await expect(cv).not.toHaveAttribute('role'); await expect(cv).toHaveAttribute('href', '/cv');
@@ -82,15 +82,15 @@ test('backend steps are validated individually against live text and older reque
   let release: (() => void) | undefined;
   await page.route('**/api/ask', async route => { await new Promise<void>(resolve => release = resolve); await route.fulfill({ json: { steps: [{ lead: '', source: 'stack', quote: 'React' }] } }).catch(() => {}); });
   await input.fill('A slow question'); await input.press('Enter'); await expect(page.locator('[data-ask-answer]')).toContainText('Connecting');
-  await page.getByRole('button', { name: 'Design background', exact: true }).click(); release?.();
+  await page.getByRole('button', { name: 'My design background', exact: true }).click(); release?.();
   await expect(page.locator('.ask-heading')).toHaveText('What does he do?');
   await expect(page.locator('[data-ask-knowledge]')).toContainText('F24');
 });
 
 test('sources changing before a phrase appears cannot produce a stale quote', async ({ page }) => {
-  await open(page); await page.getByRole('button', { name: 'His stack', exact: true }).click();
+  await open(page); await page.getByRole('button', { name: 'My stack', exact: true }).click();
   await page.locator('[data-ask-id="stack"]').evaluate(el => el.textContent = 'Changed source');
-  await expect(page.locator('[data-ask-answer]')).toContainText('Grounded in Miguel', { timeout: 7000 });
+  await expect(page.locator('[data-ask-answer]')).toContainText('Based on my published work', { timeout: 7000 });
   await expect(page.locator('[data-ask-answer] mark')).toHaveCount(0);
   await expect(page.locator('[data-ask-knowledge]')).toContainText('React');
   await expect(page.locator('[data-ask-id="stack"]')).not.toHaveClass(/is-quoted/);
@@ -184,7 +184,7 @@ test('twenty open/close cycles leave no styles, observers, timers or pointer wor
     EventTarget.prototype.removeEventListener = function(type: string, listener: any, options: any) { w.__askListeners.delete(listener); return remove.call(this, type, listener, options); };
   });
   for (let i = 0; i < 20; i++) {
-    await open(page); await page.getByRole('button', { name: 'His stack', exact: true }).click(); await close(page);
+    await open(page); await page.getByRole('button', { name: 'My stack', exact: true }).click(); await close(page);
     await expect(page.locator('.ask-effects,.is-lit,.is-quoted,.is-asked,.is-swaying,.ask-flag')).toHaveCount(0);
     expect(await page.locator('[data-ask-id]').evaluateAll(els => els.every(el => !el.getAttribute('style')?.includes('--p')))).toBe(true);
   }
