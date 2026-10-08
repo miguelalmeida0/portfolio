@@ -8,7 +8,13 @@
 #portfolio-content .hero .case-pitch .ctas { justify-content:flex-start; }
 #portfolio-content .case-artifact { margin:0; min-width:0; }
 #portfolio-content .case-artifact img { display:block; width:100%; height:auto; aspect-ratio:1.44; object-fit:contain; background:var(--sagebg); border-radius:14px; }
-#portfolio-content .case-artifact[data-project='leu'] img { aspect-ratio:1.25; }
+/* Leu and Flow posters are widescreen. Their natural image dimensions
+   must own the frame; forced ratios create empty sage bands above/below. */
+#portfolio-content .case-artifact:is([data-project='leu'],[data-project='flow']) img {
+  aspect-ratio: auto;
+  background: transparent;
+  border: 0;
+}
 #portfolio-content .case-artifact figcaption { font:400 18px/1.45 var(--sans); color:var(--muted); margin:12px 0 0; max-width:65ch; }
 @media (max-width:767px) {
   #portfolio-content :is(.cs-f24,.cs-sv,.cs-flow,.cs-leu,.cs-needle) .hero { grid-template-columns:minmax(0,1fr); gap:28px; }

@@ -182,6 +182,40 @@ test('native media sources and a poster exist when JavaScript is disabled', asyn
 });
 
 
+for (const slug of ['leu', 'flow'] as const) {
+  test(`${slug} case-study hero uses its exact image height without letterboxing`, async ({ page }) => {
+    for (const width of [390, 768, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(`/work/${slug}`);
+      const figure = page.locator(`[data-case-artifact][data-project="${slug}"]`);
+      const image = figure.locator('img');
+      await expect(image).toBeVisible();
+      await expect.poll(() => image.evaluate(img =>
+        (img as HTMLImageElement).complete && (img as HTMLImageElement).naturalWidth > 0
+      )).toBe(true);
+      await expect(image).toHaveAttribute('height', '810');
+      await expect(image).toHaveCSS('aspect-ratio', 'auto');
+      await expect(image).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+      const metrics = await image.evaluate(img => {
+        const visual = img.getBoundingClientRect();
+        const parent = img.closest('figure')!.getBoundingClientRect();
+        const picture = img as HTMLImageElement;
+        return {
+          displayed: visual.width / visual.height,
+          natural: picture.naturalWidth / picture.naturalHeight,
+          topPadding: visual.top - parent.top,
+          bottom: visual.bottom,
+          width: visual.width
+        };
+      });
+      expect(metrics.width).toBeGreaterThan(100);
+      expect(Math.abs(metrics.displayed - metrics.natural)).toBeLessThan(.012);
+      expect(Math.abs(metrics.topPadding)).toBeLessThan(2);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    }
+  });
+}
+
 test('primary routes render without uncaught client exceptions', async ({ page }) => {
   const pageErrors: string[] = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));
