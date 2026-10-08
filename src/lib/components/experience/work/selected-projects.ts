@@ -2,7 +2,8 @@ import { projects } from '$lib/experience/projects';
 import { leuMedia } from '$lib/content/leu-media';
 export type PreviewSource = { src: string; type: string };
 export type SelectedProject = {
-  id: string; name: string; line: string; tags: string[]; poster: string; alt: string;
+  id: string; name: string; line: string; category: string; tags: string[]; stack: string[];
+  poster: string; alt: string; initialAspectRatio: number;
   href: string; live?: string; code?: string; sources: PreviewSource[];
 };
 const treatments = [
@@ -26,5 +27,12 @@ export const selectedProjects: SelectedProject[] = treatments.map(item => {
   const alt = item.id === 'needle'
     ? 'Needle semantic artwork search with clustered results and an artwork inspector.'
     : item.id === 'second-voice-ai' ? 'Second Voice writing interface with author voices and rewrite controls.' : project.alt;
-  return { ...item, poster, alt, href: `/work/${item.id}`, live: project.live?.href, code: project.source, sources };
+  const category = item.id === 'needle' ? 'Search'
+    : item.id === 'second-voice-ai' ? 'Writing' : item.id === 'leu' ? 'Learning' : 'Planning';
+  const stack = project.stack.filter(value => value !== 'iOS').slice(0, 4);
+  return {
+    ...item, category, stack, poster, alt,
+    initialAspectRatio: 16 / 9,
+    href: `/work/${item.id}`, live: project.live?.href, code: project.source, sources
+  };
 });
