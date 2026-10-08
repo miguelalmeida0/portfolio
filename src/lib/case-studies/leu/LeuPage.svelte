@@ -1,8 +1,8 @@
 <svelte:options preserveWhitespace={true}/>
 <script>import {onMount} from 'svelte';import ProductNav from '../shared/ProductNav.svelte';import LeuReader from './LeuReader.svelte';import ExtractionCompare from './ExtractionCompare.svelte';import DependencyChain from './DependencyChain.svelte';import VersionCompare from './VersionCompare.svelte';import ResultsBento from './ResultsBento.svelte';import EngineeringDetail from './EngineeringDetail.svelte';import ClosingState from './ClosingState.svelte';import {createLearner} from './learner.svelte';import './leu.css';const learner=createLearner();onMount(()=>learner.destroy);</script>
-<div class="cs-leu"><ProductNav name="Leu" links={[['overview','Overview'],['source','Source'],['architecture','Architecture'],['results','Results'],['engineering','Engineering']]}/><main class="wrap" id="main"><section class="hero" id="overview" aria-labelledby="hero-h">
+<div class="cs-leu"><ProductNav name="Leu" slug="leu" links={[['overview','Overview'],['source','Source'],['architecture','Architecture'],['results','Results'],['engineering','Engineering']]}/><main class="wrap" id="main"><section class="hero" id="overview" aria-labelledby="hero-h">
     <p class="kicker">Leu, a native SwiftUI and PDFKit learning reader</p>
     <h1 id="hero-h">From PDF text to learner state.</h1>
     <p class="sub" data-ask-id="project-leu">The document stays the source of truth. Leu models what you understand, and every judgement points back to its passage.</p>
-    <div class="ctas"><a class="btn primary" href="#try">Try it</a><a class="tlink" href="#architecture">How it's built</a></div>
+    <div class="ctas"><a class="btn primary" href="#try">Explore demo</a><a class="tlink" href="#architecture">How it's built</a></div>
   </section><LeuReader {learner}/><p class="cap">A web model of Leu's loop with prepared answers.</p><ExtractionCompare/><DependencyChain {learner}/><VersionCompare/><ResultsBento/><EngineeringDetail/><ClosingState {learner}/><nav class="next" aria-label="Next project"><span class="lbl">Next project</span><a href="/work/flow">Flow</a></nav></main></div>

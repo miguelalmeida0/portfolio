@@ -36,4 +36,4 @@
   </div>
   <div class="query-route" aria-label="Search path"><span>Metadata query</span><span aria-hidden="true">→</span><span>Hybrid retrieval</span><span aria-hidden="true">→</span><span>Ranked IDs</span><span aria-hidden="true">→</span><span class="route-final">Visible artwork</span></div>
 </section>
-<p class="cap">Prepared searches from Needle’s released engine and 10,000-record corpus. Select a query and inspect its results. <a href="https://needle.miguelalmeida.xyz" {...destinationLink('https://needle.miguelalmeida.xyz')}>Search freely in Needle ↗</a></p>
+<p class="cap">Prepared searches from Needle’s released engine and 10,000-record corpus. Select a query and inspect its results.</p>

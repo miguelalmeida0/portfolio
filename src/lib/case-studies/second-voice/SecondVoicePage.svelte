@@ -9,11 +9,11 @@ import ReleaseLog from './ReleaseLog.svelte';
 import SvSpecs from './SvSpecs.svelte';
 const workspace=createWorkspace();
 </script>
-<div class="cs-sv"><ProductNav name="Second Voice" links={[["overview","Overview"],["state","State"],["voices","Voices"],["gates","Behind submit"],["privacy","Privacy"],["release","Release"]]}/><main class="wrap" id="main">  <section class="hero" id="overview" aria-labelledby="hero-h">
+<div class="cs-sv"><ProductNav name="Second Voice" slug="second-voice-ai" links={[["overview","Overview"],["state","State"],["voices","Voices"],["gates","Behind submit"],["privacy","Privacy"],["release","Release"]]}/><main class="wrap" id="main">  <section class="hero" id="overview" aria-labelledby="hero-h">
     <p class="kicker">Second Voice, design and engineering, independent product, 2026</p>
     <h1 id="hero-h">Choose a literary voice. See exactly what changes.</h1>
     <p class="sub" data-ask-id="project-second-voice-ai">Generating a rewrite is easy. Trusting one is not. The original stays close, and every edit stays inspectable.</p>
-    <div class="ctas"><a class="btn" href="#try">Try it</a><a class="tlink" href="#gates">How it's built</a></div>
+    <div class="ctas"><a class="btn" href="#try">Explore demo</a><a class="tlink" href="#gates">How it's built</a></div>
   </section>
 
 <Workspace {workspace}/><StateTruths {workspace}/><VoiceRows/><Gates/><ShareCard/><ReleaseLog/><SvSpecs/><nav class="next" aria-label="Next project"><span class="lbl">Next project</span><a href="/work/f24">F24</a></nav></main></div>
