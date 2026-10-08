@@ -25,6 +25,9 @@
 
   let guideReady = false;
   function openGuide(event: Event) { window.dispatchEvent(new CustomEvent('ask:open', { detail: (event as CustomEvent).detail })); }
+  // Header click toggles the current controller. Contextual/API events remain
+  // open-only and do not accidentally dismiss an ongoing answer.
+  function toggleGuide(restoreFocusOnClose: boolean) { $askController?.toggle(restoreFocusOnClose); }
   beforeNavigate(() => $askController?.dismiss());
 
   // SSR supplies the intro markup. The synchronous head policy controls its first
@@ -101,7 +104,7 @@
 <div data-guide-background>
 <div class="wind-theme" data-homepage={$page.url.pathname === '/' ? '' : undefined} id="portfolio-content" inert={$mobileState !== 'idle'}>
   <a href="#main" class="wind-skip sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded focus:bg-plum focus:px-5 focus:py-3 focus:text-white" {...destinationLink("#main")}>Skip to content</a>
-  <Header guideOpen={$askView.state !== 'idle'} {guideReady} homepage={$page.url.pathname === '/'} story={$page.url.pathname === '/story'} askActive={$askView.state !== 'idle'} {navigateFromMenu} navigationTransitionActive={$mobileState !== 'idle'} />
+  <Header guideOpen={$askView.state !== 'idle'} {guideReady} homepage={$page.url.pathname === '/'} story={$page.url.pathname === '/story'} askActive={$askView.state !== 'idle'} {navigateFromMenu} onGuideToggle={toggleGuide} navigationTransitionActive={$mobileState !== 'idle'} />
   {#if ['/work/flow','/work/leu','/work/f24','/work/second-voice','/work/needle'].includes($page.url.pathname)}<slot />{:else}<main id="main"><slot /></main>{/if}
   <section class="contact" aria-label="Contact"><Contact /></section>
 </div>

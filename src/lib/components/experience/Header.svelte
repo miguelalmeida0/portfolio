@@ -3,8 +3,9 @@
   import { onMount, tick } from 'svelte';
   import { primaryNavigation } from '$lib/content/navigation';
   import ArrowRight from '@lucide/svelte/icons/arrow-right';
-  let { navigateFromMenu, navigationTransitionActive, guideOpen = false, guideReady = false, homepage = false, askActive = false, story = false }: {
+  let { navigateFromMenu, onGuideToggle, navigationTransitionActive, guideOpen = false, guideReady = false, homepage = false, askActive = false, story = false }: {
     navigateFromMenu: (event: MouseEvent, close: () => void) => Promise<void>;
+    onGuideToggle: (restoreFocusOnClose: boolean) => void;
     navigationTransitionActive: boolean;
     guideOpen?: boolean;
     guideReady?: boolean;
@@ -29,13 +30,15 @@
     return () => { desktop.removeEventListener('change', closeOnDesktop); window.removeEventListener('ask:restore-trigger', restoreAsk); };
   });
   function escape(event: KeyboardEvent) { if (event.key === 'Escape' && open && !guideOpen && !navigationTransitionActive) { open = false; trigger?.focus(); } }
-  function openGuide() {
-    if (open) {
+  function toggleGuide() {
+    const fromMobileMenu = open;
+    if (fromMobileMenu) {
       open = false;
-      // The menu item unmounts; restore drawer focus to the persistent Menu button.
-      trigger?.focus();
+      // Mobile Ask unmounts as the menu closes. Keep focus on the persistent
+      // Menu button, rather than reopening the menu when Ask finishes closing.
+      trigger?.focus({ preventScroll: true });
     }
-    window.dispatchEvent(new CustomEvent('miguel-llm:open'));
+    onGuideToggle(!fromMobileMenu);
   }
 </script>
 <svelte:window onkeydown={escape} />
@@ -51,7 +54,7 @@
       {#each primaryNavigation as link}
         <a data-ask-id={homepage ? `nav-${link.label.toLowerCase()}` : undefined} class="group ink-link hover:text-plum hover:underline" href={link.href}>{link.label}{#if link.label === 'CV'} <ArrowRight size={18} aria-hidden="true" class="transition-transform group-hover:translate-x-0.5" />{/if}</a>
       {/each}
-      <button class="guide-trigger" data-ask-trigger type="button" aria-expanded={askActive} disabled={!guideReady || navigationTransitionActive} onclick={openGuide}>Ask MiguelLLM</button>
+      <button class="guide-trigger" data-ask-trigger type="button" aria-expanded={askActive} disabled={!guideReady || navigationTransitionActive} aria-label={askActive ? 'Close Ask MiguelLLM' : 'Ask MiguelLLM'} onclick={toggleGuide}>Ask MiguelLLM</button>
     </nav>
     <button bind:this={trigger} type="button" onclick={() => open = !open} disabled={!guideReady || navigationTransitionActive} aria-label={open ? 'Close' : 'Menu'} aria-expanded={open} aria-controls="mobile-navigation" class="menu-toggle">
       <span class="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
@@ -64,7 +67,7 @@
       {#each primaryNavigation as link}
         <a data-ask-id={homepage ? `nav-${link.label.toLowerCase()}` : undefined} href={link.href} data-mobile-route-link data-sveltekit-preload-data="tap" aria-disabled={navigationTransitionActive} onclick={event => navigateFromMenu(event, () => open = false)} class="flex min-h-12 items-center text-lg hover:text-plum data-[selected=true]:text-plum">{link.label}</a>
       {/each}
-      <button class="guide-trigger mobile-guide-trigger" data-ask-trigger type="button" aria-expanded={askActive} disabled={!guideReady || navigationTransitionActive} onclick={openGuide}>Ask MiguelLLM</button>
+      <button class="guide-trigger mobile-guide-trigger" data-ask-trigger type="button" aria-expanded={askActive} disabled={!guideReady || navigationTransitionActive} aria-label={askActive ? 'Close Ask MiguelLLM' : 'Ask MiguelLLM'} onclick={toggleGuide}>Ask MiguelLLM</button>
       </div>
     </nav>
   {/if}
@@ -88,6 +91,8 @@
   @media (prefers-reduced-motion: reduce) { .menu-toggle, .menu-icon > span { transition: none; } }
   .guide-trigger { flex-shrink: 0; min-height: 44px; font: inherit; white-space: nowrap; color: var(--plum); text-underline-offset: 4px; }
   .guide-trigger:hover { text-decoration: underline; }
+  /* The same control opens and closes Ask; make the active state visible. */
+  .guide-trigger[aria-expanded='true'] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
   .mobile-guide-trigger { display: flex; align-items: center; width: 100%; min-height: 48px; font-size: 18px; text-align: left; }
   .wind-header :focus-visible { outline: 3px solid var(--plum); outline-offset: 2px; }
   .wind-header nav[aria-label="Main navigation"] { gap: var(--s-7); }

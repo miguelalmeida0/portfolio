@@ -65,7 +65,7 @@ export function createAskController() {
     }
     if (queued) { queued = false; void open(); }
   }
-  function close() {
+  function closeWithFocus(restoreFocus: boolean) {
     if (!active()) return;
     choreography.clear(); cancelAnswer(); stopInteraction();
     document.documentElement.classList.remove('ask-on');
@@ -80,7 +80,15 @@ export function createAskController() {
       end = Math.max(end, delay + 500);
       choreography.after(motion.matches ? 0 : delay, () => { el.classList.add('is-ebbing'); el.classList.remove('is-lit'); });
     });
-    choreography.after(motion.matches ? 0 : end, finishClose);
+    choreography.after(motion.matches ? 0 : end, () => finishClose(restoreFocus));
+  }
+  function close() { closeWithFocus(true); }
+  function toggle(restoreFocusOnClose = true) {
+    if (view.state === 'idle') { void open(); return; }
+    // Reopen only once after the current exit finishes: no overlapping panels
+    // or duplicated registry/timer owners during rapid repeated clicks.
+    if (view.state === 'closing') { queued = !queued; return; }
+    closeWithFocus(restoreFocusOnClose);
   }
   function run(question: string, steps: unknown, knowledge: KnowledgeAnswer | null, anchor?: AreaId, free = false) {
     if (!active()) return;
@@ -153,6 +161,6 @@ export function createAskController() {
   window.addEventListener('ask:open', openEvent);
   motion.addEventListener('change', motionChanged);
   function dismiss() { queued = false; choreography.clear(); cancelAnswer(); stopInteraction(); finishClose(false); }
-  return { open, close, ask, free, dismiss, destroy() { dismiss(); history = []; askView.set(initialView()); document.removeEventListener('keydown', key, true); window.removeEventListener('ask:open', openEvent); motion.removeEventListener('change', motionChanged); } };
+  return { open, close, toggle, ask, free, dismiss, destroy() { dismiss(); history = []; askView.set(initialView()); document.removeEventListener('keydown', key, true); window.removeEventListener('ask:open', openEvent); motion.removeEventListener('change', motionChanged); } };
 }
 export type AskController = ReturnType<typeof createAskController>;

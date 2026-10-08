@@ -321,6 +321,57 @@ test('Story and web CV keep clear reading and heading contrast', async ({ page }
   }
 });
 
+for (const route of ['/', '/work/leu']) {
+  test(`Ask MiguelLLM header is a reversible desktop toggle on ${route}`, async ({ page }) => {
+    await page.setViewportSize({width:1440,height:900});
+    await page.emulateMedia({reducedMotion:'reduce'});
+    await page.addInitScript(() => sessionStorage.setItem('seen-intro','true'));
+    await page.goto(route);
+    const ask = page.locator('nav[aria-label="Main navigation"] [data-ask-trigger]');
+    await expect(ask).toBeEnabled();
+    await expect(ask).toHaveAttribute('aria-expanded','false');
+    await ask.click();
+    await expect(ask).toHaveAttribute('aria-expanded','true');
+    await expect(ask).toHaveAttribute('aria-label','Close Ask MiguelLLM');
+    await expect(page.locator('[data-ask-panel]')).toBeVisible();
+    await ask.click();
+    await expect(page.locator('[data-ask-panel]')).toHaveCount(0);
+    await expect(ask).toHaveAttribute('aria-expanded','false');
+    await expect(ask).toBeFocused();
+    await expect(page.locator('html')).not.toHaveClass(/ask-present|ask-on|ask-closing/);
+    await ask.click();
+    await expect(page.locator('[data-ask-panel]')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.locator('[data-ask-panel]')).toHaveCount(0);
+    await expect(ask).toBeFocused();
+  });
+}
+
+test('mobile Ask MiguelLLM toggles without unexpectedly reopening the menu', async ({ page }) => {
+  await page.setViewportSize({width:390,height:844});
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.addInitScript(() => sessionStorage.setItem('seen-intro','true'));
+  await page.goto('/');
+  const menu = page.getByRole('button',{name:'Menu',exact:true});
+  await expect(menu).toBeEnabled();
+  await menu.click();
+  const ask = page.locator('.mobile-guide-trigger');
+  await expect(ask).toHaveAttribute('aria-expanded','false');
+  await ask.click();
+  await expect(page.locator('#mobile-navigation')).toHaveCount(0);
+  await expect(page.locator('[data-ask-panel]')).toBeVisible();
+  await menu.click();
+  await expect(ask).toHaveAttribute('aria-expanded','true');
+  await expect(ask).toHaveAttribute('aria-label','Close Ask MiguelLLM');
+  await ask.click();
+  await expect(page.locator('[data-ask-panel]')).toHaveCount(0);
+  await expect(page.locator('#mobile-navigation')).toHaveCount(0);
+  await expect(menu).toHaveAttribute('aria-expanded','false');
+  await expect(menu).toBeFocused();
+  await menu.click();
+  await expect(ask).toHaveAttribute('aria-expanded','false');
+});
+
 test('primary routes render without uncaught client exceptions', async ({ page }) => {
   const pageErrors: string[] = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));
