@@ -8,7 +8,7 @@
 
 | Project | What to inspect |
 | --- | --- |
-| [Needle](https://needle.miguelalmeida.xyz/) | Semantic artwork search over a prepared 10,000-work museum corpus, with a [case study](/work/needle) |
+| [Needle](https://needle.miguelalmeida.xyz/) | Semantic artwork search over a prepared 10,000-work museum corpus, with a [case study](https://miguelalmeida.xyz/work/needle) |
 | [Second Voice](https://secondvoice-ai.vercel.app/second-voice) | Writing interactions, editorial typography and honest prepared-versus-live states |
 | [Flow](https://miguelalmeida0.github.io/flow/) | Voice-driven actions in a directly editable personal computing workspace |
 | [Leu](https://leu-desktop.vercel.app/) | Local-first reading and source-linked learning, with a separate native iOS implementation |
