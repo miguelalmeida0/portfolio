@@ -104,7 +104,7 @@ test('the favorite-stack question uses my voice, not a third-person CV timeline'
     assert.match(paragraphs, /React.*TypeScript.*Svelte/s);
     assert.doesNotMatch(paragraphs, /\b(?:Miguel|he|his)\b/i);
     assert.doesNotMatch(paragraphs, /From 2022 to 2023/);
-    assert.ok(result.sources.includes('Experience & CV|/cv'));
+    assert.ok(result.sources.some(source => /\|\/cv(?:#skills)?$/.test(source)), 'Framework preference must link to public CV evidence');
     assert.deepEqual(validateConversationAnswer(result, question), result);
   }
 });
