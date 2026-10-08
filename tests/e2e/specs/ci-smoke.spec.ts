@@ -376,7 +376,9 @@ test('Ask MiguelLLM gives fast evidence-backed answers a readable loading interv
   await page.emulateMedia({reducedMotion:'reduce'});
   await page.addInitScript(() => sessionStorage.setItem('seen-intro','true'));
   await page.goto('/');
-  const trigger=page.locator('nav[aria-label="Main navigation"] [data-ask-trigger]');
+  const menu=page.getByRole('button',{name:'Menu',exact:true});
+  if (await menu.isVisible()) await menu.click();
+  const trigger=page.locator('[data-ask-trigger]:visible');
   await expect(trigger).toBeEnabled();
   await trigger.click();
   const input=page.getByRole('textbox',{name:'Type your own question'});
@@ -398,7 +400,9 @@ test('closing Ask mid-answer does not leave a delayed answer or reopen', async (
   await page.emulateMedia({reducedMotion:'reduce'});
   await page.addInitScript(() => sessionStorage.setItem('seen-intro','true'));
   await page.goto('/');
-  await page.locator('nav[aria-label="Main navigation"] [data-ask-trigger]').click();
+  const menu=page.getByRole('button',{name:'Menu',exact:true});
+  if (await menu.isVisible()) await menu.click();
+  await page.locator('[data-ask-trigger]:visible').click();
   const input=page.getByRole('textbox',{name:'Type your own question'});
   await input.fill('hello');
   await input.press('Enter');
