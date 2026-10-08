@@ -1,10 +1,22 @@
-# Miguel Almeida — Portfolio
+# Miguel Almeida — Frontend & Design Engineering
 
-Frontend developer and design engineer portfolio built with Svelte 5, SvelteKit, TypeScript and Tailwind CSS.
+**A portfolio of interactive systems, product interfaces and engineering decisions.** Built with Svelte 5, SvelteKit, TypeScript and Tailwind CSS.
 
-Needle leads Selected Work with a 10,000-artwork semantic search engine and an eight-part engineering case study. The homepage also pairs an inspectable Second Voice writing demo with F24 production work and Flow’s validated calendar actions. Leu adds native work; Mirror remains in the case-study archive. The demo uses labelled prepared examples and preserves the original draft. The F24 case explains a progressive Svelte-to-React evolution and a bounded activity-history contribution.
+[Visit the portfolio](https://miguelalmeida.xyz/) · [Deployment contract](DEPLOYMENT.md) · [Engineering guide](docs/README.md) · [Contributing](CONTRIBUTING.md)
 
-## Run locally
+## Selected work
+
+| Project | What to inspect |
+| --- | --- |
+| [Needle](https://needle.miguelalmeida.xyz/) | Semantic artwork search over a prepared 10,000-work museum corpus, with a [case study](https://miguelalmeida.xyz/work/needle) |
+| [Second Voice](https://secondvoice-ai.vercel.app/second-voice) | Writing interactions, editorial typography and honest prepared-versus-live states |
+| [Flow](https://miguelalmeida0.github.io/flow/) | Voice-driven actions in a directly editable personal computing workspace |
+| [Leu](https://leu-desktop.vercel.app/) | Local-first reading and source-linked learning, with a separate native iOS implementation |
+| F24 | Public-safe production engineering case study; private employer source and deployment are not linked |
+
+Case studies live at `/work/needle`, `/work/second-voice-ai`, `/work/f24`, `/work/flow`, `/work/leu` and `/work/mirror-ai`. Supporting routes include `/cv`, `/story` and `/portfolio.pdf`. The Second Voice interaction distinguishes **prepared examples** from live inference; a demo state is never presented as a verified paid-provider response.
+
+## Develop
 
 Requires Node.js 22.12+ or Node.js 24+.
 
@@ -13,49 +25,38 @@ npm ci
 npm run dev
 ```
 
-Local development runs at `http://localhost:4173`.
+The development server uses `http://localhost:4173`.
 
-## Quality checks
+## Verify
 
 ```bash
 npm run check
 npm run test:unit
-npm run build
 npm run test:routes
 npm run test:dev-watch
+npm run build
 npm run e2e
 ```
 
-The Playwright suite is configured for Chromium, Firefox and WebKit across desktop and mobile profiles. Configuration is not a passing run; current results and limits are recorded in [the implementation report](artifacts/recruiter-audit-implementation/README.md).
+The Playwright suite covers Chromium, Firefox and WebKit, including mobile profiles. **The commands above are the required checks, not a claim that they passed on this commit.** Read actual CI output and record skipped browser coverage.
 
-## Where to inspect the engineering
+## Code navigation
 
-- `src/lib/components/experience/F24Proof.svelte`: public-safe production decision and contribution boundaries.
-- `src/lib/components/experience/EngineeringEvidence.svelte`: immutable public source/test references and version limits.
-- `src/lib/components/experience/Studio.svelte`: selected versus submitted settings, prior-result preservation and prepared/live state.
-- `src/lib/experience/text-diff.ts` and `tests/unit/text-diff.test.mjs`: bounded comparison and exact-text reconstruction.
-- `src/lib/motion/routeTransition.ts`: navigation ownership, cleanup and history behavior; focused regression tests live under `tests/unit` and `tests/e2e`.
+| Path | Responsibility |
+| --- | --- |
+| `src/routes/` | SvelteKit pages, data and navigation |
+| `src/lib/components/experience/` | Portfolio surfaces, case-study entrypoints and selected-work interactions |
+| `src/lib/case-studies/` | Project narratives and source-grounded engineering evidence |
+| `src/lib/ask/` | Guided question planning and state |
+| `src/lib/motion/` | Interaction choreography, reduced-motion behavior and cleanup |
+| `tests/unit/`, `tests/routes/`, `tests/e2e/` | Deterministic and browser regression coverage |
+| `static/` | Published fonts, project footage and downloadable files |
+| `scripts/` | Release, quality checks and media utilities |
 
-The public Second Voice app opened during this pass, but its sample generation returned “Request blocked.” The prepared portfolio interaction works independently. Films do not certify live provider, microphone or native-release behavior. Employer implementation remains private. The downloaded CV has an older project selection; see the amendment plan in the implementation artifacts.
+For source-of-truth deployment and CV handling, read [`DEPLOYMENT.md`](DEPLOYMENT.md) and [`RECOVERY.md`](RECOVERY.md) **before publishing**. Do not regenerate the preserved CV PDF or deploy an older local checkout over production. [Documentation index](docs/README.md) separates active contracts from historical design records.
 
-## Main routes
+## Scope
 
-- `/`
-- `/work/needle`
-- `/work/second-voice-ai`
-- `/work/f24`
-- `/work/flow`
-- `/work/leu`
-- `/work/mirror-ai`
-- `/cv`
-- `/story`
-- `/portfolio.pdf`
+Films and screenshots demonstrate recorded interactions, not current third-party service availability. F24 examples are intentionally bounded to publicly shareable decisions and outcomes. Source references and prepared examples are labeled where they differ from production behavior.
 
-## Stack
-
-- Svelte 5
-- SvelteKit
-- TypeScript
-- Tailwind CSS
-- Playwright
-- Cloudflare Pages adapter
+Maintained by [Miguel Almeida](https://github.com/miguelalmeida0).
