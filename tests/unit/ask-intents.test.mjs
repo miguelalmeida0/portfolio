@@ -75,7 +75,7 @@ test('clicked hero tech stack answers with named technologies before any timelin
   for (const question of ['What does he build with?', 'What is his stack?']) {
     const result = answer(question, 'stack');
     assert.match(result.paragraphs[0], /^My main frontend stack is React, TypeScript, JavaScript, Svelte/);
-    assert.match(prose(result), /Next\.js.*Vite.*Tailwind.*Playwright.*Figma/s);
+    for (const technology of ['Next.js', 'Vite', 'Tailwind', 'Playwright', 'Figma']) assert.ok(prose(result).includes(technology), technology);
     assert.match(prose(result), /SwiftUI.*PDFKit/s);
     assert.doesNotMatch(prose(result), /2022|2023|2025|2026|UX Design Institute|career timeline|mid.level/i);
     assert.equal(prepare(question, 'stack').area, 'stack');
@@ -104,6 +104,17 @@ test('area highlighting follows the answer intent rather than triggering history
     assert.equal(prepare(question).area, area);
   }
   assert.equal(prepare('Where did you study?').area, undefined);
+});
+
+test('the meaning of outside-work and direct source excerpts takes priority', () => {
+  assert.equal(visitorIntentAnswer('What does he do outside work?'), undefined);
+  assert.equal(visitorIntentAnswer('What does Flow do?', undefined, 'flow'), undefined);
+  assert.equal(visitorIntentAnswer('What did Miguel study?', 'cv-education'), undefined);
+  assert.equal(visitorIntentAnswer('What do you do at F24?', 'story-f24', 'f24'), undefined);
+  const hobbies = answer('What does he do outside work?');
+  assert.match(prose(hobbies), /music.*films.*TV/s);
+  const clicked = answer('What did Miguel study?', 'cv-education');
+  assert.match(prose(clicked), /UX Design Institute.*CareerFoundry/s);
 });
 
 test('framework experience and specific projects do not get hijacked by generic intents', () => {

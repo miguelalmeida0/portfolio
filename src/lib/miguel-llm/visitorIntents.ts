@@ -33,6 +33,11 @@ const isExperienceTimeline = (q: string) => has(q, /\b(how (?:long|many years)|y
 function intentFor(question: string, area?: string, projectSlug?: string): VisitorIntent | undefined {
   const q = normalizeVisitorQuestion(question);
 
+  // A clicked CV, Story, or case-study record is an explicit request for that
+  // exact authored excerpt. Never substitute an introductory answer for it.
+  const summaryAreas = new Set(['role', 'stack', 'quality', 'f24', 'nav-work', 'selwork']);
+  if (area && !summaryAreas.has(area)) return;
+
   // A project question stays about the named project. F24 is special because
   // a role question about Miguel's employer is still a professional overview.
   if (projectSlug && projectSlug !== 'f24' && !['role', 'stack', 'quality', 'nav-work', 'selwork'].includes(area ?? '')) {
@@ -60,7 +65,7 @@ function intentFor(question: string, area?: string, projectSlug?: string): Visit
 
   if (has(q, /\b(what (?:have|has) (?:you|he|miguel) (?:built|worked on)|which (?:projects|products) (?:have|has)|show me (?:your|his) projects|selected work|portfolio projects|what (?:are|were) (?:your|his) projects)\b/)) return 'work';
 
-  if (has(q, /\b(what (?:do|does|did) (?:you|he|miguel) (?:actually )?(?:do|work on)|what (?:is|was) (?:your|his|miguels) (?:job|role|profession)|whats (?:your|his|miguels) (?:job|role|profession)|what kind of (?:engineer|developer) (?:are you|is he)|describe (?:your|his) (?:work|job)|what (?:do|does) (?:you|he) do for a living)\b/)) return 'role';
+  if (has(q, /^(?:what (?:do|does|did) (?:you|he|miguel) (?:actually )?(?:do|work on)(?: for a living| at work)?|what (?:is|was) (?:your|his|miguels) (?:job|role|profession)|whats (?:your|his|miguels) (?:job|role|profession)|what kind of (?:engineer|developer) (?:are you|is he)|describe (?:your|his) (?:work|job))$/)) return 'role';
 }
 
 export function visitorIntentAnswer(question: string, area?: string, projectSlug?: string): IntentResponse | undefined {
