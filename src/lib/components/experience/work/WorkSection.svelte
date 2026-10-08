@@ -8,10 +8,19 @@
   import { workMotion } from './work-motion';
   import { chapterTitles } from '$lib/motion/actions/chapterTitles';
   let section: HTMLElement;
+  let controller: ReturnType<typeof createPreviewController> | undefined;
+  let blockedIds = $state<string[]>([]);
+  let videosPaused = $state(false);
   onMount(() => {
-    const controller = createPreviewController(section, selectedProjects);
-    return () => controller.destroy();
+    controller = createPreviewController(section, selectedProjects, ids => {
+      blockedIds = ids;
+    });
+    return () => controller?.destroy();
   });
+  function toggleVideos() {
+    videosPaused = !videosPaused;
+    controller?.setPaused(videosPaused);
+  }
 </script>
 
 <section id="work" class="selected-work bg-[var(--forest)] text-[var(--paper)]" aria-labelledby="work-title" bind:this={section} use:workMotion>
@@ -45,7 +54,13 @@
     <div class="independent-projects" aria-labelledby="projects-heading">
       <header class="gallery-heading">
         <h3 id="projects-heading">Independent projects</h3>
-        <span class="gallery-count">04 projects</span>
+        <div class="gallery-controls">
+          <span class="gallery-count">04 projects</span>
+          <button class="video-toggle" type="button"
+            aria-label={videosPaused ? 'Play project videos' : 'Pause project videos'}
+            title={videosPaused ? 'Play videos' : 'Pause videos'}
+            onclick={toggleVideos}><span aria-hidden="true">{videosPaused ? '▶' : 'Ⅱ'}</span></button>
+        </div>
       </header>
       <div class="project-rows">
         {#each selectedProjects as project, index}
@@ -55,9 +70,16 @@
             data-selected-project={project.id}
             aria-labelledby={`selected-${project.id}`}
           >
-            <a class="preview-link" href={project.href} {...destinationLink(project.href)} aria-label={`${project.name} case study`}>
-              <PreviewMedia {project} />
-            </a>
+            <div class="project-media">
+              <a class="preview-link" href={project.href} {...destinationLink(project.href)} aria-label={`${project.name} case study`}>
+                <PreviewMedia {project} />
+              </a>
+              {#if blockedIds.includes(project.id)}
+                <button class="preview-retry" type="button"
+                  aria-label={`Play ${project.name} and other blocked project videos`}
+                  onclick={() => controller?.retryAll()}>Play videos <span aria-hidden="true">▶</span></button>
+              {/if}
+            </div>
             <div class="project-info">
               <p class="project-number">{String(index + 1).padStart(2, '0')} / {project.category}</p>
               <h4 id={`selected-${project.id}`} class="project-title">
@@ -103,12 +125,19 @@
   .gallery-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: clamp(26px, 3vw, 44px); }
   .gallery-heading h3 { font: 700 clamp(28px, 3vw, 42px)/1.15 var(--hero-font); letter-spacing: -.035em; }
   .gallery-count { flex: 0 0 auto; color: var(--sage); font: 500 12px/1.4 var(--hero-font); letter-spacing: .04em; }
+  .gallery-controls { display: flex; align-items: center; gap: 12px; flex: 0 0 auto; }
+  .video-toggle { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid color-mix(in srgb, var(--sage) 40%, transparent); border-radius: 999px; color: var(--paper); background: transparent; cursor: pointer; font: 600 15px/1 var(--hero-font); }
+  .video-toggle:hover { background: color-mix(in srgb, var(--sage) 10%, transparent); }
+  .project-media { position: relative; grid-column: 2; grid-row: 1; min-width: 0; width: 100%; }
+  .project-media .preview-link { display: block; min-width: 0; width: 100%; border-radius: 12px; outline-offset: 5px; }
+  .preview-retry { position: absolute; z-index: 3; right: 16px; bottom: 16px; display: inline-flex; align-items: center; gap: 9px; min-height: 44px; padding: 9px 16px; border: 1px solid var(--paper); border-radius: 999px; background: var(--forest); color: var(--paper); font: 600 13px/1.3 var(--hero-font); cursor: pointer; box-shadow: 0 4px 18px rgba(0,0,0,.15); }
+  .preview-retry span { font-size: 12px; }
   .project-rows { display: grid; gap: clamp(40px, 5vw, 76px); }
   .project-row { display: grid; grid-template-columns: minmax(0, .83fr) minmax(0, 1.17fr); column-gap: clamp(28px, 3.7vw, 72px); align-items: center; min-width: 0; }
   .project-row.reversed { grid-template-columns: minmax(0, 1.17fr) minmax(0, .83fr); }
-  .project-row .preview-link { grid-column: 2; grid-row: 1; display: block; min-width: 0; width: 100%; border-radius: 12px; outline-offset: 5px; }
+  .project-row .preview-link { display: block; min-width: 0; width: 100%; border-radius: 12px; outline-offset: 5px; }
   .project-row .project-info { grid-column: 1; grid-row: 1; min-width: 0; }
-  .project-row.reversed .preview-link { grid-column: 1; }
+  .project-row.reversed .project-media { grid-column: 1; }
   .project-row.reversed .project-info { grid-column: 2; }
   .project-number { margin: 0 0 9px; color: var(--sage); font: 650 11px/1.5 var(--hero-font); letter-spacing: .13em; text-transform: uppercase; }
   .project-title { margin: 0; font: 400 clamp(30px, 3.1vw, 48px)/1.1 Georgia, 'Iowan Old Style', 'Baskerville', serif; letter-spacing: -.025em; }
@@ -130,7 +159,7 @@
   @media (max-width: 979px) {
     .project-rows { gap: 42px; }
     .project-row, .project-row.reversed { display: flex; flex-direction: column; align-items: stretch; gap: 16px; }
-    .project-row .preview-link { order: 0; }
+    .project-row .project-media { order: 0; }
     .project-row .project-info { order: 1; }
     .project-info { width: 100%; }
     .project-line { max-width: 62ch; margin-bottom: 13px; }
@@ -149,9 +178,11 @@
     .selected-heading > p { font-size: 17px; }
     .feature-body { font-size: 18px; }
     .independent-projects { padding-top: 45px; }
-    .gallery-heading { margin-bottom: 24px; }
+    .gallery-heading { margin-bottom: 24px; flex-wrap: wrap; }
+    .gallery-heading h3 { flex: 1 1 185px; min-width: 0; }
     .gallery-heading h3 { font-size: 28px; }
     .gallery-count { font-size: 11px; }
+    .gallery-controls { gap: 8px; }
     .project-rows { gap: 38px; }
     .project-row, .project-row.reversed { gap: 13px; }
     .project-title { font-size: clamp(30px, 9vw, 37px); }

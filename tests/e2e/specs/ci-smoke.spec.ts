@@ -79,6 +79,49 @@ test('project loops run without clicks and keep native media geometry',async({pa
   await expect(video).toHaveCSS('object-fit','contain');
  }
 });
+test('films autoplay even with reduced motion and Save-Data enabled', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.addInitScript(() => {
+    const connection = Object.assign(new EventTarget(), { saveData: true });
+    Object.defineProperty(navigator, 'connection', { value: connection, configurable: true });
+  });
+  await page.goto('/#work');
+  for (const id of ['needle', 'second-voice-ai', 'leu', 'flow']) {
+    const video = page.locator(`[data-selected-project="${id}"] video`);
+    await expect.poll(() => video.evaluate((v: HTMLVideoElement) =>
+      !v.paused && v.readyState >= 2 && v.videoWidth > 0), { timeout: 25000 }).toBe(true);
+  }
+});
+
+test('blocked autoplay provides an explicit retry without leaving the page', async ({ page }) => {
+  let release!: () => void;
+  const waitForMedia = new Promise<void>(resolve => { release = resolve; });
+  await page.route(/\.(mp4|webm)(\?|$)/, async route => {
+    await waitForMedia;
+    await route.continue();
+  });
+  await page.addInitScript(() => {
+    let deny = true;
+    (window as Window & { allowProjectPlayback?: () => void }).allowProjectPlayback = () => { deny = false; };
+    const nativePlay = HTMLMediaElement.prototype.play;
+    HTMLMediaElement.prototype.play = function () {
+      if (deny) return Promise.reject(new DOMException('Gesture required', 'NotAllowedError'));
+      return nativePlay.call(this);
+    };
+  });
+  await page.goto('/#work', { waitUntil: 'domcontentloaded' });
+  const retry = page.getByRole('button', { name: 'Play Needle and other blocked project videos' });
+  await expect(retry).toBeVisible({ timeout: 12000 });
+  await page.evaluate(() => (window as Window & { allowProjectPlayback?: () => void }).allowProjectPlayback?.());
+  release();
+  await retry.click();
+  for (const id of ['needle', 'second-voice-ai', 'leu', 'flow']) {
+    await expect.poll(() => page.locator(`[data-selected-project="${id}"] video`).evaluate((v: HTMLVideoElement) =>
+      !v.paused && v.readyState >= 2), { timeout: 25000 }).toBe(true);
+  }
+  await expect(page.locator('.preview-retry')).toHaveCount(0);
+});
+
 test('primary routes render without uncaught client exceptions', async ({ page }) => {
   const pageErrors: string[] = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));

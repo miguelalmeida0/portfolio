@@ -17,7 +17,7 @@
   <div class="preview-plane" data-preview-plane>
     <img src={project.poster} alt={project.alt} width="1600" height="900" loading="lazy" decoding="async" />
     {#if project.sources.length}
-      <video data-project-preview={project.id} muted loop playsinline preload="none"
+      <video data-project-preview={project.id} autoplay muted loop playsinline preload="none"
         poster={project.poster} aria-label={project.alt} onloadedmetadata={useIntrinsicRatio}></video>
     {/if}
   </div>

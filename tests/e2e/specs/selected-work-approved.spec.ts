@@ -54,18 +54,21 @@ test('all four films autoplay without a control and continue offscreen',async({p
  await page.waitForTimeout(750);
  expect(await video.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeGreaterThan(start);
 });
-test('reduced-motion visitors see posters without forced autoplay',async({page})=>{
+test('muted project loops autoplay under reduced motion and can be paused by the visitor',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});await home(page);
  for(const id of videos) {
   const video=page.locator(`[data-selected-project="${id}"] video`);
-  await expect(video).toHaveJSProperty('paused',true);
-  await expect(video).not.toHaveAttribute('src',/./);
+  await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>!v.paused&&v.readyState>=2),{timeout:25000}).toBe(true);
  }
+ await page.getByRole('button',{name:'Pause project videos'}).click();
+ for(const id of videos) await expect(page.locator(`[data-selected-project="${id}"] video`)).toHaveJSProperty('paused',true);
+ await page.getByRole('button',{name:'Play project videos'}).click();
+ for(const id of videos) await expect.poll(()=>page.locator(`[data-selected-project="${id}"] video`).evaluate((v:HTMLVideoElement)=>!v.paused),{timeout:25000}).toBe(true);
 });
 test('blocked playback and failed media retain real posters and destinations',async({page})=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
  await page.addInitScript(()=>{HTMLMediaElement.prototype.play=function(){return Promise.reject(new DOMException('Blocked','NotAllowedError'));};});
- await gallery(page);const media=page.locator('[data-selected-project="flow"] [data-preview]');await expect(media).toHaveAttribute('data-preview-status','blocked');await expect(media.locator('img')).toBeVisible();await expect(page.locator('[data-selected-project="flow"] a[href="/work/flow"]').first()).toBeVisible();expect(errors).toEqual([]);
+ await gallery(page);const media=page.locator('[data-selected-project="flow"] [data-preview]');await expect(media).toHaveAttribute('data-preview-status','blocked');await expect(media.locator('img')).toBeVisible();await expect(page.locator('[data-selected-project="flow"] .preview-retry')).toBeVisible();await expect(page.locator('[data-selected-project="flow"] a[href="/work/flow"]').first()).toBeVisible();expect(errors).toEqual([]);
 });
 test('missing media remains a usable poster card',async({page})=>{
  await page.route(/\.(mp4|webm)(\?|$)/,r=>r.fulfill({status:404,body:'missing'}));await gallery(page);
@@ -106,13 +109,13 @@ test('videos start loading independently of viewport visibility',async({page})=>
   await expect.poll(()=>page.locator(`[data-selected-project="${id}"] video`).evaluate((v:HTMLVideoElement)=>Boolean(v.currentSrc)),{timeout:10000}).toBe(true);
  }
 });
-test('Save-Data visitors get posters rather than four automatic downloads',async({page})=>{
+test('project loops autoplay even with browser Save-Data enabled',async({page})=>{
  await page.addInitScript(()=>{
   const connection=Object.assign(new EventTarget(),{saveData:true});
   Object.defineProperty(navigator,'connection',{value:connection,configurable:true});
  });
  await home(page);
- for(const id of videos) await expect(page.locator(`[data-selected-project="${id}"] video`)).not.toHaveAttribute('src',/./);
+ for(const id of videos) await expect.poll(()=>page.locator(`[data-selected-project="${id}"] video`).evaluate((v:HTMLVideoElement)=>!v.paused&&v.readyState>=2),{timeout:25000}).toBe(true);
 });
 test('background tabs pause video and resume on return',async({page})=>{
  await home(page);
