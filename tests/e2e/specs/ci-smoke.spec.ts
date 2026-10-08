@@ -122,6 +122,59 @@ test('blocked autoplay provides an explicit retry without leaving the page', asy
   await expect(page.locator('.preview-retry')).toHaveCount(0);
 });
 
+test('every project visibly renders moving video rather than a poster overlay', async ({ page }) => {
+  await page.goto('/#work');
+  for (const id of ['needle','second-voice-ai','leu','flow']) {
+    const preview = page.locator(`[data-selected-project="${id}"] [data-preview]`);
+    const video = preview.locator('video');
+    await expect(video.locator('source')).toHaveCount(id === 'leu' ? 2 : 1);
+    await expect.poll(() => video.evaluate((v: HTMLVideoElement) =>
+      !v.paused && v.readyState >= 2 && v.videoWidth > 0 && v.currentTime >= 0),
+      {timeout: 30000}).toBe(true);
+    await expect(video).toHaveCSS('opacity','1');
+    await expect(video).toHaveCSS('visibility','visible');
+    await expect.poll(() => preview.getAttribute('data-preview-status')).toBe('playing');
+    const frames = await video.evaluate((v: HTMLVideoElement) =>
+      v.getVideoPlaybackQuality?.().totalVideoFrames ?? 0);
+    const initial = await video.evaluate((v: HTMLVideoElement) => v.currentTime);
+    // A changing playback clock and decoded frame count prove more than
+    // merely having paused === false.
+    await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.currentTime),
+      {timeout:10000}).toBeGreaterThan(initial + .4);
+    await expect.poll(() => video.evaluate((v: HTMLVideoElement) =>
+      v.getVideoPlaybackQuality?.().totalVideoFrames ?? 0),
+      {timeout:10000}).toBeGreaterThan(frames + 2);
+    // Even if an early 'playing' event is lost, video pixels stay visible.
+    await preview.evaluate(el => { (el as HTMLElement).dataset.previewStatus = 'poster'; });
+    await expect(video).toHaveCSS('opacity','1');
+  }
+});
+
+test('Leu falls back to MP4 when its preferred WebM is unavailable', async ({ page }) => {
+  await page.route(/\/projects\/leu\/leu-film-20261008\.webm$/, route =>
+    route.fulfill({status: 404, contentType:'text/plain', body:'missing codec source'}));
+  await page.goto('/#work');
+  const video = page.locator('[data-selected-project="leu"] video');
+  await expect.poll(() => video.evaluate((v: HTMLVideoElement) =>
+    v.currentSrc.endsWith('.mp4') && !v.paused && v.readyState >= 2), {timeout:30000}).toBe(true);
+  await expect(video).toHaveCSS('opacity','1');
+});
+
+test('native preview sources render and loop without client-side JavaScript', async ({ browser }) => {
+  const context = await browser.newContext({javaScriptEnabled:false, viewport:{width:1440,height:900}});
+  try {
+    const page = await context.newPage();
+    await page.goto('http://127.0.0.1:4173/#work');
+    const video = page.locator('[data-selected-project="leu"] video');
+    await expect(video.locator('source')).toHaveCount(2);
+    await expect.poll(() => video.evaluate((v: HTMLVideoElement) =>
+      !v.paused && v.readyState >= 2 && v.currentTime > .25), {timeout:30000}).toBe(true);
+    await expect(video).toHaveCSS('opacity','1');
+  } finally {
+    await context.close();
+  }
+});
+
 test('primary routes render without uncaught client exceptions', async ({ page }) => {
   const pageErrors: string[] = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));

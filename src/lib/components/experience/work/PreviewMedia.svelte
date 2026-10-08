@@ -17,8 +17,12 @@
   <div class="preview-plane" data-preview-plane>
     <img src={project.poster} alt={project.alt} width="1600" height="900" loading="lazy" decoding="async" />
     {#if project.sources.length}
-      <video data-project-preview={project.id} autoplay muted loop playsinline preload="none"
-        poster={project.poster} aria-label={project.alt} onloadedmetadata={useIntrinsicRatio}></video>
+      <video data-project-preview={project.id} autoplay muted loop playsinline preload="auto"
+        poster={project.poster} aria-label={project.alt} onloadedmetadata={useIntrinsicRatio}>
+        {#each project.sources as source}
+          <source src={source.src} type={source.type} />
+        {/each}
+      </video>
     {/if}
   </div>
 </div>
@@ -28,7 +32,10 @@
   .preview-plane { position: absolute; inset: 0; min-width: 0; }
   img, video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; }
   img { z-index: 1; }
-  video { z-index: 2; opacity: 0; }
+  /* Browser-native playback paints immediately, even if a JS status event is late.
+     The explicit image below the video remains the failure/no-JS fallback. */
+  video { z-index: 2; opacity: 1; }
   .preview-frame[data-preview-status='playing'] img { visibility: hidden; }
-  .preview-frame[data-preview-status='playing'] video { opacity: 1; }
+  .preview-frame[data-preview-status='blocked'] video,
+  .preview-frame[data-preview-status='unavailable'] video { opacity: 0; }
 </style>

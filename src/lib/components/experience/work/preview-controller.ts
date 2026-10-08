@@ -4,23 +4,19 @@ type Entry = {
   id: string;
   video: HTMLVideoElement;
   frame: HTMLElement;
-  sources: string[];
-  sourceIndex: number;
   token: number;
-  pending: boolean;
   blocked: boolean;
   unavailable: boolean;
+  pending: boolean;
   retries: number;
-  retryTimer: ReturnType<typeof setTimeout> | undefined;
+  retryTimer?: ReturnType<typeof setTimeout>;
   dispose: () => void;
 };
 
 /**
- * Muted product films start automatically and loop continuously, even after
- * being scrolled out of view. Browsers can still reject autoplay; in that
- * case expose a one-click recovery rather than leaving a dead poster.
- *
- * There is no persisted pause state. The user may pause the films explicitly.
+ * Native <source> selection and muted autoplay own the video lifecycle.
+ * This owner only reconciles playback, visibility and user-requested pause,
+ * and exposes a recovery action when a browser rejects autoplay.
  */
 export function createPreviewController(
   section: HTMLElement,
@@ -30,7 +26,7 @@ export function createPreviewController(
   const entries: Entry[] = [];
   let alive = true;
   let userPaused = false;
-  const canPlay = () => alive && !document.hidden && !userPaused;
+  const eligible = () => alive && !userPaused && !document.hidden;
   const report = () => {
     if (alive) onBlocked(entries.filter(entry => entry.blocked).map(entry => entry.id));
   };
@@ -44,22 +40,34 @@ export function createPreviewController(
     }
   };
 
-  function scheduleRetry(entry: Entry) {
-    if (!canPlay() || entry.blocked || entry.unavailable || entry.retryTimer !== undefined) return;
-    entry.retryTimer = setTimeout(() => {
-      entry.retryTimer = undefined;
-      start(entry);
-    }, 350);
+  function reconcile(entry: Entry) {
+    const video = entry.video;
+    if (!eligible() || video.paused || video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) return false;
+    entry.pending = false;
+    entry.blocked = false;
+    entry.retries = 0;
+    clearRetry(entry);
+    status(entry, 'playing');
+    report();
+    return true;
   }
 
-  function rejectPlayback(entry: Entry, token: number, reason: unknown) {
+  function retryLater(entry: Entry) {
+    if (!eligible() || entry.blocked || entry.unavailable || entry.retryTimer !== undefined) return;
+    entry.retryTimer = setTimeout(() => {
+      entry.retryTimer = undefined;
+      ensurePlayback(entry);
+    }, 450);
+  }
+
+  function rejected(entry: Entry, token: number, error: unknown) {
     if (!alive || token !== entry.token) return;
     entry.pending = false;
-    if (!canPlay() || entry.unavailable) return;
-    const name = reason instanceof Error ? reason.name : '';
-    if (name !== 'NotAllowedError' && name !== 'SecurityError' && entry.retries < 3) {
-      entry.retries++;
-      scheduleRetry(entry);
+    if (!eligible()) return;
+    // Native source selection can briefly abort a play() during codec probing.
+    const name = error instanceof Error ? error.name : '';
+    if (name !== 'NotAllowedError' && name !== 'SecurityError' && entry.retries++ < 2) {
+      retryLater(entry);
       return;
     }
     entry.blocked = true;
@@ -69,112 +77,89 @@ export function createPreviewController(
     report();
   }
 
-  function start(entry: Entry) {
+  function ensurePlayback(entry: Entry) {
     const video = entry.video;
-    if (!canPlay()) {
+    if (!eligible()) {
       ++entry.token;
       entry.pending = false;
       clearRetry(entry);
-      video.autoplay = false;
       video.pause();
       return;
     }
-    if (entry.pending || entry.blocked || entry.unavailable || !video.paused) return;
-    if (!entry.sources.length) {
+    if (entry.unavailable || entry.blocked) return;
+    if (video.error) {
       entry.unavailable = true;
       status(entry, 'unavailable');
       return;
     }
+    if (reconcile(entry) || entry.pending || !video.paused) return;
 
     video.muted = true;
     video.defaultMuted = true;
     video.playsInline = true;
     video.autoplay = true;
-    video.preload = 'auto';
-    // Setting src already triggers a load. Calling load() here would abort
-    // a pending play() on some browsers and could freeze the poster.
-    if (!video.getAttribute('src')) video.src = entry.sources[entry.sourceIndex];
-
     const token = ++entry.token;
     entry.pending = true;
     try {
       void Promise.resolve(video.play()).then(() => {
         if (!alive || token !== entry.token) return;
         entry.pending = false;
-        entry.retries = 0;
-        if (!canPlay()) video.pause();
-      }, reason => rejectPlayback(entry, token, reason));
-    } catch (reason) {
-      rejectPlayback(entry, token, reason);
+        reconcile(entry);
+        if (!eligible()) video.pause();
+      }, error => rejected(entry, token, error));
+    } catch (error) {
+      rejected(entry, token, error);
     }
   }
 
   function syncAll() {
-    for (const entry of entries) start(entry);
+    entries.forEach(ensurePlayback);
   }
 
   for (const video of section.querySelectorAll<HTMLVideoElement>('video[data-project-preview]')) {
-    const project = projects.find(item => item.id === video.dataset.projectPreview);
+    const id = video.dataset.projectPreview;
     const frame = video.closest<HTMLElement>('[data-preview]');
-    if (!project || !frame) continue;
-    const sources = project.sources
-      .filter(source => video.canPlayType(source.type) !== '')
-      .map(source => source.src);
+    if (!id || !frame || !projects.some(project => project.id === id)) continue;
     const entry: Entry = {
-      id: project.id, video, frame, sources, sourceIndex: 0, token: 0,
-      pending: false, blocked: false, unavailable: false, retries: 0,
-      retryTimer: undefined, dispose: () => {}
+      id, video, frame, token: 0, blocked: false, unavailable: false,
+      pending: false, retries: 0, dispose: () => {}
     };
 
     video.muted = true;
     video.defaultMuted = true;
     video.playsInline = true;
-
-    const playing = () => {
-      if (!canPlay()) { video.pause(); return; }
-      entry.pending = false;
-      entry.retries = 0;
-      entry.blocked = false;
-      clearRetry(entry);
-      status(entry, 'playing');
-      report();
+    const playing = () => { reconcile(entry); };
+    const ready = () => {
+      if (!reconcile(entry) && eligible() && video.paused && !entry.pending) retryLater(entry);
     };
     const paused = () => {
-      // An offscreen/battery-related browser suspension must not
-      // permanently stop an otherwise eligible product loop.
-      if (canPlay() && !entry.pending && !entry.blocked && !entry.unavailable) scheduleRetry(entry);
+      if (eligible() && !entry.blocked && !entry.unavailable && !entry.pending) retryLater(entry);
     };
     const error = () => {
-      if (!alive) return;
       ++entry.token;
       entry.pending = false;
       clearRetry(entry);
-      video.pause();
-      if (entry.sourceIndex + 1 < entry.sources.length) {
-        ++entry.sourceIndex;
-        entry.retries = 0;
-        entry.blocked = false;
-        video.removeAttribute('src');
-        video.load();
-        status(entry, 'poster');
-        start(entry);
-      } else {
-        entry.unavailable = true;
-        entry.blocked = false;
-        status(entry, 'unavailable');
-        report();
-      }
+      entry.unavailable = true;
+      entry.blocked = false;
+      status(entry, 'unavailable');
+      report();
     };
-
     video.addEventListener('playing', playing);
+    video.addEventListener('loadeddata', ready);
+    video.addEventListener('canplay', ready);
     video.addEventListener('pause', paused);
     video.addEventListener('error', error);
     entry.dispose = () => {
       video.removeEventListener('playing', playing);
+      video.removeEventListener('loadeddata', ready);
+      video.removeEventListener('canplay', ready);
       video.removeEventListener('pause', paused);
       video.removeEventListener('error', error);
     };
     entries.push(entry);
+    // The native autoplay event might already have occurred before hydration.
+    // Reconcile the current browser state rather than depending on that event.
+    reconcile(entry);
   }
 
   document.addEventListener('visibilitychange', syncAll);
@@ -182,19 +167,20 @@ export function createPreviewController(
   syncAll();
 
   return {
-    setPaused(paused: boolean) {
-      userPaused = paused;
+    setPaused(value: boolean) {
+      userPaused = value;
       syncAll();
     },
     retryAll() {
-      // Must run synchronously from a real click for user-activation permission.
+      // A real click is required for user activation; keep each play call
+      // in this synchronous gesture handler, never behind a timeout.
       for (const entry of entries) {
         if (!entry.blocked) continue;
         entry.blocked = false;
         entry.retries = 0;
         clearRetry(entry);
         status(entry, 'poster');
-        start(entry);
+        ensurePlayback(entry);
       }
       report();
     },
@@ -206,10 +192,7 @@ export function createPreviewController(
         ++entry.token;
         clearRetry(entry);
         entry.dispose();
-        entry.video.autoplay = false;
         entry.video.pause();
-        entry.video.removeAttribute('src');
-        entry.video.load();
       }
     }
   };
