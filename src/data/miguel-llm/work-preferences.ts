@@ -13,7 +13,7 @@ export const workPreferencesKnowledge = [
     source: 'Miguel personality ingestion / Miguel-approved notes',
     tags: ['work preferences', 'energizes', 'lose track of time', 'coding', 'designing', 'ai workflows', 'voice chat', 'image-to-text', 'agents'],
     content:
-      'I lose track of time when I'm coding, designing, or learning about AI workflows. I've been especially interested in voice interfaces, image-to-text workflows, agents, and how these tools can change the way products are built.'
+      'I lose track of time when I’m coding, designing, or learning about AI workflows. I’ve been especially interested in voice interfaces, image-to-text workflows, agents, and how these tools can change the way products are built.'
   },
   {
     id: 'work-preferences-draining-work',
@@ -29,7 +29,7 @@ export const workPreferencesKnowledge = [
     source: 'Miguel personality ingestion / Miguel-approved notes',
     tags: ['work preferences', 'open minded', 'opportunities', 'role fit', 'boundary'],
     content:
-      'I'm open-minded about teams and challenges. An interesting problem and thoughtful collaborators matter more to me than finding one perfect job title.'
+      'I’m open-minded about teams and challenges. An interesting problem and thoughtful collaborators matter more to me than finding one perfect job title.'
   },
   {
     id: 'work-preferences-ideal-role',
@@ -37,7 +37,7 @@ export const workPreferencesKnowledge = [
     source: 'Miguel personality ingestion / Miguel-approved notes',
     tags: ['work preferences', 'role fit', 'frontend', 'ai products', 'product ui', 'design craft', 'reusable code'],
     content:
-      'I'm interested in frontend engineering roles where I can combine product UI, design craft, reusable code, reliable responsive interfaces, and useful AI-enabled features.'
+      'I’m interested in frontend engineering roles where I can combine product UI, design craft, reusable code, reliable responsive interfaces, and useful AI-enabled features.'
   },
   {
     id: 'work-preferences-previous-work-f24',
