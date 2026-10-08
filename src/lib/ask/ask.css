@@ -70,6 +70,25 @@ html.ask-present [data-ask-id].is-asked, html.ask-on [data-ask-id]:focus-visible
 .ask-sources { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 14px; font: 600 13px/1.5 var(--ask-ui); color: var(--ask-plum); }
 .ask-sources a { text-decoration: underline; text-underline-offset: 3px; }
 .ask-intro { font: 400 16px/1.4 var(--ask-ui); color: var(--ask-muted); }
+
+.ask-answer.loading .ask-intro {
+  display: inline-flex; align-items: center; flex-wrap: wrap; gap: 12px;
+  padding: 14px 18px; border-radius: 14px; background: rgb(18 42 34 / .045);
+  color: var(--ask-ink); font-weight: 500;
+}
+.ask-answer.loading .ask-intro::after {
+  content: '···'; display: inline-block; min-width: 22px;
+  color: var(--ask-plum); font-size: 20px; letter-spacing: 2px;
+  animation: ask-answer-progress 900ms ease-in-out infinite alternate;
+}
+@keyframes ask-answer-progress {
+  from { opacity: .25; transform: translateY(1px); }
+  to { opacity: 1; transform: translateY(-1px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ask-answer.loading .ask-intro::after { animation: none; opacity: 1; transform: none; }
+}
+
 .ask-answer mark { color: var(--ask-ink); background: var(--ask-spring); padding: 1px 4px; border-radius: 4px; box-decoration-break: clone; }
 .ask-answer sup { display: inline-grid; place-items: center; min-width: 18px; height: 18px; margin: 0 2px; border-radius: 6px; color: var(--ask-paper); background: var(--ask-plum); font: 700 11px/1 var(--ask-ui); font-variant-numeric: tabular-nums; }
 .ask-answer-footer { margin-top: 12px; font: 400 14px/1.5 var(--ask-ui); color: var(--ask-muted); }

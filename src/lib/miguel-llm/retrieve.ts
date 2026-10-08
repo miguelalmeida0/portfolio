@@ -148,7 +148,7 @@ export function retrieveMiguelContext(
       normalizedQuestion.includes('inspect first') ||
       normalizedQuestion.includes('technical project')
     ) {
-      if (chunk.id.includes('project-camera-harness-overview')) score += 24;
+      if (chunk.id.includes('project-needle-current')) score += 24;
     }
 
     if (

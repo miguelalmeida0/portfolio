@@ -28,10 +28,10 @@
   <!-- Keyboard users need to focus this region to scroll long answers. -->
   <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
   <div class="ask-answer-scroll" data-scroll-native tabindex="0" role="region" aria-label="Answer and sources">
-    <div class="ask-answer" data-ask-answer aria-hidden="true">
+    <div class="ask-answer" class:loading={view.loading} data-ask-answer aria-hidden="true">
       {#if !view.knowledge && !view.complete && !view.loading && !view.error}<p class="ask-intro">{INTRO}</p>{/if}
       {#if view.error}<p class="ask-intro">{view.error}</p>{/if}
-      {#if view.loading}<p class="ask-intro">Connecting this topic to Miguel’s work…</p>{/if}
+      {#if view.loading}<p class="ask-intro">Reviewing the most relevant project notes…</p>{/if}
       {#if view.refusal}<p class="ask-intro">{REFUSAL}</p>{/if}
       {#if view.knowledge}
         <div class="ask-knowledge" data-ask-knowledge>
@@ -46,7 +46,7 @@
       </p>{/if}
       {#if view.complete && !view.refusal && !view.knowledge?.conversational}<p class="ask-answer-footer ask-phrase">{FOOTER}</p>{/if}
     </div>
-    <div class="sr-only" aria-live="polite" aria-atomic="true" data-ask-announcement>{announcement || (view.question === DEFAULT_HEADING ? INTRO : '')}</div>
+    <div class="sr-only" aria-live="polite" aria-atomic="true" data-ask-announcement>{view.loading ? 'Reviewing the relevant project notes.' : announcement || (view.question === DEFAULT_HEADING ? INTRO : '')}</div>
     {#if view.error}<button class="ink-link" type="button" onclick={() => controller.free(view.question)}>Try again</button>{/if}
     {#if view.knowledge?.sources.length}<nav class="ask-sources" aria-label="Answer sources">{#each view.knowledge.sources as source}
       <a href={source.split('|')[1]} {...destinationLink(source.split('|')[1])}>{source.split('|')[0]}</a>

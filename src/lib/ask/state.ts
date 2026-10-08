@@ -12,6 +12,10 @@ import { positionAskPortrait } from './portrait';
 import type { AreaId, AskView, KnowledgeAnswer } from './types';
 export const askController = writable<AskController | undefined>();
 
+// A short, readable transition for fast local answers; remote requests that
+// already take longer display immediately once their evidence is ready.
+export const MIN_ANSWER_PRESENTATION_MS = 1850;
+
 export function createAskController() {
   let view = initialView(), queued = false, near = false;
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -20,12 +24,33 @@ export function createAskController() {
   let restorePortrait = () => {};
   let beat: ReturnType<typeof heartbeat> | undefined;
   let request: AbortController | undefined;
+  let pendingResolve: (() => void) | undefined;
+  let pendingTimer: ReturnType<typeof setTimeout> | undefined;
+  function cancelPresentation() {
+    if (pendingTimer !== undefined) clearTimeout(pendingTimer);
+    pendingTimer = undefined;
+    const resolve = pendingResolve;
+    pendingResolve = undefined;
+    resolve?.();
+  }
+  function preparePresentation(start: number) {
+    const remaining = Math.max(0, MIN_ANSWER_PRESENTATION_MS - (performance.now() - start));
+    if (!remaining) return Promise.resolve();
+    return new Promise<void>(resolve => {
+      pendingResolve = resolve;
+      pendingTimer = setTimeout(() => {
+        pendingResolve = undefined;
+        pendingTimer = undefined;
+        resolve();
+      }, remaining);
+    });
+  }
   let generation = 0;
   let history: string[] = [];
   const set = (patch: Partial<AskView>) => { view = { ...view, ...patch }; askView.set(view); };
   const active = () => view.state !== 'idle' && view.state !== 'closing';
   function stopInteraction() { beat?.stop(); beat = undefined; stopProximity(); stopProximity = () => {}; document.removeEventListener('click', click, true); }
-  function cancelAnswer() { generation++; request?.abort(); request = undefined; stopAnswer(); stopAnswer = () => {}; }
+  function cancelAnswer() { generation++; cancelPresentation(); request?.abort(); request = undefined; stopAnswer(); stopAnswer = () => {}; }
   async function open() {
     if (view.state === 'closing') { queued = true; return; }
     if (view.state !== 'idle') return;
@@ -103,11 +128,13 @@ export function createAskController() {
   async function ask(id: AreaId) {
     const plan = areaPlan(id); if (!plan || !active()) return;
     cancelAnswer(); clearQuotes(); beat?.silence(4500);
+    const startedAt = performance.now();
     const version = generation;
     set({ state: 'answering', question: plan.question, knowledge: null, fragments: [], complete: false, refusal: false, loading: true, error: undefined });
     try {
       const { prepareAskAnswer, assembleAskAnswer } = await import('$lib/miguel-llm/askConversation');
       const prepared = prepareAskAnswer(plan.question, history, id);
+      if (version === generation && active()) await preparePresentation(startedAt);
       if (version === generation && active()) {
         history = [prepared.question];
         run(plan.question, plan.steps.slice(0, 1).map(step => ({ ...step, lead: '' })), assembleAskAnswer(prepared), id);
@@ -120,6 +147,7 @@ export function createAskController() {
   async function answerQuestion(question: string, area?: AreaId) {
     question = question.trim(); if (!question || !active()) return;
     cancelAnswer(); clearQuotes(); beat?.silence(4500);
+    const startedAt = performance.now();
     const version = generation;
     request = new AbortController();
     const recent = [...history];
@@ -129,6 +157,7 @@ export function createAskController() {
       if (!response.ok) throw new Error(response.status === 429 ? 'A few too many questions in a row. Give it a minute, then try again.' : response.status === 400 ? 'Please ask a short question about Miguel’s public work, experience or projects.' : 'The answer service is unavailable right now. Please try again.');
       const plan = await response.json();
       const { validateConversationAnswer, resolveAskQuestion } = await import('$lib/miguel-llm/askConversation');
+      if (version === generation && active()) await preparePresentation(startedAt);
       if (version === generation && active()) {
         const answer = validateConversationAnswer(plan.knowledge, question, recent, area);
         if (answer && !answer.conversational) history = [...history, resolveAskQuestion(question, recent)].slice(-6);

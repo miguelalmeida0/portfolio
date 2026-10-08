@@ -372,6 +372,44 @@ test('mobile Ask MiguelLLM toggles without unexpectedly reopening the menu', asy
   await expect(ask).toHaveAttribute('aria-expanded','false');
 });
 
+test('Ask MiguelLLM gives fast evidence-backed answers a readable loading interval', async ({page}) => {
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.addInitScript(() => sessionStorage.setItem('seen-intro','true'));
+  await page.goto('/');
+  const trigger=page.locator('nav[aria-label="Main navigation"] [data-ask-trigger]');
+  await expect(trigger).toBeEnabled();
+  await trigger.click();
+  const input=page.getByRole('textbox',{name:'Type your own question'});
+  await input.fill('hello');
+  const began=Date.now();
+  await input.press('Enter');
+  const progress=page.locator('[data-ask-answer].loading');
+  await expect(progress).toBeVisible();
+  await expect(progress).toContainText('Reviewing the most relevant project notes');
+  await expect(page.locator('[data-ask-knowledge]')).toHaveCount(0);
+  await expect(page.locator('[data-ask-knowledge]')).toContainText('portfolio guide',{timeout:12000});
+  expect(Date.now()-began).toBeGreaterThanOrEqual(1600);
+  await expect(progress).toHaveCount(0);
+  const followups=page.getByRole('navigation',{name:'Follow-up questions'});
+  await expect(followups.getByRole('button').first()).toBeVisible();
+});
+
+test('closing Ask mid-answer does not leave a delayed answer or reopen', async ({page}) => {
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.addInitScript(() => sessionStorage.setItem('seen-intro','true'));
+  await page.goto('/');
+  await page.locator('nav[aria-label="Main navigation"] [data-ask-trigger]').click();
+  const input=page.getByRole('textbox',{name:'Type your own question'});
+  await input.fill('hello');
+  await input.press('Enter');
+  await expect(page.locator('[data-ask-answer].loading')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('[data-ask-panel]')).toHaveCount(0);
+  await page.waitForTimeout(2050);
+  await expect(page.locator('[data-ask-panel]')).toHaveCount(0);
+  await expect(page.locator('html')).not.toHaveClass(/ask-on|ask-present|ask-closing/);
+});
+
 test('primary routes render without uncaught client exceptions', async ({ page }) => {
   const pageErrors: string[] = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));

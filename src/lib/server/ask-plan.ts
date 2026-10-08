@@ -10,7 +10,7 @@ export async function buildAskPlan(question: string, texts: Partial<Record<AreaI
   if (signal?.aborted) return { question, steps: [], knowledge: null };
   const prepared = prepareAskAnswer(question, context.history, context.area);
   let knowledge = assembleAskAnswer(prepared);
-  if (knowledge && !prepared.conversational && selectedProvider() !== 'local-fallback') {
+  if (knowledge && prepared.facts.length > 2 && !prepared.conversational && selectedProvider() !== 'local-fallback') {
     try {
       const selection = await requestStructured(JSON.stringify({
         question, resolvedQuestion: prepared.question, recentQuestions: context.history ?? [],
