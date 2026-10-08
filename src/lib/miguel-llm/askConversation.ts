@@ -68,17 +68,17 @@ export function prepareAskAnswer(input: string, history: string[] = [], area?: A
   if (friendly) {
     prepared.defaults = [add('conversation', friendly.text, [])]; prepared.followups = friendly.followups; prepared.conversational = true; prepared.area = undefined; return prepared;
   }
-  if (isBoundaryQuestion(input) || /\b(graphql|kubernetes|visa|married|children|age|rust)\b/.test(q)) return prepared;
+  if (isBoundaryQuestion(input) || /\b(graphql|kubernetes|visa|married|children|age|rust|birthday)\b/.test(q) || /\b(how old|what age|when born|date of birth)\b/.test(q)) return prepared;
   // Clicked source areas keep their exact on-page evidence, rather than
   // replacing a highlighted record with a looser editorial summary.
   const explicitProject = resolveProject(question);
-  const curated = !area ? editorialAnswer(question, explicitProject) : undefined;
+  const curated = !area && (!explicitProject || explicitProject === 'f24') ? editorialAnswer(question, explicitProject) : undefined;
   if (curated) {
     for (const fact of curated.facts) prepared.facts.push(fact);
     prepared.defaults = curated.facts.map(f => f.id);
     prepared.followups = curated.followups;
     prepared.conversational = curated.conversational ?? false;
-    prepared.area = undefined;
+    prepared.area = /\b(what is his stack|his stack|tech stack|technical stack)\b/.test(q) ? 'stack' : undefined;
     return prepared;
   }
   // Terms such as "study" and "language" are ambiguous inside project

@@ -85,7 +85,7 @@ export function editorialAnswer(question: string, projectSlug?: string): Editori
   if (match(q, /\b(education|diploma|degree|studied|what did (?:miguel|he) study|study at|college|university|background in ux|why ux)\b/) && !projectSlug) {
     const education = cvEducation.map(record => `${record.title} (${record.year})`).join('; ');
     return make('education', [
-      [`Miguel started with UX before moving deeper into engineering. His published education includes ${education}.`, cv],
+      [`Miguel started with UX before moving deeper into engineering. His published education includes ${education}.`, ['Education|/cv#education']],
       ['That still shows up in his code: he thinks about what people need to understand, how focus moves, and what happens when the happy path breaks.', story]
     ], ['How did he transition into frontend?', 'What does he care about in UX?', 'How does he work with designers?']);
   }
@@ -111,7 +111,7 @@ export function editorialAnswer(question: string, projectSlug?: string): Editori
     ], ['How does Second Voice show changes?', 'How does Leu preserve source context?', 'What does he consider good frontend engineering?']);
   }
 
-  if (match(q, /\b(how does he (debug|test|handle bugs|ensure quality|build)|testing strategy|quality|accessibility|reliability|edge case|failure state|production readiness|resilien|maintainab|readability|architecture practices)\b/) && !projectSlug) {
+  if (match(q, /\b(how does (?:he|miguel) (debug|test|handle bugs|handle failure|ensure quality|build)|testing strategy|quality|accessibility|reliability|edge case|failure states?|production readiness|resilien|maintainab|readability|architecture practices)\b/) && !projectSlug) {
     return make('engineering', [
       ['Miguel treats the difficult states as part of the product: failed requests should not erase useful work, stale responses should not overwrite newer ones, and closing an overlay should restore keyboard focus.', [...story, ...f24]],
       ['His CV documents typed contracts, Playwright and regression coverage. Flow adds structured actions with undo; Leu adds source-linked state and explicit verification limits. The common thread is making behavior inspectable and recoverable.', [...cv, ...flow, ...leu]]
@@ -184,7 +184,8 @@ export function editorialAnswer(question: string, projectSlug?: string): Editori
     const named = cvSkills.slice(0, 9).join(', ');
     return make('tech-stack', [
       [`His public CV lists ${named}. Day to day, his frontend story runs through TypeScript, Svelte, React, and careful testing.`, cv],
-      ['The projects broaden that picture: Needle uses Web Workers and hybrid search; Flow has an action/state engine; Leu is a native SwiftUI and PDFKit app.', [...needle, ...flow, ...leu]]
+      ['The projects broaden that picture: Needle uses Web Workers and hybrid search; Flow has an action/state engine; Leu is a native SwiftUI and PDFKit app.', [...needle, ...flow, ...leu]],
+      ['From 2022 to 2023, he built reusable Svelte and TypeScript UI at F24. The public timeline then documents subsequent React delivery.', cv]
     ], ['How long has he used React?', 'Which project shows complex state management?', 'How does he test frontend work?']);
   }
 
