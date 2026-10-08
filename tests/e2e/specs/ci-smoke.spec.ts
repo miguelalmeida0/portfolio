@@ -160,20 +160,27 @@ test('Leu falls back to MP4 when its preferred WebM is unavailable', async ({ pa
   await expect(video).toHaveCSS('opacity','1');
 });
 
-test('native preview sources render and loop without client-side JavaScript', async ({ browser }) => {
+test('native media sources and a poster exist when JavaScript is disabled', async ({ browser }) => {
   const context = await browser.newContext({javaScriptEnabled:false, viewport:{width:1440,height:900}});
   try {
     const page = await context.newPage();
-    await page.goto('http://127.0.0.1:4173/#work');
-    const video = page.locator('[data-selected-project="leu"] video');
+    // Video downloads must not block navigation; browser autoplay may be
+    // disabled independently of the page, so test the SSR fallback instead.
+    await page.goto('http://127.0.0.1:4173/#work', {waitUntil:'domcontentloaded'});
+    const preview = page.locator('[data-selected-project="leu"] [data-preview]');
+    const video = preview.locator('video');
+    await expect(video).toHaveAttribute('poster','/projects/leu/leu-film-20261008-poster.jpg');
     await expect(video.locator('source')).toHaveCount(2);
-    await expect.poll(() => video.evaluate((v: HTMLVideoElement) =>
-      !v.paused && v.readyState >= 2 && v.currentTime > .25), {timeout:30000}).toBe(true);
-    await expect(video).toHaveCSS('opacity','1');
+    const types = await video.locator('source').evaluateAll(sources =>
+      sources.map(source => (source as HTMLSourceElement).getAttribute('type')));
+    expect(types).toEqual(['video/webm; codecs="vp9"','video/mp4']);
+    await expect(preview.locator('img')).toBeVisible();
+    await expect(page.locator('[data-selected-project]')).toHaveCount(4);
   } finally {
     await context.close();
   }
 });
+
 
 test('primary routes render without uncaught client exceptions', async ({ page }) => {
   const pageErrors: string[] = [];
