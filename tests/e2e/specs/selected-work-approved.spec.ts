@@ -15,7 +15,9 @@ test('permanent static F24 and four independent projects expose honest links', a
  await expect(f.locator('video,button')).toHaveCount(0);
  expect(await page.locator('[data-selected-project]').evaluateAll(es=>es.map(e=>e.getAttribute('data-selected-project')))).toEqual(cards);
  for(const id of cards)await expect(page.locator(`[data-selected-project="${id}"] a[href="/work/${id}"]`).first()).toBeVisible();
- await expect(page.locator('[data-selected-project="flow"]').getByRole('link',{name:'Live app',exact:true})).toHaveCount(0);
+ const flow=page.locator('[data-selected-project="flow"]').getByRole('link',{name:'Live app',exact:true});
+ await expect(flow).toHaveAttribute('href','https://miguelalmeida0.github.io/');
+ await expect(flow).toHaveAttribute('target','_blank');
  const leu=page.locator('[data-selected-project="leu"]').getByRole('link',{name:'Live app',exact:true});
  await expect(leu).toHaveAttribute('href','https://leu-desktop.vercel.app/');
  await expect(leu).toHaveAttribute('target','_blank');

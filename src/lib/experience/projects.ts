@@ -70,6 +70,7 @@ export const projects: Project[] = [
   "ownership": "I designed and built the React interface and action model that turn spoken requests into editable calendar events, plans and commitments.",
   "period": "Independent product · 2026",
   "source": "https://github.com/miguelalmeida0/flow",
+  "live": { "href": "https://miguelalmeida0.github.io/", "label": "Open Flow" },
   "stack": [
     "React",
     "TypeScript",

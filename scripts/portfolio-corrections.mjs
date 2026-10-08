@@ -71,7 +71,7 @@ try {
       assert.equal(await photo.evaluate(n=>getComputedStyle(n).transform),'none');
       await page.locator('.f24-photo-link').click(); await page.waitForURL('**/work/f24'); await settle(page);
       assert.ok(await page.evaluate(()=>scrollY<2));
-      await page.getByRole('navigation',{name:'F24 Connectivity Hub sections'}).getByRole('link',{name:'Try it',exact:true}).click();
+      await page.getByRole('navigation',{name:'F24 Connectivity Hub sections'}).getByRole('link',{name:'Explore demo',exact:true}).click();
       await settle(page);
       assert.equal(new URL(page.url()).hash,'#try');
       assert.ok(await page.locator('#try').evaluate(n=>Math.abs(n.getBoundingClientRect().top)<100));
