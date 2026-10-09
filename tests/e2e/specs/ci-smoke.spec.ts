@@ -214,16 +214,16 @@ test('every project visibly renders moving video rather than a poster overlay', 
   for (const id of ['needle','second-voice-ai','leu','flow']) {
     const preview = page.locator(`[data-selected-project="${id}"] [data-preview]`);
     const video = preview.locator('video');
-    await expect(video.locator('source')).toHaveCount(id === 'leu' ? 2 : 1);
+    await expect(video.locator('source')).toHaveCount(1);
     await expect.poll(() => video.evaluate((v: HTMLVideoElement) =>
       !v.paused && v.readyState >= 2 && v.videoWidth > 0 && v.currentTime >= 0),
       {timeout: 30000}).toBe(true);
     await expect(video).toHaveCSS('opacity','1');
     await expect(video).toHaveCSS('visibility','visible');
     if (id === 'leu') {
-      // Keep the low-resolution preferred source from silently returning.
-      await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.videoWidth)).toBeGreaterThanOrEqual(1920);
-      await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.videoHeight)).toBeGreaterThanOrEqual(1080);
+      // Keep the original master in place and the blurred 540p source retired.
+      await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.videoWidth)).toBe(1440);
+      await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.videoHeight)).toBe(810);
     }
     await expect.poll(() => preview.getAttribute('data-preview-status')).toBe('playing');
     const frames = await video.evaluate((v: HTMLVideoElement) =>
@@ -242,11 +242,11 @@ test('every project visibly renders moving video rather than a poster overlay', 
   }
 });
 
-test('Leu falls back to MP4 when its preferred WebM is unavailable', async ({ page }) => {
-  await page.route(/\/projects\/leu\/leu-film-20261009-1440p\.webm$/, route =>
-    route.fulfill({status: 404, contentType:'text/plain', body:'missing codec source'}));
+test('Leu plays its original master without a lower-resolution alternative', async ({ page }) => {
   await page.goto('/#work');
   const video = page.locator('[data-selected-project="leu"] video');
+  await expect(video.locator('source')).toHaveCount(1);
+  await expect(video.locator('source')).toHaveAttribute('src', '/projects/leu/leu-film-original-20261009.mp4');
   await expect.poll(() => video.evaluate((v: HTMLVideoElement) =>
     v.currentSrc.endsWith('.mp4') && !v.paused && v.readyState >= 2), {timeout:30000}).toBe(true);
   await expect(video).toHaveCSS('opacity','1');
@@ -261,11 +261,11 @@ test('native media sources and a poster exist when JavaScript is disabled', asyn
     await page.goto('http://127.0.0.1:4173/#work', {waitUntil:'domcontentloaded'});
     const preview = page.locator('[data-selected-project="leu"] [data-preview]');
     const video = preview.locator('video');
-    await expect(video).toHaveAttribute('poster','/projects/leu/leu-film-20261009-1440p-poster.jpg');
-    await expect(video.locator('source')).toHaveCount(2);
+    await expect(video).toHaveAttribute('poster','/projects/leu/leu-film-original-20261009-poster.jpg');
+    await expect(video.locator('source')).toHaveCount(1);
     const types = await video.locator('source').evaluateAll(sources =>
       sources.map(source => (source as HTMLSourceElement).getAttribute('type')));
-    expect(types).toEqual(['video/webm; codecs="vp9"','video/mp4']);
+    expect(types).toEqual(['video/mp4']);
     await expect(preview.locator('img')).toBeVisible();
     await expect(page.locator('[data-selected-project]')).toHaveCount(4);
   } finally {

@@ -14,42 +14,16 @@ PNG originals were encoded as lossless WebP, preserving transparency. Supplied
 WebP files were copied unchanged. Superseded gallery images and film files are
 retired rather than shipping a second obsolete generation.
 
-The blur originated in the preferred 960×540 WebM. Its replacement is a
-40-second, 30 fps, 2560×1440 film in VP9 and H.264, with a matching sharp poster.
-Real Leu browser states were captured at 2880×1800 from the existing product
-build and composed at 2560×1440; the old film was not upscaled. The sequence
-covers Home, Library, Read, Explanation, Own words, Explore, Trails, and Home,
-with quiet transitions. Cache-versioned filenames prevent the old film from
-being reused. Both codec paths retain autoplay, mute, loop, pause, retry, and
-poster fallback behavior.
+The owner's original 40.4-second loop is restored byte for byte from the
+1440×810 H.264 master in commit `4db870e`. The previous browser-preferred WebM
+was only 960×540. Playback now uses only the original master, providing 2.25×
+the source pixels without changing a scene, frame, transition, or timing. A
+new cache-versioned URL ensures browsers do not reuse the blurred alternative.
+The original poster is retained. The rejected recaptured film and its generation
+scripts are removed. The image gallery and all other case studies are unchanged.
 
-Recreate source captures with:
-
-```sh
-node scripts/media/capture-leu-product.mjs /absolute/path/to/leu/web/dist
-node scripts/media/render-leu-film.mjs
-```
-
-The scripts require the project's Playwright browser and ffmpeg. Set
-`PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` for an existing Chromium installation.
-Product sample PDFs are opened within the local browser; no uploaded user PDFs
-or credentials are included in the captures.
-
-## Verification
-
-- Production build passes. Svelte check: zero errors; four existing warnings in PreviewMedia.
-- 189 unit tests pass; 22 served-route tests pass.
-- 10 final gallery checks pass on desktop/mobile, including 320/390/768/1440
-  widths, aspect ratios, keyboard learning steps, platform focus, and scoped scrolling.
-- Five film tests pass per desktop/mobile: playback, pause/resume, actual decoded
-  resolution, preferred codec failure, missing media, and blocked autoplay.
-- The broader 96-test browser selection completed with 86 passes initially.
-  Ten Ask tests initially lacked POST bodies in the temporary local SSR harness;
-  correcting that harness resolved them. Three mobile Ask tests then reached
-  the existing per-address rate limit when desktop/mobile shared one address;
-  all three pass in isolated reruns. No Ask production behavior was changed.
-- Required CI smoke verifies the replacement film decodes at Full HD or above.
-- All five case-study routes render their headings and return 200. Current
-  deployed source was inspected before release. Visual review covered desktop
-  and mobile; the existing typography, product header, and interactive learning
-  loop are retained.
+The SHA-256 of the approved original MP4 is
+`b314eff70e3652ef3a18e83e75f6bc4a55640d0665efc5d12f780abd601bf120`.
+The regression check prevents accidentally replacing or recompressing it.
+Browser checks require actual 1440×810 decoded video, the original duration,
+only the master request, pause/resume, missing-file fallback, and autoplay retry.
