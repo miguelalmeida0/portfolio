@@ -56,7 +56,6 @@
         <source type="image/webp" srcset="/images/wind-full-720.webp 720w, /images/wind-full-1086.webp 1086w" sizes="(max-width: 799px) 260px, 340px" />
         <img src="/images/miguel-contact-editorial.webp" width="1086" height="1448" alt="Portrait of Miguel Almeida" loading="eager" decoding="async" />
       </picture>
-      <figcaption>In Berlin these days. Still curious.</figcaption>
     </figure>
   </header>
   <section class="story-summary story-summary-first" data-story-section data-chapter="summary" aria-labelledby="story-summary"><ShortVersion /></section>

@@ -62,8 +62,7 @@
 .story-hero-link:hover { text-decoration-thickness: 2px; }
 .story-hero-link span { font-size: 20px; text-decoration: none; }
 .story-intro-photo {
-  display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
+  display: block;
   align-self: center;
   width: 100%;
   min-width: 0;
@@ -74,21 +73,13 @@
   border-radius: 16px;
   background: var(--story-sage);
 }
-.story-intro-photo picture { display: block; min-height: 0; }
+.story-intro-photo picture { display: block; width: 100%; height: 100%; }
 .story-intro-photo img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
   object-position: center bottom;
-}
-.story-intro-photo figcaption {
-  padding: 12px 18px 16px;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.4;
-  text-align: center;
-  color: var(--story-muted);
 }
 
 .story-eyebrow {
@@ -346,7 +337,6 @@
   .story-intro-copy { max-width: 48ch; margin-top: 20px; font-size: 18px; }
   .story-hero-link { margin-top: 16px; }
   .story-intro-photo { justify-self: end; width: 210px; height: 205px; }
-  .story-intro-photo figcaption { font-size: 11px; padding: 6px 8px 10px; }
   .short-version { padding: 30px 24px; }
   .short-journey { grid-template-columns: minmax(0, 1fr); gap: 0; margin-top: 30px; }
   .short-journey li { position: relative; padding: 19px 0 22px 34px; }
@@ -370,4 +360,23 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .story-split *, .story-split *::before, .story-split *::after { animation: none !important; transition: none !important; }
+}
+
+/* An opening composition, not a scrolling chapter controller. The SSR-first
+   layout remains fully visible until the page has hydrated. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion='reduced']) .story-split[data-story-ready] .story-intro-text {
+    animation: story-opening-copy 640ms cubic-bezier(.22, 1, .36, 1) both;
+  }
+  html:not([data-motion='reduced']) .story-split[data-story-ready] .story-intro-photo {
+    animation: story-opening-photo 720ms cubic-bezier(.22, 1, .36, 1) 60ms both;
+  }
+}
+@keyframes story-opening-copy {
+  from { opacity: .72; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes story-opening-photo {
+  from { clip-path: inset(5% 7% 5% 7% round 16px); transform: scale(1.015); }
+  to { clip-path: inset(0 0 0 0 round 16px); transform: scale(1); }
 }

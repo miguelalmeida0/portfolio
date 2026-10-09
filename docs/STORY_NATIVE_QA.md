@@ -78,3 +78,20 @@ on application commit `a226bbe` passed:
 This is Chromium automation plus real Chrome visual review, not a Safari or
 physical-device performance certification. Playwright captures and traces are
 attached to the CI run as `portfolio-corrections`.
+
+## 9 October 2026: shared portfolio motion restored
+
+Story now opts into the existing Lenis scroll owner and its same-page link
+navigation. Wheel easing stays continuous and does not snap between chapters;
+touch and keyboard reading remain browser-native. Chapter and summary links
+use their CSS `scroll-margin-top` for final positioning, preserve fragment
+URLs and move focus after scrolling. Reduced motion scrolls immediately.
+
+A deliberate link into Story participates in the standard case-study
+View Transition, with one short intro and portrait reveal. The prior native
+exits and Back/Forward safeguards remain in place to avoid the earlier
+history snapshot race. The portrait no longer has an on-image caption.
+
+The historical QA evidence above describes the earlier native-only contract,
+not this later behavior. Regression coverage lives in
+`tests/e2e/specs/story-motion.spec.ts` and the updated Story test suite.

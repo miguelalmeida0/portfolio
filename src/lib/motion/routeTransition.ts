@@ -200,9 +200,10 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
     if (active) return;
     const from = navigation.from?.url;
     const to = navigation.to?.url;
-    // The editorial reader uses ordinary route/history navigation as well as
-    // native scrolling. A snapshot or mobile history veil must not delay Back.
-    if (from?.pathname === '/story' || to?.pathname === '/story') {
+    // Entering Story by link has the same native transition as a case study.
+    // Leave Story and restore Story history without a snapshot: previously,
+    // rapid Back/reload could race Kit's scroll and history restoration.
+    if (from?.pathname === '/story' || (navigation.type === 'popstate' && to?.pathname === '/story')) {
       nativeTransition?.skipTransition();
       releaseClaimedFrames();
       return;

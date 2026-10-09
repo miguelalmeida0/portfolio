@@ -92,7 +92,10 @@ export function scrollToPosition(top: number, duration = SCROLL_TRANSITION_MS, o
 export function scrollToElement(target: HTMLElement, options: { offset?: number; duration?: number; focus?: boolean } = {}) {
   // Honor case-study sticky navigation while keeping the homepage's 40px inset.
   const pageInset = Math.max(40, parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0);
-  const top = window.scrollY + target.getBoundingClientRect().top - (options.offset ?? pageInset);
+  // A section's authored scroll margin takes precedence over the generic page
+  // inset. This also keeps chapter links clear of the Story page's sticky UI.
+  const sectionInset = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+  const top = window.scrollY + target.getBoundingClientRect().top - (options.offset ?? Math.max(pageInset, sectionInset));
   // Time the actual reachable distance, including pages shorter than the viewport.
   const destination = Math.max(0, Math.min(top, document.documentElement.scrollHeight - window.innerHeight));
   const duration = options.duration ?? Math.min(1250, Math.max(650, Math.abs(destination - window.scrollY) * 0.65));

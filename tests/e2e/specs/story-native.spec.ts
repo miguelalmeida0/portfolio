@@ -1,19 +1,16 @@
 import { expect, test } from '@playwright/test';
 
-test('Story leaves wheel input under native browser control', async ({ page }) => {
-  await page.addInitScript(() => {
-    (window as any).storyWheel = [];
-    window.addEventListener('wheel', event => setTimeout(() => {
-      (window as any).storyWheel.push({ prevented: event.defaultPrevented });
-    }, 0), { capture: true });
-  });
+test('Story uses the shared Lenis wheel easing without forcing chapter snaps', async ({ page }) => {
   await page.goto('/story');
-  await page.getByRole('link', {name:'Back to home',exact:true}).waitFor();
-  await page.waitForFunction(() => document.querySelector('[data-story-ready]') || document.querySelector<HTMLButtonElement>('button[aria-label="Choose a chapter"]')?.disabled === false);
-  await page.mouse.move(1000,400);
-  await page.mouse.wheel(0,120);
-  await expect.poll(() => page.evaluate(() => (window as any).storyWheel.length)).toBeGreaterThan(0);
-  expect(await page.evaluate(() => (window as any).storyWheel)).toEqual([{prevented:false}]);
+  await expect(page.locator('[data-story-ready]')).toBeVisible();
+  await page.mouse.move(700, 400);
+  await page.mouse.wheel(0, 360);
+  const early = await page.evaluate(() => scrollY);
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(early + 10);
+  await page.waitForTimeout(500);
+  const settled = await page.evaluate(() => scrollY);
+  expect(settled).toBeGreaterThan(180);
+  expect(settled).toBeLessThan(500);
 });
 
 for (const [width,height] of [[1440,900],[1280,800],[768,1024],[390,844],[375,812]]) for (const reduced of [false,true]) {
@@ -85,7 +82,8 @@ for (const [width,height] of [[1440,900],[1280,800],[768,1024],[390,844],[375,81
     await expect(page.locator('[data-story-copy]')).toContainText('Copied');
     expect(await page.evaluate(()=>navigator.clipboard.readText())).toContain('Miguel Almeida');
     await page.screenshot({path:`artifacts/portfolio-corrections/native/${width}-${reduced}-summary.png`});
-    expect(await page.evaluate(()=> (window as any).storyInputs.filter((event:any)=>event.prevented))).toEqual([]);
+    // Lenis owns wheel default-prevention; touch and keyboard input stay native.
+    expect(await page.evaluate(()=> (window as any).storyInputs.filter((event:any)=>event.type!=='wheel' && event.prevented))).toEqual([]);
     await back.click();
     await page.waitForURL('**/#top');
     await page.goBack();
