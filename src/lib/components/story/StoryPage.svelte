@@ -3,6 +3,7 @@
   import data from '$lib/story/story.json';
   import { createSceneRunner, type SceneId } from '$lib/story/scenes';
   import { prefersReducedMotion } from '$lib/motion/policy';
+  import { reveal } from '$lib/motion/actions/reveal';
   import { destinationLink } from '$lib/navigation/destination-link';
   import ScenePanel from './ScenePanel.svelte';
   import ShortVersion from './ShortVersion.svelte';
@@ -58,7 +59,7 @@
       </picture>
     </figure>
   </header>
-  <section class="story-summary story-summary-first" data-story-section data-chapter="summary" aria-labelledby="story-summary"><ShortVersion /></section>
+  <section use:reveal={{ variant: "settle", threshold: 0.08, skipInitialViewport: true }} class="story-summary story-summary-first" data-story-section data-chapter="summary" aria-labelledby="story-summary"><ShortVersion /></section>
   <div class="story-layout">
     <aside class="story-index">
       <p class="story-eyebrow">{data.editorial.indexTitle}</p>
@@ -72,7 +73,7 @@
     <div class="story-chapters">
       {#each data.questions as question, i}
         <section class="story-question" id={`story-${question.id}`} tabindex="-1" data-story-section data-story-index={i} data-chapter={question.id} aria-labelledby={`story-${question.id}-title`}>
-          <div class="story-copy">
+          <div class="story-copy" use:reveal={{ variant: "settle", threshold: 0.08, skipInitialViewport: true }}>
             <p class="question-number">{String(i + 1).padStart(2, '0')} / 08</p>
             <h2 id={`story-${question.id}-title`}>{question.question}</h2>
             <p class="story-lead">{question.lead}</p>
@@ -82,7 +83,7 @@
           <ScenePanel index={i} {runners} {run} {ready} />
         </section>
       {/each}
-      <section class="story-ending" aria-labelledby="story-end">
+      <section class="story-ending" aria-labelledby="story-end" use:reveal={{ variant: "settle", threshold: 0.08, skipInitialViewport: true }}>
         <p class="story-eyebrow">{data.ending.label}</p>
         <h2 id="story-end">{data.ending.question}</h2>
         <p class="story-answer">{data.ending.answer}</p>

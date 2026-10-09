@@ -49,6 +49,14 @@
   ::view-transition-old(root), ::view-transition-new(root) { mix-blend-mode: normal; }
   ::view-transition-old(root) { animation: route-fade-out var(--motion-press) ease-out both; }
   ::view-transition-new(root) { animation: route-fade-in var(--motion-route) var(--ease-settle) var(--motion-press) both; }
+  /* Story is a reading surface. Its arrival uses one gentle overlapping
+     crossfade, without the second hero animation or the general pause. */
+  html[data-route-destination='/story']::view-transition-old(root) {
+    animation: route-fade-out 240ms ease-in-out both;
+  }
+  html[data-route-destination='/story']::view-transition-new(root) {
+    animation: route-fade-in 460ms cubic-bezier(.16, 1, .3, 1) both;
+  }
   ::view-transition { pointer-events: none; }
   @keyframes route-fade-out { from { opacity: 1; } to { opacity: 0; } }
   @keyframes route-fade-in { from { opacity: 0; } to { opacity: 1; } }

@@ -33,7 +33,10 @@ test('opening Story keeps the portfolio transition and a clean portrait', async 
   await expect(page.locator('.story-intro-photo img')).toBeVisible();
   await expect(page.locator('.story-intro-photo figcaption')).toHaveCount(0);
   await expect(page.locator('.story-intro-photo picture')).toHaveCSS('height', /\d+(\.\d+)?px/);
-  await expect(page.locator('.story-intro-text')).toHaveCSS('animation-name', 'story-opening-copy');
+  // Navigation has one visual owner: the route crossfade. A separate hero
+  // keyframe used to stack opacity/movement on top of that transition.
+  await expect(page.locator('.story-intro-text')).toHaveCSS('animation-name', 'none');
+  await expect(page.locator('.story-intro-photo')).toHaveCSS('animation-name', 'none');
   if (!isMobile) {
     expect(await page.evaluate(() => (window as any).__storyRouteTransitionSeen)).toBe(true);
   }
@@ -91,7 +94,46 @@ test('Story remains readable and anchors work without JavaScript', async ({ brow
     await page.getByRole('link', { name: 'Start with the short version' }).click();
     await expect(page).toHaveURL(/\/story#story-summary$/);
     await expect(page.locator('#story-summary')).toBeInViewport();
+    await expect(page.locator('#story-f24 .story-copy')).not.toHaveAttribute('data-reveal', 'pending');
   } finally {
     await context.close();
+  }
+});
+
+test('Story reveals chapters and interactive examples as they enter the viewport', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/story');
+  await expect(page.locator('[data-story-ready]')).toBeVisible();
+
+  const copy = page.locator('#story-f24 .story-copy');
+  const example = page.locator('#story-f24 [data-story-panel]');
+  await expect(copy).toHaveAttribute('data-reveal', 'pending');
+  await expect(example).toHaveAttribute('data-reveal', 'pending');
+  await expect(example).toHaveAttribute('data-reveal-variant', 'frame');
+
+  await copy.scrollIntoViewIfNeeded();
+  await expect(copy).toHaveAttribute('data-reveal', 'in');
+  await example.scrollIntoViewIfNeeded();
+  await expect(example).toHaveAttribute('data-reveal', 'in');
+  await expect(example).toHaveCSS('opacity', '1');
+  await expect(page.locator('#story-f24 [data-story-action="0"]')).toBeEnabled();
+
+  // Once seen, a chapter must stay readable on a second visit.
+  await page.evaluate(() => scrollTo(0, 0));
+  await example.scrollIntoViewIfNeeded();
+  await expect(copy).toHaveAttribute('data-reveal', 'in');
+  await expect(example).toHaveAttribute('data-reveal', 'in');
+});
+
+test('reduced-motion Story and first-viewport content never wait for a reveal', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/story');
+  await expect(page.locator('[data-story-ready]')).toBeVisible();
+  for (const selector of ['.story-intro-text', '.story-intro-photo']) {
+    await expect(page.locator(selector)).toHaveCSS('animation-name', 'none');
+  }
+  for (const selector of ['.story-summary', '#story-f24 .story-copy', '#story-f24 [data-story-panel]']) {
+    await expect(page.locator(selector)).toHaveAttribute('data-reveal', 'in');
+    await expect(page.locator(selector)).toHaveCSS('opacity', '1');
   }
 });

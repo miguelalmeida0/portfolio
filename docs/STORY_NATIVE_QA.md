@@ -95,3 +95,23 @@ history snapshot race. The portrait no longer has an on-image caption.
 The historical QA evidence above describes the earlier native-only contract,
 not this later behavior. Regression coverage lives in
 `tests/e2e/specs/story-motion.spec.ts` and the updated Story test suite.
+
+## 9 October 2026: single-owner arrival and scroll reveals
+
+Entering Story originally stacked a 640ms headline fade/translate and a
+720ms portrait crop/scale inside the root View Transition's crossfade.
+The two animation timelines competed, especially when the route snapshot
+was captured during the intro animation. The page now uses only a gentle,
+Story-specific route crossfade. Mobile menu navigation keeps its existing
+veil, and Story history traversal keeps its native safeguards.
+
+Below-fold reading sections reveal once using the shared IntersectionObserver
+action: copy settles over a small distance, followed by a shallow aperture
+on its interactive example. Content already in the first viewport is not
+re-hidden during hydration. Motion remains optional, does not lock scrolling,
+and leaves native anchors, focus, keyboard navigation, reduced motion and
+JavaScript-disabled reading intact. No new animation dependencies were added.
+
+Regression coverage is in `tests/unit/story-reveal.test.mjs` and
+`tests/e2e/specs/story-motion.spec.ts`; the latter is included in
+desktop and mobile CI browser smoke.

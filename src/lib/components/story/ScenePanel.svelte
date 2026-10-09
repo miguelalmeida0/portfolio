@@ -1,12 +1,13 @@
 <script lang="ts">
   import data from '$lib/story/story.json';
   import { format } from '$lib/story/reading';
+  import { reveal } from '$lib/motion/actions/reveal';
   import type { SceneId, SceneRunner } from '$lib/story/scenes';
   import Scene from './Scene.svelte';
   let { index, runners, run, ready }: { index: number; runners: SceneRunner[]; run: (index: number, action: number) => void; ready: boolean } = $props();
   const question = $derived(data.questions[index]);
 </script>
-<div class="story-panel" data-story-panel>
+<div class="story-panel" data-story-panel use:reveal={{ variant: "frame", threshold: 0.08, skipInitialViewport: true }}>
   <p class="scene-caption" data-story-caption>{question.scene.caption}</p>
   <div class="scene-stage">
     <div class="story-scene" data-story-scene={question.id} role="region" aria-label={format(data.ui.illustration, { question: question.question })}>
