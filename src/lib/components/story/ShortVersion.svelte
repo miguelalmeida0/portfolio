@@ -33,7 +33,6 @@
       <h2 id="story-summary" tabindex="-1">{data.shortVersion.title}</h2>
       <p class="short-introduction">{data.shortVersion.intro}</p>
     </div>
-    <p class="short-aside">{data.shortVersion.aside}</p>
   </div>
 
   <ol class="short-journey" aria-label="My path into frontend">

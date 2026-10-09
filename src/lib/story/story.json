@@ -3,11 +3,11 @@
   "questions": [
     {
       "id": "hi",
-      "question": "So, how did you get here?",
-      "lead": "I've loved computers for as long as I can remember.",
-      "answer": "Technology had my attention long before it became my job. My career took a less obvious route: I started in aviation, found my way into UX, and eventually into frontend engineering. Looking back, each chapter taught me something I still use.",
+      "question": "How did you get into tech?",
+      "lead": "I started out in aviation.",
+      "answer": "I've been interested in computers since I was a kid, but aviation was where I began my career. I later studied UX design and moved into frontend engineering. Having worked in both design and development helps me think about the whole product.",
       "scene": {
-        "caption": "The path I took",
+        "caption": "My background",
         "actions": [
           "The journey",
           "What stayed with me"
@@ -16,11 +16,11 @@
     },
     {
       "id": "ux",
-      "question": "What did aviation have to do with UX?",
-      "lead": "More than you might think.",
-      "answer": "Aviation was my first professional world, and it made me pay attention to how people make decisions when clarity matters. UX gave me a new way to think about the same thing. Who is using this? What do they need to know? What happens when things don't go to plan?",
+      "question": "What did you learn from UX?",
+      "lead": "To understand the problem before designing a screen.",
+      "answer": "I learned to ask what someone is trying to do, what they need to know, and where they might get stuck. I still ask those questions when I'm building an interface.",
       "scene": {
-        "caption": "Three questions before the first pixel",
+        "caption": "Questions I ask before designing",
         "actions": [
           "Ask what they need",
           "Start again"
@@ -29,11 +29,11 @@
     },
     {
       "id": "build",
-      "question": "When did you start building things?",
-      "lead": "When I wanted to make the whole idea real.",
-      "answer": "I liked designing interfaces, but I kept wanting to know what happened behind them. Learning frontend meant I could take something from a rough idea to a working interaction. Even the loading states, the empty screens, and the awkward little edge cases became part of the design.",
+      "question": "Why did you move into frontend?",
+      "lead": "I wanted to build my own designs.",
+      "answer": "I enjoyed UX, but I wanted to work on the implementation too. Frontend gave me the chance to build the interactions, handle loading and error states, and see a feature through from start to finish.",
       "scene": {
-        "caption": "A screen has more than one state",
+        "caption": "An interface in different states",
         "actions": [
           "Loading",
           "Empty",
@@ -44,11 +44,11 @@
     },
     {
       "id": "f24",
-      "question": "What's your work at F24 like?",
-      "lead": "I work on software people need to be able to trust.",
-      "answer": "For four years I've helped build crisis management and critical communication software at F24. I built the original frontend in Svelte and now deliver work in React. It has taught me to think carefully about what a person sees when the situation is already stressful.",
+      "question": "What do you do at F24?",
+      "lead": "I build software for critical situations.",
+      "answer": "I've spent four years at F24 working on crisis management and critical communication software. I built the original Svelte frontend, and now I work in React. It matters that the information is clear and the interface stays reliable when people need it.",
       "scene": {
-        "caption": "An illustrative moment in a critical workflow",
+        "caption": "An example of a crisis management workflow",
         "actions": [
           "Trigger an alarm",
           "All clear"
@@ -57,11 +57,11 @@
     },
     {
       "id": "fail",
-      "question": "What details matter most to you?",
-      "lead": "Usually the ones no one notices when they work.",
-      "answer": "A failed refresh shouldn't wipe out the information someone already has. An older response shouldn't overwrite a newer one. Closing a panel should bring keyboard focus back to the right place. They're small decisions, but they say a lot about how much you care for the person using the product.",
+      "question": "What details do you care about?",
+      "lead": "The things that make a product reliable.",
+      "answer": "If a request fails, the data already on screen should stay there. A slow response shouldn't overwrite newer results. Closing a panel should return keyboard focus to the right place. They're not big visual features, but they make an interface much easier to use.",
       "scene": {
-        "caption": "The details that earn trust",
+        "caption": "Handling errors and keyboard focus",
         "actions": [
           "Drop the connection",
           "Race two filters",
@@ -71,11 +71,11 @@
     },
     {
       "id": "own",
-      "question": "And when you're building for yourself?",
-      "lead": "I follow the ideas I can't quite leave alone.",
-      "answer": "Second Voice explores rewriting while keeping the original words and changes visible. Flow turns something you say into a useful, editable action. Leu and Needle let me explore reading, learning and finding things differently. I love that personal projects give me room to be curious, try things, and own every detail.",
+      "question": "What do you build in your spare time?",
+      "lead": "I also work on my own products.",
+      "answer": "Second Voice is a writing tool that shows what changed in a rewrite. Flow turns spoken requests into editable actions. I've also built Leu, focused on reading and learning, and Needle, an artwork search project. I enjoy being able to design and build the whole thing myself.",
       "scene": {
-        "caption": "Two ideas I wanted to make real",
+        "caption": "Examples from Second Voice and Flow",
         "actions": [
           "Rewrite a sentence",
           "Say something to Flow"
@@ -84,11 +84,11 @@
     },
     {
       "id": "love",
-      "question": "What still makes you curious?",
-      "lead": "Those little 'wait, how does that work?' moments.",
-      "answer": "I love understanding the invisible parts of technology, whether that's DNS, TLS or what actually happens when you open a website. The part I enjoy most is turning a complicated idea into something another person can understand without feeling talked down to.",
+      "question": "What do you like learning about?",
+      "lead": "How things work behind the screen.",
+      "answer": "I like understanding the technical details behind things we use every day. DNS, TLS and what happens when you open a website are good examples. I also enjoy turning those explanations into interactive demos.",
       "scene": {
-        "caption": "A single web request, made visible",
+        "caption": "What happens during a web request",
         "actions": [
           "Send a request",
           "Explain each stop"
@@ -97,11 +97,11 @@
     },
     {
       "id": "care",
-      "question": "What kind of work makes you proud?",
-      "lead": "Work that's thoughtful, even where nobody's looking.",
-      "answer": "An interface should feel good, but it should also be accessible, resilient and honest about what's happening. I care about readable code, typed boundaries, proper tests and the next person who has to maintain what I've built. For me, good engineering is another way of looking after people.",
+      "question": "What matters to you when writing code?",
+      "lead": "Keeping it readable and reliable.",
+      "answer": "I care about accessibility, performance, tests and code that's easy for someone else to maintain. I don't want a project to be hard to use or hard to change because I rushed the implementation.",
       "scene": {
-        "caption": "A small example of care in the code",
+        "caption": "Checking a response before rendering",
         "actions": [
           "Send a bad field",
           "Send a good response"
@@ -119,12 +119,12 @@
     "Docker"
   ],
   "ending": {
-    "label": "One last thing",
-    "question": "It's nice to meet you.",
-    "answer": "I like working with people who notice the little things, ask good questions and care about how the finished product feels to the person using it. If that sounds like you, I'd love to hear what you're making.",
+    "label": "Contact",
+    "question": "Want to talk?",
+    "answer": "If you'd like to discuss my work, have a question or want to talk about a project, feel free to get in touch.",
     "ctas": [
       {
-        "label": "Say hello",
+        "label": "Get in touch",
         "href": "#contact",
         "primary": true
       },
@@ -141,28 +141,27 @@
   "shortVersion": {
     "kicker": "The short version",
     "title": "Hi, I'm Miguel.",
-    "intro": "Computers have fascinated me since I was a kid. The funny thing is, I didn't go straight into tech.",
-    "aside": "I'm still that curious kid. I just get to build things now.",
+    "intro": "I started my career in aviation, then moved into UX design and frontend engineering. Computers have been an interest of mine since I was a kid.",
     "chapters": [
       {
-        "period": "The beginning",
+        "period": "First",
         "title": "Aviation",
-        "text": "That's where my working life started. It gave me a lasting respect for clear information, good decisions and the people relying on both."
+        "text": "I started my career in aviation. Later I decided to move into UX design."
       },
       {
-        "period": "The change of direction",
+        "period": "Then",
         "title": "UX design",
-        "text": "I became interested in what makes a product feel understandable to a real person, not just look good in a mockup."
+        "text": "Studying UX taught me to think about the people using a product and the problems they're trying to solve."
       },
       {
-        "period": "Where it all came together",
+        "period": "Now",
         "title": "Frontend engineering",
-        "text": "Now I get to bring both sides together, designing and building products people can actually use."
+        "text": "I wanted to build the interfaces I designed, so I learned frontend development. Today I work with React, TypeScript and Svelte."
       }
     ],
-    "outro": "These days I'm based in Berlin, working on critical communication software and making my own little experiments whenever an idea won't leave me alone.",
+    "outro": "I'm based in Berlin and have worked at F24 for four years on crisis management software. Outside work, I've built Second Voice, Flow, Leu and Needle.",
     "copyLabel": "Copy my introduction",
-    "copyText": "Hi, I'm Miguel Almeida.\n\nI've loved computers since I was a kid. My career began in aviation, moved through UX design and led me to frontend engineering.\n\nI'm based in Berlin and have spent four years building critical communication software at F24, first in Svelte and now in React. I also build my own products, including Second Voice, Flow, Leu and Needle.\n\nI care about thoughtful design, reliable interfaces and making complicated things easier to understand.\n\nmiguelalmeida1592@gmail.com"
+    "copyText": "Hi, I'm Miguel Almeida.\n\nI've been interested in computers since I was a kid. I started my career in aviation, then moved into UX design and frontend engineering.\n\nI'm based in Berlin and work at F24 on crisis management and critical communication software. I built the original Svelte frontend and now work in React.\n\nI also build my own projects, including Second Voice, Flow, Leu and Needle.\n\nmiguelalmeida1592@gmail.com"
   },
   "progress": {
     "format": "Question {n} of {total} · {left} left",
@@ -187,14 +186,14 @@
   },
   "scenes": {
     "hi": {
-      "title": "The long way around",
+      "title": "My background",
       "recruiter": [
         [
-          "As a kid",
-          "Loved computers and technology"
+          "Growing up",
+          "Interested in computers"
         ],
         [
-          "First chapter",
+          "Started in",
           "Aviation"
         ],
         [
@@ -208,20 +207,20 @@
       ],
       "engineer": [
         [
-          "From aviation",
-          "Care about clarity when it counts"
+          "Aviation",
+          "Where my career started"
         ],
         [
-          "From UX",
-          "See the person behind the screen"
+          "UX",
+          "I learned to think about users"
         ],
         [
-          "From engineering",
-          "Build the idea all the way through"
+          "Frontend",
+          "I build working interfaces"
         ],
         [
-          "The constant",
-          "Curiosity about technology"
+          "Outside work",
+          "I build my own projects"
         ]
       ]
     },
@@ -315,7 +314,7 @@
       "title": "One web request",
       "ready": "ready",
       "flight": "in flight",
-      "intro": "One web request, drawn so it finally clicks. Hover a stop.",
+      "intro": "A web request, step by step. Hover, focus or tap a step to learn more.",
       "stops": [
         [
           "You",
@@ -335,7 +334,7 @@
         [
           "Server",
           "here you go",
-          "The server finally answers, and the page travels back to you."
+          "The server sends a response and your browser displays the page."
         ]
       ]
     },
@@ -370,18 +369,18 @@
   },
   "editorial": {
     "eyebrow": "A bit about me",
-    "title": "I took the scenic route to code.",
-    "intro": "I was the kid who loved computers. Getting here took a few unexpected turns through aviation and UX, and I'm glad it did. Here are eight little stories about what I learned along the way and what I love making now.",
-    "indexTitle": "Jump to a chapter",
+    "title": "A bit about me.",
+    "intro": "I've been interested in computers since I was a kid, but I started my career in aviation. After that I studied UX design, then moved into frontend engineering. These days I'm based in Berlin, working at F24 and building my own projects outside work.",
+    "indexTitle": "On this page",
     "topics": [
-      "Hello",
-      "From aviation to UX",
-      "Learning to build",
-      "At F24",
-      "The little details",
-      "After hours",
-      "Still curious",
-      "What matters"
+      "My background",
+      "Getting into UX",
+      "Learning frontend",
+      "Working at F24",
+      "Details that matter",
+      "Personal projects",
+      "Things I like learning",
+      "How I work"
     ],
     "summaryLink": "The short version"
   }

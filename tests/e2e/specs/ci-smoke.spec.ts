@@ -640,7 +640,7 @@ test('Story shares the path from aviation to UX to frontend in an accessible rea
   for (const width of [390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/story');
-    await expect(page.locator('#story-title')).toHaveText('I took the scenic route to code.');
+    await expect(page.locator('#story-title')).toHaveText('A bit about me.');
     await expect(page.locator('.short-journey li')).toHaveCount(3);
     await expect(page.locator('.short-journey')).toContainText('Aviation');
     await expect(page.locator('.short-journey')).toContainText('UX design');

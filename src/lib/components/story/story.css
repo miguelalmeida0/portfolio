@@ -114,12 +114,7 @@
   background: var(--story-forest);
   color: var(--story-paper);
 }
-.short-opening {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 32px;
-}
+.short-opening { display: block; }
 .short-kicker { margin: 0; color: var(--story-spring); font-size: 14px; font-weight: 650; }
 .short-version h2 {
   max-width: 16ch;
@@ -135,13 +130,6 @@
   font-size: clamp(18px, 1.45vw, 21px);
   font-weight: 450;
   line-height: 1.55;
-}
-.short-aside {
-  max-width: 21ch;
-  margin: 0 0 4px;
-  color: #D7E4D3;
-  font-size: clamp(16px, 1.4vw, 19px);
-  line-height: 1.5;
 }
 .short-journey {
   display: grid;
@@ -327,7 +315,6 @@
   .story-index .summary-link { grid-column: 1 / -1; margin-top: 8px; }
   .story-question { padding-block: 44px; }
   .story-panel { padding: 24px; }
-  .short-aside { display: none; }
   .short-journey { gap: 22px; }
   .short-chapter-copy { font-size: 15px; }
 }

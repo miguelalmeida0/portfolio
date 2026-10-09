@@ -27,7 +27,7 @@ for (const [width,height] of [[1440,900],[1280,800],[768,1024],[390,844],[375,81
     });
     await page.goto('/story');
     await expect(page.locator('[data-story-ready]')).toBeVisible();
-    await expect(page.locator('h1')).toHaveText('I took the scenic route to code.');
+    await expect(page.locator('h1')).toHaveText('A bit about me.');
     await expect(page.locator('[data-story-scene]')).toHaveCount(8);
     await expect(page.locator('[data-story-scene][inert]')).toHaveCount(0);
     await expect(page.locator('.story-progress,.story-visual')).toHaveCount(0);
@@ -103,7 +103,7 @@ test('all eight examples work independently of scrolling and respect reduced mot
   await page.goto('/story');
   await expect(page.locator('[data-story-ready]')).toBeVisible();
   await page.getByRole('button',{name:'What stayed with me',exact:true}).click();
-  await expect(page.locator('[data-story-scene="hi"]')).toContainText('Build the idea all the way through');
+  await expect(page.locator('[data-story-scene="hi"]')).toContainText('I build working interfaces');
   await page.getByRole('button',{name:'Ask what they need',exact:true}).click();
   await expect(page.locator('[data-story-scene="ux"] .revealed')).toHaveCount(3);
   await page.getByRole('button',{name:'Couldn’t refresh',exact:true}).click();
@@ -122,7 +122,7 @@ test('all eight examples work independently of scrolling and respect reduced mot
   await page.getByRole('button',{name:'Rewrite a sentence',exact:true}).click();
   await expect(page.locator('[data-story-scene="own"]')).toContainText('Every change is marked');
   await page.getByRole('button',{name:'Send a request',exact:true}).click();
-  await expect(page.locator('[data-story-scene="love"]')).toContainText('The server finally answers');
+  await expect(page.locator('[data-story-scene="love"]')).toContainText('The server sends a response');
   await page.getByRole('button',{name:'Send a bad field',exact:true}).click();
   await expect(page.locator('[data-story-scene="care"]')).toContainText('Time unavailable');
   await page.getByRole('button',{name:'Send a good response',exact:true}).click();
