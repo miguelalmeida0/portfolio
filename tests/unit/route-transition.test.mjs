@@ -11,7 +11,7 @@ const deferred = () => { let resolve, reject; const promise = new Promise((a, b)
 const flush = async () => { for (let i = 0; i < 12; i++) await Promise.resolve(); };
 
 function setup({ reduced = false, mobile = true } = {}) {
-  const animations = [], events = [], hooks = {}, frames = [];
+  const animations = [], events = [], hooks = {}, frames = [], identityTransitions = [];
   const navigation = deferred();
   const element = () => ({ hidden: true, style: {}, dataset: {}, animate(keyframes, options) {
     const done = deferred(); const animation = { ...done, keyframes, options, finished: done.promise, cancel() {} };
@@ -38,6 +38,13 @@ function setup({ reduced = false, mobile = true } = {}) {
     svelte: { onMount: fn => hooks.mount = fn, onDestroy: fn => hooks.destroy = fn, tick: async () => { events.push('tick'); } },
     'svelte/store': { writable: initial => { let state = initial; return { set(value) { state = value; }, subscribe(fn) { fn(state); return () => {}; }, get value() { return state; } }; } },
     './policy': { motionSnapshot: () => ({ reduced }) },
+    './story-identity-transition': {
+      createStoryIdentityTransition: () => ({
+        begin: (from, to) => { identityTransitions.push([from, to]); return Promise.resolve(); },
+        destroy() {},
+        get active() { return false; }
+      })
+    },
     './tokens': { easing: { settle: 'cubic-bezier(0.22,1,0.36,1)' } },
     './smooth-scroll': { resetScrollMotion() {}, syncScrollPosition: () => events.push('scroll-synced'), scrollToElement: (target, options) => events.push('scroll:' + target.id + ':' + options.focus) }
   };
@@ -48,7 +55,7 @@ function setup({ reduced = false, mobile = true } = {}) {
   const owner = exports.installRouteTransitions(() => veil);
   const click = (fields = {}) => ({ currentTarget: link, button: 0, defaultPrevented: false,
     preventDefault() { this.defaultPrevented = true; }, ...fields });
-  return { owner, hooks, animations, frames, veil, events, navigation, click,
+  return { owner, hooks, animations, frames, veil, events, identityTransitions, navigation, click,
     close: () => { assert.equal(veil.style.opacity, '1'); events.push('close'); } };
 }
 
@@ -174,4 +181,20 @@ test('same-page work menu link closes, updates history and scrolls with focus wi
   assert.deepEqual(s.events, ['closed-anchor', 'tick', 'push:#work', 'scroll:work:true']);
   assert.equal(s.animations.length, 0);
   assert.equal(s.owner.mobileState.value, 'idle');
+});
+
+test('Story identity owns direct entry and the return home', async () => {
+  const s = setup({mobile:false});
+  const complete = Promise.resolve();
+  const location = path => ({url:new URL('https://portfolio.test' + path)});
+  await s.hooks.on({type:'link',from:location('/'),to:location('/story'),complete});
+  await s.hooks.on({type:'link',from:location('/story'),to:location('/'),complete});
+  assert.deepEqual(s.identityTransitions, [['/','/story'], ['/story','/']]);
+  assert.equal(s.animations.length, 0);
+});
+test('reduced motion skips the name silhouette', async () => {
+  const s = setup({mobile:false,reduced:true});
+  await s.hooks.on({type:'link',from:{url:new URL('https://portfolio.test/')},
+    to:{url:new URL('https://portfolio.test/story')},complete:Promise.resolve()});
+  assert.deepEqual(s.identityTransitions, []);
 });

@@ -4,6 +4,7 @@ import { writable } from 'svelte/store';
 import { motionSnapshot } from './policy';
 import { resetScrollMotion, scrollToElement, syncScrollPosition } from './smooth-scroll';
 import { easing } from './tokens';
+import { createStoryIdentityTransition } from './story-identity-transition';
 
 /**
  * Progressive-enhancement route continuity built on the native View Transitions API.
@@ -25,37 +26,6 @@ import { easing } from './tokens';
 export const SHARED_MEDIA_SLUGS = ['ghostwriter'] as const;
 
 export const PROJECT_MEDIA_TRANSITION_NAME = 'project-media';
-export const STORY_PORTRAIT_TRANSITION_NAME = 'story-portrait';
-
-// A photo should only travel when it is actually in view and decoded. A jump
-// from an offscreen position would feel disconnected from the visitor's action.
-function visibleHomePortrait(): HTMLElement | null {
-  const picture = document.querySelector<HTMLElement>('[data-story-flight-source]');
-  const image = picture?.querySelector<HTMLImageElement>('img');
-  if (!picture || !image?.complete || !image.naturalWidth) return null;
-
-  const bounds = picture.getBoundingClientRect();
-  const visibleWidth = Math.min(bounds.right, innerWidth) - Math.max(bounds.left, 0);
-  const visibleHeight = Math.min(bounds.bottom, innerHeight) - Math.max(bounds.top, 0);
-  if (visibleWidth < Math.min(bounds.width * 0.6, 180) ||
-      visibleHeight < Math.min(bounds.height * 0.6, 200)) return null;
-  return picture;
-}
-
-function canTravelToStory(): boolean {
-  return viewTransitionsSupported() && document.visibilityState === 'visible' &&
-    !motionSnapshot().reduced && Boolean(visibleHomePortrait());
-}
-
-function claimStoryPortrait(): void {
-  const picture = visibleHomePortrait();
-  if (!picture) return;
-  releaseClaimedFrames();
-  picture.style.viewTransitionName = STORY_PORTRAIT_TRANSITION_NAME;
-  picture.dataset.vtClaimed = 'true';
-  document.documentElement.dataset.storyPortraitFlight = 'active';
-}
-
 type StartViewTransition = (callback: () => Promise<void> | void) => {
   finished: Promise<void>;
   ready: Promise<void>;
@@ -86,7 +56,6 @@ export function claimProjectMediaFrame(frame: HTMLElement | null | undefined, hr
 
 function releaseClaimedFrames() {
   if (typeof document === 'undefined') return;
-  delete document.documentElement.dataset.storyPortraitFlight;
   for (const element of document.querySelectorAll<HTMLElement>('[data-vt-claimed="true"]')) {
     element.style.viewTransitionName = '';
     delete element.dataset.vtClaimed;
@@ -102,7 +71,8 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
   const navigationError = writable('');
   let active = false;
   let ownedNavigation = false;
-  let storyPortraitNavigation = false;
+  let storyIdentityNavigation = false;
+  const storyIdentity = createStoryIdentityTransition();
   let disposed = false;
   let nativeTransition: ReturnType<StartViewTransition> | undefined;
   const animations = new Set<Animation>();
@@ -185,7 +155,7 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
     if (!event.defaultPrevented && link.target === '_blank') { close(); return; }
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey ||
       event.shiftKey || event.altKey || link.download || (link.target && link.target !== '_self')) return;
-    if (storyPortraitNavigation) { event.preventDefault(); return; }
+    if (storyIdentityNavigation) { event.preventDefault(); return; }
     const url = new URL(link.href);
     if (url.origin === location.origin && url.pathname === location.pathname && url.search === location.search && url.hash) {
       let target: HTMLElement | null;
@@ -201,14 +171,13 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
     }
     if (url.origin !== location.origin) return;
 
-    // Let the same-document View Transition carry the real portrait on mobile.
-    // The menu must close before the old photograph is snapshotted. Other
-    // destinations, unsupported browsers, offscreen photos and reduced motion
-    // retain the existing opaque veil.
-    if (location.pathname === '/' && url.pathname === '/story' && !url.hash &&
-        !active && canTravelToStory()) {
+    // The mobile menu closes before the name-and-silhouette sequence starts.
+    // This keeps one animation owner and leaves reduced-motion navigation on
+    // the existing accessible opaque veil.
+    if (location.pathname !== '/story' && url.pathname === '/story' && !url.hash &&
+        !active && !motionSnapshot().reduced && document.visibilityState === 'visible') {
       event.preventDefault();
-      storyPortraitNavigation = true;
+      storyIdentityNavigation = true;
       navigationError.set('');
       link.dataset.selected = 'true';
       close();
@@ -232,7 +201,7 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
       } catch {
         navigationError.set('Navigation could not finish. Please try again.');
       } finally {
-        storyPortraitNavigation = false;
+        storyIdentityNavigation = false;
         delete link.dataset.selected;
       }
       return;
@@ -265,6 +234,7 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
   onDestroy(() => {
     disposed = true;
     animations.forEach(animation => animation.cancel());
+    storyIdentity.destroy();
   });
 
   onNavigate((navigation) => {
@@ -273,7 +243,19 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
     if (active) return;
     const from = navigation.from?.url;
     const to = navigation.to?.url;
-    // Entering Story by link has the same native transition as a case study.
+
+    // Match the homepage's original name/silhouette intro in BOTH directions.
+    // The screen is covered before Kit commits the new route; there is no
+    // competing native root snapshot or photo-flight animation.
+    const identityRoute = from && to && from.pathname !== to.pathname &&
+      (to.pathname === '/story' || (from.pathname === '/story' && to.pathname === '/'));
+    if (identityRoute && !motionSnapshot().reduced && document.visibilityState === 'visible') {
+      nativeTransition?.skipTransition();
+      releaseClaimedFrames();
+      return storyIdentity.begin(from.pathname, to.pathname, navigation.complete);
+    }
+
+    // Other Story history and reduced-motion routes retain the safe native path.
     // Leave Story and restore Story history without a snapshot: previously,
     // rapid Back/reload could race Kit's scroll and history restoration.
     if (from?.pathname === '/story' || (navigation.type === 'popstate' && to?.pathname === '/story')) {
@@ -310,14 +292,6 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
     if (!startViewTransition) {
       releaseClaimedFrames();
       return;
-    }
-
-    // Extract the identical photograph from each root snapshot. The browser
-    // interpolates its real source and target bounds; no floating DOM clone,
-    // timeout-based position calculation or second entrance animation.
-    if (from?.pathname === '/' && to.pathname === '/story' &&
-        navigation.type !== 'popstate' && canTravelToStory()) {
-      claimStoryPortrait();
     }
 
     document.documentElement.dataset.routeTransition = 'active';

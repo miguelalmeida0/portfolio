@@ -50,8 +50,8 @@ async function select(page: Page, label: string) {
 test.describe('mobile route veil', () => {
   test.skip(({ isMobile }) => !isMobile, 'Burger flow runs on mobile projects');
   for (const viewport of [{ width: 390, height: 844 }, { width: 393, height: 852 }, { width: 430, height: 932 }]) {
-    // Story uses a shared-photo transition when its source is visible. The
-    // remaining destinations keep the tested opaque mobile veil.
+    // Story now owns a separate name-silhouette handoff. Other destinations
+    // keep the opaque mobile veil covered by these regression assertions.
     for (const [label, slug] of [['CV', 'cv']]) {
       test(`${viewport.width}: Home → ${label} stays covered through commit`, async ({ page }, testInfo) => {
         await page.setViewportSize(viewport);

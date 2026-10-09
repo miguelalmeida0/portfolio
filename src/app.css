@@ -57,43 +57,6 @@
   html[data-route-destination='/story']::view-transition-new(root) {
     animation: route-fade-in 460ms cubic-bezier(.16, 1, .3, 1) both;
   }
-  /* The photograph is the continuity anchor from Home to Story.
-     The browser owns its FLIP geometry; the frame and both snapshots
-     get a single carefully timed settle, above the quiet page crossfade. */
-  html[data-story-portrait-flight='active'] [data-story-flight-target] {
-    view-transition-name: story-portrait;
-  }
-  html[data-story-portrait-flight='active']::view-transition-group(story-portrait) {
-    animation-duration: 760ms;
-    animation-timing-function: cubic-bezier(.18, .84, .23, 1);
-    background: #e7ecd8;
-    border-radius: 16px;
-    overflow: hidden;
-    z-index: 2;
-  }
-  html[data-story-portrait-flight='active']::view-transition-image-pair(story-portrait) {
-    isolation: isolate;
-    overflow: hidden;
-    border-radius: inherit;
-  }
-  html[data-story-portrait-flight='active']::view-transition-old(story-portrait),
-  html[data-story-portrait-flight='active']::view-transition-new(story-portrait) {
-    mix-blend-mode: normal;
-  }
-  html[data-story-portrait-flight='active']::view-transition-old(story-portrait) {
-    animation: story-photo-out 580ms ease-in both;
-  }
-  html[data-story-portrait-flight='active']::view-transition-new(story-portrait) {
-    animation: story-photo-in 540ms cubic-bezier(.18, .84, .23, 1) 120ms both;
-  }
-  html[data-story-portrait-flight='active']::view-transition-old(root) {
-    animation: route-fade-out 290ms ease-in both;
-  }
-  html[data-story-portrait-flight='active']::view-transition-new(root) {
-    animation: route-fade-in 470ms cubic-bezier(.18, .84, .23, 1) 100ms both;
-  }
-  @keyframes story-photo-out { from { opacity: 1; } to { opacity: 0; } }
-  @keyframes story-photo-in { from { opacity: 0; } to { opacity: 1; } }
   ::view-transition { pointer-events: none; }
   @keyframes route-fade-out { from { opacity: 1; } to { opacity: 0; } }
   @keyframes route-fade-in { from { opacity: 0; } to { opacity: 1; } }

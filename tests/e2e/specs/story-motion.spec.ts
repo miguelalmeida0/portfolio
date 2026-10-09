@@ -5,16 +5,16 @@ test('opening Story keeps the portfolio transition and a clean portrait', async 
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
   await page.evaluate(() => {
-    (window as any).__storyRouteTransitionSeen = false;
+    (window as any).__storyIdentitySeen = false;
     const observer = new MutationObserver(() => {
-      if (document.documentElement.dataset.routeTransition === 'active') {
-        (window as any).__storyRouteTransitionSeen = true;
+      if (document.documentElement.dataset.storyIdentityTransition === 'covering') {
+        (window as any).__storyIdentitySeen = true;
         observer.disconnect();
       }
     });
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['data-route-transition']
+      attributeFilter: ['data-story-identity-transition']
     });
   });
   if (isMobile) {
@@ -33,12 +33,12 @@ test('opening Story keeps the portfolio transition and a clean portrait', async 
   await expect(page.locator('.story-intro-photo img')).toBeVisible();
   await expect(page.locator('.story-intro-photo figcaption')).toHaveCount(0);
   await expect(page.locator('.story-intro-photo picture')).toHaveCSS('height', /\d+(\.\d+)?px/);
-  // Navigation has one visual owner: the route crossfade. A separate hero
-  // keyframe used to stack opacity/movement on top of that transition.
+  // The name silhouette owns navigation. Independent hero keyframes must not
+  // run on top of its choreography.
   await expect(page.locator('.story-intro-text')).toHaveCSS('animation-name', 'none');
   await expect(page.locator('.story-intro-photo')).toHaveCSS('animation-name', 'none');
   if (!isMobile) {
-    expect(await page.evaluate(() => (window as any).__storyRouteTransitionSeen)).toBe(true);
+    expect(await page.evaluate(() => (window as any).__storyIdentitySeen)).toBe(true);
   }
 });
 

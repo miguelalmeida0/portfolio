@@ -52,7 +52,7 @@
     </a>
     {#if !story}<nav aria-label="Main navigation" class="hidden shrink-0 items-center gap-7 text-sm min-[64rem]:flex">
       {#each primaryNavigation as link}
-        <a data-ask-id={homepage ? `nav-${link.label.toLowerCase()}` : undefined} class="group ink-link hover:text-plum hover:underline" href={link.href}>{link.label}{#if link.label === 'CV'} <ArrowRight size={18} aria-hidden="true" class="transition-transform group-hover:translate-x-0.5" />{/if}</a>
+        <a data-ask-id={homepage ? `nav-${link.label.toLowerCase()}` : undefined} class="group ink-link hover:text-plum hover:underline" href={link.href} data-sveltekit-preload-data={link.href === '/story' ? 'hover' : undefined}>{link.label}{#if link.label === 'CV'} <ArrowRight size={18} aria-hidden="true" class="transition-transform group-hover:translate-x-0.5" />{/if}</a>
       {/each}
       <button class="guide-trigger" data-ask-trigger type="button" aria-expanded={askActive} disabled={!guideReady || navigationTransitionActive} aria-label={askActive ? 'Close Ask MiguelLLM' : 'Ask MiguelLLM'} onclick={toggleGuide}>Ask MiguelLLM</button>
     </nav>

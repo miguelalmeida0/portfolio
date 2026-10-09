@@ -134,3 +134,25 @@ Story exit and history snapshot safety is unchanged.
 
 Regression tests for image continuity, mobile entry, reduced motion and
 shared-photo cleanup are in `tests/e2e/specs/story-portrait-transition.spec.ts`.
+
+## 9 October 2026: the name silhouette replaces the portrait flight
+
+The photograph's shared View Transition did not match the original introduction,
+so the photo flight has been removed. Home to Story, Story back to Home,
+browser history between them, and other-page visits into Story now use one
+condensed name-and-silhouette transition inspired by the existing first-visit
+introduction. It reuses the exact 63 rows of MIGUEL ALMEIDA typography and the
+original silhouette path, with the decoded photograph's alpha mask where
+available.
+
+One fixed surface covers the old route before Kit commits the new document,
+then the name lettering resolves toward the destination portrait. Position
+is measured from the real object-fit image rectangle. Offscreen or undecoded
+portraits begin from the centered name instead of flying from nowhere.
+Navigation uses one owner, avoids competing root view transitions, and takes
+less than one second at standard motion preferences. Reduced motion keeps
+the original accessible route behavior; interruption releases hidden images
+and removes the overlay. The first-visit introduction is unchanged.
+
+Regression tests are in `tests/e2e/specs/story-identity-transition.spec.ts`
+and `tests/unit/route-transition.test.mjs`.
