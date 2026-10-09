@@ -5,16 +5,17 @@ test('opening Story keeps the portfolio transition and a clean portrait', async 
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
   await page.evaluate(() => {
-    (window as any).__storyIdentitySeen = false;
+    (window as any).__storyFadeSeen = false;
+    const veil = document.querySelector('[data-route-veil]');
     const observer = new MutationObserver(() => {
-      if (document.documentElement.dataset.storyIdentityTransition === 'covering') {
-        (window as any).__storyIdentitySeen = true;
+      if (veil?.getAttribute('data-phase') === 'covering') {
+        (window as any).__storyFadeSeen = true;
         observer.disconnect();
       }
     });
-    observer.observe(document.documentElement, {
+    if (veil) observer.observe(veil, {
       attributes: true,
-      attributeFilter: ['data-story-identity-transition']
+      attributeFilter: ['data-phase']
     });
   });
   if (isMobile) {
@@ -33,12 +34,12 @@ test('opening Story keeps the portfolio transition and a clean portrait', async 
   await expect(page.locator('.story-intro-photo img')).toBeVisible();
   await expect(page.locator('.story-intro-photo figcaption')).toHaveCount(0);
   await expect(page.locator('.story-intro-photo picture')).toHaveCSS('height', /\d+(\.\d+)?px/);
-  // The name silhouette owns navigation. Independent hero keyframes must not
-  // run on top of its choreography.
+  // Only the full-page opacity fade owns Story navigation; the hero itself
+  // must not run a second entrance animation.
   await expect(page.locator('.story-intro-text')).toHaveCSS('animation-name', 'none');
   await expect(page.locator('.story-intro-photo')).toHaveCSS('animation-name', 'none');
   if (!isMobile) {
-    expect(await page.evaluate(() => (window as any).__storyIdentitySeen)).toBe(true);
+    expect(await page.evaluate(() => (window as any).__storyFadeSeen)).toBe(true);
   }
 });
 

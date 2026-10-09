@@ -156,3 +156,20 @@ and removes the overlay. The first-visit introduction is unchanged.
 
 Regression tests are in `tests/e2e/specs/story-identity-transition.spec.ts`
 and `tests/unit/route-transition.test.mjs`.
+
+## 9 October 2026: single full-page fade for Story navigation
+
+The user rejected the portrait-flight and name-silhouette route effects. Their
+experimental modules, related styles and browser tests have been removed.
+Story now uses the portfolio's existing full-page route veil, with only opacity
+animated (230 ms cover, 400 ms reveal), in both directions, including page
+history navigation. Kit commits the new route while the page is completely
+covered. No letter shapes, moving images, zoom, masking, blur or extra hero
+entrance animations participate. Mobile menu navigation uses the same fade
+with focus and screen-reader behavior preserved.
+
+The homepage's original first-visit name introduction is independent and was
+not changed. Normal Story Lenis scrolling, chapter links and below-fold
+reveals are unchanged. Reduced-motion visitors see no decorative fade.
+Validation is in `tests/e2e/specs/story-fade-transition.spec.ts` and the
+route owner's unit tests; the former runs on desktop and mobile in CI.

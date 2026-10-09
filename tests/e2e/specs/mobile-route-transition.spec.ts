@@ -50,8 +50,8 @@ async function select(page: Page, label: string) {
 test.describe('mobile route veil', () => {
   test.skip(({ isMobile }) => !isMobile, 'Burger flow runs on mobile projects');
   for (const viewport of [{ width: 390, height: 844 }, { width: 393, height: 852 }, { width: 430, height: 932 }]) {
-    // Story now owns a separate name-silhouette handoff. Other destinations
-    // keep the opaque mobile veil covered by these regression assertions.
+    // Story uses the same opacity-only full-page veil with a longer settle.
+    // CV retains the original, faster timings asserted by this matrix.
     for (const [label, slug] of [['CV', 'cv']]) {
       test(`${viewport.width}: Home → ${label} stays covered through commit`, async ({ page }, testInfo) => {
         await page.setViewportSize(viewport);
