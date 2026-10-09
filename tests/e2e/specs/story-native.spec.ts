@@ -30,7 +30,7 @@ for (const [width,height] of [[1440,900],[1280,800],[768,1024],[390,844],[375,81
     });
     await page.goto('/story');
     await expect(page.locator('[data-story-ready]')).toBeVisible();
-    await expect(page.locator('h1')).toHaveText('The story behind the work.');
+    await expect(page.locator('h1')).toHaveText('I took the scenic route to code.');
     await expect(page.locator('[data-story-scene]')).toHaveCount(8);
     await expect(page.locator('[data-story-scene][inert]')).toHaveCount(0);
     await expect(page.locator('.story-progress,.story-visual')).toHaveCount(0);
@@ -74,7 +74,7 @@ for (const [width,height] of [[1440,900],[1280,800],[768,1024],[390,844],[375,81
     }
     await page.screenshot({path:`artifacts/portfolio-corrections/native/${width}-${reduced}-chapter.png`});
     await index.getByRole('link',{name:'The short version',exact:true}).click();
-    await expect(page.locator('.short-version li')).toHaveCount(8);
+    await expect(page.locator('.short-version li')).toHaveCount(3);
     for(const line of await page.locator('.short-version li').all()) expect(await line.evaluate(node=>getComputedStyle(node).opacity)).toBe('1');
     await expect(back).toBeInViewport();
     const endY=await page.evaluate(()=>scrollY);
@@ -104,8 +104,8 @@ test('all eight examples work independently of scrolling and respect reduced mot
   await page.emulateMedia({reducedMotion:'reduce'});
   await page.goto('/story');
   await expect(page.locator('[data-story-ready]')).toBeVisible();
-  await page.getByRole('button',{name:'For an engineer',exact:true}).click();
-  await expect(page.locator('[data-story-scene="hi"]')).toContainText('TypeScript · React · Svelte');
+  await page.getByRole('button',{name:'What stayed with me',exact:true}).click();
+  await expect(page.locator('[data-story-scene="hi"]')).toContainText('Build the idea all the way through');
   await page.getByRole('button',{name:'Ask what they need',exact:true}).click();
   await expect(page.locator('[data-story-scene="ux"] .revealed')).toHaveCount(3);
   await page.getByRole('button',{name:'Couldn’t refresh',exact:true}).click();

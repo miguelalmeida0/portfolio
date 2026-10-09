@@ -634,3 +634,19 @@ test('primary routes render without uncaught client exceptions', async ({ page }
 
   expect(pageErrors).toEqual([]);
 });
+
+
+test('Story shares the path from aviation to UX to frontend in an accessible reading flow', async ({ page }) => {
+  for (const width of [390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/story');
+    await expect(page.locator('#story-title')).toHaveText('I took the scenic route to code.');
+    await expect(page.locator('.short-journey li')).toHaveCount(3);
+    await expect(page.locator('.short-journey')).toContainText('Aviation');
+    await expect(page.locator('.short-journey')).toContainText('UX design');
+    await expect(page.locator('.short-journey')).toContainText('Frontend engineering');
+    await expect(page.locator('.story-intro-photo img')).toHaveAttribute('alt', 'Portrait of Miguel Almeida');
+    await expect(page.getByRole('navigation', { name: 'Story chapters' }).getByRole('link', { name: '01 Hello' })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(false);
+  }
+});

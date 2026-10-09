@@ -45,9 +45,19 @@
     <a href="/#top" aria-label="Back to home"><span aria-hidden="true">‹</span> Back</a>
   </nav>
   <header class="story-intro">
-    <p class="story-eyebrow">{data.editorial.eyebrow}</p>
-    <h1 id="story-title">{data.editorial.title}</h1>
-    <p class="story-intro-copy">{data.editorial.intro}</p>
+    <div class="story-intro-text">
+      <h1 id="story-title">{data.editorial.title}</h1>
+      <p class="story-intro-copy">{data.editorial.intro}</p>
+      <a class="story-hero-link" href="#story-summary">Start with the short version <span aria-hidden="true">↓</span></a>
+    </div>
+    <figure class="story-intro-photo">
+      <picture>
+        <source type="image/avif" srcset="/images/wind-full-720.avif 720w, /images/wind-full-1086.avif 1086w" sizes="(max-width: 799px) 260px, 340px" />
+        <source type="image/webp" srcset="/images/wind-full-720.webp 720w, /images/wind-full-1086.webp 1086w" sizes="(max-width: 799px) 260px, 340px" />
+        <img src="/images/miguel-contact-editorial.webp" width="1086" height="1448" alt="Portrait of Miguel Almeida" loading="eager" decoding="async" />
+      </picture>
+      <figcaption>In Berlin these days. Still curious.</figcaption>
+    </figure>
   </header>
   <section class="story-summary story-summary-first" data-story-section data-chapter="summary" aria-labelledby="story-summary"><ShortVersion /></section>
   <div class="story-layout">
