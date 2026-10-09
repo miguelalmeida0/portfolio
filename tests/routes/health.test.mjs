@@ -10,7 +10,7 @@ const routes = [
   ['/work/needle', /^From a query to a visible artwork\.$/],
   ['/work/second-voice', /^Choose a literary voice\. See exactly what changes\.$/],
   ['/work/f24', /^From mockup to production system\.$/],
-  ['/work/leu', /^From PDF text to learner state\.$/],
+  ['/work/leu', /^Built around the page\.$/],
   ['/work/flow', /^From speech to deterministic state\.$/]
 ];
 const results = [];
