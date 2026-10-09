@@ -6,12 +6,12 @@ const baseURL = process.env.ROUTE_HEALTH_BASE_URL || 'http://localhost:4173';
 const routes = [
   ['/', /^Frontend engineer & product designer\b/],
   ['/cv', /^Miguel Almeida\b/],
-  ['/story', /^Story$/],
-  ['/work/needle', /^Needle$/],
-  ['/work/second-voice-ai', /^Second Voice\b/],
-  ['/work/f24', /^F24\b/],
-  ['/work/leu', /^Leu\b/],
-  ['/work/flow', /^Flow\b/]
+  ['/story', /^The story behind the work\.$/],
+  ['/work/needle', /^From a query to a visible artwork\.$/],
+  ['/work/second-voice', /^Choose a literary voice\. See exactly what changes\.$/],
+  ['/work/f24', /^From mockup to production system\.$/],
+  ['/work/leu', /^From PDF text to learner state\.$/],
+  ['/work/flow', /^From speech to deterministic state\.$/]
 ];
 const results = [];
 

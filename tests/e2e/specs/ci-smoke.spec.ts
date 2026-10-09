@@ -49,8 +49,8 @@ for (const { slug, live, code } of caseStudyActions) {
       const popupEvent = page.waitForEvent('popup');
       await page.locator('#pnav').getByRole('link', { name: label, exact: true }).click();
       const popup = await popupEvent;
-      await popup.waitForLoadState('domcontentloaded');
-      expect(popup.url()).toBe(new URL(href).href);
+      await expect(popup).toHaveURL(new URL(href).href);
+      await expect(popup.locator('h1')).toHaveText('External destination');
       expect(await popup.evaluate(() => window.opener)).toBeNull();
       expect(page.url()).toBe(portfolioURL);
       await expect(page.locator('#pnav')).toBeVisible();
