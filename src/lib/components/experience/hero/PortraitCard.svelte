@@ -3,7 +3,7 @@
   // Use the complete transparent source directly over the sage field.
 </script>
 <div class="portrait-card" data-landing-target data-portrait-card>
-  <picture>
+  <picture data-story-flight-source>
     <source type="image/avif" srcset="/images/wind-full-720.avif 720w, /images/wind-full-1086.avif 1086w" sizes="(max-width: 767px) 250px, 357px" />
     <source type="image/webp" srcset="/images/wind-full-720.webp 720w, /images/wind-full-1086.webp 1086w" sizes="(max-width: 767px) 250px, 357px" />
     <img class="portrait" src="/images/miguel-contact-editorial.webp" width="1086" height="1448" alt="Miguel Almeida" fetchpriority="high" />

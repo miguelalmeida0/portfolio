@@ -115,3 +115,22 @@ JavaScript-disabled reading intact. No new animation dependencies were added.
 Regression coverage is in `tests/unit/story-reveal.test.mjs` and
 `tests/e2e/specs/story-motion.spec.ts`; the latter is included in
 desktop and mobile CI browser smoke.
+
+## 9 October 2026: portrait continuity from Home
+
+The homepage photograph and Story photograph now participate in a named,
+same-document View Transition when the home picture is decoded and visible.
+The same original portrait is snapshotted and interpolated by the browser.
+Only the real picture travels, not the Ask UI over the home photograph.
+The sage background moves with the snapshot and the root scene crossfades
+quietly behind it. A duration under 800 ms uses a settling ease without
+bouncing, a separate overlay clone, layout mutations or new dependencies.
+
+On mobile, an eligible home-to-Story link closes the menu before the snapshot
+and permits the same browser-managed photo transition. Rapid repeated taps
+remain single-owner. Offscreen, undecoded, unsupported and reduced-motion
+cases retain the existing navigation, including its mobile opaque veil.
+Story exit and history snapshot safety is unchanged.
+
+Regression tests for image continuity, mobile entry, reduced motion and
+shared-photo cleanup are in `tests/e2e/specs/story-portrait-transition.spec.ts`.
