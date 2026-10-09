@@ -31,8 +31,16 @@ for (const [width,height] of [[1440,900],[1280,800],[768,1024],[390,844],[375,81
     await expect(page.locator('[data-story-scene]')).toHaveCount(8);
     await expect(page.locator('[data-story-scene][inert]')).toHaveCount(0);
     await expect(page.locator('.story-progress,.story-visual')).toHaveCount(0);
-    const back = page.getByRole('link',{name:'Back to home',exact:true});
-    await expect(back).toBeInViewport();
+    const home = page.locator('[data-identity-home]');
+    await expect(home).toBeVisible();
+    await expect(page.locator('.story-exits')).toHaveCount(0);
+    if (width >= 1024) {
+      await expect(page.getByRole('navigation', {name: 'Main navigation'})).toBeVisible();
+      await expect(page.getByRole('navigation', {name: 'Main navigation'})
+        .getByRole('link', {name: 'Story', exact: true})).toHaveAttribute('aria-current', 'page');
+    } else {
+      await expect(page.getByRole('button', {name: 'Menu', exact: true})).toBeVisible();
+    }
     await page.evaluate(()=>document.fonts.ready);
     await page.screenshot({path:`artifacts/portfolio-corrections/native/${width}-${reduced}-intro.png`,fullPage:false});
     const index = page.getByRole('navigation',{name:'Story chapters'});
@@ -60,7 +68,7 @@ for (const [width,height] of [[1440,900],[1280,800],[768,1024],[390,844],[375,81
       await index.locator(`a[href="#story-${id}"]`).click();
       const section=page.locator(`#story-${id}`);
       await expect(section).toBeFocused();
-      await expect(back).toBeInViewport();
+      await expect(home).toHaveCount(1);
       const box=(await section.boundingBox())!;
       expect(box.y).toBeGreaterThan(50);
       expect(box.y).toBeLessThan(150);
@@ -73,7 +81,7 @@ for (const [width,height] of [[1440,900],[1280,800],[768,1024],[390,844],[375,81
     await index.getByRole('link',{name:'The short version',exact:true}).click();
     await expect(page.locator('.short-version li')).toHaveCount(3);
     for(const line of await page.locator('.short-version li').all()) expect(await line.evaluate(node=>getComputedStyle(node).opacity)).toBe('1');
-    await expect(back).toBeInViewport();
+    await expect(home).toHaveCount(1);
     const endY=await page.evaluate(()=>scrollY);
     await page.mouse.move(width*.65,height*.5);
     await page.mouse.wheel(0,300);
@@ -84,7 +92,7 @@ for (const [width,height] of [[1440,900],[1280,800],[768,1024],[390,844],[375,81
     await page.screenshot({path:`artifacts/portfolio-corrections/native/${width}-${reduced}-summary.png`});
     // Lenis owns wheel default-prevention; touch and keyboard input stay native.
     expect(await page.evaluate(()=> (window as any).storyInputs.filter((event:any)=>event.type!=='wheel' && event.prevented))).toEqual([]);
-    await back.click();
+    await home.click();
     await page.waitForURL('**/#top');
     await page.goBack();
     await expect(page.locator('[data-story-ready]')).toBeVisible();
@@ -92,7 +100,7 @@ for (const [width,height] of [[1440,900],[1280,800],[768,1024],[390,844],[375,81
     await expect(page.locator('.short-version')).toBeVisible();
     await page.setViewportSize({width:width<600?844:390,height:width<600?390:844});
     expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1)).toBe(false);
-    await expect(back).toBeInViewport();
+    await expect(home).toHaveCount(1);
     expect(errors).toEqual([]);
     await context.close();
   });
@@ -136,7 +144,7 @@ test('Story reading and chapter links work without JavaScript',async({browser})=
   await expect(page.locator('[data-story-section]')).toHaveCount(9);
   await page.getByRole('navigation',{name:'Story chapters'}).getByRole('link',{name:'The short version',exact:true}).click();
   await expect(page.locator('#story-summary')).toBeInViewport();
-  await expect(page.getByRole('link',{name:'Back to home',exact:true})).toBeInViewport();
+  await expect(page.locator('[data-identity-home]')).toHaveCount(1);
   await context.close();
 });
 

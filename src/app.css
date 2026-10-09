@@ -49,6 +49,52 @@
   ::view-transition-old(root), ::view-transition-new(root) { mix-blend-mode: normal; }
   ::view-transition-old(root) { animation: route-fade-out var(--motion-press) ease-out both; }
   ::view-transition-new(root) { animation: route-fade-in var(--motion-route) var(--ease-settle) var(--motion-press) both; }
+  /* Story is an editorial handoff, not a blank loading screen.
+     Both snapshots stay visible while the previous page gently leaves and
+     the next one settles in. The shared header remains in its own layer. */
+  html[data-story-route-transition='active']::view-transition {
+    background: #F0F3E4;
+  }
+  html[data-story-route-transition='active']::view-transition-group(root) {
+    animation: none;
+  }
+  html[data-story-route-transition='active']::view-transition-old(root) {
+    animation: story-editorial-out 420ms cubic-bezier(.3, .68, .25, 1) both;
+    mix-blend-mode: normal;
+  }
+  html[data-story-route-transition='active']::view-transition-new(root) {
+    animation: story-editorial-in 560ms cubic-bezier(.16, 1, .3, 1) both;
+    mix-blend-mode: normal;
+  }
+  @keyframes story-editorial-out {
+    from { opacity: 1; transform: translate3d(0, 0, 0); }
+    to { opacity: 0; transform: translate3d(0, -7px, 0); }
+  }
+  @keyframes story-editorial-in {
+    from { opacity: 0; transform: translate3d(0, 11px, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+
+  /* Only pin a header that was actually in the outgoing viewport. This
+     avoids teleporting a scrolled-off header during browser history travel. */
+  html[data-story-navigation-pinned='active'] .wind-header {
+    view-transition-name: story-site-header;
+  }
+  html[data-story-navigation-pinned='active']::view-transition-group(story-site-header) {
+    animation-duration: 0.01ms;
+    z-index: 3;
+  }
+  html[data-story-navigation-pinned='active']::view-transition-old(story-site-header) {
+    animation: story-header-out 145ms ease-out both;
+    mix-blend-mode: normal;
+  }
+  html[data-story-navigation-pinned='active']::view-transition-new(story-site-header) {
+    animation: story-header-in 220ms ease-out both;
+    mix-blend-mode: normal;
+  }
+  @keyframes story-header-out { from { opacity: 1; } to { opacity: 0; } }
+  @keyframes story-header-in { from { opacity: 0; } to { opacity: 1; } }
+
   ::view-transition { pointer-events: none; }
   @keyframes route-fade-out { from { opacity: 1; } to { opacity: 0; } }
   @keyframes route-fade-in { from { opacity: 0; } to { opacity: 1; } }

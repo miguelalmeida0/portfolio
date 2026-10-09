@@ -173,3 +173,32 @@ not changed. Normal Story Lenis scrolling, chapter links and below-fold
 reveals are unchanged. Reduced-motion visitors see no decorative fade.
 Validation is in `tests/e2e/specs/story-fade-transition.spec.ts` and the
 route owner's unit tests; the former runs on desktop and mobile in CI.
+
+## 9 October 2026: editorial page continuity and restored navigation
+
+The prior 230 ms cover and 400 ms reveal used an opaque full-screen veil,
+hiding both pages and showing a nearly blank canvas during every Story
+navigation. Story also hid the site's primary desktop navigation and mobile
+menu, leaving a fixed Back pill overlapping the header's right side.
+
+Story now uses the browser's View Transition API to keep the outgoing and
+incoming pages visible together. A short opacity cross-dissolve with at most
+11 px of vertical settle replaces the blank veil. The regular header is
+present and active on Story, and when it is onscreen its snapshot is placed
+in a stable independent transition layer, rather than leaving with the page.
+The previous floating Back pill has been removed; the site logo provides a
+consistent Home link and the Work, Story, CV, Contact and Ask controls are
+available in the header. Story is marked as the current page in desktop
+and mobile navigation.
+
+For mobile navigation, close the menu before capturing the old page; no
+opaque veil competes with the native Story transition in supporting browsers.
+The existing menu veil remains the fallback for unsupported/reduced motion
+cases and unrelated routes. The new history and rapid-navigation cleanup
+guards restore the route state only for the transition that owns it.
+
+The original first-visit name introduction and case studies are untouched.
+Native Story scrolling, in-page links, focus restoration, and scroll reveals
+are retained. Browser acceptance is in
+`tests/e2e/specs/story-editorial-transition.spec.ts`, with route-owner
+unit tests and updated native Story reading tests.

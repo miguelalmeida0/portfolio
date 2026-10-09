@@ -70,6 +70,7 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
   const navigationError = writable('');
   let active = false;
   let ownedNavigation = false;
+  let storyMenuNavigating = false;
   let disposed = false;
   let nativeTransition: ReturnType<StartViewTransition> | undefined;
   const animations = new Set<Animation>();
@@ -84,11 +85,9 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
     finally { animation.cancel(); animations.delete(animation); }
   }
 
-  // Story shares one restrained full-page fade with its destination. All
-  // other routes keep their existing quicker mobile overlay timings.
-  let storyFade = false;
-  async function cover(menu?: HTMLElement | null, isStoryFade = false) {
-    storyFade = isStoryFade;
+  // The opaque veil is reserved for existing mobile fallback paths.
+  // Story's enhanced navigation is composed from two page snapshots instead.
+  async function cover(menu?: HTMLElement | null) {
     active = true;
     navigationError.set('');
     nativeTransition?.skipTransition();
@@ -100,11 +99,9 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
     veil.hidden = false;
     veil.style.opacity = '1';
     await Promise.all([
-      animate(veil, [{ opacity: 0 }, { opacity: 1 }], storyFade ? 230 : 190),
-      menu ? animate(menu,
-        storyFade ? [{ opacity: 1 }, { opacity: 0 }] :
-          [{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(-4px)' }],
-        storyFade ? 160 : 120, storyFade ? 0 : 70) : Promise.resolve()
+      animate(veil, [{ opacity: 0 }, { opacity: 1 }], 190),
+      menu ? animate(menu, [{ opacity: 1, transform: 'translateY(0)' },
+        { opacity: 0, transform: 'translateY(-4px)' }], 120, 70) : Promise.resolve()
     ]);
     mobileState.set('covered');
   }
@@ -116,7 +113,6 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
     veil.style.opacity = '0';
     active = false;
     ownedNavigation = false;
-    storyFade = false;
     mobileState.set('idle');
   }
 
@@ -130,21 +126,24 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
     mobileState.set('revealing');
     const veil = getVeil();
     veil.style.opacity = '0';
-    await animate(veil, [{ opacity: 1 }, { opacity: 0 }], storyFade ? 400 : 260);
+    await animate(veil, [{ opacity: 1 }, { opacity: 0 }], 260);
     reset();
     await tick();
-    // Inert content cannot receive Kit's fragment focus until it is unlocked.
-    // Restore a useful keyboard starting point without changing Kit's scroll.
-    if (!disposed && document.activeElement === document.body) {
-      let target = document.getElementById('main');
-      try { target = document.getElementById(decodeURIComponent(location.hash.slice(1))) ?? target; } catch { /* Invalid hash: use main. */ }
-      if (target) {
-        const hadTabindex = target.hasAttribute('tabindex');
-        if (!hadTabindex) target.setAttribute('tabindex', '-1');
-        target.focus({ preventScroll: true });
-        if (!hadTabindex) target.addEventListener('blur', () => target.removeAttribute('tabindex'), { once: true });
-      }
-    }
+    // Inert content cannot receive fragment focus until the veil unlocks.
+    restoreNavigationFocus();
+  }
+
+  function restoreNavigationFocus() {
+    if (disposed || document.activeElement !== document.body) return;
+    let target = document.getElementById('main');
+    try {
+      target = document.getElementById(decodeURIComponent(location.hash.slice(1))) ?? target;
+    } catch { /* An invalid fragment uses the main landmark. */ }
+    if (!target) return;
+    const hadTabindex = target.hasAttribute('tabindex');
+    if (!hadTabindex) target.setAttribute('tabindex', '-1');
+    target.focus({ preventScroll: true });
+    if (!hadTabindex) target.addEventListener('blur', () => target.removeAttribute('tabindex'), { once: true });
   }
 
   beforeNavigate(navigation => {
@@ -174,6 +173,33 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
     }
     if (url.origin !== location.origin) return;
 
+    // Close the small-screen menu before native page snapshots are taken.
+    // An open menu appearing in the outgoing snapshot breaks continuity.
+    const storyRoute = url.pathname !== location.pathname &&
+      (url.pathname === '/story' || location.pathname === '/story');
+    if (storyRoute && viewTransitionsSupported() && !motionSnapshot().reduced &&
+        document.visibilityState === 'visible') {
+      event.preventDefault();
+      if (active || storyMenuNavigating) return;
+      storyMenuNavigating = true;
+      navigationError.set('');
+      link.dataset.selected = 'true';
+      close();
+      try {
+        await tick();
+        if (disposed) return;
+        await goto(url);
+        await tick();
+        restoreNavigationFocus();
+      } catch {
+        navigationError.set('Navigation could not finish. Please try again.');
+      } finally {
+        storyMenuNavigating = false;
+        delete link.dataset.selected;
+      }
+      return;
+    }
+
     if (!matchMedia('(max-width: 719px)').matches) return;
     event.preventDefault();
     if (active) return;
@@ -182,7 +208,7 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
     void preloadData(url.href).catch(() => undefined);
     try {
       // Only the links fade. The menu panel must stay opaque over the old page.
-      await cover(link.parentElement, url.pathname === '/story' || location.pathname === '/story');
+      await cover(link.parentElement);
       if (disposed) return;
       close();
       await tick();
@@ -210,28 +236,12 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
     const from = navigation.from?.url;
     const to = navigation.to?.url;
 
-    // Fade the entire page, in either direction, whenever Story is involved.
-    // No portrait layer, text animation, scale or competing view transition.
-    // The fade covers the old page before Kit swaps the DOM, then reveals the
-    // new page after Kit finishes and restores its scroll position.
-    const storyRoute = from && to && from.pathname !== to.pathname &&
-      (from.pathname === '/story' || to.pathname === '/story');
-    if (storyRoute && !motionSnapshot().reduced && document.visibilityState === 'visible') {
-      nativeTransition?.skipTransition();
-      releaseClaimedFrames();
-      return cover(undefined, true).then(() => {
-        void navigation.complete.then(reveal, reveal);
-      });
-    }
-
-    // Reduced-motion Story navigation remains immediate; the mobile menu's
-    // existing veil still covers slow loads without running an animation.
-    if (storyRoute) {
-      nativeTransition?.skipTransition();
-      releaseClaimedFrames();
-      return;
-    }
-    if (navigation.type === 'popstate' && matchMedia('(max-width: 719px)').matches &&
+    // Story transitions share the real old and new compositions, rather than
+    // displaying a blank veil between them. Keep both page images overlapping
+    // while the persistent site header is captured in its own stable layer.
+    const storyRoute = Boolean(from && to && from.pathname !== to.pathname &&
+      (from.pathname === '/story' || to.pathname === '/story'));
+    if (!storyRoute && navigation.type === 'popstate' && matchMedia('(max-width: 719px)').matches &&
       navigation.from?.url.pathname !== navigation.to?.url.pathname) {
       return cover().then(() => {
         void navigation.complete.then(reveal, reveal);
@@ -262,27 +272,49 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
       return;
     }
 
+    // Cancel any preceding snapshot before setting this navigation's style
+    // flags. An interrupted transition must not erase the successor's marker.
+    nativeTransition?.skipTransition();
+
+    // The flag is applied before startViewTransition snapshots the old DOM.
+    // It stays on the root until finished, so both image layers use one
+    // choreography even if page content or scroll position changes.
     document.documentElement.dataset.routeTransition = 'active';
     document.documentElement.dataset.routeDestination = to.pathname;
+    if (storyRoute) {
+      document.documentElement.dataset.storyRouteTransition = 'active';
+      const header = document.querySelector<HTMLElement>('.wind-header');
+      const rect = header?.getBoundingClientRect();
+      if (rect && rect.bottom > 0 && rect.top < innerHeight) {
+        document.documentElement.dataset.storyNavigationPinned = 'active';
+      }
+    }
 
     return new Promise<void>((resolve) => {
       // Navigation must still complete when a background tab or browser policy
       // skips the native transition callback.
       const failSafe = window.setTimeout(resolve, 180);
+      let ownedTransition: ReturnType<StartViewTransition> | undefined;
       const cleanup = () => {
         window.clearTimeout(failSafe);
         resolve();
+        // An interrupted transition must never delete its successor's state.
+        if (ownedTransition && nativeTransition !== ownedTransition) return;
+        nativeTransition = undefined;
         delete document.documentElement.dataset.routeTransition;
         delete document.documentElement.dataset.routeDestination;
+        delete document.documentElement.dataset.storyRouteTransition;
+        delete document.documentElement.dataset.storyNavigationPinned;
         releaseClaimedFrames();
       };
       try {
-        const transition = nativeTransition = startViewTransition.call(document, async () => {
+        const transition = startViewTransition.call(document, async () => {
           window.clearTimeout(failSafe);
           resolve();
           await navigation.complete;
           syncScrollPosition();
         });
+        ownedTransition = nativeTransition = transition;
         transition.ready.catch(cleanup);
         // A rapid Back/reload can abort Kit's navigation while the snapshot
         // callback is awaiting it. Each ViewTransition promise rejects

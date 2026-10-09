@@ -50,22 +50,21 @@
         <span data-identity-location data-ask-id={homepage ? 'city' : undefined} class="mt-1 text-xs sm:mt-0 sm:text-sm">Berlin</span>
       </span>
     </a>
-    {#if !story}<nav aria-label="Main navigation" class="hidden shrink-0 items-center gap-7 text-sm min-[64rem]:flex">
+    <nav aria-label="Main navigation" class="hidden shrink-0 items-center gap-7 text-sm min-[64rem]:flex">
       {#each primaryNavigation as link}
-        <a data-ask-id={homepage ? `nav-${link.label.toLowerCase()}` : undefined} class="group ink-link hover:text-plum hover:underline" href={link.href} data-sveltekit-preload-data={link.href === '/story' ? 'hover' : undefined}>{link.label}{#if link.label === 'CV'} <ArrowRight size={18} aria-hidden="true" class="transition-transform group-hover:translate-x-0.5" />{/if}</a>
+        <a data-ask-id={homepage ? `nav-${link.label.toLowerCase()}` : undefined} class="group ink-link hover:text-plum hover:underline" href={link.href} aria-current={story && link.href === '/story' ? 'page' : undefined} data-sveltekit-preload-data={link.href === '/story' ? 'hover' : undefined}>{link.label}{#if link.label === 'CV'} <ArrowRight size={18} aria-hidden="true" class="transition-transform group-hover:translate-x-0.5" />{/if}</a>
       {/each}
       <button class="guide-trigger" data-ask-trigger type="button" aria-expanded={askActive} disabled={!guideReady || navigationTransitionActive} aria-label={askActive ? 'Close Ask MiguelLLM' : 'Ask MiguelLLM'} onclick={toggleGuide}>Ask MiguelLLM</button>
     </nav>
     <button bind:this={trigger} type="button" onclick={() => open = !open} disabled={!guideReady || navigationTransitionActive} aria-label={open ? 'Close' : 'Menu'} aria-expanded={open} aria-controls="mobile-navigation" class="menu-toggle">
       <span class="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
     </button>
-    {/if}
   </div>
   {#if open}
     <nav id="mobile-navigation" aria-label="Mobile navigation" aria-busy={navigationTransitionActive} class="mobile-navigation absolute inset-x-0 top-full max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-xl border px-5 py-2 shadow-sm min-[64rem]:hidden" data-scroll-native>
       <div data-mobile-menu-content>
       {#each primaryNavigation as link}
-        <a data-ask-id={homepage ? `nav-${link.label.toLowerCase()}` : undefined} href={link.href} data-mobile-route-link data-sveltekit-preload-data="tap" aria-disabled={navigationTransitionActive} onclick={event => navigateFromMenu(event, () => open = false)} class="flex min-h-12 items-center text-lg hover:text-plum data-[selected=true]:text-plum">{link.label}</a>
+        <a data-ask-id={homepage ? `nav-${link.label.toLowerCase()}` : undefined} href={link.href} aria-current={story && link.href === '/story' ? 'page' : undefined} data-mobile-route-link data-sveltekit-preload-data="tap" aria-disabled={navigationTransitionActive} onclick={event => navigateFromMenu(event, () => open = false)} class="flex min-h-12 items-center text-lg hover:text-plum data-[selected=true]:text-plum">{link.label}</a>
       {/each}
       <button class="guide-trigger mobile-guide-trigger" data-ask-trigger type="button" aria-expanded={askActive} disabled={!guideReady || navigationTransitionActive} aria-label={askActive ? 'Close Ask MiguelLLM' : 'Ask MiguelLLM'} onclick={toggleGuide}>Ask MiguelLLM</button>
       </div>
@@ -96,6 +95,17 @@
   .mobile-guide-trigger { display: flex; align-items: center; width: 100%; min-height: 48px; font-size: 18px; text-align: left; }
   .wind-header :focus-visible { outline: 3px solid var(--plum); outline-offset: 2px; }
   .wind-header nav[aria-label="Main navigation"] { gap: var(--s-7); }
+  .wind-header nav[aria-label="Main navigation"] a[aria-current='page'] {
+    color: var(--plum);
+    font-weight: 650;
+    text-decoration-line: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 8px;
+  }
+  .wind-header .mobile-navigation a[aria-current='page'] {
+    color: var(--plum);
+    font-weight: 700;
+  }
   .wind-header [data-identity-name] { font: 700 26px/1 'Antonio', sans-serif; letter-spacing: -.01em; }
   .wind-header [data-identity-rule] { height: 2px; background: var(--plum); }
   .wind-header [data-identity-location], .wind-header nav { font-size: var(--type-ui,17px); line-height: 1.4; font-weight: 400; }

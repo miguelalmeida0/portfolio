@@ -42,9 +42,6 @@
 </script>
 
 <article bind:this={root} class="story-split story-editorial" data-story-ready={ready || undefined} aria-labelledby="story-title">
-  <nav class="story-exits" aria-label="Story exits">
-    <a href="/#top" data-sveltekit-preload-data="hover" aria-label="Back to home"><span aria-hidden="true">‹</span> Back</a>
-  </nav>
   <header class="story-intro">
     <div class="story-intro-text">
       <h1 id="story-title">{data.editorial.title}</h1>

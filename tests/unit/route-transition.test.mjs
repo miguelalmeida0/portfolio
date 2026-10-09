@@ -10,7 +10,7 @@ const source = ts.transpileModule(fs.readFileSync('src/lib/motion/routeTransitio
 const deferred = () => { let resolve, reject; const promise = new Promise((a, b) => { resolve = a; reject = b; }); return { promise, resolve, reject }; };
 const flush = async () => { for (let i = 0; i < 12; i++) await Promise.resolve(); };
 
-function setup({ reduced = false, mobile = true } = {}) {
+function setup({ reduced = false, mobile = true, native = false } = {}) {
   const animations = [], events = [], hooks = {}, frames = [];
   const navigation = deferred();
   const element = () => ({ hidden: true, style: {}, dataset: {}, animate(keyframes, options) {
@@ -22,7 +22,17 @@ function setup({ reduced = false, mobile = true } = {}) {
   const link = { href: 'https://portfolio.test/work/leu', download: '', target: '', dataset: {}, parentElement: menu };
   const body = {};
   const document = { body, activeElement: body, visibilityState: 'visible', documentElement: { dataset: {} },
-    querySelectorAll: () => [], getElementById: id => id === 'work' ? { id } : null };
+    querySelector: () => null, querySelectorAll: () => [], getElementById: id => id === 'work' ? { id } : null };
+  if (native) document.startViewTransition = callback => {
+    events.push('view-transition');
+    const completed = Promise.resolve().then(callback);
+    return {
+      ready: Promise.resolve(),
+      updateCallbackDone: completed,
+      finished: completed,
+      skipTransition() { events.push('transition-skipped'); }
+    };
+  };
   const modules = {
     '$app/navigation': {
       beforeNavigate: fn => hooks.before = fn, onNavigate: fn => hooks.on = fn,
@@ -44,11 +54,11 @@ function setup({ reduced = false, mobile = true } = {}) {
   const exports = {};
   vm.runInNewContext(source, { exports, require: name => modules[name], document, URL,
     location: { origin: 'https://portfolio.test', pathname: '/', search: '', hash: '' }, matchMedia: () => ({ matches: mobile }),
-    requestAnimationFrame: fn => frames.push(fn), window: {} });
+    requestAnimationFrame: fn => frames.push(fn), window: { setTimeout, clearTimeout } });
   const owner = exports.installRouteTransitions(() => veil);
   const click = (fields = {}) => ({ currentTarget: link, button: 0, defaultPrevented: false,
     preventDefault() { this.defaultPrevented = true; }, ...fields });
-  return { owner, hooks, animations, frames, veil, events, navigation, click,
+  return { owner, hooks, animations, frames, veil, events, navigation, document, click,
     close: () => { assert.equal(veil.style.opacity, '1'); events.push('close'); } };
 }
 
@@ -177,55 +187,56 @@ test('same-page work menu link closes, updates history and scrolls with focus wi
 });
 
 
-test('Story entry uses only the full-screen opacity veil', async () => {
-  const s = setup({ mobile: false });
-  const from = path => ({url: new URL('https://portfolio.test' + path)});
-  const fading = s.hooks.on({
-    type: 'link', from: from('/'), to: from('/story'), complete: s.navigation.promise
-  });
-  assert.equal(s.owner.mobileState.value, 'covering');
-  assert.equal(s.animations.length, 1);
-  assert.equal(s.animations[0].options.duration, 230);
-  assert.deepEqual(Array.from(s.animations[0].keyframes, f => Object.keys(f)), [['opacity'], ['opacity']]);
-  s.animations[0].resolve();
-  await fading;
-  assert.equal(s.owner.mobileState.value, 'covered');
-  s.navigation.resolve();
-  await flush();
-  assert.equal(s.frames.length, 1);
-  s.frames.shift()();
-  await flush();
-  assert.equal(s.owner.mobileState.value, 'revealing');
-  assert.equal(s.animations.at(-1).options.duration, 400);
-  s.animations.at(-1).resolve();
-  await flush();
-  assert.equal(s.owner.mobileState.value, 'idle');
-});
 
-test('Story to Home uses the same full-page fade', async () => {
-  const s = setup({ mobile: false });
-  const from = path => ({url: new URL('https://portfolio.test' + path)});
-  const fading = s.hooks.on({
-    type: 'link', from: from('/story'), to: from('/#top'), complete: s.navigation.promise
+test('Story entry keeps the old and new page in a native transition', async () => {
+  const s = setup({ mobile: false, native: true });
+  const at = path => ({url: new URL('https://portfolio.test' + path)});
+  const journey = s.hooks.on({
+    type: 'link', from: at('/'), to: at('/story'), complete: s.navigation.promise
   });
-  assert.equal(s.owner.mobileState.value, 'covering');
-  assert.equal(s.animations[0].options.duration, 230);
-  s.animations[0].resolve();
-  await fading;
-  s.navigation.resolve();
-  await flush();
-  s.frames.shift()();
-  await flush();
-  assert.equal(s.owner.mobileState.value, 'revealing');
-  s.animations.at(-1).resolve();
-  await flush();
   assert.equal(s.owner.mobileState.value, 'idle');
-});
-
-test('Reduced motion does not animate the Story route veil', async () => {
-  const s = setup({ mobile: false, reduced: true });
-  const from = path => ({url: new URL('https://portfolio.test' + path)});
-  await s.hooks.on({type: 'link', from: from('/'), to: from('/story'), complete: Promise.resolve()});
-  assert.equal(s.owner.mobileState.value, 'idle');
+  assert.equal(s.document.documentElement.dataset.storyRouteTransition, 'active');
+  assert.equal(s.document.documentElement.dataset.routeDestination, '/story');
   assert.equal(s.animations.length, 0);
+  await journey;
+  assert.deepEqual(s.events.filter(x => x === 'view-transition'), ['view-transition']);
+  s.navigation.resolve();
+  await flush();
+  assert.equal(s.document.documentElement.dataset.storyRouteTransition, undefined);
+});
+
+test('Story return to Home uses the same route composition', async () => {
+  const s = setup({ mobile: false, native: true });
+  const at = path => ({url: new URL('https://portfolio.test' + path)});
+  const journey = s.hooks.on({
+    type: 'link', from: at('/story'), to: at('/#top'), complete: s.navigation.promise
+  });
+  assert.equal(s.document.documentElement.dataset.storyRouteTransition, 'active');
+  assert.equal(s.document.documentElement.dataset.routeDestination, '/');
+  await journey;
+  s.navigation.resolve();
+  await flush();
+  assert.equal(s.document.documentElement.dataset.storyRouteTransition, undefined);
+});
+
+test('Story history navigation is not intercepted by a mobile blank veil', async () => {
+  const s = setup({ mobile: true, native: true });
+  const at = path => ({url: new URL('https://portfolio.test' + path)});
+  const journey = s.hooks.on({
+    type: 'popstate', from: at('/story'), to: at('/'), complete: s.navigation.promise
+  });
+  assert.equal(s.owner.mobileState.value, 'idle');
+  assert.equal(s.document.documentElement.dataset.storyRouteTransition, 'active');
+  await journey;
+  s.navigation.resolve();
+  await flush();
+});
+
+test('Reduced motion does not start a decorative Story transition', async () => {
+  const s = setup({ mobile: false, native: true, reduced: true });
+  const at = path => ({url: new URL('https://portfolio.test' + path)});
+  await s.hooks.on({type: 'link', from: at('/'), to: at('/story'), complete: Promise.resolve()});
+  assert.equal(s.owner.mobileState.value, 'idle');
+  assert.equal(s.document.documentElement.dataset.storyRouteTransition, undefined);
+  assert.equal(s.events.filter(x => x === 'view-transition').length, 0);
 });
