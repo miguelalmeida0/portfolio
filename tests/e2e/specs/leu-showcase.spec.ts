@@ -18,6 +18,27 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/work/leu');
 });
 
+// Replaces the former single-image hero check with the paired exhibit's real
+// handset and browser proportions, including the narrowest supported layout.
+test('paired screens retain their proportions across phone and desktop widths', async ({ page }) => {
+  for (const width of [320, 390, 768, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/work/leu');
+    const gallery = page.getByRole('region', { name: 'Leu across phone and browser' });
+    for (const image of await gallery.getByRole('img').all()) {
+      await expect.poll(() => image.evaluate(i => (i as HTMLImageElement).complete && (i as HTMLImageElement).naturalWidth > 0)).toBe(true);
+    }
+    const phone = await gallery.locator('.phone-screen').boundingBox();
+    const desktop = await gallery.locator('.browser-stage').boundingBox();
+    expect(phone!.height / phone!.width).toBeGreaterThan(2.05);
+    expect(phone!.height / phone!.width).toBeLessThan(2.12);
+    expect(Math.abs(desktop!.width / desktop!.height - 1363 / 936)).toBeLessThan(.012);
+    expect(phone!.width).toBeGreaterThan(100);
+    expect(desktop!.width).toBeGreaterThan(100);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  }
+});
+
 // Catches a focus control that hides the wrong platform or resets the scene.
 test('platform focus preserves the selected scene and restores both interfaces', async ({ page }) => {
   const gallery = page.getByRole('region', { name: 'Leu across phone and browser' });

@@ -2,9 +2,11 @@
 
 Source visual truth: `/workspace/scratch/81d3085e4fb3/generated_images/exec-a3b33b03-d4d5-43d9-82c4-3767f5a6044c.png` (the user's selected direction 2).
 
-Implementation: `/work/leu`, production build at `http://terminal.local:4173/work/leu`.
+Implementation: `/work/leu`, published at `https://miguelalmeida.is-a.dev/work/leu`. Production build preview: `http://terminal.local:4173/work/leu`.
 
 Browser-rendered evidence: `/workspace/scratch/81d3085e4fb3/leu-gallery-final-viewport.jpg`; complete gallery: `/workspace/scratch/81d3085e4fb3/leu-qa/desktop-read.png`. Combined source/implementation comparison: `/workspace/scratch/81d3085e4fb3/leu-qa/design-comparison-final.png`. Focused handset comparison: `/workspace/scratch/81d3085e4fb3/leu-qa/phone-comparison.png`.
+
+Public deployment evidence: `/workspace/scratch/81d3085e4fb3/leu-live-final-20261009.jpg`. Cloudflare Pages deployment succeeded. All four scenes load on the public domain, platform controls work, and the original reading judgement still returns the expected verdict and learner state.
 
 ## Comparison conditions
 
@@ -36,7 +38,8 @@ Copy and content: the selected headline, supporting line, platform captions and 
 - Reduced-motion styles retain the gallery without visual fades.
 - Fresh direct browser error log: no application errors. Extension-origin messages excluded.
 - Unit suite: 189 passed. Rendered route suite: 22 passed.
-- New gallery browser tests: 3 passed; existing homepage Leu media tests: 5 passed.
+- New gallery browser tests: 4 passed; existing homepage Leu media tests: 5 passed.
+- The two superseded single-image/standard-hero CI assumptions now verify the approved exhibit's proportions and hierarchy. All six focused gallery and smoke checks pass. The gallery suite is included in the required desktop and mobile CI job.
 - Existing Leu reading, judgement, source-return, architecture and graph behavior tests: 7 passed.
 - Svelte check: 0 errors; four pre-existing PreviewMedia warnings. Production build passed.
 

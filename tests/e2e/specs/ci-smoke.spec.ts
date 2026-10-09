@@ -269,7 +269,8 @@ test('native media sources and a poster exist when JavaScript is disabled', asyn
 });
 
 
-for (const slug of ['leu', 'flow'] as const) {
+// Leu's approved paired gallery has its own geometry checks in leu-showcase.
+for (const slug of ['flow'] as const) {
   test(`${slug} case-study hero uses its exact image height without letterboxing`, async ({ page }) => {
     for (const width of [390, 768, 1440]) {
       await page.setViewportSize({ width, height: 900 });
@@ -338,12 +339,33 @@ test('homepage typography has a consistent descending hierarchy at responsive wi
   }
 });
 
-test('all five case studies share headline, section and metadata scales', async ({ page }) => {
+test('case studies keep a clear hierarchy and standard openings share scales', async ({ page }) => {
   for (const width of [390, 1440]) {
     await page.setViewportSize({width, height:980});
     const titles: number[] = [];
     for (const route of ['/work/needle','/work/second-voice','/work/f24','/work/leu','/work/flow']) {
       await page.goto(route, {waitUntil:'domcontentloaded'});
+      // Leu now opens with the selected paired-platform exhibit. Its distinct
+      // typography is checked without requiring the superseded hero roles.
+      if (route === '/work/leu') {
+        const gallery = page.getByRole('region', { name: 'Leu across phone and browser' });
+        await expect(gallery.getByRole('heading', { level: 1 })).toHaveText('Built around the page.');
+        const exhibit = await gallery.evaluate(el => {
+          const size = (selector: string) => Number.parseFloat(getComputedStyle(el.querySelector(selector)!).fontSize);
+          return {
+            hero: size('h1'), lead: size('.showcase-deck'),
+            caption: size('figcaption p'), label: size('.platform-label'),
+            overflow: document.documentElement.scrollWidth > innerWidth
+          };
+        });
+        expect(exhibit.hero).toBeGreaterThan(40);
+        expect(exhibit.hero).toBeGreaterThan(exhibit.lead);
+        expect(exhibit.lead).toBeGreaterThan(exhibit.caption);
+        expect(exhibit.caption).toBeGreaterThan(exhibit.label);
+        expect(exhibit.label).toBeGreaterThanOrEqual(12);
+        expect(exhibit.overflow).toBe(false);
+        continue;
+      }
       const values = await page.evaluate(() => {
         const size = (node: Element) => Number.parseFloat(getComputedStyle(node).fontSize);
         const hero = document.querySelector('main .hero h1');
