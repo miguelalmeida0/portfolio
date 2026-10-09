@@ -55,7 +55,7 @@ test('Story links use smooth section travel, preserve the hash and focus the des
   expect(summaryTop).toBeLessThanOrEqual(135);
 
   await page.getByRole('navigation', { name: 'Story chapters' })
-    .getByRole('link', { name: '01 Hello' }).click();
+    .getByRole('link', { name: '01 My background' }).click();
   await expect(page).toHaveURL(/\/story#story-hi$/);
   const chapter = page.locator('#story-hi');
   await expect(chapter).toBeFocused({ timeout: 5000 });

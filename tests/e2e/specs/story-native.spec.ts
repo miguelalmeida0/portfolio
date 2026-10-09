@@ -36,7 +36,7 @@ for (const [width,height] of [[1440,900],[1280,800],[768,1024],[390,844],[375,81
     await page.evaluate(()=>document.fonts.ready);
     await page.screenshot({path:`artifacts/portfolio-corrections/native/${width}-${reduced}-intro.png`,fullPage:false});
     const index = page.getByRole('navigation',{name:'Story chapters'});
-    await index.getByRole('link',{name:'01 Hello',exact:true}).click();
+    await index.getByRole('link',{name:'01 My background',exact:true}).click();
     await expect(page.locator('#story-hi')).toBeFocused();
     await page.mouse.move(width*.65,height*.5);
     const y = await page.evaluate(()=>scrollY);

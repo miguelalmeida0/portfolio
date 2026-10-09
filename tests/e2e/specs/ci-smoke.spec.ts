@@ -646,7 +646,7 @@ test('Story shares the path from aviation to UX to frontend in an accessible rea
     await expect(page.locator('.short-journey')).toContainText('UX design');
     await expect(page.locator('.short-journey')).toContainText('Frontend engineering');
     await expect(page.locator('.story-intro-photo img')).toHaveAttribute('alt', 'Portrait of Miguel Almeida');
-    await expect(page.getByRole('navigation', { name: 'Story chapters' }).getByRole('link', { name: '01 Hello' })).toBeVisible();
+    await expect(page.getByRole('navigation', { name: 'Story chapters' }).getByRole('link', { name: '01 My background' })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(false);
   }
 });
