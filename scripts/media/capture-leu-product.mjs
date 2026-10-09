@@ -1,0 +1,46 @@
+import {chromium} from '@playwright/test';
+import fs from 'node:fs';
+import path from 'node:path';
+// Capture real product states, not an upscale of the old film.
+const root=path.resolve(process.argv[2] || '../leu/web/dist');
+const output=path.resolve(process.argv[3] || '.cache/leu-film/source');fs.mkdirSync(output,{recursive:true});
+const browser=await chromium.launch({executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,args:['--no-sandbox','--disable-dev-shm-usage','--disable-gpu']});
+const context=await browser.newContext({viewport:{width:1440,height:900},deviceScaleFactor:2,reducedMotion:'reduce'});
+const page=await context.newPage();
+const mime={'.js':'text/javascript','.mjs':'text/javascript','.css':'text/css','.pdf':'application/pdf','.woff2':'font/woff2','.woff':'font/woff','.png':'image/png','.svg':'image/svg+xml','.webp':'image/webp','.wasm':'application/wasm','.json':'application/json'};
+await page.route('**/*',async route=>{
+ const url=new URL(route.request().url());
+ if(url.hostname!=='leu.local')return route.abort();
+ const file=path.join(root,decodeURIComponent(url.pathname==='/'?'/index.html':url.pathname));
+ if(fs.existsSync(file)&&fs.statSync(file).isFile())return route.fulfill({status:200,contentType:mime[path.extname(file)]??'text/html',body:fs.readFileSync(file)});
+ return route.fulfill({status:404,body:'Not found'});
+});
+page.on('pageerror',e=>console.log('PAGE ERROR',e.message));
+const capture=async name=>{await page.evaluate(()=>document.fonts.ready);await page.screenshot({path:`${output}/${name}.png`,animations:'disabled'});console.log('Captured',name)};
+await page.goto('http://leu.local');
+await capture('welcome');
+await page.getByRole('button',{name:'fill the shelf with all six samples'}).click();
+await page.waitForFunction(()=>JSON.parse(localStorage.getItem('leu.web.v1')||'{}').books?.length===6);
+const books=await page.evaluate(()=>JSON.parse(localStorage.getItem('leu.web.v1')).books);
+const id=books.find(b=>b.title==='Computer Science Essentials').id;
+await page.goto(`http://leu.local/#/read/${id}/2`);
+await page.locator('.reader-paper').waitFor();
+await page.getByRole('heading',{name:'Growth, not a stopwatch'}).waitFor();
+await capture('read');
+await page.getByRole('button',{name:'Explain this page simply'}).click();
+await page.locator('.explain-panel').waitFor();
+await capture('explain');
+await page.keyboard.press('Escape');
+await page.goto(`http://leu.local/#/words/${id}/2`);
+await page.getByRole('heading',{name:'Tell it to a curious friend.'}).waitFor();
+await page.locator('textarea').fill('Time complexity describes how work grows with input size, not the exact seconds. A binary search needs a sorted list. The model leaves out preparation and sorting costs.');
+await page.getByRole('button',{name:'See what got across'}).click();
+await page.waitForFunction(()=>!document.body.innerText.includes('Listening to your words'));
+await page.waitForTimeout(1100);
+await capture('words');
+for(const name of ['home','library','explore']){await page.goto(`http://leu.local/#/${name}`);await page.waitForTimeout(300);await capture(name);}
+await page.getByRole('button',{name:'Make it a trail'}).click();
+await page.locator('.walk-map').waitFor();
+await capture('trails');
+console.log('Real product views captured at 2880×1800.');
+await browser.close();

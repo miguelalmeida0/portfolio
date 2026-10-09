@@ -220,6 +220,11 @@ test('every project visibly renders moving video rather than a poster overlay', 
       {timeout: 30000}).toBe(true);
     await expect(video).toHaveCSS('opacity','1');
     await expect(video).toHaveCSS('visibility','visible');
+    if (id === 'leu') {
+      // Keep the low-resolution preferred source from silently returning.
+      await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.videoWidth)).toBeGreaterThanOrEqual(1920);
+      await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.videoHeight)).toBeGreaterThanOrEqual(1080);
+    }
     await expect.poll(() => preview.getAttribute('data-preview-status')).toBe('playing');
     const frames = await video.evaluate((v: HTMLVideoElement) =>
       v.getVideoPlaybackQuality?.().totalVideoFrames ?? 0);
@@ -238,7 +243,7 @@ test('every project visibly renders moving video rather than a poster overlay', 
 });
 
 test('Leu falls back to MP4 when its preferred WebM is unavailable', async ({ page }) => {
-  await page.route(/\/projects\/leu\/leu-film-20261008\.webm$/, route =>
+  await page.route(/\/projects\/leu\/leu-film-20261009-1440p\.webm$/, route =>
     route.fulfill({status: 404, contentType:'text/plain', body:'missing codec source'}));
   await page.goto('/#work');
   const video = page.locator('[data-selected-project="leu"] video');
@@ -256,7 +261,7 @@ test('native media sources and a poster exist when JavaScript is disabled', asyn
     await page.goto('http://127.0.0.1:4173/#work', {waitUntil:'domcontentloaded'});
     const preview = page.locator('[data-selected-project="leu"] [data-preview]');
     const video = preview.locator('video');
-    await expect(video).toHaveAttribute('poster','/projects/leu/leu-film-20261008-poster.jpg');
+    await expect(video).toHaveAttribute('poster','/projects/leu/leu-film-20261009-1440p-poster.jpg');
     await expect(video.locator('source')).toHaveCount(2);
     const types = await video.locator('source').evaluateAll(sources =>
       sources.map(source => (source as HTMLSourceElement).getAttribute('type')));

@@ -19,9 +19,10 @@ test('current Leu film plays silently in the gallery and preserves the shared me
   await expect.poll(() => video.evaluate(v => (v as HTMLVideoElement).currentTime)).toBeGreaterThan(0);
   const metrics = await video.evaluate(v => { const p=v as HTMLVideoElement; return {duration:p.duration,src:p.currentSrc,width:p.videoWidth,height:p.videoHeight}; });
   expect(Math.abs(metrics.duration - leuMedia.duration)).toBeLessThan(1);
-  expect(metrics.src).toMatch(/leu-film-20261008\.(webm|mp4)$/);
-  expect(metrics.width).toBeGreaterThan(0);
-  expect(metrics.height).toBeGreaterThan(0);
+  expect(metrics.src).toMatch(/leu-film-20261009-1440p\.(webm|mp4)$/);
+  // The preferred WebM previously delivered only 960×540 source pixels.
+  expect(metrics.width).toBeGreaterThanOrEqual(1920);
+  expect(metrics.height).toBeGreaterThanOrEqual(1080);
   await row.getByRole('link', {name:'Leu case study',exact:true}).click();
   await expect(page).toHaveURL(/\/work\/leu$/);
   await expect(page.locator('h1')).toBeVisible();
@@ -39,20 +40,20 @@ test('gallery requests current film generations once and the visitor can pause a
   await page.getByRole('button',{name:'Play project videos'}).click();
   await expect.poll(()=>video.evaluate(v=>!((v as HTMLVideoElement).paused))).toBe(true);
   expect(requests.length).toBeGreaterThan(0);
-  expect(requests.every(url=>/leu-film-20261008\./.test(url))).toBe(true);
+  expect(requests.every(url=>/leu-film-20261009-1440p\./.test(url))).toBe(true);
   expect(new Set(requests).size).toBe(requests.length);
 });
 
 test('MP4 remains the fallback when the preferred WebM fails', async ({ page }) => {
-  await page.route('**/leu-film-20261008.webm',r=>r.abort());
+  await page.route('**/leu-film-20261009-1440p.webm',r=>r.abort());
   await page.goto('/#work');
   const video=page.locator('[data-selected-project="leu"] video');
-  await expect.poll(()=>video.evaluate(v=>(v as HTMLVideoElement).currentSrc)).toContain('leu-film-20261008.mp4');
+  await expect.poll(()=>video.evaluate(v=>(v as HTMLVideoElement).currentSrc)).toContain('leu-film-20261009-1440p.mp4');
   await expect.poll(()=>video.evaluate(v=>(v as HTMLVideoElement).currentTime)).toBeGreaterThan(0);
 });
 
 test('missing film retains the real poster and the case-study destination', async ({ page }) => {
-  await page.route(/leu-film-20261008\.(mp4|webm)$/,r=>r.fulfill({status:404,body:'Missing film'}));
+  await page.route(/leu-film-20261009-1440p\.(mp4|webm)$/,r=>r.fulfill({status:404,body:'Missing film'}));
   await page.goto('/#work');
   const row=page.locator('[data-selected-project="leu"]');
   await row.scrollIntoViewIfNeeded();
