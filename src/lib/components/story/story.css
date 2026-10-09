@@ -372,6 +372,10 @@
   transform: none;
   clip-path: none;
 }
+/* Keep both ends of the panel aperture as the same interpolatable shape. */
+.story-split [data-reveal='in'][data-reveal-variant='frame'] {
+  clip-path: inset(0 0 0 0 round 16px);
+}
 /* The illustration follows its accompanying explanation, not the scroll
    position. The delay applies only to this local once-per-section reveal. */
 .story-split .story-panel[data-reveal='in'] { transition-delay: 65ms; }
