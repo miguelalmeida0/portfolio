@@ -5,17 +5,16 @@ test('opening Story keeps the portfolio transition and a clean portrait', async 
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
   await page.evaluate(() => {
-    (window as any).__storyFadeSeen = false;
-    const veil = document.querySelector('[data-route-veil]');
+    (window as any).__storyEditorialSeen = false;
     const observer = new MutationObserver(() => {
-      if (veil?.getAttribute('data-phase') === 'covering') {
-        (window as any).__storyFadeSeen = true;
+      if (document.documentElement.dataset.storyRouteTransition === 'active') {
+        (window as any).__storyEditorialSeen = true;
         observer.disconnect();
       }
     });
-    if (veil) observer.observe(veil, {
+    observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['data-phase']
+      attributeFilter: ['data-story-route-transition']
     });
   });
   if (isMobile) {
@@ -39,7 +38,7 @@ test('opening Story keeps the portfolio transition and a clean portrait', async 
   await expect(page.locator('.story-intro-text')).toHaveCSS('animation-name', 'none');
   await expect(page.locator('.story-intro-photo')).toHaveCSS('animation-name', 'none');
   if (!isMobile) {
-    expect(await page.evaluate(() => (window as any).__storyFadeSeen)).toBe(true);
+    expect(await page.evaluate(() => (window as any).__storyEditorialSeen)).toBe(true);
   }
 });
 
