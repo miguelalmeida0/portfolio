@@ -115,7 +115,7 @@ test('reaching the end reveals the short version and completes the ring', async 
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await goTo(page, N); await page.waitForTimeout(2200);
   await expect(page.locator(S.panelDone)).toHaveCount(1); await expect(page.locator(S.ringDone)).toHaveCount(1);
-  for (const line of data.shortVersion.lines) await expect(page.locator(S.panel)).toContainText(line);
+  for (const chapter of data.shortVersion.chapters) await expect(page.locator(S.panel)).toContainText(chapter.title);
   await page.click(S.copy); await page.waitForTimeout(200);
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(data.shortVersion.copyText);
 });
