@@ -12,6 +12,7 @@ async function setup(page: import('@playwright/test').Page) {
       const mark = document.querySelector<HTMLElement>('[data-story-identity-mark]');
       trace.push({
         stage, rows: rows.length, text: rows[0]?.textContent,
+        silhouetteClip: document.querySelector('[data-story-identity-type] g')?.getAttribute('clip-path'),
         position: mark?.getBoundingClientRect().toJSON(), time: performance.now()
       });
     }).observe(document, {
@@ -43,6 +44,7 @@ function verifyStages(stages: Array<{stage: string; rows: number; text: string}>
   expect(stages.map(item => item.stage)).toEqual(['covering', 'covered', 'revealing']);
   expect(stages.every(item => item.rows === 63)).toBe(true);
   expect(stages[0].text).toContain('MIGUEL ALMEIDA');
+  expect((stages[0] as any).silhouetteClip).toBe('url(#story-route-identity-outline)');
 }
 
 test('name silhouette replaces the photo flight in both directions', async ({ page, isMobile }) => {

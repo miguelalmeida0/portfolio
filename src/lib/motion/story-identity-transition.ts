@@ -148,7 +148,7 @@ export function createStoryIdentityTransition() {
       type.style.maskImage = 'url("' + source.image.currentSrc + '")';
       type.style.maskSize = '100% 100%';
       type.style.maskRepeat = 'no-repeat';
-      type.querySelector('g')?.removeAttribute('clip-path');
+      // Keep the SVG silhouette clip as a fallback if CSS masking is unsupported.
     }
     type.style.opacity = '0';
     photo.style.opacity = source ? '1' : '0';
