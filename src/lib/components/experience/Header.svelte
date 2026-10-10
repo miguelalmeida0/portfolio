@@ -30,6 +30,12 @@
     return () => { desktop.removeEventListener('change', closeOnDesktop); window.removeEventListener('ask:restore-trigger', restoreAsk); };
   });
   function escape(event: KeyboardEvent) { if (event.key === 'Escape' && open && !guideOpen && !navigationTransitionActive) { open = false; trigger?.focus(); } }
+  // A pointer press outside the dropdown dismisses it on touch and mouse.
+  function dismissOnOutsidePointerDown(event: PointerEvent) {
+    if (!open || navigationTransitionActive || !(event.target instanceof Node)) return;
+    if (trigger?.contains(event.target) || document.getElementById('mobile-navigation')?.contains(event.target)) return;
+    open = false;
+  }
   function toggleGuide() {
     const fromMobileMenu = open;
     if (fromMobileMenu) {
@@ -41,8 +47,8 @@
     onGuideToggle(!fromMobileMenu);
   }
 </script>
-<svelte:window onkeydown={escape} />
-<header id="top" class="wind-header shell relative z-30 no-print" data-align="left" data-story={story || undefined}>
+<svelte:window onkeydown={escape} onpointerdown={dismissOnOutsidePointerDown} />
+<header id="top" class="wind-header shell relative z-30 no-print" data-align="left" data-story={story || undefined} data-menu-open={open ? "" : undefined}>
   <div class="flex items-center justify-between gap-4">
     <a href="/#top" data-identity-home class="group flex min-h-11 min-w-0 shrink-0 items-center gap-3 rounded-lg sm:gap-4" aria-label="Miguel Almeida, Berlin — home">
       <span class="flex min-w-0 flex-col items-start sm:flex-row sm:items-center sm:gap-7">
@@ -75,6 +81,8 @@
 <style>
   .wind-header { --ink: #142A22; --plum: #59163C; --color-plum: #610d3d; --hero-font: 'Figtree', sans-serif; width: min(calc(100% - 2 * var(--page-x)), var(--content-max)); margin-inline: auto; padding-block: 0; height: var(--header-height); display: grid; align-items: center; color: var(--ink); font-family: var(--hero-font); }
   .wind-header > div { height: 56px; }
+  /* The case studies' sticky product bars use z-index: 40. The open site menu must clear them. */
+  .wind-header[data-menu-open] { z-index: 50; }
   .mobile-navigation { background: #F9F7EE; border-color: rgb(20 42 34 / 18%); }
   .menu-toggle { display: inline-flex; flex: 0 0 44px; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; border: 1px solid rgb(20 42 34 / 14%); border-radius: 12px; color: var(--ink); background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color 180ms ease, border-color 180ms ease; }
   .menu-toggle[aria-expanded="true"] { background: rgb(20 42 34 / 5%); border-color: rgb(20 42 34 / 22%); }

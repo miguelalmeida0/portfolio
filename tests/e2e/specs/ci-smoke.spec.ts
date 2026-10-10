@@ -650,3 +650,46 @@ test('Story shares the path from aviation to UX to frontend in an accessible rea
     expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(false);
   }
 });
+
+test('mobile menu dismisses outside presses and stays above case-study navigation', async ({ page }) => {
+  test.setTimeout(180_000);
+  await page.addInitScript(() => sessionStorage.setItem('seen-intro', 'true'));
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  for (const width of [320, 390, 768]) {
+    await page.setViewportSize({ width, height: 844 });
+    // Cover every case-study product bar at phone width; check narrow and tablet edges too.
+    const routes = width === 390
+      ? ['/', '/work/needle', '/work/second-voice', '/work/f24', '/work/leu', '/work/flow']
+      : ['/work/flow'];
+    for (const route of routes) {
+      await page.goto(route);
+      const toggle = page.locator('.menu-toggle');
+      await expect(toggle).toBeEnabled();
+      await toggle.click();
+      const nav = page.locator('#mobile-navigation');
+      await expect(nav).toBeVisible();
+      await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+      for (const label of ['Work', 'Story', 'CV', 'Contact']) {
+        const link = nav.getByRole('link', { name: label, exact: true });
+        await expect(link).toBeVisible();
+        const unobscured = await link.evaluate(element => {
+          const rect = element.getBoundingClientRect();
+          const target = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+          return !!target && element.contains(target);
+        });
+        expect(unobscured, `${route} at ${width}px: ${label} covered by case-study navigation`).toBe(true);
+      }
+
+      // Pointer presses inside the dropdown must not dismiss it.
+      const bounds = await nav.boundingBox();
+      expect(bounds).not.toBeNull();
+      await page.mouse.click(bounds!.x + bounds!.width - 8, bounds!.y + 8);
+      await expect(nav).toBeVisible();
+
+      // Pressing the page outside the dropdown closes it without a second toggle press.
+      await page.mouse.click(8, 500);
+      await expect(nav).toHaveCount(0);
+      await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    }
+  }
+});
