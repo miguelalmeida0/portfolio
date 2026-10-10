@@ -1,8 +1,9 @@
 name: CI
 
 on:
+  # Dev/test validation is available on PRs or by manual dispatch.
   push:
-    branches: [main, dev, test]
+    branches: [main]
   pull_request:
     branches: [main, dev, test]
   workflow_dispatch:
