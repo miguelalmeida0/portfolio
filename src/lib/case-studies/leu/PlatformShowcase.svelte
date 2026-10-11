@@ -229,7 +229,7 @@
     margin: 0 0 12px;
     text-align: center;
   }
-  figcaption .platform-label { display: none; }
+  figcaption .platform-label { display: none; font: 600 12px/1.4 var(--sans); }
   figcaption h2 {
     margin: 0;
     font: 750 clamp(17px, 1.65vw, 21px)/1.22 var(--sans);
@@ -240,7 +240,7 @@
     max-width: 65ch;
     margin: 0;
     color: var(--muted);
-    font: 400 13px/1.4 var(--sans);
+    font: 400 14px/1.4 var(--sans);
   }
   .platform-gallery:not([data-view='desktop']):not([data-view='phone']):not([data-moment='journey']) figcaption {
     display: grid;
@@ -341,7 +341,7 @@
   @media (max-width: 700px) {
     .platform-showcase { padding: 8px 0 24px; }
     .showcase-heading { margin-bottom: 12px; }
-    .showcase-heading h1 { font-size: clamp(32px, 8vw, 48px); }
+    .showcase-heading h1 { font-size: clamp(42px, 8vw, 48px); }
     .showcase-deck { margin-top: 5px; font-size: clamp(16px, 4.2vw, 19px); line-height: 1.24; }
     .showcase-controls { display: grid; grid-template-columns: minmax(0, 1fr); gap: 7px; margin-bottom: 10px; }
     .scene-switch {
@@ -374,7 +374,7 @@
     .platform-gallery[data-moment='journey'] { grid-template-columns: minmax(0, 1fr); }
     figcaption { margin-bottom: 8px; gap: 3px 8px; }
     figcaption h2 { font-size: 16px; line-height: 1.22; }
-    figcaption p { font-size: 12px; line-height: 1.33; }
+    figcaption p { font-size: 13px; line-height: 1.33; }
     .platform-gallery:not([data-view='desktop']):not([data-view='phone']):not([data-moment='journey']) figcaption p {
       display: -webkit-box;
       -webkit-line-clamp: 2;
@@ -393,7 +393,7 @@
     .scene-bar a { font-size: 12px; margin-inline: auto; }
   }
   @media (max-width: 360px) {
-    .showcase-heading h1 { font-size: 31px; }
+    .showcase-heading h1 { font-size: 42px; }
     .showcase-deck { font-size: 16px; }
     .scene-switch button { font-size: 11px; }
     .platform-gallery { grid-template-columns: minmax(0, .47fr) minmax(0, .53fr); gap: 7px; padding: 8px; }
