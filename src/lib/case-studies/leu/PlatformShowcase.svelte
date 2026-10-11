@@ -254,13 +254,13 @@
   .journey-stage { grid-column: 1 / -1; }
   .journey-stage picture {
     display: block;
-    width: min(100%, 690px, 69dvh);
+    width: min(100%, 760px);
     overflow: hidden;
     border-radius: 14px;
   }
   .journey-stage img { display: block; width: 100%; height: auto; }
   .flow-scroll {
-    width: min(100%, 690px);
+    width: min(100%, 760px);
     overflow-x: auto;
     overflow-y: hidden;
     border-radius: 14px;
@@ -290,12 +290,12 @@
     top: calc(-100% * 134 / 1019);
   }
   [data-view='phone'] .platform-phone { width: 100%; }
-  [data-view='phone'] .phone-screen { width: min(100%, 205px, 21dvh); }
+  [data-view='phone'] .phone-screen { width: min(100%, 245px, 30dvh); }
 
-  /* Original 2048 x 1280 desktop images: scale, never crop. The viewport cap
-     makes the entire screen visible in one glance on laptop and desktop. */
+  /* Preserve the source screenshots uncropped. Width follows available space,
+     not viewport height; the former 70dvh cap made laptop previews tiny. */
   .browser-stage {
-    width: min(100%, 700px, 70dvh);
+    width: min(100%, 820px);
     aspect-ratio: 2048/1280;
     overflow: hidden;
     border-radius: 13px;
@@ -303,7 +303,7 @@
   }
   .browser-stage img { display: block; width: 100%; height: 100%; object-fit: contain; }
   [data-view='desktop'] .platform-desktop { width: 100%; }
-  [data-view='desktop'] .browser-stage { width: min(100%, 700px, 70dvh); }
+  [data-view='desktop'] .browser-stage { width: min(100%, 820px); }
 
   /* One quiet next action; do not add another tall band below the images. */
   .scene-bar {
@@ -386,8 +386,8 @@
     .flow-scroll { width: 100%; max-height: 35dvh; border-radius: 10px; }
     .flow-scroll img { width: max(100%, 650px); }
     .phone-screen { width: min(100%, 108px, 16dvh); }
-    [data-view='phone'] .phone-screen { width: min(100%, 190px, 20dvh); }
-    .browser-stage, [data-view='desktop'] .browser-stage { width: min(100%, 700px, 70dvh); border-radius: 9px; }
+    [data-view='phone'] .phone-screen { width: min(100%, 215px, 28dvh); }
+    .browser-stage, [data-view='desktop'] .browser-stage { width: min(100%, 700px); border-radius: 9px; }
     .scene-bar { margin-top: 8px; padding-top: 5px; }
     .scene-bar > p { display: none; }
     .scene-bar a { font-size: 12px; margin-inline: auto; }

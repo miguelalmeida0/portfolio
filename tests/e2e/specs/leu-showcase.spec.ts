@@ -200,3 +200,25 @@ test('compact Leu showcase keeps choices, context, and active screen together ac
     }
   }
 });
+
+test('screens fill the showcase without shrinking on shorter laptop viewports', async ({ page }) => {
+  const showcase = page.getByRole('region', { name: 'Leu across phone and browser' });
+  for (const viewport of [
+    { width: 1440, height: 720 },
+    { width: 1440, height: 900 },
+    { width: 768, height: 820 },
+    { width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await showcase.getByRole('button', { name: 'Desktop', exact: true }).click();
+    await showcase.getByRole('button', { name: 'Read', exact: true }).click();
+    const gallery = await showcase.locator('.platform-gallery').boundingBox();
+    const screen = await showcase.locator('.browser-stage').boundingBox();
+    expect(gallery).not.toBeNull();
+    expect(screen).not.toBeNull();
+    expect(screen!.width / gallery!.width, `viewport ${viewport.width}x${viewport.height}`).toBeGreaterThan(0.87);
+    expect(screen!.width).toBeLessThanOrEqual(gallery!.width);
+    expect(Math.abs(screen!.width / screen!.height - 2048 / 1280)).toBeLessThan(.012);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2)).toBe(true);
+  }
+});
