@@ -7,12 +7,29 @@
     { id: 'read', label: 'Read', title: 'Stay with the thought.', description: 'Read the passage, hear it aloud, or ask for an explanation without losing the source.', phone: 'iphone-hero-20261009.webp' },
     { id: 'words', label: 'Tell it back', title: 'Tell it to a curious friend.', description: 'Explain the page in your own words. See which ideas got across and which need another look.', phone: 'iphone-words-20261009.webp' }
   ];
+  // Preserve the native phone journey. Desktop is its own six-screen gallery:
+  // a desktop Journey panorama would needlessly duplicate the product walkthrough.
+  const desktopScreens = [
+    { ...scenes[1], desktop: 'desktop-home-20261011.avif' },
+    { ...scenes[2], desktop: 'desktop-library-20261011.avif' },
+    { ...scenes[3], desktop: 'desktop-select-20261011.avif' },
+    { id: 'explain', label: 'Explain', title: 'Make the passage clearer.', description: 'An explanation alongside the real source, with the page and its meaning kept in view.', phone: scenes[3].phone, desktop: 'desktop-explain-20261011.avif' },
+    { ...scenes[4], desktop: 'desktop-own-words-20261011.avif' },
+    { id: 'study', label: 'Study', title: 'Bring the ideas back.', description: 'Turn reading into active recall, on your own terms and at your own pace.', phone: scenes[4].phone, desktop: 'desktop-study-20261011.avif' }
+  ];
   const views = ['Together', 'Phone', 'Desktop'] as const;
   let selected = $state('journey');
+  let desktopSelected = $state('home');
   let view = $state<(typeof views)[number]>('Together');
-  const scene = $derived(scenes.find(item => item.id === selected)!);
-  const overview = $derived(selected === 'journey');
+  const momentOptions = $derived(view === 'Desktop' ? desktopScreens : scenes);
+  const scene = $derived((view === 'Desktop' ? desktopScreens.find(item => item.id === desktopSelected) : scenes.find(item => item.id === selected))!);
+  const overview = $derived(view !== 'Desktop' && selected === 'journey');
   const asset = (file: string) => `/projects/leu/showcase/${file}`;
+  const chooseView = (next: (typeof views)[number]) => {
+    if (next === 'Desktop' && selected !== 'journey') desktopSelected = selected;
+    if (view === 'Desktop' && next === 'Together') selected = desktopSelected === 'explain' ? 'read' : desktopSelected === 'study' ? 'words' : desktopSelected;
+    view = next;
+  };
 </script>
 
 <section class="platform-showcase" id="overview" aria-label="Leu across phone and browser" data-leu-showcase>
@@ -20,16 +37,17 @@
     <div><h1 id="hero-h">Built around the page.</h1><p class="showcase-deck">A quieter way to read. A clearer way to understand.</p></div>
     <p class="platform-note">Native on iPhone.<br />At home in your browser.</p>
   </header>
-  <div class="showcase-controls">
-    <div class="scene-switch" role="group" aria-label="Choose a moment">
-      {#each scenes as item, index}
-        <button type="button" aria-pressed={selected === item.id} aria-controls="leu-platform-gallery" onclick={() => selected = item.id}>
-          {#if index > 0}<span class="step-number" aria-hidden="true">{index}</span>{/if}{item.label}
+  <div class="showcase-controls" data-platform={view.toLowerCase()}>
+    <div class="scene-switch" role="group" aria-label={view === 'Desktop' ? 'Choose a desktop screen' : 'Choose a moment'}>
+      {#each momentOptions as item, index (item.id)}
+        <button type="button" aria-pressed={scene.id === item.id} aria-controls="leu-platform-gallery"
+          onclick={() => view === 'Desktop' ? desktopSelected = item.id : selected = item.id}>
+          {#if view === 'Desktop' || index > 0}<span class="step-number" aria-hidden="true">{view === 'Desktop' ? index + 1 : index}</span>{/if}{item.label}
         </button>
       {/each}
     </div>
     <div class="view-switch" role="group" aria-label="Focus a platform">
-      {#each views as option}<button type="button" aria-pressed={view === option} aria-controls="leu-platform-gallery" onclick={() => view = option}>{option}</button>{/each}
+      {#each views as option}<button type="button" aria-pressed={view === option} aria-controls="leu-platform-gallery" onclick={() => chooseView(option)}>{option}</button>{/each}
     </div>
   </div>
   <div id="leu-platform-gallery" class="platform-gallery" data-view={view.toLowerCase()} data-moment={scene.id}>
@@ -62,35 +80,19 @@
         <figcaption><p class="platform-label">On iPhone · SwiftUI</p><h2>{scene.title}</h2><p>{scene.description}</p></figcaption>
       </figure>
     {/if}
-    <figure class="platform-desktop" hidden={overview && view !== 'Desktop' || view === 'Phone'}>
-      {#if scene.id === 'read'}
-        <div class="browser-stage" data-desktop-moment="read">
-          <img src={asset('desktop-reading-20261009.webp')} alt="Leu's real desktop reading interface: chapter navigation, the source passage, and explanation tools." width="2048" height="1280" decoding="async" />
-        </div>
-      {:else}
-        <!-- Only the Read desktop capture is available. Use the genuine supplied
-             phone captures for the other journey moments, not a fabricated desktop UI. -->
-        <div class="desktop-journey-stage" data-desktop-moment={scene.id}>
-          <div class="desktop-journey-copy">
-            <p class="desktop-journey-eyebrow">THE LEARNING JOURNEY · {scenes.findIndex(item => item.id === scene.id) + 1} / {scenes.length}</p>
-            <h3>{scene.title}</h3>
-            <p>{scene.description}</p>
-            <div class="desktop-journey-bridge">
-              <span class="bridge-dot" aria-hidden="true"></span>
-              <span>The same book continues in the browser.</span>
-            </div>
-          </div>
-          <div class="desktop-journey-art" data-journey-art={scene.id}>
-            {#key scene.id}
-              <img in:fade={{ duration: 160 }} src={asset(scene.phone)} alt={`Leu journey step: ${scene.label}, shown in the original iPhone design.`} width={scene.id === 'journey' || scene.id === 'read' ? 2048 : 984} height={scene.id === 'journey' ? 888 : scene.id === 'read' ? 1280 : 2048} decoding="async" />
-            {/key}
-          </div>
-        </div>
-      {/if}
+    <figure class="platform-desktop" hidden={view === 'Phone' || overview}>
+      <div class="browser-stage" data-desktop-moment={scene.id}>
+        {#key scene.id}
+          <img in:fade={{ duration: 160 }}
+            src={asset(view === 'Desktop' ? desktopScreens.find(item => item.id === scene.id)!.desktop : (desktopScreens.find(item => item.id === scene.id)?.desktop ?? 'desktop-select-20261011.avif'))}
+            alt={`Leu desktop — ${scene.label}: ${scene.description}`}
+            width="2048" height="1280" decoding="async" />
+        {/key}
+      </div>
       <figcaption>
-        <p class="platform-label">{scene.id === 'read' ? 'In your browser · React' : 'Journey detail · Original product screens'}</p>
-        <h2>{scene.id === 'read' ? 'More room. The same page.' : scene.title}</h2>
-        <p>{scene.id === 'read' ? 'The chapter on one side, your questions on the other. The source stays at the centre.' : scene.description}</p>
+        <p class="platform-label">In your browser · React</p>
+        <h2>{scene.title}</h2>
+        <p>{scene.description}</p>
       </figcaption>
     </figure>
   </div>
@@ -135,28 +137,10 @@
   .from-sheet img { position: absolute; width: calc(100% * 2048 / 489); max-width: none; left: calc(-100% * 780 / 489); top: calc(-100% * 134 / 1019); }
   .browser-stage { overflow: hidden; border-radius: 16px; width: 100%; aspect-ratio: 2048/1280; }
   .browser-stage img { display: block; width: 100%; height: auto; }
-  .desktop-journey-stage {
-    display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
-    gap: clamp(18px, 4vw, 64px); align-items: center;
-    width: 100%; min-height: min(52vw, 580px);
-    padding: clamp(24px, 4vw, 60px); border-radius: 16px;
-    background: #dce4c8; overflow: hidden;
-  }
-  .desktop-journey-copy { min-width: 0; }
-  .desktop-journey-eyebrow { margin: 0 0 18px; font: 700 12px/1.4 var(--sans); letter-spacing: .1em; color: var(--forest); }
-  .desktop-journey-copy h3 { margin: 0 0 18px; font: 800 clamp(30px, 3.6vw, 58px)/1.06 var(--sans); letter-spacing: -.045em; color: var(--forest); text-wrap: balance; }
-  .desktop-journey-copy > p:not(.desktop-journey-eyebrow) { max-width: 37ch; margin: 0; font: 400 clamp(16px, 1.55vw, 21px)/1.5 var(--serif); color: var(--forest); }
-  .desktop-journey-bridge { display: flex; align-items: center; gap: 10px; margin-top: 28px; padding-top: 16px; border-top: 1px solid rgba(22,60,46,.18); font: 600 13px/1.45 var(--sans); color: var(--forest); }
-  .bridge-dot { flex: none; width: 9px; height: 9px; border-radius: 50%; background: #bb704d; }
-  .desktop-journey-art { display: grid; place-items: center; min-width: 0; max-height: 550px; overflow: hidden; }
-  .desktop-journey-art img { display: block; width: auto; height: auto; max-width: 100%; max-height: 540px; object-fit: contain; }
-  .desktop-journey-art[data-journey-art='journey'] img { width: 100%; max-height: none; }
-  @media (max-width: 700px) {
-    .desktop-journey-stage { grid-template-columns: 1fr; min-height: 0; padding: 24px 18px; gap: 20px; }
-    .desktop-journey-copy h3 { font-size: 32px; }
-    .desktop-journey-bridge { margin-top: 16px; }
-    .desktop-journey-art img { max-height: 460px; }
-  }
+  /* All six authentic 2048×1280 desktop captures share a compact fixed ratio. */
+  .browser-stage img { width: 100%; height: 100%; object-fit: contain; }
+  .showcase-controls[data-platform='desktop'] .scene-switch { flex-wrap: nowrap; min-width: 0; max-width: 100%; overflow-x: auto; scrollbar-width: thin; }
+  .showcase-controls[data-platform='desktop'] .scene-switch button { flex: 0 0 auto; white-space: nowrap; }
   figcaption { margin-top: 24px; }
   figcaption h2 { font: 750 clamp(23px, 2.25vw, 34px)/1.18 var(--sans); letter-spacing: -.03em; text-wrap: balance; margin: 0 0 10px; }
   figcaption p { font: 400 18px/1.55 var(--sans); color: var(--muted); margin: 0; }
