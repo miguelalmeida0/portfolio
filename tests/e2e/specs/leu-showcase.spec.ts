@@ -52,12 +52,13 @@ test('paired screens preserve the supplied handset and desktop proportions', asy
 test('platform focus preserves the selected scene and restores both interfaces', async ({ page }) => {
   const gallery = page.getByRole('region', { name: 'Leu across phone and browser' });
   await gallery.getByRole('button', { name: 'Library', exact: true }).click();
-  const phone=gallery.getByRole('img',{name:'Leu on iPhone: Library'}), desktop=gallery.locator('.browser-stage img');
+  const phone=gallery.getByRole('img',{name:'Leu on iPhone: Library'}), desktop=gallery.locator('.platform-desktop');
   await expect(phone).toBeVisible();
   await gallery.getByRole('button', { name: 'Phone', exact: true }).click();
   await expect(desktop).toBeHidden();await expect(phone).toBeVisible();
   await gallery.getByRole('button', { name: 'Desktop', exact: true }).click();
   await expect(desktop).toBeVisible();await expect(phone).toBeHidden();
+  await expect(desktop.locator('[data-desktop-moment="library"]')).toBeVisible();
   await gallery.getByRole('button', { name: 'Together', exact: true }).click();
   await expect(phone).toBeVisible();await expect(desktop).toBeVisible();
   await expect(gallery.getByRole('button',{name:'Library',exact:true})).toHaveAttribute('aria-pressed','true');
@@ -74,7 +75,11 @@ test('every learning step changes the phone and description with keyboard contro
     const phoneScreen=await phone.getAttribute('data-scene');expect(phoneScreen).not.toBe(lastPhone);lastPhone=phoneScreen!;
     await expect.poll(() => phone.evaluate(i => (i as HTMLImageElement).complete && (i as HTMLImageElement).naturalWidth > 0)).toBe(true);
     await expect(gallery.locator('.platform-phone h2')).not.toBeEmpty();
-    await expect(gallery.locator('.browser-stage img')).toHaveAttribute('src',/desktop-reading-20261009.webp$/);
+    if (scene === 'Read') {
+      await expect(gallery.locator('.browser-stage img')).toHaveAttribute('src',/desktop-reading-20261009.webp$/);
+    } else {
+      await expect(gallery.locator('.desktop-journey-art img')).toHaveAttribute('src',/iphone-(home|library|words)-20261009.webp$/);
+    }
     await captureGallery(page,`step-${scene.toLowerCase().replaceAll(' ','-')}`);
   }
   await expect(page.getByRole('region', { name: 'Interactive reading loop' })).toBeVisible();
@@ -93,4 +98,31 @@ test('complete phone flow scrolls inside its own viewport without page overflow'
   for(const button of await gallery.getByRole('button').all()){const b=await button.boundingBox();expect(b!.height).toBeGreaterThanOrEqual(44);expect(b!.x+b!.width).toBeLessThanOrEqual(391);}
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   await captureGallery(page,'mobile-phone-read');
+});
+
+test('desktop journey controls update the actual gallery content for every moment', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const gallery = page.getByRole('region', { name: 'Leu across phone and browser' });
+  await gallery.getByRole('button', { name: 'Desktop', exact: true }).click();
+  const moments = [
+    { label: 'The journey', id: 'journey', asset: 'iphone-flow-20261009.webp' },
+    { label: 'Home', id: 'home', asset: 'iphone-home-20261009.webp' },
+    { label: 'Library', id: 'library', asset: 'iphone-library-20261009.webp' },
+    { label: 'Read', id: 'read', asset: 'desktop-reading-20261009.webp' },
+    { label: 'Tell it back', id: 'words', asset: 'iphone-words-20261009.webp' },
+  ];
+  let previous = '';
+  for (const moment of moments) {
+    await gallery.getByRole('button', { name: moment.label, exact: true }).click();
+    const frame = gallery.locator('[data-desktop-moment]');
+    await expect(frame).toHaveAttribute('data-desktop-moment', moment.id);
+    const image = frame.locator('img');
+    await expect(image).toHaveAttribute('src', new RegExp(moment.asset.replaceAll('.', '\\.')));
+    await expect.poll(() => image.evaluate((el) => (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth > 0)).toBe(true);
+    const source = await image.getAttribute('src');
+    expect(source).not.toBe(previous);
+    previous = source!;
+    await expect(gallery.locator('.platform-desktop figcaption h2')).not.toBeEmpty();
+  }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
