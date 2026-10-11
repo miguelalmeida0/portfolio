@@ -693,3 +693,37 @@ test('mobile menu dismisses outside presses and stays above case-study navigatio
     }
   }
 });
+
+
+test('mobile Line M footer has four native icon stops and a compact train', async ({ page }) => {
+  await page.addInitScript(() => sessionStorage.setItem('seen-intro', 'true'));
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  for (const width of [320, 375, 390, 430]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto('/#contact');
+    await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
+    const mobile = page.locator('[data-mobile-line]');
+    await expect(mobile).toBeVisible();
+    await expect(page.locator('[data-line]')).toBeHidden();
+    const stops = mobile.locator('[data-mobile-stop]');
+    await expect(stops).toHaveCount(4);
+    for (const [i, href] of [
+      ['0', 'mailto:miguelalmeida1592@gmail.com'],
+      ['1', 'https://www.linkedin.com/in/miguelalmeida1/'],
+      ['2', 'https://github.com/miguelalmeida0'],
+      ['3', '/cv/pdf']
+    ]) {
+      const station = stops.locator(`[data-mobile-stop="${i}"]`);
+      await expect(station).toBeVisible();
+      await expect(station).toHaveAttribute('href', href);
+      const bounds = await station.boundingBox();
+      expect(bounds!.height).toBeGreaterThanOrEqual(44);
+      expect(bounds!.x).toBeGreaterThanOrEqual(0);
+      expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width);
+    }
+    await expect(mobile.locator('svg')).toHaveCount(8);
+    const train = await mobile.locator('span[class*="mobileTrain"]').boundingBox();
+    expect(train!.width).toBeLessThanOrEqual(40);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  }
+});
