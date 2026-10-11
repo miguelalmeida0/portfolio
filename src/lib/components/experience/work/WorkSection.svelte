@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { destinationLink } from '$lib/navigation/destination-link';
+  import ArrowUpRight from '@lucide/svelte/icons/arrow-up-right';
   import { f24Ownership } from '$lib/content/work-projects';
   import PreviewMedia from './PreviewMedia.svelte';
   import { selectedProjects } from './selected-projects';
@@ -83,7 +84,7 @@
             <div class="project-info">
               <p class="project-number">{String(index + 1).padStart(2, '0')} / {project.category}</p>
               <h4 id={`selected-${project.id}`} class="project-title">
-                <a href={project.href} {...destinationLink(project.href)}>{project.name} <span data-project-arrow aria-hidden="true">↗</span></a>
+                <a href={project.href} {...destinationLink(project.href)}>{project.name} <ArrowUpRight size={20} strokeWidth={1.8} aria-hidden="true" /></a>
               </h4>
               <p class="project-line">{project.line}</p>
               <ul class="capabilities project-tags" aria-label={`${project.name} capabilities`}>
@@ -91,8 +92,8 @@
               </ul>
               <p class="project-stack" aria-label={`${project.name} technology stack`}>{project.stack.join(' · ')}</p>
               <div class="project-actions">
-                {#if project.live}<a href={project.live} {...destinationLink(project.live)}>Live app <span aria-hidden="true">↗</span></a>{/if}
-                {#if project.code}<a href={project.code} {...destinationLink(project.code)}>Code <span aria-hidden="true">↗</span></a>{/if}
+                {#if project.live}<a href={project.live} {...destinationLink(project.live)}>Live app <ArrowUpRight size={18} strokeWidth={1.8} aria-hidden="true" /></a>{/if}
+                {#if project.code}<a href={project.code} {...destinationLink(project.code)}>Code <ArrowUpRight size={18} strokeWidth={1.8} aria-hidden="true" /></a>{/if}
               </div>
             </div>
           </article>

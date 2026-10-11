@@ -47,7 +47,16 @@
   @media (min-width: 768px) and (max-width: 1023px) { .content-card { height: 420px; } }
   @media (max-width: 767px) {
     .wind-hero { margin-top: 28px; gap: 20px; }
-    .content-card { height: auto; padding: 24px 20px; gap: 28px; }
+    .content-card { height: auto; padding: 28px 24px 24px; gap: 32px; border-radius: 22px; }
+    .top-group { gap: 14px; }
+    .greeting { font-size: 17px; }
+    .content-card :global(h1) { font-size: clamp(34px, 9vw, 42px); line-height: 1.06; letter-spacing: -.045em; }
+    .experience { font-size: 17px; line-height: 1.45; }
+    .bottom-group { gap: 18px; }
+    .supporting-copy { padding-top: 18px; }
+    .hero-actions { gap: 8px; }
+    .hero-actions .primary { border-radius: 12px; }
+    .hero-actions .secondary { min-height: 48px; }
     .hero-stack { font-size: 22px; }
     .hero-actions { flex-direction: column; gap: 12px; }
     .hero-actions a { width: 100%; min-height: 52px; }
