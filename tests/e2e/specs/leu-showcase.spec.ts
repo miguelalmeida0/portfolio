@@ -157,3 +157,44 @@ test('switching Desktop and Phone preserves each platform independently', async 
   await gallery.getByRole('button', { name: 'Phone', exact: true }).click();
   await expect(gallery.getByRole('button', { name: 'Study', exact: true })).toHaveCount(0);
 });
+
+test('compact Leu showcase keeps choices, context, and active screen together across viewports', async ({ page }) => {
+  const showcase = page.getByRole('region', { name: 'Leu across phone and browser' });
+  for (const width of [320, 390, 768, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/work/leu');
+    for (const mode of ['Together', 'Phone', 'Desktop'] as const) {
+      await showcase.getByRole('button', { name: mode, exact: true }).click();
+      const choices = showcase.locator('.scene-switch');
+      const controls = showcase.locator('.showcase-controls');
+      const gallery = showcase.locator('.platform-gallery');
+      const footprint = await Promise.all([controls.boundingBox(), gallery.boundingBox()]);
+      expect(footprint[0], `${width} ${mode}: tabs must be visible`).not.toBeNull();
+      expect(footprint[1], `${width} ${mode}: gallery must be visible`).not.toBeNull();
+      expect(
+        footprint[1]!.y + footprint[1]!.height - footprint[0]!.y,
+        `${width} ${mode}: options and full image should fit in the same view`,
+      ).toBeLessThan(700);
+      const overflow = await choices.evaluate((el) => el.scrollWidth - el.clientWidth);
+      expect(overflow, `${width} ${mode}: all screen choices must fit without a horizontal carousel`).toBeLessThanOrEqual(2);
+      const image = mode === 'Desktop'
+        ? gallery.locator('.platform-desktop .browser-stage img')
+        : mode === 'Phone'
+          ? gallery.locator('.flow-scroll img, .phone-screen img').first()
+          : gallery.locator('.journey-stage img, .platform-desktop .browser-stage img').first();
+      await expect(image).toBeVisible();
+      await expect.poll(() => image.evaluate((el) => (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth > 0)).toBe(true);
+      const bounding = await image.boundingBox();
+      expect(bounding!.width, `${width} ${mode}: image must not be cropped horizontally`).toBeLessThanOrEqual(width);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2)).toBe(true);
+    }
+    // The denser six-tab desktop flow stays available without extra scrolling.
+    await showcase.getByRole('button', { name: 'Desktop', exact: true }).click();
+    for (const label of ['Home', 'Library', 'Read', 'Explain', 'Tell it back', 'Study']) {
+      const button = showcase.getByRole('group', { name: 'Choose a desktop screen' }).getByRole('button', { name: label, exact: true });
+      await expect(button).toBeVisible();
+      await button.click();
+      await expect(button).toHaveAttribute('aria-pressed', 'true');
+    }
+  }
+});
