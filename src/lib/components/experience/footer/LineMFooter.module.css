@@ -110,7 +110,9 @@
   .sign { margin: 0 0 0 34px; align-items: flex-start; padding: 8px 12px 10px; }
   .nm { font-size: 22px; }
   .vl { font-size: 17px; white-space: normal; }
-  .train { left: 6px; top: var(--p); margin-left: -100px; margin-top: -29px; transform: translateX(-25px) scale(.36); transform-origin: center; }
+  /* Scale the actual train, not only its position. At 390px the two cars
+     occupy 52px and sit left of the route label, without covering it. */
+  .train { left: 6px; top: var(--p); width: 200px; height: 58px; margin-left: -100px; margin-top: -29px; transform: translateX(-32px) scale(.26); transform-origin: center; }
   .startl { left: 44px; top: -2px; }
 }
 
