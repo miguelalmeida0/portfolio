@@ -713,7 +713,7 @@ test('mobile Line M footer has four native icon stops and a compact train', asyn
       ['2', 'https://github.com/miguelalmeida0'],
       ['3', '/cv/pdf']
     ]) {
-      const station = stops.locator(`[data-mobile-stop="${i}"]`);
+      const station = mobile.locator(`[data-mobile-stop="${i}"]`);
       await expect(station).toBeVisible();
       await expect(station).toHaveAttribute('href', href);
       const bounds = await station.boundingBox();
