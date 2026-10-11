@@ -6,8 +6,6 @@
   import { createLineService, initialTrain } from './service';
   import { copyText } from '$lib/experience/motion';
   import Mail from '@lucide/svelte/icons/mail';
-  import Linkedin from '@lucide/svelte/icons/linkedin';
-  import Github from '@lucide/svelte/icons/github';
   import FileText from '@lucide/svelte/icons/file-text';
   import ChevronRight from '@lucide/svelte/icons/chevron-right';
 
@@ -109,8 +107,8 @@
           <span class={s.mobileStation} aria-hidden="true"></span>
           <span class={s.mobileIcon} aria-hidden="true">
             {#if stop.id === 'email'}<Mail size={22} strokeWidth={1.85} />
-            {:else if stop.id === 'linkedin'}<Linkedin size={22} strokeWidth={1.85} />
-            {:else if stop.id === 'github'}<Github size={22} strokeWidth={1.85} />
+            {:else if stop.id === 'linkedin'}<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M20.45 2H3.55C2.7 2 2 2.67 2 3.5v17c0 .83.7 1.5 1.55 1.5h16.9c.86 0 1.55-.67 1.55-1.5v-17c0-.83-.69-1.5-1.55-1.5ZM7.93 18.75H4.97V9.2h2.96v9.55ZM6.45 7.9a1.72 1.72 0 1 1 0-3.44 1.72 1.72 0 0 1 0 3.44Zm12.3 10.85h-2.96V14.1c0-1.11-.02-2.54-1.55-2.54-1.55 0-1.79 1.21-1.79 2.46v4.73H9.49V9.2h2.84v1.3h.04c.4-.75 1.36-1.55 2.8-1.55 3 0 3.58 1.98 3.58 4.55v5.25Z"/></svg>
+            {:else if stop.id === 'github'}<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.162 19.487c.5.093.682-.217.682-.483 0-.237-.008-.866-.013-1.7-2.775.603-3.36-1.338-3.36-1.338-.455-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.004.07 1.532 1.03 1.532 1.03.892 1.529 2.341 1.087 2.91.831.09-.647.35-1.087.635-1.337-2.215-.252-4.544-1.108-4.544-4.937 0-1.09.39-1.98 1.029-2.677-.104-.253-.446-1.27.098-2.647 0 0 .838-.268 2.75 1.023a9.58 9.58 0 0 1 5 0c1.91-1.29 2.747-1.023 2.747-1.023.546 1.377.203 2.394.1 2.647.64.697 1.026 1.587 1.026 2.677 0 3.839-2.332 4.682-4.554 4.93.36.312.68.927.68 1.869 0 1.35-.013 2.438-.013 2.768 0 .27.18.582.688.482A10.001 10.001 0 0 0 12 2Z"/></svg>
             {:else}<FileText size={22} strokeWidth={1.85} />{/if}
           </span>
           <span class={s.mobileCopy}>
