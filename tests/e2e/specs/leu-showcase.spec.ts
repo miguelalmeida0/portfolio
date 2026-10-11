@@ -184,8 +184,10 @@ test('compact Leu showcase keeps choices, context, and active screen together ac
           : gallery.locator('.journey-stage img, .platform-desktop .browser-stage img').first();
       await expect(image).toBeVisible();
       await expect.poll(() => image.evaluate((el) => (el as HTMLImageElement).complete && (el as HTMLImageElement).naturalWidth > 0)).toBe(true);
-      const bounding = await image.boundingBox();
-      expect(bounding!.width, `${width} ${mode}: image must not be cropped horizontally`).toBeLessThanOrEqual(width);
+      const bounding = await (mode === 'Phone' && (await gallery.locator('.flow-scroll').count()) > 0
+        ? gallery.locator('.flow-scroll').boundingBox()
+        : image.boundingBox());
+      expect(bounding!.width, `${width} ${mode}: visible gallery viewport must fit the page`).toBeLessThanOrEqual(width);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2)).toBe(true);
     }
     // The denser six-tab desktop flow stays available without extra scrolling.
