@@ -32,9 +32,9 @@
   };
 </script>
 
-<section class="platform-showcase" id="overview" aria-label="Leu across phone and browser" data-leu-showcase>
+<section class="platform-showcase" id="platforms" aria-label="Leu across phone and browser" data-leu-showcase>
   <header class="showcase-heading">
-    <div><h1 id="hero-h">Built around the page.</h1><p class="showcase-deck">A quieter way to read. A clearer way to understand.</p></div>
+    <div><h2 id="platforms-h">The experience, on every screen.</h2><p class="showcase-deck">Explore the real iPhone and browser interfaces.</p></div>
     <p class="platform-note">Native on iPhone.<br />At home in your browser.</p>
   </header>
   <div class="showcase-controls" data-platform={view.toLowerCase()}>
@@ -121,7 +121,7 @@
     gap: 20px;
     margin-bottom: clamp(14px, 2vw, 22px);
   }
-  .showcase-heading h1 {
+  .showcase-heading h2 {
     margin: 0;
     font: 800 clamp(36px, 4.7vw, 62px)/1.06 var(--sans);
     letter-spacing: -.045em;
@@ -341,7 +341,7 @@
   @media (max-width: 700px) {
     .platform-showcase { padding: 8px 0 24px; }
     .showcase-heading { margin-bottom: 12px; }
-    .showcase-heading h1 { font-size: clamp(42px, 8vw, 48px); }
+    .showcase-heading h2 { font-size: clamp(42px, 8vw, 48px); }
     .showcase-deck { margin-top: 5px; font-size: clamp(16px, 4.2vw, 19px); line-height: 1.24; }
     .showcase-controls { display: grid; grid-template-columns: minmax(0, 1fr); gap: 7px; margin-bottom: 10px; }
     .scene-switch {
@@ -393,7 +393,7 @@
     .scene-bar a { font-size: 12px; margin-inline: auto; }
   }
   @media (max-width: 360px) {
-    .showcase-heading h1 { font-size: 42px; }
+    .showcase-heading h2 { font-size: 42px; }
     .showcase-deck { font-size: 16px; }
     .scene-switch button { font-size: 11px; }
     .platform-gallery { grid-template-columns: minmax(0, .47fr) minmax(0, .53fr); gap: 7px; padding: 8px; }
