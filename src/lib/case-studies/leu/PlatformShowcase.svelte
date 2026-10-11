@@ -104,91 +104,305 @@
 </section>
 
 <style>
-  .platform-showcase { padding: 24px 0 clamp(40px, 5vw, 72px); }
-  .showcase-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; margin-bottom: 36px; }
-  .showcase-heading h1 { font: 800 clamp(48px, 7vw, 96px)/1.05 var(--sans); letter-spacing: -.04em; margin: 0; text-wrap: balance; }
-  .showcase-deck { font: 400 clamp(23px, 2.3vw, 34px)/1.35 var(--serif); letter-spacing: -.02em; margin: 14px 0 0; }
-  .platform-note { flex-shrink: 0; font: 500 17px/1.65 var(--sans); color: var(--muted); margin: 0 0 4px; }
-  .showcase-controls { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
-  .scene-switch { display: flex; flex-wrap: wrap; gap: 4px; }
-  .scene-switch button { display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 10px 14px; border: 0; border-radius: 10px; font: 550 16px/1.3 var(--sans); background: transparent; color: var(--muted); cursor: pointer; transition: background .18s, color .18s; }
+
+  /*
+   * Compact, viewport-conscious showcase. Keep the actual source screenshots
+   * uncropped; scale their frames, not the raster contents or page scroll.
+   */
+  .platform-showcase {
+    width: min(100%, 1000px);
+    margin-inline: auto;
+    padding: clamp(10px, 2vw, 20px) 0 clamp(24px, 3vw, 40px);
+  }
+  .showcase-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: clamp(14px, 2vw, 22px);
+  }
+  .showcase-heading h1 {
+    margin: 0;
+    font: 800 clamp(36px, 4.7vw, 62px)/1.06 var(--sans);
+    letter-spacing: -.045em;
+    text-wrap: balance;
+  }
+  .showcase-deck {
+    margin: 8px 0 0;
+    font: 400 clamp(17px, 1.7vw, 22px)/1.32 var(--serif);
+    letter-spacing: -.02em;
+  }
+  .platform-note {
+    margin: 0 0 2px;
+    flex: 0 0 auto;
+    color: var(--muted);
+    font: 500 13px/1.5 var(--sans);
+  }
+
+  /* The tabs and displayed frame must be visible in the same viewport. */
+  .showcase-controls {
+    width: min(100%, 940px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 auto 12px;
+  }
+  .scene-switch {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 3px;
+    min-width: 0;
+  }
+  .scene-switch button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    min-height: 44px;
+    padding: 8px 11px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font: 600 13px/1.25 var(--sans);
+    white-space: nowrap;
+    transition: background .18s, color .18s;
+  }
   .scene-switch button[aria-pressed='true'] { background: var(--forest); color: var(--ivory); }
   .scene-switch button:hover:not([aria-pressed='true']) { background: var(--sagebg); color: var(--ink); }
-  .step-number { font-size: 12px; font-variant-numeric: tabular-nums; opacity: .8; }
-  .view-switch { display: flex; flex-shrink: 0; padding: 3px; border: 1px solid var(--line); border-radius: 999px; }
-  .view-switch button { min-height: 44px; border: 0; border-radius: 999px; padding: 10px 17px; font: 550 14px/1.3 var(--sans); cursor: pointer; background: transparent; transition: background .18s, color .18s; }
+  .step-number { font: 500 11px/1 var(--sans); font-variant-numeric: tabular-nums; opacity: .7; }
+  .view-switch {
+    display: flex;
+    flex: 0 0 auto;
+    padding: 2px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+  }
+  .view-switch button {
+    min-height: 44px;
+    padding: 8px 14px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--forest);
+    cursor: pointer;
+    font: 600 12px/1.25 var(--sans);
+    transition: background .18s, color .18s;
+  }
   .view-switch button[aria-pressed='true'] { background: var(--ivory); color: var(--forest); }
   .view-switch button:hover:not([aria-pressed='true']) { background: var(--sagebg); }
-  .platform-gallery { display: grid; grid-template-columns: minmax(0, .34fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
-  figure { min-width: 0; margin: 0; }
-  figure[hidden] { display: none; }
+
+  /* A single, compact gallery card across all three platform modes. */
+  .platform-gallery {
+    display: grid;
+    grid-template-columns: minmax(0, .28fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(16px, 2.5vw, 26px);
+    width: min(100%, 910px);
+    min-width: 0;
+    margin-inline: auto;
+    padding: clamp(10px, 1.6vw, 18px);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    background: rgba(226, 234, 210, .43);
+    box-shadow: 0 12px 30px rgba(29, 54, 37, .055);
+  }
+  .platform-gallery[data-view='phone'],
+  .platform-gallery[data-view='desktop'],
+  .platform-gallery[data-moment='journey'] { grid-template-columns: minmax(0, 1fr); }
+  figure { display: flex; flex-direction: column; align-items: center; min-width: 0; width: 100%; margin: 0; }
+  figure[hidden] { display: none !important; }
+
+  /* Put the concise context BEFORE the image, never below an oversized image. */
+  figcaption {
+    order: -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: 3px 12px;
+    width: 100%;
+    min-width: 0;
+    margin: 0 0 12px;
+    text-align: center;
+  }
+  figcaption .platform-label { display: none; }
+  figcaption h2 {
+    margin: 0;
+    font: 750 clamp(17px, 1.65vw, 21px)/1.22 var(--sans);
+    letter-spacing: -.025em;
+    text-wrap: balance;
+  }
+  figcaption p {
+    max-width: 65ch;
+    margin: 0;
+    color: var(--muted);
+    font: 400 13px/1.4 var(--sans);
+  }
+  .platform-gallery:not([data-view='desktop']):not([data-view='phone']):not([data-moment='journey']) figcaption {
+    display: grid;
+    justify-items: center;
+    gap: 4px;
+    min-height: 50px;
+  }
+  .platform-gallery:not([data-view='desktop']):not([data-view='phone']):not([data-moment='journey']) figcaption p {
+    max-width: 33ch;
+  }
   .journey-stage { grid-column: 1 / -1; }
-  .journey-stage picture { display: block; overflow: hidden; border-radius: 16px; }
+  .journey-stage picture {
+    display: block;
+    width: min(100%, 690px, 69dvh);
+    overflow: hidden;
+    border-radius: 14px;
+  }
   .journey-stage img { display: block; width: 100%; height: auto; }
-  .journey-stage > figcaption { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; }
-  .journey-stage > figcaption p { max-width: 42ch; }
-  .flow-scroll { overflow-x: auto; border-radius: 16px; scrollbar-color: var(--forest) var(--sagebg); }
-  .phone-stage { display: flex; justify-content: center; }
-  .phone-screen { position: relative; width: min(100%, 280px); aspect-ratio: 984/2048; }
+  .flow-scroll {
+    width: min(100%, 690px);
+    overflow-x: auto;
+    overflow-y: hidden;
+    border-radius: 14px;
+    scrollbar-color: var(--forest) var(--sagebg);
+  }
+  .flow-scroll img { display: block; width: max(100%, 760px); height: auto; max-width: none; }
+
+  .phone-stage { display: flex; justify-content: center; width: 100%; }
+  .phone-screen {
+    position: relative;
+    width: min(100%, 190px, 19dvh);
+    aspect-ratio: 984/2048;
+  }
   .phone-screen img { display: block; width: 100%; height: auto; }
-  /* The larger reader in the supplied hero provides 46% more source pixels
-     than the four-phone sheet. Preserve its complete device in this viewport. */
-  .phone-screen.from-sheet { overflow: hidden; aspect-ratio: 489/1019; border-radius: 16% / 8%; }
-  .from-sheet img { position: absolute; width: calc(100% * 2048 / 489); max-width: none; left: calc(-100% * 780 / 489); top: calc(-100% * 134 / 1019); }
-  .browser-stage { overflow: hidden; border-radius: 16px; width: 100%; aspect-ratio: 2048/1280; }
-  .browser-stage img { display: block; width: 100%; height: auto; }
-  /* All six authentic 2048×1280 desktop captures share a compact fixed ratio. */
-  .browser-stage img { width: 100%; height: 100%; object-fit: contain; }
-  .showcase-controls[data-platform='desktop'] .scene-switch { flex-wrap: nowrap; min-width: 0; max-width: 100%; overflow-x: auto; scrollbar-width: thin; }
-  .showcase-controls[data-platform='desktop'] .scene-switch button { flex: 0 0 auto; white-space: nowrap; }
-  figcaption { margin-top: 24px; }
-  figcaption h2 { font: 750 clamp(23px, 2.25vw, 34px)/1.18 var(--sans); letter-spacing: -.03em; text-wrap: balance; margin: 0 0 10px; }
-  figcaption p { font: 400 18px/1.55 var(--sans); color: var(--muted); margin: 0; }
-  figcaption .platform-label { font: 600 12px/1.5 var(--sans); margin: 0 0 8px; }
-  .platform-gallery[data-moment='journey'], .platform-gallery[data-view='phone'], .platform-gallery[data-view='desktop'] { grid-template-columns: 1fr; }
-  [data-view='phone'] .platform-phone { width: min(100%, 420px); margin-inline: auto; }
+  /* The supplied high-resolution reader sheet is intentionally cropped to the
+     original iPhone screen, and only in that specific mode. */
+  .phone-screen.from-sheet {
+    overflow: hidden;
+    aspect-ratio: 489/1019;
+    border-radius: 16% / 8%;
+  }
+  .from-sheet img {
+    position: absolute;
+    width: calc(100% * 2048 / 489);
+    max-width: none;
+    left: calc(-100% * 780 / 489);
+    top: calc(-100% * 134 / 1019);
+  }
+  [data-view='phone'] .platform-phone { width: 100%; }
+  [data-view='phone'] .phone-screen { width: min(100%, 205px, 21dvh); }
+
+  /* Original 2048 x 1280 desktop images: scale, never crop. The viewport cap
+     makes the entire screen visible in one glance on laptop and desktop. */
+  .browser-stage {
+    width: min(100%, 700px, 70dvh);
+    aspect-ratio: 2048/1280;
+    overflow: hidden;
+    border-radius: 13px;
+    background: var(--sagebg);
+  }
+  .browser-stage img { display: block; width: 100%; height: 100%; object-fit: contain; }
   [data-view='desktop'] .platform-desktop { width: 100%; }
-  .scene-bar { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); }
-  .scene-bar > p { margin: 0; font: 400 19px/1.5 var(--serif); color: var(--muted); }
-  .scene-bar a { display: flex; align-items: center; gap: 10px; min-height: 44px; font: 650 16px/1.4 var(--sans); text-decoration: none; text-underline-offset: 4px; }
+  [data-view='desktop'] .browser-stage { width: min(100%, 700px, 70dvh); }
+
+  /* One quiet next action; do not add another tall band below the images. */
+  .scene-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    width: min(100%, 910px);
+    margin: 12px auto 0;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+  }
+  .scene-bar > p { margin: 0; color: var(--muted); font: 400 14px/1.4 var(--serif); }
+  .scene-bar a {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 44px;
+    font: 650 13px/1.3 var(--sans);
+    text-decoration: none;
+    text-underline-offset: 4px;
+  }
   .scene-bar a:hover { color: var(--plum); text-decoration: underline; }
-  .scene-bar svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+  .scene-bar svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.6; }
   .showcase-status { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   button:focus-visible, .flow-scroll:focus-visible { outline: 2px solid var(--plum); outline-offset: 4px; }
   ::selection { color: var(--ink); background: var(--highlight); }
-  @media (max-width: 1100px) {
+
+  @media (max-width: 900px) {
     .platform-note { display: none; }
     .showcase-controls { flex-wrap: wrap; }
-    .journey-stage > figcaption { align-items: flex-start; flex-direction: column; gap: 4px; }
-    .journey-stage > figcaption p { max-width: 65ch; }
+    .platform-gallery { width: min(100%, 780px); }
+    .scene-switch button { padding-inline: 10px; }
   }
   @media (max-width: 700px) {
-    .showcase-heading { margin-bottom: 24px; }
-    .showcase-heading h1 { font-size: clamp(42px, 10vw, 62px); max-width: 12ch; }
-    .showcase-deck { font-size: 23px; max-width: 28ch; }
-    .showcase-controls { gap: 14px; margin-bottom: 24px; }
-    .scene-switch { width: 100%; }
-    .scene-switch button { padding: 10px 11px; font-size: 14px; }
-    .step-number { font-size: 11px; }
+    .platform-showcase { padding: 8px 0 24px; }
+    .showcase-heading { margin-bottom: 12px; }
+    .showcase-heading h1 { font-size: clamp(32px, 8vw, 48px); }
+    .showcase-deck { margin-top: 5px; font-size: clamp(16px, 4.2vw, 19px); line-height: 1.24; }
+    .showcase-controls { display: grid; grid-template-columns: minmax(0, 1fr); gap: 7px; margin-bottom: 10px; }
+    .scene-switch {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 4px;
+      width: 100%;
+      overflow: visible;
+    }
+    .scene-switch button {
+      width: 100%;
+      min-width: 0;
+      min-height: 44px;
+      padding: 6px 4px;
+      font-size: clamp(11px, 3vw, 13px);
+      white-space: normal;
+      text-align: center;
+    }
+    .step-number { display: none; }
     .view-switch { width: 100%; }
-    .view-switch button { flex: 1; }
-    .platform-gallery { grid-template-columns: 1fr; gap: 36px; }
-    .platform-phone { width: min(100%, 360px); margin-inline: auto; }
-    .phone-screen { width: min(100%, 260px); }
-    .flow-scroll img { width: max(100%, 760px); max-width: none; }
-    .browser-stage { border-radius: 10px; }
-    figcaption { margin-top: 20px; }
-    figcaption h2 { font-size: 26px; }
-    figcaption p { font-size: 17px; }
-    .scene-bar { align-items: flex-start; flex-direction: column; gap: 12px; margin-top: 24px; }
-    .scene-bar > p { font-size: 18px; }
-  }
-  @media (max-width: 600px) {
-    .journey-stage picture { width: min(100%, 260px); margin-inline: auto; border-radius: 0; }
+    .view-switch button { flex: 1 1 0; min-height: 44px; }
+    .platform-gallery {
+      grid-template-columns: minmax(0, .4fr) minmax(0, .6fr);
+      gap: 11px;
+      padding: 10px;
+      border-radius: 18px;
+    }
+    .platform-gallery[data-view='phone'],
+    .platform-gallery[data-view='desktop'],
+    .platform-gallery[data-moment='journey'] { grid-template-columns: minmax(0, 1fr); }
+    figcaption { margin-bottom: 8px; gap: 3px 8px; }
+    figcaption h2 { font-size: 16px; line-height: 1.22; }
+    figcaption p { font-size: 12px; line-height: 1.33; }
+    .platform-gallery:not([data-view='desktop']):not([data-view='phone']):not([data-moment='journey']) figcaption p {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .journey-stage picture { width: min(100%, 160px); border-radius: 8px; }
     .journey-stage picture img { aspect-ratio: 984/2048; }
+    .flow-scroll { width: 100%; max-height: 35dvh; border-radius: 10px; }
+    .flow-scroll img { width: max(100%, 650px); }
+    .phone-screen { width: min(100%, 108px, 16dvh); }
+    [data-view='phone'] .phone-screen { width: min(100%, 190px, 20dvh); }
+    .browser-stage, [data-view='desktop'] .browser-stage { width: min(100%, 700px, 70dvh); border-radius: 9px; }
+    .scene-bar { margin-top: 8px; padding-top: 5px; }
+    .scene-bar > p { display: none; }
+    .scene-bar a { font-size: 12px; margin-inline: auto; }
+  }
+  @media (max-width: 360px) {
+    .showcase-heading h1 { font-size: 31px; }
+    .showcase-deck { font-size: 16px; }
+    .scene-switch button { font-size: 11px; }
+    .platform-gallery { gap: 7px; padding: 8px; }
+    .phone-screen { width: min(100%, 92px, 15dvh); }
+    .journey-stage picture { width: min(100%, 145px); }
+    .flow-scroll img { width: max(100%, 620px); }
   }
   @media (prefers-reduced-motion: reduce) {
     button { transition: none; }
-    .phone-screen, picture, .flow-scroll { opacity: 1 !important; transition: none !important; }
+    .phone-screen, picture, .flow-scroll, .browser-stage img { opacity: 1 !important; transition: none !important; }
   }
 </style>
