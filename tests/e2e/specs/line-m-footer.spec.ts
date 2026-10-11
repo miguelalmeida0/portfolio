@@ -98,10 +98,17 @@ for(const width of [1920,1440,1100,834,390,375]) test(`layout, typography and ac
   await page.emulateMedia({reducedMotion:'reduce'}); await page.setViewportSize({width,height:width<900?844:1020});
   await page.locator(footer).scrollIntoViewIfNeeded();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  const boxes=await page.locator('[data-stop]').evaluateAll(nodes=>nodes.map(n=>n.getBoundingClientRect().toJSON()));
+  const mobile = width < 900;
+  const stops = page.locator(mobile ? '[data-mobile-stop]' : '[data-stop]');
+  await expect(stops).toHaveCount(4);
+  const boxes=await stops.evaluateAll(nodes=>nodes.map(n=>n.getBoundingClientRect().toJSON()));
   for(const box of boxes) {expect(box.x).toBeGreaterThanOrEqual(0);expect(box.right).toBeLessThanOrEqual(width);}
-  const line=await page.getByRole('navigation',{name:'Contact Miguel'}).boundingBox();
-  expect(line!.height>line!.width).toBe(width<900);
+  const line = await page.getByRole('navigation',{name:'Contact Miguel'}).boundingBox();
+  if (mobile) {
+    expect(line!.height).toBeGreaterThan(330);
+    await expect(page.locator('[data-line]')).toBeHidden();
+    for (const box of boxes) expect(box.height).toBeGreaterThanOrEqual(44);
+  } else expect(line!.height).toBe(12);
   await expect(page.locator(`${footer} p`).first()).toHaveCSS('font-style','normal');
   const axe=await new AxeBuilder({page}).include(footer).analyze();expect(axe.violations.map(v=>v.id)).toEqual([]);
 });
@@ -113,5 +120,27 @@ test('desktop geometry retains the handoff line, train and station positions',as
   for(const [i,at] of [16,39,62,85].entries()) {
     const ring=(await page.locator(`${stop(i)} > span:first-child`).boundingBox())!;
     expect(ring.x+ring.width/2).toBeCloseTo(line.x+line.width*at/100,0);
+  }
+});
+
+test('mobile Line M is a native compact timeline with icons and usable destinations', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  for (const width of [320, 375, 390, 430, 768]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.locator('[data-line-m]').scrollIntoViewIfNeeded();
+    const nav = page.locator('[data-mobile-line]');
+    await expect(nav).toBeVisible();
+    await expect(page.locator('[data-line]')).toBeHidden();
+    await expect(nav.locator('svg')).toHaveCount(8);
+    await expect(nav.locator('[data-mobile-stop]')).toHaveCount(4);
+    const train = await nav.locator('span[class*="mobileTrain"]').boundingBox();
+    expect(train!.width).toBeLessThanOrEqual(40);
+    for (const link of await nav.locator('[data-mobile-stop]').all()) {
+      const box = (await link.boundingBox())!;
+      expect(box.x).toBeGreaterThanOrEqual(0);
+      expect(box.x + box.width).toBeLessThanOrEqual(width + 1);
+      expect(box.height).toBeGreaterThanOrEqual(44);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   }
 });

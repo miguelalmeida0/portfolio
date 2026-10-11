@@ -5,6 +5,11 @@
   import { EMAIL, STOPS, STOP_AT } from './contact';
   import { createLineService, initialTrain } from './service';
   import { copyText } from '$lib/experience/motion';
+  import Mail from '@lucide/svelte/icons/mail';
+  import Linkedin from '@lucide/svelte/icons/linkedin';
+  import Github from '@lucide/svelte/icons/github';
+  import FileText from '@lucide/svelte/icons/file-text';
+  import ChevronRight from '@lucide/svelte/icons/chevron-right';
 
   let root: HTMLElement;
   let line: HTMLElement;
@@ -13,10 +18,22 @@
   let service: ReturnType<typeof createLineService> | undefined;
   let toastTimer: ReturnType<typeof setTimeout>;
   let mounted = false;
+  let desktopQuery: MediaQueryList;
   onMount(() => {
     mounted = true;
-    service = createLineService(root, line, state => train = state);
-    return () => { mounted = false; service?.destroy(); clearTimeout(toastTimer); };
+    desktopQuery = matchMedia('(min-width: 900px)');
+    const sync = () => {
+      service?.destroy();
+      service = desktopQuery.matches ? createLineService(root, line, state => train = state) : undefined;
+    };
+    sync();
+    desktopQuery.addEventListener('change', sync);
+    return () => {
+      mounted = false;
+      desktopQuery.removeEventListener('change', sync);
+      service?.destroy();
+      clearTimeout(toastTimer);
+    };
   });
   async function activate(i: number) {
     service?.aim(i);
@@ -67,6 +84,42 @@
         <div class={s.car}><span class={s.win} style:left="12px"></span><span class={s.door}></span><span class={s.win} style:right="12px"></span></div>
         <div class={s.car}><span class={s.win} style:left="12px"></span><span class={s.door}></span><span class="{s.rnd} {s.rndT}">M</span></div>
       </div>
+    </div>
+  </nav>
+
+  <!-- Dedicated mobile composition. Desktop rail/board stay intact and are
+       removed from the mobile layout rather than transformed to fit. -->
+  <nav class={s.mobileJourney} data-mobile-line aria-label="Contact Miguel">
+    <div class={s.mobileStartingPoint} aria-hidden="true">
+      <span class={s.mobileTrain}>
+        <span class={s.trainWindow}></span><span class={s.trainDoor}></span><span class={s.trainMark}>M</span>
+      </span>
+      <span class={s.mobileOrigin}>You are here</span>
+    </div>
+    <div class={s.mobileStops}>
+      {#each STOPS as stop, i}
+        <a
+          data-mobile-stop={i}
+          href={stop.href}
+          class={s.mobileStop}
+          aria-label="{stop.name}: {stop.value}. {stop.hint}"
+          onclick={() => activate(i)}
+          {...destinationLink(stop.href)}
+        >
+          <span class={s.mobileStation} aria-hidden="true"></span>
+          <span class={s.mobileIcon} aria-hidden="true">
+            {#if stop.id === 'email'}<Mail size={22} strokeWidth={1.85} />
+            {:else if stop.id === 'linkedin'}<Linkedin size={22} strokeWidth={1.85} />
+            {:else if stop.id === 'github'}<Github size={22} strokeWidth={1.85} />
+            {:else}<FileText size={22} strokeWidth={1.85} />{/if}
+          </span>
+          <span class={s.mobileCopy}>
+            <span class={s.mobileName}>{stop.name}</span>
+            <span class={s.mobileValue}>{stop.value}</span>
+          </span>
+          <ChevronRight size={19} strokeWidth={1.8} class={s.mobileArrow} aria-hidden="true" />
+        </a>
+      {/each}
     </div>
   </nav>
   <div data-toast role="status" aria-live="polite" class="{s.toast} {toast ? s.on : ''}">{toast}</div>
