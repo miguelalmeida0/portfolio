@@ -396,8 +396,8 @@
     .showcase-heading h1 { font-size: 31px; }
     .showcase-deck { font-size: 16px; }
     .scene-switch button { font-size: 11px; }
-    .platform-gallery { gap: 7px; padding: 8px; }
-    .phone-screen { width: min(100%, 92px, 15dvh); }
+    .platform-gallery { grid-template-columns: minmax(0, .47fr) minmax(0, .53fr); gap: 7px; padding: 8px; }
+    .phone-screen { width: min(100%, 108px, 15dvh); }
     .journey-stage picture { width: min(100%, 145px); }
     .flow-scroll img { width: max(100%, 620px); }
   }
