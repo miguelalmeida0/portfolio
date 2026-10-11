@@ -10,12 +10,12 @@
   // Preserve the native phone journey. Desktop is its own six-screen gallery:
   // a desktop Journey panorama would needlessly duplicate the product walkthrough.
   const desktopScreens = [
-    { ...scenes[1], desktop: 'desktop-home-20261011.avif' },
-    { ...scenes[2], desktop: 'desktop-library-20261011.avif' },
-    { ...scenes[3], desktop: 'desktop-select-20261011.avif' },
-    { id: 'explain', label: 'Explain', title: 'Make the passage clearer.', description: 'An explanation alongside the real source, with the page and its meaning kept in view.', phone: scenes[3].phone, desktop: 'desktop-explain-20261011.avif' },
-    { ...scenes[4], desktop: 'desktop-own-words-20261011.avif' },
-    { id: 'study', label: 'Study', title: 'Bring the ideas back.', description: 'Turn reading into active recall, on your own terms and at your own pace.', phone: scenes[4].phone, desktop: 'desktop-study-20261011.avif' }
+    { ...scenes[1], desktop: 'desktop-home-20261011.webp' },
+    { ...scenes[2], desktop: 'desktop-library-20261011.webp' },
+    { ...scenes[3], desktop: 'desktop-select-20261011.webp' },
+    { id: 'explain', label: 'Explain', title: 'Make the passage clearer.', description: 'An explanation alongside the real source, with the page and its meaning kept in view.', phone: scenes[3].phone, desktop: 'desktop-explain-20261011.webp' },
+    { ...scenes[4], desktop: 'desktop-own-words-20261011.webp' },
+    { id: 'study', label: 'Study', title: 'Bring the ideas back.', description: 'Turn reading into active recall, on your own terms and at your own pace.', phone: scenes[4].phone, desktop: 'desktop-study-20261011.webp' }
   ];
   const views = ['Together', 'Phone', 'Desktop'] as const;
   let selected = $state('journey');
@@ -84,7 +84,7 @@
       <div class="browser-stage" data-desktop-moment={scene.id}>
         {#key scene.id}
           <img in:fade={{ duration: 160 }}
-            src={asset(view === 'Desktop' ? desktopScreens.find(item => item.id === scene.id)!.desktop : (desktopScreens.find(item => item.id === scene.id)?.desktop ?? 'desktop-select-20261011.avif'))}
+            src={asset(view === 'Desktop' ? desktopScreens.find(item => item.id === scene.id)!.desktop : (desktopScreens.find(item => item.id === scene.id)?.desktop ?? 'desktop-select-20261011.webp'))}
             alt={`Leu desktop — ${scene.label}: ${scene.description}`}
             width="2048" height="1280" decoding="async" />
         {/key}
