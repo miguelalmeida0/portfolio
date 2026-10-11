@@ -63,8 +63,35 @@
       </figure>
     {/if}
     <figure class="platform-desktop" hidden={overview && view !== 'Desktop' || view === 'Phone'}>
-      <div class="browser-stage"><img src={asset('desktop-reading-20261009.webp')} alt="Leu in your browser: Read. The same source passage, chapter navigation, explanation tools, and narration controls." width="2048" height="1280" decoding="async" /></div>
-      <figcaption><p class="platform-label">In your browser · React</p><h2>More room. The same page.</h2><p>The chapter on one side, your questions on the other. The source stays at the centre.</p></figcaption>
+      {#if scene.id === 'read'}
+        <div class="browser-stage" data-desktop-moment="read">
+          <img src={asset('desktop-reading-20261009.webp')} alt="Leu's real desktop reading interface: chapter navigation, the source passage, and explanation tools." width="2048" height="1280" decoding="async" />
+        </div>
+      {:else}
+        <!-- Only the Read desktop capture is available. Use the genuine supplied
+             phone captures for the other journey moments, not a fabricated desktop UI. -->
+        <div class="desktop-journey-stage" data-desktop-moment={scene.id}>
+          <div class="desktop-journey-copy">
+            <p class="desktop-journey-eyebrow">THE LEARNING JOURNEY · {scenes.findIndex(item => item.id === scene.id) + 1} / {scenes.length}</p>
+            <h3>{scene.title}</h3>
+            <p>{scene.description}</p>
+            <div class="desktop-journey-bridge">
+              <span class="bridge-dot" aria-hidden="true"></span>
+              <span>The same book continues in the browser.</span>
+            </div>
+          </div>
+          <div class="desktop-journey-art" data-journey-art={scene.id}>
+            {#key scene.id}
+              <img in:fade={{ duration: 160 }} src={asset(scene.phone)} alt={`Leu journey step: ${scene.label}, shown in the original iPhone design.`} width={scene.id === 'journey' || scene.id === 'read' ? 2048 : 984} height={scene.id === 'journey' ? 888 : scene.id === 'read' ? 1280 : 2048} decoding="async" />
+            {/key}
+          </div>
+        </div>
+      {/if}
+      <figcaption>
+        <p class="platform-label">{scene.id === 'read' ? 'In your browser · React' : 'Journey detail · Original product screens'}</p>
+        <h2>{scene.id === 'read' ? 'More room. The same page.' : scene.title}</h2>
+        <p>{scene.id === 'read' ? 'The chapter on one side, your questions on the other. The source stays at the centre.' : scene.description}</p>
+      </figcaption>
     </figure>
   </div>
   <footer class="scene-bar">
@@ -108,6 +135,28 @@
   .from-sheet img { position: absolute; width: calc(100% * 2048 / 489); max-width: none; left: calc(-100% * 780 / 489); top: calc(-100% * 134 / 1019); }
   .browser-stage { overflow: hidden; border-radius: 16px; width: 100%; aspect-ratio: 2048/1280; }
   .browser-stage img { display: block; width: 100%; height: auto; }
+  .desktop-journey-stage {
+    display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+    gap: clamp(18px, 4vw, 64px); align-items: center;
+    width: 100%; min-height: min(52vw, 580px);
+    padding: clamp(24px, 4vw, 60px); border-radius: 16px;
+    background: #dce4c8; overflow: hidden;
+  }
+  .desktop-journey-copy { min-width: 0; }
+  .desktop-journey-eyebrow { margin: 0 0 18px; font: 700 12px/1.4 var(--sans); letter-spacing: .1em; color: var(--forest); }
+  .desktop-journey-copy h3 { margin: 0 0 18px; font: 800 clamp(30px, 3.6vw, 58px)/1.06 var(--sans); letter-spacing: -.045em; color: var(--forest); text-wrap: balance; }
+  .desktop-journey-copy > p:not(.desktop-journey-eyebrow) { max-width: 37ch; margin: 0; font: 400 clamp(16px, 1.55vw, 21px)/1.5 var(--serif); color: var(--forest); }
+  .desktop-journey-bridge { display: flex; align-items: center; gap: 10px; margin-top: 28px; padding-top: 16px; border-top: 1px solid rgba(22,60,46,.18); font: 600 13px/1.45 var(--sans); color: var(--forest); }
+  .bridge-dot { flex: none; width: 9px; height: 9px; border-radius: 50%; background: #bb704d; }
+  .desktop-journey-art { display: grid; place-items: center; min-width: 0; max-height: 550px; overflow: hidden; }
+  .desktop-journey-art img { display: block; width: auto; height: auto; max-width: 100%; max-height: 540px; object-fit: contain; }
+  .desktop-journey-art[data-journey-art='journey'] img { width: 100%; max-height: none; }
+  @media (max-width: 700px) {
+    .desktop-journey-stage { grid-template-columns: 1fr; min-height: 0; padding: 24px 18px; gap: 20px; }
+    .desktop-journey-copy h3 { font-size: 32px; }
+    .desktop-journey-bridge { margin-top: 16px; }
+    .desktop-journey-art img { max-height: 460px; }
+  }
   figcaption { margin-top: 24px; }
   figcaption h2 { font: 750 clamp(23px, 2.25vw, 34px)/1.18 var(--sans); letter-spacing: -.03em; text-wrap: balance; margin: 0 0 10px; }
   figcaption p { font: 400 18px/1.55 var(--sans); color: var(--muted); margin: 0; }
