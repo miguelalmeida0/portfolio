@@ -110,11 +110,11 @@
   .sign { margin: 0 0 0 34px; align-items: flex-start; padding: 8px 12px 10px; }
   .nm { font-size: 22px; }
   .vl { font-size: 17px; white-space: normal; }
-  .train { left: 6px; top: var(--p); margin-left: -100px; margin-top: -29px; transform: scale(.48); transform-origin: center; }
+  .train { left: 6px; top: var(--p); margin-left: -100px; margin-top: -29px; transform: translateX(-25px) scale(.36); transform-origin: center; }
   .startl { left: 44px; top: -2px; }
 }
 
-/* Compact horizontal train on the vertical mobile route. */
 @media (max-width: 899px) {
-  .train { margin-left: -100px; margin-top: -29px; }
+  .startl { left: 54px; }
+  .train { z-index: 2; }
 }

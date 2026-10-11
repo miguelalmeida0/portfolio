@@ -50,14 +50,23 @@
     .content-card { height: auto; padding: 28px 24px 24px; gap: 32px; border-radius: 22px; }
     .top-group { gap: 14px; }
     .greeting { font-size: 17px; }
-    .content-card :global(h1) { font-size: clamp(34px, 9vw, 42px); line-height: 1.06; letter-spacing: -.045em; }
+    .content-card { --type-home-display-mobile: clamp(32px, 8.2vw, 39px); }
+    .content-card :global(h1) { line-height: 1.08; }
     .experience { font-size: 17px; line-height: 1.45; }
     .bottom-group { gap: 18px; }
     .supporting-copy { padding-top: 18px; }
     .hero-actions { gap: 8px; }
     .hero-actions .primary { border-radius: 12px; }
     .hero-actions .secondary { min-height: 48px; }
-    .hero-stack { font-size: 22px; }
+    .hero-stack { font-size: 15px; line-height: 1.5; letter-spacing: -.01em; }
+    .content-card .experience { font-size: 16px; }
+    .content-card .greeting { font-size: 16px; }
+    .content-card .top-group { gap: 13px; }
+    .content-card .bottom-group { gap: 16px; }
+    .content-card .supporting-copy { padding-top: 15px; }
+    .content-card .hero-actions { gap: 5px; }
+    .content-card .hero-actions .secondary { min-height: 44px; font-size: 15px; }
+    .content-card .hero-actions .primary { min-height: 52px; font-size: 16px; }
     .hero-actions { flex-direction: column; gap: 12px; }
     .hero-actions a { width: 100%; min-height: 52px; }
   }
