@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
 
 const caseStudyActions = [
-  { slug: 'leu', live: 'https://leu-desktop.vercel.app/', code: 'https://github.com/miguelalmeida0/leu' },
+  { slug: 'leu', live: 'https://leu.miguelalmeida.xyz/', code: 'https://github.com/miguelalmeida0/leu' },
   { slug: 'needle', live: 'https://needle.miguelalmeida.xyz', code: 'https://github.com/miguelalmeida0/needle-portfolio-release' },
   { slug: 'flow', live: undefined, code: 'https://github.com/miguelalmeida0/flow' },
-  { slug: 'second-voice', live: 'https://secondvoice-ai.vercel.app/second-voice', code: 'https://github.com/miguelalmeida0/second-voice' },
+  { slug: 'second-voice', live: 'https://secondvoice.miguelalmeida.xyz/', code: 'https://github.com/miguelalmeida0/second-voice' },
 ];
 
 for (const { slug, live, code } of caseStudyActions) {

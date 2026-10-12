@@ -1,4 +1,4 @@
-export const SECOND_VOICE_URL = 'https://secondvoice-ai.vercel.app/second-voice';
+export const SECOND_VOICE_URL = 'https://secondvoice.miguelalmeida.xyz/';
 export type RewriteInput = { text: string; author: string; mood: number };
 export type RewriteResult = { text: string; remaining: number | null };
 type Pending = { id: string; resolve: (value: RewriteResult) => void; reject: (error: Error) => void; timer: ReturnType<typeof setTimeout> };
@@ -9,7 +9,7 @@ export class VoiceBridge {
   private ready?: Promise<void>;
   private pending?: Pending;
   private disconnect?: () => void;
-  constructor(private url = SECOND_VOICE_URL + '/embed?mode=controller') {}
+  constructor(private url = SECOND_VOICE_URL + 'embed?mode=controller') {}
 
   private connect(): Promise<void> {
     if (this.ready) return this.ready;

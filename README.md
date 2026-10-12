@@ -9,9 +9,9 @@
 | Project | What to inspect |
 | --- | --- |
 | [Needle](https://needle.miguelalmeida.xyz/) | Semantic artwork search over a prepared 10,000-work museum corpus, with a [case study](https://miguelalmeida.xyz/work/needle) |
-| [Second Voice](https://secondvoice-ai.vercel.app/second-voice) | Writing interactions, editorial typography and honest prepared-versus-live states |
+| [Second Voice](https://secondvoice.miguelalmeida.xyz/) | Writing interactions, editorial typography and honest prepared-versus-live states |
 | [Flow case study](https://miguelalmeida.xyz/work/flow) | Voice-driven actions in a directly editable personal computing workspace; [source](https://github.com/miguelalmeida0/flow) |
-| [Leu](https://leu-desktop.vercel.app/) | Local-first reading and source-linked learning, with a separate native iOS implementation |
+| [Leu](https://leu.miguelalmeida.xyz/) | Local-first reading and source-linked learning, with a separate native iOS implementation |
 | F24 | Public-safe production engineering case study; private employer source and deployment are not linked |
 
 Case studies live at `/work/needle`, `/work/second-voice`, `/work/f24`, `/work/flow` and `/work/leu`. Historical Second Voice slugs redirect permanently to `/work/second-voice`. Supporting routes include `/cv`, `/story` and `/portfolio.pdf`. The Second Voice interaction distinguishes **prepared examples** from live inference; a demo state is never presented as a verified paid-provider response.

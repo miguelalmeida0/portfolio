@@ -11,7 +11,7 @@ export const cvProjects = [
     ]
   },
   {
-    slug: 'second-voice-ai', name: 'Second Voice', href: '/work/second-voice', live: 'https://secondvoice-ai.vercel.app/second-voice',
+    slug: 'second-voice-ai', name: 'Second Voice', href: '/work/second-voice', live: 'https://secondvoice.miguelalmeida.xyz/',
     description: 'AI rewriting product',
     stack: 'Next.js · React · TypeScript · Supabase · Playwright',
     bullets: [
@@ -21,7 +21,7 @@ export const cvProjects = [
     ]
   },
   {
-    slug: 'leu', name: 'Leu', href: '/work/leu', live: 'https://leu-desktop.vercel.app/',
+    slug: 'leu', name: 'Leu', href: '/work/leu', live: 'https://leu.miguelalmeida.xyz/',
     description: 'Native iPhone PDF study app',
     stack: 'Swift · SwiftUI · PDFKit · local-first architecture',
     bullets: [

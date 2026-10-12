@@ -48,7 +48,7 @@ async function auditLinks(page: Page) {
     } else if (/\.pdf(?:[?#]|$)/i.test(link.href)) {
       expect(link.target).toBe('_blank');
       expect(link.rel).toContain('noopener');
-    } else if (link.headerNavigation || !/^(https?:)?\/\//i.test(link.href) || new URL(link.href, 'https://miguelalmeida.is-a.dev').origin === 'https://miguelalmeida.is-a.dev' || link.download) {
+    } else if (link.headerNavigation || !/^(https?:)?\/\//i.test(link.href) || new URL(link.href, 'https://miguelalmeida.xyz').origin === 'https://miguelalmeida.xyz' || link.download) {
       expect(link.target, link.href).not.toBe('_blank');
     } else {
       expect(link.target, link.href).toBe('_blank');

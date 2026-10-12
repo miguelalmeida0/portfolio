@@ -92,7 +92,7 @@ test('Second Voice controls remain interactive without navigating away', async (
   await expect(voice.locator('a.media-link')).toHaveCount(0);
   const fullApp = voice.getByRole('link', { name: 'Rewrite your own text in the full app' });
   await expect(fullApp).toBeVisible();
-  await expect(fullApp).toHaveAttribute('href', 'https://secondvoice-ai.vercel.app/second-voice');
+  await expect(fullApp).toHaveAttribute('href', 'https://secondvoice.miguelalmeida.xyz/');
   await expect(fullApp).toHaveAttribute('target', '_blank');
   await voice.getByText('Hemingway', { exact: true }).click();
   await expect(voice.getByRole('radio', { name: 'Hemingway', exact: true })).toBeChecked();

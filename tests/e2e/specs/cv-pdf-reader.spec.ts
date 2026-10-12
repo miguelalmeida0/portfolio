@@ -71,8 +71,8 @@ test('PDF links open separately and preserve the rendered CV', async ({ page, co
   const original = page.url();
   const destinations = [
     'https://needle.miguelalmeida.xyz',
-    'https://secondvoice-ai.vercel.app/second-voice',
-    'https://leu-desktop.vercel.app',
+    'https://secondvoice.miguelalmeida.xyz/',
+    'https://leu.miguelalmeida.xyz',
     'https://github.com/miguelalmeida0/'
   ];
   for (const destination of destinations) {

@@ -51,13 +51,29 @@
           // without the native URL tooltip obscuring adjacent content.
           for (const link of pages.querySelectorAll<HTMLAnchorElement>('.linkAnnotation > a[href]')) {
             const url = new URL(link.href);
+            // The authored CV artwork is preserved. Keep its PDF.js link
+            // annotations pointed at the currently published project domains.
+            const previousHost = url.hostname;
+            const migratedHosts: Record<string, string> = {
+              'miguelalmeida.is-a.dev': 'miguelalmeida.xyz',
+              'secondvoice-ai.vercel.app': 'secondvoice.miguelalmeida.xyz',
+              'leu-desktop.vercel.app': 'leu.miguelalmeida.xyz'
+            };
+            const canonicalHost = migratedHosts[previousHost];
+            if (canonicalHost) {
+              url.hostname = canonicalHost;
+              if (previousHost === 'secondvoice-ai.vercel.app') {
+                url.pathname = url.pathname.replace(/^\/second-voice(?=\/|$)/, '') || '/';
+              }
+              link.href = url.href;
+            }
             const names: Record<string, string> = {
               'www.linkedin.com': 'LinkedIn',
               'github.com': 'GitHub',
-              'miguelalmeida.is-a.dev': 'Portfolio',
+              'miguelalmeida.xyz': 'Portfolio',
               'needle.miguelalmeida.xyz': 'Needle',
-              'secondvoice-ai.vercel.app': 'Second Voice',
-              'leu-desktop.vercel.app': 'Leu'
+              'secondvoice.miguelalmeida.xyz': 'Second Voice',
+              'leu.miguelalmeida.xyz': 'Leu'
             };
             const email = url.protocol === 'mailto:';
             link.setAttribute('aria-label', email
@@ -67,7 +83,7 @@
             // The four contact cards are 128 × 39 PDF points, radius 8.
             const section = link.parentElement!;
             const contact = ['www.linkedin.com', 'github.com'].includes(url.hostname)
-              || email || (url.hostname === 'miguelalmeida.is-a.dev' && url.pathname === '/');
+              || email || (url.hostname === 'miguelalmeida.xyz' && url.pathname === '/');
             section.classList.toggle('contact-link', contact);
           }
         });
