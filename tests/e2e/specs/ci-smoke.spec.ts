@@ -354,17 +354,27 @@ test('case studies keep a clear hierarchy and standard openings share scales', a
       // typography is checked without requiring the superseded hero roles.
       if (route === '/work/leu') {
         const gallery = page.getByRole('region', { name: 'Leu across phone and browser' });
-        await expect(gallery.getByRole('heading', { level: 1 })).toHaveText('Built around the page.');
-        const exhibit = await gallery.evaluate(el => {
-          const size = (selector: string) => Number.parseFloat(getComputedStyle(el.querySelector(selector)!).fontSize);
+        // The page H1 belongs to the hero; the showcase is a named section with H2.
+        await expect(page.getByRole('heading', { level: 1, name: 'Built around the page.' })).toBeVisible();
+        await expect(gallery.getByRole('heading', { level: 2, name: 'The experience, on every screen.' })).toBeVisible();
+        const exhibit = await page.evaluate(() => {
+          const size = (selector: string) => {
+            const element = document.querySelector(selector);
+            if (!element) throw new Error(`Missing Leu typography role: ${selector}`);
+            return Number.parseFloat(getComputedStyle(element).fontSize);
+          };
           return {
-            hero: size('h1'), lead: size('.showcase-deck'),
-            caption: size('figcaption p'), label: size('.platform-label'),
+            hero: size('.cs-leu .hero h1'),
+            section: size('.platform-showcase .showcase-heading h2'),
+            lead: size('.platform-showcase .showcase-deck'),
+            caption: size('.platform-showcase figcaption p'),
+            label: size('.platform-showcase .platform-label'),
             overflow: document.documentElement.scrollWidth > innerWidth
           };
         });
         expect(exhibit.hero).toBeGreaterThan(40);
-        expect(exhibit.hero).toBeGreaterThan(exhibit.lead);
+        expect(exhibit.hero).toBeGreaterThan(exhibit.section);
+        expect(exhibit.section).toBeGreaterThan(exhibit.lead);
         expect(exhibit.lead).toBeGreaterThan(exhibit.caption);
         expect(exhibit.caption).toBeGreaterThan(exhibit.label);
         expect(exhibit.label).toBeGreaterThanOrEqual(12);
