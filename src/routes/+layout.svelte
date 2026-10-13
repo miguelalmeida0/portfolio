@@ -1,6 +1,6 @@
 <script lang="ts">
   import { destinationLink } from '$lib/navigation/destination-link';
-  import { onMount } from 'svelte';
+  import { onMount, setContext } from 'svelte';
   import { browser } from '$app/environment';
   import { afterNavigate, beforeNavigate } from '$app/navigation';
   import { installSmoothScroll, syncScrollPosition } from '$lib/motion/smooth-scroll';
@@ -15,6 +15,9 @@
   } from '$lib/config/site';
   import entryStyles from '../app.css?inline';
   import 'lenis/dist/lenis.css';
+  import LineMJourney from '$lib/components/experience/footer/LineMJourney.svelte';
+  import { LINE_M, createLineService } from '$lib/components/experience/footer/service';
+  setContext(LINE_M, createLineService());
   import BookmarkScrollbar from '$lib/components/experience/BookmarkScrollbar.svelte';
   import Header from '$lib/components/experience/Header.svelte';
   import Contact from '$lib/components/experience/footer/LineMFooter.svelte';
@@ -109,10 +112,12 @@
   <section class="contact" aria-label="Contact"><Contact /></section>
 </div>
 
-{#if $page.url.pathname !== '/'}<div inert={$mobileState !== 'idle'}><BookmarkScrollbar /></div>{/if}
+<div inert={$mobileState !== 'idle'}><BookmarkScrollbar /></div>
 </div>
 
 {#if $page.url.pathname !== '/'}<AskExperience floating />{/if}
+
+{#key $page.url.pathname}<LineMJourney suppressed={$mobileState !== 'idle' || $askView.state !== 'idle'} />{/key}
 
 <!-- Root sibling: never inherits a page/header transform or stacking context. -->
 <div bind:this={routeVeil} data-route-veil data-phase={$mobileState} hidden aria-hidden="true" class="route-veil no-print"></div>

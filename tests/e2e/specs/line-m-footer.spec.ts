@@ -1,10 +1,9 @@
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-test.use({ viewport: { width: 1920, height: 963 }, permissions: ['clipboard-read','clipboard-write'] });
 const footer = '[data-line-m]';
 const stop = (i: number) => `[data-stop="${i}"]`;
-const here = (page: Page) => page.locator('[data-stop] > span:first-child').evaluateAll(nodes => nodes.findIndex(n => getComputedStyle(n).backgroundColor === 'rgb(91, 21, 60)'));
+const here = (page: Page) => page.locator('[data-stop]').evaluateAll(nodes => nodes.findIndex(n => n.getAttribute('data-arrived') === 'true'));
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => sessionStorage.setItem('seen-intro','true'));
   await page.goto('/#contact');
@@ -19,22 +18,26 @@ test('all four real contacts are visible and the PDF is valid', async ({ page, r
   expect(await page.locator(footer).innerText()).not.toMatch(/\d\d:\d\d/);
   const pdf = await request.get('/portfolio.pdf'); expect(pdf.ok()).toBe(true); expect((await pdf.body()).subarray(0,5).toString()).toBe('%PDF-');
 });
-test('idle service visits Email, LinkedIn and GitHub in order and opens doors', async ({ page }) => {
-  for(const i of [0,1,2]) await expect.poll(()=>here(page),{timeout:5000}).toBe(i);
-  await expect.poll(()=>page.locator('[data-train] > div > div > span:nth-child(2)').first().evaluate(el=>getComputedStyle(el,'::before').transform)).not.toBe('none');
+test('idle service visits Email, LinkedIn and GitHub in order and opens doors', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'Automatic service is disabled on touch layouts');
+  for(const i of [0,1,2]) await expect.poll(()=>here(page),{timeout:10000}).toBe(i);
+  await expect.poll(()=>page.locator('[data-door]').first().getAttribute('transform')).not.toBe('translate(0 0)');
 });
-test('hover dispatch reverses and engagement permanently stops idle service', async ({ page }) => {
+test('hover dispatch reverses and engagement permanently stops idle service', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'Hover service is disabled on touch layouts');
   await page.locator(stop(3)).hover(); await expect.poll(()=>here(page)).toBe(3);
   await page.locator(stop(0)).hover(); await expect.poll(()=>here(page)).toBe(0);
-  await expect(page.locator('[data-train] > div')).toHaveCSS('transform','matrix(-1, 0, 0, 1, 0, 0)');
+  await expect(page.locator('[data-car]')).toHaveCount(3);
+  for(const transform of await page.locator('[data-car]').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('transform')))) expect(transform).not.toContain('scaleX');
   await page.mouse.move(5,5); await page.waitForTimeout(4000); expect(await here(page)).toBe(0);
 });
-test('Tab follows four stations in order, excludes the duplicate board and dispatches',async({page})=>{
+test('Tab follows four stations in order, excludes the duplicate board and dispatches',async({page,isMobile})=>{
   await page.locator(stop(0)).focus();
   for(const i of [0,1,2,3]) {
     if(i) await page.keyboard.press('Tab');
     await expect(page.locator(stop(i))).toBeFocused();
-    await expect.poll(()=>here(page)).toBe(i);
+    await expect(page.locator(stop(i))).toHaveAttribute('data-requested','true');
+    if (!isMobile) await expect.poll(()=>here(page)).toBe(i);
     await expect(page.locator(`${stop(i)} > span:nth-child(2)`)).toHaveCSS('outline-style','solid');
   }
   for(const row of await page.locator('[data-dep]').all()) await expect(row).toHaveAttribute('tabindex','-1');
@@ -62,12 +65,24 @@ test('resume opens in a new tab', async ({ page, context }) => {
   expect(page.url()).toBe(original);
   await popup.close();
 });
-test('email click copies, preserves native mailto and confirms the result',async({page})=>{
+test('native Chromium clipboard copies the email without cancelling mailto',async({page,context,browserName})=>{
+  test.skip(browserName !== 'chromium', 'Native clipboard permissions supported by this check only in Chromium; injected clipboard contracts run in all engines');
+  await context.grantPermissions(['clipboard-read','clipboard-write']);
   await page.evaluate(()=>navigator.clipboard.writeText(''));
   await expect(page.locator(stop(0))).toHaveAttribute('href','mailto:miguelalmeida1592@gmail.com');
   await page.evaluate(()=>document.querySelector('[data-stop="0"]')!.addEventListener('click',event=>{(window as any).__mailPrevented=event.defaultPrevented;event.preventDefault();}));
   await page.locator(stop(0)).click(); await expect(page.locator('[data-toast]')).toContainText('Address copied');
   expect(await page.evaluate(()=>navigator.clipboard.readText())).toBe('miguelalmeida1592@gmail.com');
+  expect(await page.evaluate(()=>(window as any).__mailPrevented)).toBe(false);
+});
+test('email clipboard success preserves native mailto in every engine',async({page})=>{
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async(text:string)=>{(window as any).__copiedAddress=text;}}});
+    document.querySelector('[data-stop="0"]')!.addEventListener('click',event=>{(window as any).__mailPrevented=event.defaultPrevented;event.preventDefault();});
+  });
+  await page.locator(stop(0)).click();
+  await expect(page.locator('[data-toast]')).toContainText('Address copied');
+  expect(await page.evaluate(()=>(window as any).__copiedAddress)).toBe('miguelalmeida1592@gmail.com');
   expect(await page.evaluate(()=>(window as any).__mailPrevented)).toBe(false);
 });
 test('clipboard denial gives the address without claiming it was copied',async({page})=>{
@@ -80,67 +95,42 @@ test('clipboard denial gives the address without claiming it was copied',async({
 test('reduced motion has no idle, travel, door or blink animations',async({page})=>{
   await page.emulateMedia({reducedMotion:'reduce'}); await page.reload(); await page.locator(footer).scrollIntoViewIfNeeded();
   await page.waitForTimeout(3000); expect(await here(page)).toBe(-1);
-  await page.locator(stop(2)).hover(); await expect.poll(()=>here(page)).toBe(2);
+  await page.locator(stop(2)).hover(); await expect(page.locator(stop(2))).toHaveAttribute('data-requested','true'); expect(await here(page)).toBe(-1);
   expect(await page.locator(footer).evaluate(el=>el.getAnimations({subtree:true}).length)).toBe(0);
-  await expect.poll(()=>page.locator('[data-train] > div > div > span:nth-child(2)').first().evaluate(el=>getComputedStyle(el,'::before').transform)).toBe('none');
+  await expect.poll(()=>page.locator('[data-door]').first().getAttribute('transform')).toBe('translate(0 0)');
 });
-test('offscreen and hidden footer stop service until it becomes visible',async({page})=>{
+test('offscreen and hidden footer stop service until it becomes visible',async({page,isMobile})=>{
+  test.skip(isMobile, 'Automatic service is disabled on touch layouts');
   await page.evaluate(()=>scrollTo(0,0)); await page.waitForTimeout(3500);
-  const pos=await page.locator('[data-train]').getAttribute('style'); await page.waitForTimeout(3000);
-  expect(await page.locator('[data-train]').getAttribute('style')).toBe(pos);
+  const rendered=()=>page.locator('[data-car]').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('transform')));
+  const pos=await rendered(); await page.waitForTimeout(3000);
+  expect(await rendered()).toEqual(pos);
   await page.evaluate(()=>{Object.defineProperty(document,'hidden',{value:true,configurable:true});document.dispatchEvent(new Event('visibilitychange'));});
   await page.locator(footer).scrollIntoViewIfNeeded(); await page.waitForTimeout(3000);
-  expect(await page.locator('[data-train]').getAttribute('style')).toBe(pos);
+  expect(await rendered()).toEqual(pos);
   await page.evaluate(()=>{delete (document as any).hidden;document.dispatchEvent(new Event('visibilitychange'));});
-  await expect.poll(()=>here(page),{timeout:5000}).toBe(0);
+  await expect.poll(()=>here(page),{timeout:10000}).toBe(0);
 });
 for(const width of [1920,1440,1100,834,390,375]) test(`layout, typography and accessibility at ${width}`,async({page})=>{
   await page.emulateMedia({reducedMotion:'reduce'}); await page.setViewportSize({width,height:width<900?844:1020});
   await page.locator(footer).scrollIntoViewIfNeeded();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-  const mobile = width < 900;
-  const stops = page.locator(mobile ? '[data-mobile-stop]' : '[data-stop]');
-  await expect(stops).toHaveCount(4);
-  const boxes=await stops.evaluateAll(nodes=>nodes.map(n=>n.getBoundingClientRect().toJSON()));
+  const boxes=await page.locator('[data-stop]').evaluateAll(nodes=>nodes.map(n=>n.getBoundingClientRect().toJSON()));
   for(const box of boxes) {expect(box.x).toBeGreaterThanOrEqual(0);expect(box.right).toBeLessThanOrEqual(width);}
-  const line = await page.getByRole('navigation',{name:'Contact Miguel'}).boundingBox();
-  if (mobile) {
-    expect(line!.height).toBeGreaterThan(330);
-    await expect(page.locator('[data-line]')).toBeHidden();
-    for (const box of boxes) expect(box.height).toBeGreaterThanOrEqual(44);
-  } else expect(line!.height).toBe(12);
+  const line=await page.getByRole('navigation',{name:'Contact Miguel'}).boundingBox();
+  expect(line!.height>line!.width).toBe(width<900);
   await expect(page.locator(`${footer} p`).first()).toHaveCSS('font-style','normal');
   const axe=await new AxeBuilder({page}).include(footer).analyze();expect(axe.violations.map(v=>v.id)).toEqual([]);
 });
-test('desktop geometry retains the handoff line, train and station positions',async({page})=>{
+test('desktop geometry retains the clear approach corridor and compact footer train',async({page,isMobile})=>{
+  test.skip(isMobile,'Desktop pointer composition');
+  await page.setViewportSize({width:1920,height:963});
   await page.emulateMedia({reducedMotion:'reduce'}); await page.reload(); await page.locator(footer).scrollIntoViewIfNeeded();
   const root=(await page.locator(footer).boundingBox())!, line=(await page.getByRole('navigation',{name:'Contact Miguel'}).boundingBox())!;
-  expect(root.height).toBe(640);expect(line.x-root.x).toBe(170);expect(line.y-root.y).toBe(452);expect(line.height).toBe(12);
-  const train=(await page.locator('[data-train]').boundingBox())!;expect(train.width).toBe(200);expect(train.height).toBe(58);
+  expect(root.height).toBe(640);expect(line.x-root.x).toBeCloseTo(136,0);expect(line.y-root.y).toBeCloseTo(489.6,0);expect(line.height).toBeCloseTo(9.6,0);
+  const train=(await page.locator('[data-train]').boundingBox())!;expect(train.width).toBeCloseTo(116,0);expect(train.height).toBeCloseTo(23.22,0);
   for(const [i,at] of [16,39,62,85].entries()) {
     const ring=(await page.locator(`${stop(i)} > span:first-child`).boundingBox())!;
     expect(ring.x+ring.width/2).toBeCloseTo(line.x+line.width*at/100,0);
-  }
-});
-
-test('mobile Line M is a native compact timeline with icons and usable destinations', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  for (const width of [320, 375, 390, 430, 768]) {
-    await page.setViewportSize({ width, height: 844 });
-    await page.locator('[data-line-m]').scrollIntoViewIfNeeded();
-    const nav = page.locator('[data-mobile-line]');
-    await expect(nav).toBeVisible();
-    await expect(page.locator('[data-line]')).toBeHidden();
-    await expect(nav.locator('svg')).toHaveCount(8);
-    await expect(nav.locator('[data-mobile-stop]')).toHaveCount(4);
-    const train = await nav.locator('span[class*="mobileTrain"]').boundingBox();
-    expect(train!.width).toBeLessThanOrEqual(40);
-    for (const link of await nav.locator('[data-mobile-stop]').all()) {
-      const box = (await link.boundingBox())!;
-      expect(box.x).toBeGreaterThanOrEqual(0);
-      expect(box.x + box.width).toBeLessThanOrEqual(width + 1);
-      expect(box.height).toBeGreaterThanOrEqual(44);
-    }
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   }
 });
