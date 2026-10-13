@@ -50,7 +50,7 @@ async function instrument(page: Page, reduced = false) {
 async function openStory(page: Page, isMobile: boolean) {
   if (isMobile) {
     await page.getByRole('button', {name: 'Menu', exact: true}).click();
-    await page.getByRole('navigation', {name: 'Mobile navigation'})
+    await page.getByRole('navigation', {name: 'Fullscreen navigation'})
       .getByRole('link', {name: 'Story', exact: true}).click();
   } else {
     await page.getByRole('navigation', {name: 'Main navigation'})
@@ -98,7 +98,7 @@ test('Story shares the full header and an overlapping editorial transition in bo
     await expect(page.getByRole('button', {name: 'Menu', exact: true})).toBeVisible();
     await expect(page.locator('#mobile-navigation')).toHaveCount(0);
     await page.getByRole('button', {name: 'Menu', exact: true}).click();
-    await expect(page.getByRole('navigation', {name: 'Mobile navigation'})
+    await expect(page.getByRole('navigation', {name: 'Fullscreen navigation'})
       .getByRole('link', {name: 'Story', exact: true})).toHaveAttribute('aria-current', 'page');
     await page.getByRole('button', {name: 'Close', exact: true}).click();
   } else {

@@ -74,7 +74,7 @@ for (const width of [1440, 390]) test(`header remains stable during navigation a
   const original = await page.locator('.wind-header').boundingBox();
   for (const [name, path] of [['CV', '/cv'], ['Story', '/story']]) {
     if (width < 1024) await page.getByRole('button',{name:'Menu',exact:true}).click();
-    await page.getByRole('navigation',{name:width < 1024 ? 'Mobile navigation' : 'Main navigation'}).getByRole('link',{name,exact:true}).click();
+    await page.getByRole('navigation',{name:width < 1024 ? 'Fullscreen navigation' : 'Main navigation'}).getByRole('link',{name,exact:true}).click();
     await expect(page).toHaveURL(new RegExp(path+'$'));
     await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase','idle');
     expect(await page.locator('.wind-header').boundingBox()).toEqual(original);

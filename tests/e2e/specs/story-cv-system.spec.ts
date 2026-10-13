@@ -86,7 +86,7 @@ for(const width of [1440,390]) {
         await page.locator('[data-identity-home]').click();
       }else if(width<720){
         await page.getByRole('button',{name:'Menu',exact:true}).click();
-        await page.getByRole('navigation',{name:'Mobile navigation'}).getByRole('link',{name:mobileLabel,exact:true}).click();
+        await page.getByRole('navigation',{name:'Fullscreen navigation'}).getByRole('link',{name:mobileLabel,exact:true}).click();
       }else{
         await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:label,exact:true}).click();
       }

@@ -1,7 +1,7 @@
 /** Shared primary navigation for every route and breakpoint. */
 export const primaryNavigation = [
-  { label: 'Work', href: '/#work' },
-  { label: 'Story', href: '/story' },
-  { label: 'CV', href: '/cv' },
-  { label: 'Contact', href: '#contact' }
+  { label: 'Work', description: 'SELECTED WORK', href: '/#work' },
+  { label: 'Story', description: 'ABOUT ME', href: '/story' },
+  { label: 'CV', description: 'RESUME', href: '/cv' },
+  { label: 'Contact', description: 'LET’S CONNECT', href: '#contact' }
 ] as const;

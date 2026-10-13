@@ -5,10 +5,10 @@ test('mobile menu closes on Escape and restores focus', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openPortfolioHome(page);
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
-  await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', { name: 'Story' }).focus();
+  await page.getByRole('navigation', { name: 'Fullscreen navigation' }).getByRole('link', { name: 'Story' }).focus();
   await page.keyboard.press('Escape');
   await expect(page.getByRole('button', { name: 'Menu', exact: true })).toBeFocused();
-  await expect(page.getByRole('navigation', { name: 'Mobile navigation' })).toHaveCount(0);
+  await expect(page.getByRole('navigation', { name: 'Fullscreen navigation' })).toHaveCount(0);
 });
 
 test('intro is decorative, skippable and never creates a second page heading', async ({ page }) => {

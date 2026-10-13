@@ -128,7 +128,7 @@ test('390px menu opens spatial Ask and Leu retains its v2 loop', async ({ page }
   await openPortfolioHome(page);
   await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
-  const menu = page.getByRole('navigation', { name: 'Mobile navigation' });
+  const menu = page.getByRole('navigation', { name: 'Fullscreen navigation' });
   await expect(menu.getByRole('link')).toHaveText(['Work', 'Story', 'CV', 'Contact']);
   const guideTrigger = menu.getByRole('button', { name: 'Ask MiguelLLM', exact: true });
   await expect(guideTrigger).toBeVisible();

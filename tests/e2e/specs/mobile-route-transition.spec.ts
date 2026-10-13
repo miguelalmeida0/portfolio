@@ -23,6 +23,7 @@ async function observe(page: Page) {
         menu: !!menu,
         menuOpacity: menu ? getComputedStyle(menu).opacity : null,
         menuBackground: menu ? getComputedStyle(menu).backgroundColor : null,
+        backdrop: menu ? getComputedStyle(menu, '::backdrop').backgroundColor : null,
         opacity: Number(getComputedStyle(veil).opacity), hidden: veil.hidden,
         fullViewport: r.x === 0 && r.y === 0 && r.width === innerWidth && r.height === innerHeight,
         topmost: points.every(([x, y]) => document.elementFromPoint(x, y) === veil),
@@ -44,7 +45,7 @@ async function settled(page: Page, path: string) {
 
 async function select(page: Page, label: string) {
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
-  await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', { name: label, exact: true }).click();
+  await page.getByRole('navigation', { name: 'Fullscreen navigation' }).getByRole('link', { name: label, exact: true }).click();
 }
 
 test.describe('mobile route veil', () => {
@@ -58,7 +59,7 @@ test.describe('mobile route veil', () => {
         await openPortfolioHome(page);
         await page.getByRole('button', { name: 'Menu', exact: true }).click();
         await observe(page);
-        await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', { name: label, exact: true }).click();
+        await page.getByRole('navigation', { name: 'Fullscreen navigation' }).getByRole('link', { name: label, exact: true }).click();
         await settled(page, '/' + slug);
         const samples = await page.evaluate(() => (window as any).__routeSamples);
         await testInfo.attach('animation-frames.json', { body: JSON.stringify(samples, null, 2), contentType: 'application/json' });
@@ -70,11 +71,11 @@ test.describe('mobile route veil', () => {
         for (const s of active) {
           // Fading the panel itself would expose the old page through its links.
           if (s.menu) {
-            expect(s.menuOpacity).toBe('1');
+            expect(s.menuOpacity === '1' || s.backdrop === 'rgb(249, 247, 238)').toBe(true);
             expect(s.menuBackground).toBe('rgb(249, 247, 238)');
           }
           if (s.old && !s.menu) expect(s.opacity === 1 && s.fullViewport && s.topmost && !s.hidden).toBe(true);
-          if (s.phase === 'covered') expect(s.opacity === 1 && s.fullViewport && s.topmost).toBe(true);
+          if (s.phase === 'covered') expect(s.opacity === 1 && s.fullViewport && (s.topmost || s.menu)).toBe(true);
           if (s.phase === 'revealing') {
             expect(s.old).toBe(false);
             expect(s.url).toBe('/' + slug);

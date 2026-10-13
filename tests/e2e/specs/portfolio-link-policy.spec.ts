@@ -12,7 +12,7 @@ for (const width of [1440, 390]) {
       await page.goto(entry);
       for (const [label, path] of [['Story', '/story'], ['CV', '/cv'], ['Work', '/#work'], ['Contact', '/#contact']]) {
         if (width === 390) await page.getByRole('button', { name: 'Menu', exact: true }).click();
-        const nav = page.getByRole('navigation', { name: width === 390 ? 'Mobile navigation' : 'Main navigation', exact: true });
+        const nav = page.getByRole('navigation', { name: width === 390 ? 'Fullscreen navigation' : 'Main navigation', exact: true });
         const link = nav.getByRole('link', { name: label, exact: true });
         await expect(link).not.toHaveAttribute('target', '_blank');
         await link.click();

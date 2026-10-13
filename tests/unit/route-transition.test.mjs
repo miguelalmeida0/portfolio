@@ -114,7 +114,7 @@ test('reduced motion has no animation but still awaits route readiness', async (
   assert.equal(s.veil.hidden, true);
 });
 
-test('modified, external, download and desktop links remain native', async () => {
+test('modified, external and download links remain native', async () => {
   for (const fields of [{ metaKey: true }, { ctrlKey: true }, { shiftKey: true }, { altKey: true }, { button: 1 }, { defaultPrevented: true }]) {
     const s = setup(); const event = s.click(fields);
     await s.owner.navigateFromMenu(event, s.close);
@@ -126,9 +126,6 @@ test('modified, external, download and desktop links remain native', async () =>
     await s.owner.navigateFromMenu(event, s.close);
     assert.equal(event.defaultPrevented, false);
   }
-  const s = setup({ mobile: false }); const event = s.click();
-  await s.owner.navigateFromMenu(event, s.close);
-  assert.equal(event.defaultPrevented, false);
 });
 
 test('new-tab links close the menu without covering or intercepting navigation', async () => {
@@ -239,4 +236,31 @@ test('Reduced motion does not start a decorative Story transition', async () => 
   assert.equal(s.owner.mobileState.value, 'idle');
   assert.equal(s.document.documentElement.dataset.storyRouteTransition, undefined);
   assert.equal(s.events.filter(x => x === 'view-transition').length, 0);
+});
+
+test('tablet fullscreen navigation waits for modal dismissal before committing the route', async () => {
+  const s = setup({ mobile: false, reduced: true });
+  const dismissal = deferred();
+  const event = s.click();
+  const work = s.owner.navigateFromMenu(event, () => dismissal.promise);
+  await flush();
+  assert.equal(event.defaultPrevented, true);
+  assert.equal(s.owner.mobileState.value, 'covered');
+  assert.equal(s.events.includes('goto'), false);
+  dismissal.resolve(); await flush();
+  assert.equal(s.events.includes('goto'), true);
+  s.navigation.resolve(); await flush(); s.frames.shift()(); await work;
+  assert.equal(s.owner.mobileState.value, 'idle');
+});
+
+test('anchor scrolling waits until the modal releases background scroll and focus', async () => {
+  const s = setup();
+  const dismissal = deferred();
+  const event = s.click();
+  event.currentTarget.href = 'https://portfolio.test/#work';
+  const work = s.owner.navigateFromMenu(event, () => dismissal.promise);
+  await flush();
+  assert.equal(s.events.some(e => e.startsWith('scroll:')), false);
+  dismissal.resolve(); await work;
+  assert.deepEqual(s.events, ['tick', 'push:#work', 'scroll:work:true']);
 });

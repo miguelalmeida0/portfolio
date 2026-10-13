@@ -153,7 +153,7 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
     }
   });
 
-  async function navigateFromMenu(event: MouseEvent, close: () => void) {
+  async function navigateFromMenu(event: MouseEvent, close: () => void | Promise<void>) {
     const link = event.currentTarget as HTMLAnchorElement;
     if (!event.defaultPrevented && link.target === '_blank') { close(); return; }
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey ||
@@ -164,7 +164,7 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
       try { target = document.getElementById(decodeURIComponent(url.hash.slice(1))); } catch { return; }
       if (target) {
         event.preventDefault();
-        close();
+        await close();
         await tick();
         if (location.hash !== url.hash) pushState(url, {});
         scrollToElement(target, { focus: true });
@@ -184,7 +184,7 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
       storyMenuNavigating = true;
       navigationError.set('');
       link.dataset.selected = 'true';
-      close();
+      await close();
       try {
         await tick();
         if (disposed) return;
@@ -200,7 +200,6 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
       return;
     }
 
-    if (!matchMedia('(max-width: 719px)').matches) return;
     event.preventDefault();
     if (active) return;
     link.dataset.selected = 'true';
@@ -210,7 +209,7 @@ export function installRouteTransitions(getVeil: () => HTMLElement) {
       // Only the links fade. The menu panel must stay opaque over the old page.
       await cover(link.parentElement);
       if (disposed) return;
-      close();
+      await close();
       await tick();
       ownedNavigation = true;
       await goto(url);

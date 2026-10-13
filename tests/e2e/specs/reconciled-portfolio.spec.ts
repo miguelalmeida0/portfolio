@@ -40,7 +40,7 @@ test('Needle keeps its genuine search demonstration and public destinations', as
 test('mobile menu work anchor closes without leaving the homepage', async ({page}) => {
   await page.setViewportSize({width:390,height:844}); await page.goto('/#top');
   await page.getByRole('button',{name:'Menu',exact:true}).click();
-  await page.getByRole('navigation',{name:'Mobile navigation'}).getByRole('link',{name:'Work',exact:true}).click();
+  await page.getByRole('navigation',{name:'Fullscreen navigation'}).getByRole('link',{name:'Work',exact:true}).click();
   await expect(page).toHaveURL(/\/#work$/); await expect(page.locator('#mobile-navigation')).toHaveCount(0);
   await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase','idle');
   await expect(page.locator('#work')).toBeInViewport();

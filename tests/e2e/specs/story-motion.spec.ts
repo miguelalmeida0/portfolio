@@ -21,7 +21,7 @@ test('opening Story keeps the portfolio transition and a clean portrait', async 
     const menu = page.getByRole('button', { name: 'Menu', exact: true });
     await expect(menu).toBeEnabled();
     await menu.click();
-    await page.getByRole('navigation', { name: 'Mobile navigation' })
+    await page.getByRole('navigation', { name: 'Fullscreen navigation' })
       .getByRole('link', { name: 'Story', exact: true }).click();
   } else {
     await page.getByRole('navigation', { name: 'Main navigation' })
