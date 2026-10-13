@@ -1,4 +1,5 @@
 <script>
+  import CircleFill from '$lib/components/experience/CircleFill.svelte';
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { resetScrollMotion, scrollToPosition, syncScrollPosition } from '$lib/motion/smooth-scroll';
@@ -50,9 +51,9 @@
     {#if !standalone}<div class="project-actions">
       {#if project?.source}<a class="btn sm code" href={project.source} {...destinationLink(project.source)}>Code</a>{/if}
       {#if project?.live}
-        <a class="btn primary sm" href={project.live.href} {...destinationLink(project.live.href)}>Try it</a>
+        <a class="btn primary sm" data-circle-fill="compact" href={project.live.href} {...destinationLink(project.live.href)}><CircleFill label="Try it" /></a>
       {:else if !project?.source}
-        <a class="btn primary sm" href="#try">Explore demo</a>
+        <a class="btn primary sm" data-circle-fill="compact" href="#try"><CircleFill label="Explore demo" /></a>
       {/if}
     </div>{/if}
   </div>
@@ -95,7 +96,8 @@
   @media (max-width: 600px) {
     .pnav#pnav .wrap { gap: 8px; }
     .pnav .project-identity { gap: 8px; }
-    .pnav .pname { display: block; font-size: 18px; line-height: 1.15; white-space: normal; }
+    .pnav .project-identity { flex: 1 1 0; }
+    .pnav .pname { overflow-wrap: anywhere; display: block; font-size: 18px; line-height: 1.15; white-space: normal; }
     .pnav .project-actions .btn { padding-inline: 13px; }
   }
   @media (prefers-reduced-motion: reduce) { .pnav .back-home { transition: none; } }

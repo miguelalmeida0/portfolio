@@ -1,4 +1,5 @@
 <script lang="ts">
+  import CircleFill from '$lib/components/experience/CircleFill.svelte';
   import { onMount } from 'svelte';
   import data from '$lib/story/story.json';
   import { createSceneRunner, type SceneId } from '$lib/story/scenes';
@@ -84,7 +85,7 @@
         <p class="story-eyebrow">{data.ending.label}</p>
         <h2 id="story-end">{data.ending.question}</h2>
         <p class="story-answer">{data.ending.answer}</p>
-        <div class="ending-actions">{#each data.ending.ctas as cta}<a class:primary={'primary' in cta && cta.primary} href={cta.href} {...destinationLink(cta.href)}>{cta.label}<span aria-hidden="true">↗</span></a>{/each}</div>
+        <div class="ending-actions">{#each data.ending.ctas as cta}<a data-circle-fill={'primary' in cta && cta.primary ? '' : undefined} class:primary={'primary' in cta && cta.primary} href={cta.href} {...destinationLink(cta.href)}>{#if 'primary' in cta && cta.primary}<CircleFill label={cta.label} />{:else}{cta.label}<span aria-hidden="true">↗</span>{/if}</a>{/each}</div>
       </section>
     </div>
   </div>

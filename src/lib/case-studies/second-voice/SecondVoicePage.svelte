@@ -1,4 +1,5 @@
 <script>
+  import CircleFill from '$lib/components/experience/CircleFill.svelte';
 import CaseOverview from '../shared/CaseOverview.svelte';
 import '../shared/case-artifact.css';
 import { chapterTitles } from "$lib/motion/actions/chapterTitles";
@@ -16,7 +17,7 @@ const workspace=createWorkspace();
     <p class="kicker">Second Voice, design and engineering, independent product, 2026</p>
     <h1 id="hero-h">Choose a literary voice. See exactly what changes.</h1>
     <p class="sub">Generating a rewrite is easy. Trusting one is not. The original stays close, and every edit stays inspectable.</p>
-    <div class="ctas"><a class="btn" href="#try">Explore demo</a><a class="tlink" href="#gates">How it's built</a></div>
+    <div class="ctas"><a class="btn" data-circle-fill href="#try"><CircleFill label="Explore demo" /></a><a class="tlink" href="#gates">How it's built</a></div>
   </div><CaseOverview slug="second-voice-ai"/></section>
 
 <Workspace {workspace}/><StateTruths {workspace}/><VoiceRows/><Gates/><ShareCard/><ReleaseLog/><SvSpecs/><nav class="next" aria-label="Next project"><span class="lbl">Next project</span><a href="/work/f24">F24</a></nav></main></div>

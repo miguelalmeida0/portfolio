@@ -1,4 +1,5 @@
 <script>
+  import CircleFill from '$lib/components/experience/CircleFill.svelte';
 import CaseOverview from '../shared/CaseOverview.svelte';
 import '../shared/case-artifact.css';
 import { chapterTitles } from "$lib/motion/actions/chapterTitles";
@@ -28,7 +29,7 @@ import { chapterTitles } from "$lib/motion/actions/chapterTitles";
       <h1 id="hero-h" data-ask-id="project-needle">From a query to a visible artwork.</h1>
       <p class="sub">Find a work in the collection. Follow the search, the image and the decisions that make it appear.</p>
       <dl class="hero-stack"><dt>Built with</dt><dd>React, TypeScript, HNSW, Web Workers, Node.js, Sharp and Docker.</dd></dl>
-      <div class="ctas"><a class="btn primary" href="#try">Explore demo</a><a class="tlink" href="#engineering">How it’s built</a></div>
+      <div class="ctas"><a class="btn primary" data-circle-fill href="#try"><CircleFill label="Explore demo" /></a><a class="tlink" href="#engineering">How it’s built</a></div>
     </div><CaseOverview slug="needle"/></section>
 
     <SearchDemo />

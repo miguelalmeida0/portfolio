@@ -12,7 +12,8 @@ const projects = [
 function anchors(html) {
   return [...html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)].map(([, attributes, content]) => ({
     attributes: Object.fromEntries([...attributes.matchAll(/([\w-]+)="([^"]*)"/g)].map(([, key, value]) => [key, value])),
-    label: content.replace(/<[^>]*>/g, '').trim(),
+    // Decorative animation labels are excluded from the link's accessible name.
+    label: content.replace(/<span\b[^>]*aria-hidden="true"[^>]*>[\s\S]*?<\/span>/g, '').replace(/<[^>]*>/g, '').trim(),
   }));
 }
 

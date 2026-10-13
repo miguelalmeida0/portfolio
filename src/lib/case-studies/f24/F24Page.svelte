@@ -1,4 +1,5 @@
 <script>
+  import CircleFill from '$lib/components/experience/CircleFill.svelte';
 import CaseOverview from '../shared/CaseOverview.svelte';
 import '../shared/case-artifact.css';
 import { chapterTitles } from "$lib/motion/actions/chapterTitles";
@@ -18,7 +19,7 @@ import NoticeFull from './NoticeFull.svelte';
     <p class="kicker">F24, frontend architecture and product delivery, 2022-now</p>
     <h1 id="hero-h">From mockup to production system.</h1>
     <p class="sub">Built Connectivity Hub's original Svelte frontend within the product team, and continued shipping as React joined the architecture.</p>
-    <div class="ctas"><a class="btn" href="#try">Explore demo</a><a class="tlink" href="#decisions">Architecture decisions</a></div>
+    <div class="ctas"><a class="btn" data-circle-fill href="#try"><CircleFill label="Explore demo" /></a><a class="tlink" href="#decisions">Architecture decisions</a></div>
   </div><CaseOverview slug="f24"/></section>
 
 <SituationStory/><StatesExplorer/>  <section class="chapter" id="migration" aria-labelledby="mig-h">

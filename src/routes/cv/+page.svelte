@@ -1,4 +1,5 @@
 <script lang="ts">
+  import CircleFill from '$lib/components/experience/CircleFill.svelte';
   import { destinationLink } from '$lib/navigation/destination-link';
   import '$lib/components/experience/profile-pages.css';
   import ArrowUpRight from '@lucide/svelte/icons/arrow-up-right';
@@ -15,7 +16,7 @@
     <div class="profile-surface profile-primary cv-intro"><p class="profile-meta">Experience / Berlin, Germany</p><h1 class="cv-name">Miguel Almeida.</h1><p class="cv-role">Frontend engineer.</p><p class="cv-stack">Product architecture<br />Design engineering</p><p class="cv-intro-line">I build the interfaces teams rely on when seconds matter.</p></div>
     <div class="profile-surface profile-support cv-summary">
       <p class="cv-summary-text" data-ask-id="cv-summary">{cvBio}</p>
-      <a href="/cv/pdf" class="profile-button" {...destinationLink("/cv/pdf")}><ArrowUpRight size={18} aria-hidden="true" /> Open CV PDF</a>
+      <a href="/cv/pdf" class="profile-button" data-circle-fill {...destinationLink("/cv/pdf")}><CircleFill label="Open CV PDF" /></a>
       <a href="/files/miguel-almeida-cv.pdf" download="Miguel-Almeida-CV.pdf" class="profile-link cv-download">Download PDF</a>
       <a href={'mailto:'+site.email} class="profile-link cv-email" {...destinationLink('mailto:'+site.email)}>{site.email}</a>
     </div>
