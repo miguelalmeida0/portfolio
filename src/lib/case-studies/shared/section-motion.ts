@@ -6,7 +6,7 @@ export function sectionMotion(node: HTMLElement) {
     const list = node.querySelector('ul');
     const indicator = node.querySelector<HTMLElement>('[data-section-indicator]');
     const progress = node.querySelector<HTMLElement>('[data-reading-progress]');
-    const main = node.parentElement?.querySelector('main');
+    const main = node.parentElement?.querySelector('main, .story-editorial');
     if (!list || !indicator || !progress || !main) return;
     node.dataset.navMotion = '';
     gsap.set(list, { position: 'relative' });

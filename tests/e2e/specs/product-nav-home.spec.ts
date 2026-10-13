@@ -107,3 +107,39 @@ test('keyboard focus and reduced motion keep the compact home control accessible
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL('/');
 });
+
+for (const width of [320, 390, 768, 1024, 1440]) {
+  test(`Story ${width}px: shared home navigation survives middle and footer`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    for (const depth of [0, 0.5, 1]) {
+      await page.goto('/story');
+      await expect(page.locator('#pnav')).toBeVisible();
+      await expect(page.locator('#pnav ul a[aria-current]')).not.toHaveCount(0);
+      if (depth) {
+        await page.evaluate(depth => window.scrollTo({ top: (document.documentElement.scrollHeight - innerHeight) * depth, behavior: 'instant' }), depth);
+        await expect.poll(() => page.locator('#pnav').evaluate(el => el.getBoundingClientRect().top)).toBe(0);
+      }
+      const home = await assertNavFits(page);
+      await expect(page.locator('#pnav .project-actions')).toHaveCount(0);
+      await home.click();
+      await expect(page).toHaveURL('/');
+      await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
+    }
+  });
+}
+
+test('Story: shared home link interrupts chapter scrolling and supports keyboard', async ({ page }) => {
+  await page.goto('/story');
+  await expect(page.locator('#pnav ul a[aria-current]')).not.toHaveCount(0);
+  await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight / 2, behavior: 'instant' }));
+  await page.locator('#pnav [data-project-identity]').click();
+  const home = page.locator('#pnav').getByRole('link', { name: 'Back home', exact: true });
+  await home.focus();
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Shift+Tab');
+  await expect(home).toBeFocused();
+  await expect(home).toHaveCSS('outline-style', 'solid');
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL('/');
+  await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
+});

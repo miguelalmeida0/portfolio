@@ -5,7 +5,7 @@
   import { findProject } from '$lib/experience/projects';
   import { destinationLink } from '$lib/navigation/destination-link';
   import { sectionMotion } from './section-motion';
-  let { name, slug, links } = $props();
+  let { name, slug = undefined, links, standalone = false, overviewHref = '#overview' } = $props();
   const project = $derived(findProject(slug));
   async function goHome(event) {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -35,7 +35,7 @@
 <div id="sentinel" bind:this={sentinel}></div>
 <!-- Preserve flow when pinned, including beyond the case-study wrapper at Contact. -->
 <div aria-hidden="true" style:height={stuck ? `${navHeight}px` : '0px'}></div>
-<nav aria-label={name+' sections'} class="pnav" class:stuck id="pnav" bind:this={nav} use:sectionMotion>
+<nav aria-label={name+' sections'} class="pnav" class:stuck class:standalone id="pnav" bind:this={nav} use:sectionMotion>
   <div class="wrap">
     <div class="project-identity">
       <a class="back-home" href="/" onclick={goHome} aria-label="Back home" title="Back home">
@@ -44,21 +44,32 @@
         </svg>
         <span>Back home</span>
       </a>
-      <a class="pname" data-project-identity href="#overview">{name}</a>
+      <a class="pname" data-project-identity href={overviewHref}>{name}</a>
     </div>
     <ul><li data-section-indicator aria-hidden="true"></li>{#each links as [id, label]}<li><a href={'#' + id} aria-current={current ? String(current === id) : undefined}>{label}</a></li>{/each}</ul>
-    <div class="project-actions">
+    {#if !standalone}<div class="project-actions">
       {#if project?.source}<a class="btn sm code" href={project.source} {...destinationLink(project.source)}>Code</a>{/if}
       {#if project?.live}
         <a class="btn primary sm" href={project.live.href} {...destinationLink(project.live.href)}>Try it</a>
       {:else if !project?.source}
         <a class="btn primary sm" href="#try">Explore demo</a>
       {/if}
-    </div>
+    </div>{/if}
   </div>
   <span data-reading-progress aria-hidden="true"></span>
 </nav>
 <style>
+  /* Non-case-study pages share the same controls without project launch actions. */
+  .pnav.standalone { --ink: #122A22; --sagebg: #E7ECD9; --plum: #5B153C; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40; background: #F0F3E5; color: var(--ink); border-bottom: 1px solid transparent; font-family: var(--hero-font, 'Figtree', sans-serif); }
+  .pnav.standalone.stuck { position: fixed; border-bottom-color: rgba(18, 42, 34, .17); }
+  .pnav.standalone .wrap { display: flex; align-items: center; min-height: 64px; width: calc(100% - 2 * var(--page-x, 20px)); margin-inline: auto; }
+  .pnav.standalone .pname { color: inherit; font-size: 24px; line-height: 1; font-weight: 800; letter-spacing: -.03em; text-decoration: none; }
+  .pnav.standalone ul { display: flex; gap: 6px; list-style: none; margin: 0; padding: 0; }
+  .pnav.standalone ul a { display: block; padding: 8px 14px; border-radius: 999px; color: inherit; font-size: 14.5px; text-decoration: none; }
+  .pnav.standalone ul a:hover, .pnav.standalone ul a[aria-current='true'] { background: var(--sagebg); }
+  .pnav.standalone a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  @media (max-width: 1200px) { .pnav.standalone ul { display: none; } }
+
   .pnav.stuck { position: fixed; inset-inline: 0; }
   .pnav .wrap { gap: clamp(8px, 2vw, 24px); }
   .pnav .project-identity { display: flex; align-items: center; gap: 12px; min-width: 0; }
