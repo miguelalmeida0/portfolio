@@ -1,10 +1,23 @@
 <script>
   import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
+  import { resetScrollMotion, scrollToPosition, syncScrollPosition } from '$lib/motion/smooth-scroll';
   import { findProject } from '$lib/experience/projects';
   import { destinationLink } from '$lib/navigation/destination-link';
   import { sectionMotion } from './section-motion';
   let { name, slug, links } = $props();
   const project = $derived(findProject(slug));
+  async function goHome(event) {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    resetScrollMotion();
+    scrollToPosition(0, 0);
+    syncScrollPosition();
+    await goto('/');
+    // Outgoing scroll owners finish teardown before the home position is synced.
+    scrollToPosition(0, 0);
+    syncScrollPosition();
+  }
   let sentinel, nav;
   let stuck = $state(false), current = $state('');
   let navHeight = $state(0);
@@ -25,7 +38,7 @@
 <nav aria-label={name+' sections'} class="pnav" class:stuck id="pnav" bind:this={nav} use:sectionMotion>
   <div class="wrap">
     <div class="project-identity">
-      <a class="back-home" href="/" aria-label="Back home" title="Back home">
+      <a class="back-home" href="/" onclick={goHome} aria-label="Back home" title="Back home">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
           <path d="M19 12H5m6-6-6 6 6 6" />
         </svg>
