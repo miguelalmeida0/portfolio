@@ -49,7 +49,14 @@
         <ul class="capabilities flex flex-wrap gap-2" aria-label="F24 contributions">
           {#each f24Ownership.tags as tag}<li>{tag}</li>{/each}
         </ul>
-        <a class="case-action inline-flex items-center justify-center gap-4" href="/work/f24" {...destinationLink('/work/f24')}>View case study <span aria-hidden="true">→</span></a>
+        <a class="case-action inline-flex items-center justify-center" href="/work/f24" {...destinationLink('/work/f24')}>
+          <span class="case-label">View case study</span>
+          <span class="case-reveal" aria-hidden="true">View case study</span>
+          <span class="case-orbit" aria-hidden="true">
+            <svg class="case-arrow case-arrow-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+            <svg class="case-arrow case-arrow-in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+          </span>
+        </a>
       </div>
     </article>
     <div class="independent-projects" aria-labelledby="projects-heading">
@@ -121,7 +128,100 @@
   .feature-body { font-size: var(--type-body); line-height: var(--leading-body); margin: 22px 0; color: var(--sage); }
   .capabilities { list-style: none; padding: 0; margin: 0; }
   .capabilities li { border: 1px solid color-mix(in srgb,var(--sage) 40%,transparent); border-radius: var(--r-pill); padding: 7px 13px; font-size: 14px; line-height: 1.25; color: var(--sage); }
-  .case-action { min-height: 58px; padding: 12px 28px; border-radius: var(--r-pill); background: var(--lime); color: var(--ink); font-size: 21px; font-weight: 750; margin-top: 30px; }
+  .case-action {
+    --case-duration: 450ms;
+    --case-ease: cubic-bezier(0.785, 0.135, 0.15, 0.86);
+    --case-scale: 1;
+    --case-icon: calc(36px * var(--case-scale));
+    --case-inset: calc(5px * var(--case-scale));
+    --case-padding: 0 62px 0 28px;
+    --case-clip: inset(calc(50% - var(--case-icon) / 2) var(--case-inset) calc(50% - var(--case-icon) / 2) calc(100% - var(--case-icon) - var(--case-inset)) round 999px);
+    --case-orbit-bg: var(--plum);
+    --case-orbit-ink: var(--lime);
+    --case-arrow-out: translate(-50%, -50%) scale(1);
+    --case-arrow-in: translate(-170%, -50%) scale(0);
+    position: relative;
+    isolation: isolate;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    justify-content: flex-start;
+    min-height: max(58px, calc(48px * var(--case-scale)));
+    padding: var(--case-padding);
+    overflow: hidden;
+    border: 2px solid var(--lime);
+    border-radius: var(--r-pill);
+    background: var(--lime);
+    color: var(--ink);
+    font-size: 21px;
+    font-weight: 750;
+    line-height: 1;
+    margin-top: 30px;
+    white-space: nowrap;
+    text-decoration: none;
+    touch-action: manipulation;
+  }
+  .case-action span, .case-arrow { pointer-events: none; }
+  .case-label { position: relative; }
+  /* Clip the plum surface and its lime label together: text never fades
+     through an intermediate color or appears on the wrong background. */
+  .case-reveal {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    padding: var(--case-padding);
+    background: var(--plum);
+    color: var(--lime);
+    clip-path: var(--case-clip);
+    transition: clip-path var(--case-duration) var(--case-ease);
+  }
+  .case-orbit {
+    position: absolute;
+    right: var(--case-inset);
+    top: 50%;
+    width: var(--case-icon);
+    height: var(--case-icon);
+    transform: translateY(-50%);
+    overflow: hidden;
+    border-radius: 50%;
+    background: var(--case-orbit-bg);
+    color: var(--case-orbit-ink);
+  }
+  .case-arrow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(19px * var(--case-scale));
+    height: calc(19px * var(--case-scale));
+    transition: transform var(--case-duration) var(--case-ease);
+  }
+  .case-arrow-out { transform: var(--case-arrow-out); }
+  .case-arrow-in { transform: var(--case-arrow-in); }
+  .case-action:is(:focus-visible, :active) {
+    --case-clip: inset(0 0 0 0 round 999px);
+    --case-orbit-bg: var(--lime);
+    --case-orbit-ink: var(--plum);
+    --case-arrow-out: translate(65%, -50%) scale(0);
+    --case-arrow-in: translate(-50%, -50%) scale(1);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .case-action:hover {
+      --case-clip: inset(0 0 0 0 round 999px);
+      --case-orbit-bg: var(--lime);
+      --case-orbit-ink: var(--plum);
+      --case-arrow-out: translate(65%, -50%) scale(0);
+      --case-arrow-in: translate(-50%, -50%) scale(1);
+    }
+  }
+  .case-action:focus-visible { outline: 3px solid var(--paper); outline-offset: 4px; }
+  /* Keep the circle and touch target sized consistently within the site's 80% desktop zoom.
+     Keep the inherited typography at its existing size. */
+  @media screen and (min-width: 1024px) {
+    .case-action { --case-scale: 1.25; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .case-reveal, .case-arrow { transition: none; }
+  }
   .independent-projects { padding-top: clamp(40px, 5vw, 80px); }
   .gallery-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: clamp(26px, 3vw, 44px); }
   .gallery-heading h3 { font: 700 var(--type-collection)/var(--leading-heading) var(--hero-font); letter-spacing: -.035em; }
