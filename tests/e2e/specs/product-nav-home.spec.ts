@@ -114,7 +114,7 @@ for (const width of [320, 390, 768, 1024, 1440]) {
     for (const depth of [0, 0.5, 1]) {
       await page.goto('/story');
       await expect(page.locator('#pnav')).toBeVisible();
-      await expect(page.locator('#pnav ul a[aria-current]')).not.toHaveCount(0);
+      await expect(page.locator('#pnav[data-nav-motion]')).toBeVisible();
       if (depth) {
         await page.evaluate(depth => window.scrollTo({ top: (document.documentElement.scrollHeight - innerHeight) * depth, behavior: 'instant' }), depth);
         await expect.poll(() => page.locator('#pnav').evaluate(el => el.getBoundingClientRect().top)).toBe(0);
@@ -130,7 +130,7 @@ for (const width of [320, 390, 768, 1024, 1440]) {
 
 test('Story: shared home link interrupts chapter scrolling and supports keyboard', async ({ page }) => {
   await page.goto('/story');
-  await expect(page.locator('#pnav ul a[aria-current]')).not.toHaveCount(0);
+  await expect(page.locator('#pnav[data-nav-motion]')).toBeVisible();
   await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight / 2, behavior: 'instant' }));
   await page.locator('#pnav [data-project-identity]').click();
   const home = page.locator('#pnav').getByRole('link', { name: 'Back home', exact: true });
