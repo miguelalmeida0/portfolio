@@ -1,4 +1,27 @@
-# Production deployments
+# Current release workflow
+
+As of 19 October 2026, GitHub main contains the reviewed typographic portfolio
+from the October 15 current-state recovery, including its October 16-19 work.
+It was reconciled in a clean checkout from main, validated on local test, then
+promoted by fast-forward. The older dirty production checkout was preserved.
+
+The published routes are /, /story and /cv, plus the five /work case studies.
+The opening/loading overlay is removed. The FRONTEND / DESIGNER header
+animation remains. The older /hero-lab/typographic URLs remain available as
+non-indexed aliases whose navigation points to the canonical pages.
+
+Canonical site: https://miguelalmeida.is-a.dev/
+Cloudflare Pages project: miguelalmeida-portfolio. Production branch: main.
+Push validated main to GitHub and wait for the Cloudflare Pages check. Do not
+run a parallel direct deployment. Always verify the public domain afterward.
+
+Use a fresh main-based checkout for future release preparation. Never deploy
+an older outer workspace or overwrite divergent work in a historical checkout.
+Read docs/qa/portfolio-release-2026-10-19.md for the verification commands.
+The historical recovery notes below document the earlier source location and
+assets that must continue to be preserved.
+
+# Historical production recovery
 
 Production source is this checkout, `.cache/leu-flow-pages` under the portfolio
 workspace. The workspace root is an older checkout and must never be deployed.

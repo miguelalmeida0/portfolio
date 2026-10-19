@@ -76,7 +76,7 @@ for (const width of [1440, 390]) test(`header remains stable during navigation a
     if (width < 1024) await page.getByRole('button',{name:'Menu',exact:true}).click();
     await page.getByRole('navigation',{name:width < 1024 ? 'Fullscreen navigation' : 'Main navigation'}).getByRole('link',{name,exact:true}).click();
     await expect(page).toHaveURL(new RegExp(path+'$'));
-    await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase','idle');
+    await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase','idle');
     expect(await page.locator('.wind-header').boundingBox()).toEqual(original);
     await expect(page.locator('#mobile-navigation')).toHaveCount(0);
   }

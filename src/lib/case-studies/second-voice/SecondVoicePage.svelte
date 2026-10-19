@@ -1,4 +1,5 @@
 <script>
+import NextProject from '../shared/NextProject.svelte';
   import CircleFill from '$lib/components/experience/CircleFill.svelte';
 import CaseOverview from '../shared/CaseOverview.svelte';
 import '../shared/case-artifact.css';
@@ -20,4 +21,4 @@ const workspace=createWorkspace();
     <div class="ctas"><a class="btn" data-circle-fill href="#try"><CircleFill label="Explore demo" /></a><a class="tlink" href="#gates">How it's built</a></div>
   </div><CaseOverview slug="second-voice-ai"/></section>
 
-<Workspace {workspace}/><StateTruths {workspace}/><VoiceRows/><Gates/><ShareCard/><ReleaseLog/><SvSpecs/><nav class="next" aria-label="Next project"><span class="lbl">Next project</span><a href="/work/f24">F24</a></nav></main></div>
+<Workspace {workspace}/><StateTruths {workspace}/><VoiceRows/><Gates/><ShareCard/><ReleaseLog/><SvSpecs/><NextProject slug="second-voice"/></main></div>

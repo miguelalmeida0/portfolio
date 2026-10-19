@@ -91,9 +91,9 @@ for(const width of [1440,390]) {
         await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:label,exact:true}).click();
       }
       await expect(page).toHaveURL(new RegExp(path==='/'?'/$':path+'$'));
-      await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase','idle');
+      await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase','idle');
       await expect(page.locator('#portfolio-content')).not.toHaveAttribute('inert','');
-      await expect(page.locator('[data-route-veil]')).toBeHidden();
+      await expect(page.locator('[data-route-shutter]')).toBeHidden();
       expect(await header.boundingBox()).toEqual(initial);
     }
     await nav('Story','Story','/story');
@@ -102,11 +102,11 @@ for(const width of [1440,390]) {
     await page.goBack();
     await expect(page).toHaveURL(/\/cv$/);
     await expect(page.locator('h1')).toHaveText('Miguel Almeida.');
-    await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase','idle');
+    await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase','idle');
     await page.goForward();
     await expect(page).toHaveURL(/\/$/);
     await expect(page.locator('#intro-heading')).toBeVisible();
-    await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase','idle');
+    await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase','idle');
     const frames=await page.evaluate(()=>(window as any).__headerFrames);
     expect(frames.filter((f:any)=>f.old||f.avatar||f.x!==initial!.x||f.height!==initial!.height)).toEqual([]);
     await page.goto('/story');

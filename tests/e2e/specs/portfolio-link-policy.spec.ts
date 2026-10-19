@@ -17,7 +17,7 @@ for (const width of [1440, 390]) {
         await expect(link).not.toHaveAttribute('target', '_blank');
         await link.click();
         await expect(page).toHaveURL('http://localhost:4173' + path);
-        await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+        await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
         await expect(page.locator('#portfolio-content')).toHaveJSProperty('inert', false);
         await expect(page.locator('main h1')).toBeVisible();
         await expect(page.locator('[data-pixel-intro]')).toHaveCount(0);
@@ -63,7 +63,7 @@ async function openDestination(page: Page, link: Locator, path: string) {
   await link.click();
   await page.waitForURL(url => url.pathname === path);
   await expect(page.locator('main h1')).toBeVisible();
-  await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+  await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
   await expect(page.locator('#portfolio-content')).toHaveJSProperty('inert', false);
   expect(page.context().pages()).toHaveLength(count);
 }
@@ -168,7 +168,7 @@ test('mobile menu navigates in the same tab and closes', async ({ page }) => {
   await expect(page).toHaveURL(/\/cv$/);
   expect(page.context().pages()).toHaveLength(1);
   await expect(page.locator('#mobile-navigation')).toHaveCount(0);
-  await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+  await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
   await expect(page.locator('#portfolio-content')).not.toHaveAttribute('inert', '');
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
   await page.locator('#mobile-navigation').getByRole('link', { name: 'Contact', exact: true }).click();

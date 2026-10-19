@@ -10,7 +10,7 @@
 }
 @media (max-width: 767px) { :root { --page-x: 20px; } }
 /* Shared palette and geometry. The homepage keeps its portrait and stage contracts. */
-.wind-theme {
+.wind-theme, .route-shutter {
   --page: #F0F3E4;
   --lime: #E4EDBF;
   --sage: #E7ECD8;

@@ -2,11 +2,10 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs';
 import sharp from 'sharp';
-// @ts-expect-error Shared JavaScript loader used by the repository's Node checks.
 import { loadLocalTs } from '../scripts/lib/load-local-ts.mjs';
 
 const plans: typeof import('../src/lib/ask/question-plans.json') = JSON.parse(fs.readFileSync('src/lib/ask/question-plans.json', 'utf8'));
-const { validateStep } = await loadLocalTs('src/lib/ask/plan.ts', {
+const { validateStep } = await loadLocalTs<Pick<typeof import('../src/lib/ask/plan'), 'validateStep'>>('src/lib/ask/plan.ts', {
   stubs: { './question-plans.json': `export default ${JSON.stringify(plans)}` }
 });
 

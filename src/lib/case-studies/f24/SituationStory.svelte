@@ -1,5 +1,5 @@
 <script>
-import {onMount,flushSync} from 'svelte'; import {SITS} from './data'; import {lifecycle} from '../shared/lifecycle';
+import {onMount,flushSync} from 'svelte';import {motionState} from '$lib/motion/policy'; import {SITS} from './data'; import {lifecycle} from '../shared/lifecycle';
 let sit=$state(0),playing=$state(false),inView=$state(false),seen=$state([0]),hint=$state(false);let section,tabsEl,mock,life,timer,hintTimer;const animations=new Set();
 function animate(el,frames,opts){const a=el.animate(frames,opts);animations.add(a);a.finished.catch(()=>{}).finally(()=>animations.delete(a));return a;}
 function schedule(){if(!life)return;life.cancel(timer);tabsEl?.classList.remove('playing');if(tabsEl)void tabsEl.offsetWidth;if(playing&&inView){tabsEl?.classList.add('playing');timer=life.later(()=>setSit(sit+1),2400);}}
@@ -7,15 +7,16 @@ function setSit(i,{focus=false,user=false}={}){if(user)playing=false;const n=(i+
 function tabKey(e,i){const d=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(d||['Home','End'].includes(e.key)){e.preventDefault();setSit(e.key==='Home'?0:e.key==='End'?SITS.length-1:i+d,{user:true,focus:true});}}
 function togglePlay(){if(playing){playing=false;schedule();return;}playing=true;setSit(sit+1);schedule();}
 function showHint(){hint=true;life.cancel(hintTimer);hintTimer=life.later(()=>hint=false,2600);animate(tabsEl,[{opacity:1},{opacity:.55},{opacity:1}],{duration:life.reduce.matches?1:900,easing:'ease-in-out'});}
-onMount(()=>{life=lifecycle();life.observe(new IntersectionObserver(([e])=>{inView=e.isIntersecting;schedule();},{threshold:.45}),[section]);playing=!life.reduce.matches;schedule();return()=>{life.destroy();animations.forEach(a=>a.cancel());};});
+onMount(()=>{life=lifecycle();const stop=motionState.subscribe(({reduced})=>{if(reduced){playing=false;schedule();}});life.observe(new IntersectionObserver(([e])=>{inView=e.isIntersecting;schedule();},{threshold:.45}),[section]);playing=false;schedule();return()=>{stop();life.destroy();animations.forEach(a=>a.cancel());};});
 </script>
-  <section class="frame" id="try" bind:this={section} aria-label="A mockup becomes a production screen">
+  <section class="frame" id="try" bind:this={section} aria-label="A mockup becomes a production screen" onfocusin={() => { playing=false; schedule(); }}>
     <div class="window">
       <div class="sit-top">
         <div><h3 id="asm-h" aria-level="2">One screen, eight situations.</h3><p>A mockup shows the first. A real product has to handle all of them.</p></div>
-        <button class="playbtn" type="button" id="play" aria-pressed={playing} onclick={togglePlay}><span class="pi" aria-hidden="true"></span><span class="pl">{playing?'Pause':'Play'}</span></button>
+        <button class="playbtn" type="button" id="play" aria-pressed={playing} onclick={togglePlay}><span class="pi" aria-hidden="true"></span><span class="pl">{playing?'Pause':'Play walkthrough'}</span></button>
       </div>
       <div class="sit-tabs" role="tablist" aria-labelledby="asm-h" id="sits" bind:this={tabsEl} class:playing={playing&&inView} style:--dur="2400ms">{#each SITS as x,i}<button type="button" class="stab" class:seen={seen.includes(i)} role="tab" id={'st'+i} aria-controls="sitPanel" aria-selected={sit===i} tabindex={sit===i?0:-1} onclick={()=>setSit(i,{user:true})} onkeydown={e=>tabKey(e,i)}><span class="sn">{i===0?'Start':i+' of 8'}</span><b>{x.tab}</b><span class="bar" aria-hidden="true"></span></button>{/each}</div>
+      <p class="cap">Choose a situation above. The screen below is an illustration.</p>
       <div class="sit-body">
         <!-- svelte-ignore a11y_no_static_element_interactions, a11y_click_events_have_key_events -->
 <div class="asm-stage" id="asmStage" onclick={showHint}><span class="ex-pill">Example screen</span><span class="hint" id="hint" class:show={hint} role="status" aria-live="polite">{hint?'This is a picture of the screen. Pick a tab above to change it.':''}</span>

@@ -161,7 +161,7 @@ html:has(.cs-sv){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);ba
 .cs-sv .out-head .label{margin:0 auto 0 0}
 .cs-sv .run{font:600 12.5px var(--mono);color:var(--muted)}
 .cs-sv .mv-wrap{position:relative;background:var(--paper);border-radius:16px;padding:24px 26px 26px;min-height:208px;transition:opacity .3s}
-.cs-sv .mv-wrap.pending .mv{opacity:.45}
+.cs-sv .mv-wrap.pending .mv{opacity:1}
 .cs-sv .progress{position:absolute;left:26px;right:26px;top:12px;height:2px;border-radius:2px;background:var(--line);overflow:hidden;opacity:0;transition:opacity .2s}
 .cs-sv .progress::after{content:"";position:absolute;inset:0;background:var(--plum);transform-origin:left;transform:scaleX(0)}
 .cs-sv .mv-wrap.pending .progress{opacity:1}

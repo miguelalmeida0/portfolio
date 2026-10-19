@@ -13,7 +13,7 @@ test('flagship app CTA precedes the demo and closing links navigate', async ({ p
   await page.locator('#experience').getByRole('link', { name: 'Read my story' }).click();
   await expect(page).toHaveURL(/\/story$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('I started in UX. Then built the frontend.', { useInnerText: true });
-  await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+  await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
   await page.goBack();
   await expect(page.locator('#intro-heading')).toBeVisible();
   await page.locator('#experience').getByRole('link', { name: 'View CV' }).click();

@@ -37,26 +37,26 @@ test('each real media surface and title navigate to their internal case study', 
     else await media.click();
     await expect(page).toHaveURL(new RegExp(`/work/${slug}$`));
     await expect(page.locator('main h1')).toHaveText(slug === 'f24' ? 'F24' : slug === 'leu' ? 'Leu' : 'Flow');
-    await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+    await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
     await page.goBack();
     await expect(page).toHaveURL(/\/$/);
     await expect(page.locator('#intro-heading')).toBeVisible();
-    await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+    await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
     await page.locator(`#project-${slug} .project-link`).click();
     await expect(page).toHaveURL(new RegExp(`/work/${slug}$`));
     await expect(page.locator('main h1')).toHaveText(slug === 'f24' ? 'F24' : slug === 'leu' ? 'Leu' : 'Flow');
-    await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+    await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
     await page.goBack();
     await expect(page).toHaveURL(/\/$/);
     await expect(page.locator('#intro-heading')).toBeVisible();
-    await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+    await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
   }
 });
 
 test('Tab reaches each media anchor and Enter opens its case study', async ({ page }) => {
   await openPortfolioHome(page);
   for (const [slug] of projects) {
-    await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+    await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
     await page.locator(`#project-${slug} .project-link`).focus();
     await expect(page.locator(`#project-${slug} .project-link`)).toBeFocused();
     await page.keyboard.press('Tab');
@@ -76,11 +76,11 @@ test('Tab reaches each media anchor and Enter opens its case study', async ({ pa
     await page.keyboard.press('Enter');
     await expect(page).toHaveURL(new RegExp(`/work/${slug}$`));
     await expect(page.locator('main h1')).toHaveText(slug === 'f24' ? 'F24' : slug === 'leu' ? 'Leu' : 'Flow');
-    await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+    await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
     await page.goBack();
     await expect(page).toHaveURL(/\/$/);
     await expect(page.locator('#intro-heading')).toBeVisible();
-    await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+    await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
   }
 });
 

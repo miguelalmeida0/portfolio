@@ -7,9 +7,10 @@ export function createWorkspace(){
   onMount(()=>{life=lifecycle();return life.destroy;});
   async function submit(settings){
     if(S.pending)return;
+    const shouldFail=S.fail;S.fail=false;
     const snap={...settings};S.submitted={...snap};S.failed=null;S.runs++;S.pending={settings:snap,run:S.runs};
     await new Promise(r=>life.later(r,life.reduce.matches?0:900));
-    if(S.fail){S.failed={settings:snap};S.pending=null;flushSync();root?.querySelector('#retry')?.focus({preventScroll:true});return;}
+    if(shouldFail){S.failed={settings:snap};S.pending=null;flushSync();root?.querySelector('#retry')?.focus({preventScroll:true});return;}
     const changed=S.result.settings.voice!==snap.voice||S.result.settings.strength!==snap.strength;
     S.result={settings:snap,run:S.pending.run};S.pending=null;
     if(changed&&!life.reduce.matches){S.reveal=false;flushSync();void root?.querySelector('#mv')?.offsetWidth;S.reveal=true;life.cancel(revealTimer);revealTimer=life.later(()=>S.reveal=false,2400);}

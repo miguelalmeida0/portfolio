@@ -1,0 +1,219 @@
+/* One type system for the selected direction, including reused work and footer.
+   The live-root selector prevents styles leaking into other routes after navigation. */
+#portfolio-content[data-hero-lab]:has([data-direction='typographic']) {
+  --d1-display: 'Lab Antonio', 'Arial Narrow', sans-serif;
+  --d1-body: var(--hero-font);
+  --d1-page-title: clamp(48px, 5.8vw, 100px);
+  --d1-section: clamp(38px, 4.1vw, 72px);
+  --d1-subsection: clamp(28px, 2.8vw, 44px);
+  --d1-body-size: clamp(17px, 1.25vw, 21px);
+  --d1-lead: clamp(19px, 1.55vw, 25px);
+  --d1-meta: 14px;
+  --d1-action: 20px;
+}
+
+/* Display type carries the hierarchy from the hero through selected work. */
+#portfolio-content[data-hero-lab]:has([data-direction='typographic']) :is(#work-title, .gallery-heading h3, .project-title, .f24-editorial h3, [data-contact-head] h2) {
+  font-family: var(--d1-display);
+  font-weight: 700;
+  font-style: normal;
+  line-height: 1.02;
+  letter-spacing: -.005em;
+  text-transform: uppercase;
+}
+#portfolio-content[data-hero-lab]:has([data-direction='typographic']) :is(#work-title, [data-contact-head] h2) { font-size: var(--d1-section); }
+#portfolio-content[data-hero-lab]:has([data-direction='typographic']) .gallery-heading h3 { font-size: var(--d1-subsection); }
+#portfolio-content[data-hero-lab]:has([data-direction='typographic']) .project-title { font-size: clamp(36px, 3.8vw, 64px); }
+#portfolio-content[data-hero-lab]:has([data-direction='typographic']) .feature-headline { font: 600 var(--d1-lead)/1.4 var(--d1-body); letter-spacing: 0; }
+#portfolio-content[data-hero-lab]:has([data-direction='typographic']) :is(.feature-body, .project-line, .selected-heading > p) { font: 400 var(--d1-body-size)/1.6 var(--d1-body); }
+#portfolio-content[data-hero-lab]:has([data-direction='typographic']) :is(.project-actions a, .case-action) { font-family: var(--d1-display); font-size: var(--d1-action); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+#portfolio-content[data-hero-lab]:has([data-direction='typographic']) :is(.feature-label, .project-number, .gallery-count, .project-stack, .project-tags li) { font-family: var(--d1-body); font-size: var(--d1-meta); letter-spacing: .03em; }
+
+/* Reading text and metadata share Figtree; monospace is reserved for real code. */
+#portfolio-content[data-hero-lab]:has([data-direction='typographic']) :is(.c-date, .c-project-stack, .c-highlights dt, .short-kicker, .short-step, .story-eyebrow, .question-number, .scene-caption, .section-num, .sheet-num, .sheet-label) {
+  font-family: var(--d1-body);
+  font-size: var(--d1-meta);
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: .04em;
+}
+#portfolio-content[data-hero-lab]:has([data-direction='typographic']) .story-index a > span { font-family: var(--d1-body); }
+#portfolio-content[data-hero-lab]:has([data-direction='typographic']) :is(.story-answer, .short-introduction, .c-bullets li, .c-project-description) { font-family: var(--d1-body); font-size: var(--d1-body-size); line-height: 1.6; }
+#portfolio-content[data-hero-lab]:has([data-direction='typographic']) :is(.story-lead, .c-recommendation blockquote) { font: 500 var(--d1-lead)/1.5 var(--d1-body); }
+#portfolio-content[data-hero-lab]:has([data-direction='typographic']) [data-line-m] { --ui: var(--d1-body); --read: var(--d1-body); }
+
+@media (max-width: 767px) {
+  #portfolio-content[data-hero-lab]:has([data-direction='typographic']) { --d1-meta: 13px; --d1-action: 19px; }
+}
+
+/* Direction 03 scroll adaptation. All layout changes are opt-in on this Home;
+   the shared production WorkSection retains its original presentation. */
+#portfolio-content [data-direction='typographic'] [data-current-reading] { min-width: 0; }
+#portfolio-content[data-hero-lab] .current-work {
+  margin-top: 0;
+  padding-block: clamp(56px, 7vw, 112px) clamp(64px, 8vw, 128px);
+  overflow: clip;
+  scroll-margin-top: 100px;
+}
+#portfolio-content[data-hero-lab] .current-work .selected-heading {
+  align-items: end;
+  margin-bottom: clamp(44px, 6vw, 104px);
+  padding-bottom: clamp(28px, 4vw, 64px);
+  border-bottom: 1px solid color-mix(in srgb, var(--lime) 28%, transparent);
+}
+#portfolio-content[data-hero-lab] .current-work #work-title {
+  font-size: clamp(44px, 6vw, 88px);
+  line-height: 1.04;
+  color: var(--lime);
+  letter-spacing: -.025em;
+}
+#portfolio-content[data-hero-lab] .current-work [data-current-word] {
+  display: inline-block;
+  width: max-content;
+  max-width: 100%;
+  padding-block: .04em;
+}
+#portfolio-content[data-hero-lab] .current-work [data-current-word]:last-child { margin-left: .18em; }
+#portfolio-content[data-hero-lab] .current-work .selected-heading > p { padding-bottom: .5em; max-width: 25ch; }
+#portfolio-content[data-hero-lab] .current-work .f24-photo-link { padding: 18px 12px 0; }
+#portfolio-content[data-hero-lab] .current-work .f24-working { padding-bottom: 48px; }
+#portfolio-content[data-hero-lab] .current-work .f24-moment img { border-radius: 24px; }
+#portfolio-content[data-hero-lab] .current-work .f24-editorial h3 { font-size: clamp(70px, 8vw, 144px); color: var(--lime); }
+#portfolio-content[data-hero-lab] .current-work .independent-projects { padding-top: clamp(64px, 9vw, 144px); }
+#portfolio-content[data-hero-lab] .current-work .gallery-heading { margin-bottom: 0; padding-bottom: 28px; }
+#portfolio-content[data-hero-lab] .current-work .project-rows { gap: 0; }
+#portfolio-content[data-hero-lab] .current-work .project-row {
+  padding-block: clamp(40px, 6vw, 96px);
+  border-top: 1px solid color-mix(in srgb, var(--lime) 28%, transparent);
+  column-gap: clamp(32px, 5vw, 80px);
+}
+#portfolio-content[data-hero-lab] .current-work .project-title {
+  font-size: clamp(54px, 6.6vw, 116px);
+  line-height: 1;
+  letter-spacing: -.02em;
+  margin-block: 18px 24px;
+}
+#portfolio-content[data-hero-lab] .current-work .project-title a { color: var(--lime); }
+#portfolio-content[data-hero-lab] .current-work .project-title svg { align-self: start; margin-top: .12em; width: .3em; height: .3em; flex-shrink: 0; }
+#portfolio-content[data-hero-lab] .current-work .project-line { max-width: 34ch; }
+#portfolio-content[data-hero-lab] .current-work [data-current-art] { transform-origin: center; border-radius: 24px; overflow: clip; }
+#portfolio-content[data-hero-lab] .current-work .preview-link { border-radius: 24px; }
+#portfolio-content[data-hero-lab] .current-work .preview-frame { border-radius: 0; }
+#portfolio-content[data-hero-lab] .current-work .project-tags li { background: transparent; border: 1px solid color-mix(in srgb, var(--lime) 28%, transparent); }
+#portfolio-content[data-hero-lab] .current-work .project-actions { margin-top: 24px; }
+@media (max-width: 979px) {
+  #portfolio-content[data-hero-lab] .current-work .project-row { gap: 28px; }
+  #portfolio-content[data-hero-lab] .current-work .project-title { font-size: clamp(52px, 10vw, 92px); margin-block: 12px 16px; }
+  #portfolio-content[data-hero-lab] .current-work .project-line { max-width: 55ch; }
+}
+@media (max-width: 600px) {
+  #portfolio-content[data-hero-lab] .current-work { padding-block: 44px 48px; scroll-margin-top: 84px; }
+  #portfolio-content[data-hero-lab] .current-work #work-title { font-size: clamp(40px, 10vw, 52px); }
+  #portfolio-content[data-hero-lab] .current-work .selected-heading { gap: 24px; margin-bottom: 32px; }
+  #portfolio-content[data-hero-lab] .current-work .selected-heading > p { font-size: 17px; }
+  #portfolio-content[data-hero-lab] .current-work .f24-photo-link { padding-inline: 8px; }
+  #portfolio-content[data-hero-lab] .current-work .f24-working { padding-bottom: 28px; }
+  #portfolio-content[data-hero-lab] .current-work .f24-moment img,
+  #portfolio-content[data-hero-lab] .current-work [data-current-art],
+  #portfolio-content[data-hero-lab] .current-work .preview-link { border-radius: 16px; }
+  #portfolio-content[data-hero-lab] .current-work .project-row { padding-block: 32px 40px; }
+}
+
+/* Complete projects exchange as chapters, not individually animated fragments.
+   The native-flow version is the default; JS enables a deck only when it fits. */
+#portfolio-content[data-hero-lab] .current-work .project-rows { display: block; isolation: isolate; }
+#portfolio-content[data-hero-lab] .current-work .project-shell {
+  --chapter-bg: var(--forest);
+  --chapter-ink: var(--lime);
+  --chapter-copy: var(--paper);
+  --chapter-muted: var(--sage);
+  display: flow-root;
+  position: relative;
+  z-index: var(--chapter-index);
+  margin-top: 32px;
+  perspective: 1800px;
+}
+#portfolio-content[data-hero-lab] .current-work [data-chapter-tone='lime'] {
+  --chapter-bg: var(--lime);
+  --chapter-ink: var(--ink);
+  --chapter-copy: var(--forest);
+  --chapter-muted: var(--forest);
+}
+#portfolio-content[data-hero-lab] .current-work .project-row {
+  position: relative;
+  isolation: isolate;
+  box-sizing: border-box;
+  padding: clamp(28px, 3vw, 48px);
+  border: 1px solid color-mix(in srgb, var(--chapter-ink) 24%, transparent);
+  border-radius: 32px;
+  background: var(--chapter-bg);
+  color: var(--chapter-copy);
+  transform-origin: 50% 0%;
+}
+#portfolio-content[data-hero-lab] .current-work .chapter-shade {
+  display: block;
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  background: var(--ink);
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+}
+#portfolio-content[data-hero-lab] .current-work .project-title a,
+#portfolio-content[data-hero-lab] .current-work .project-actions a { color: var(--chapter-ink); }
+#portfolio-content[data-hero-lab] .current-work .project-line { color: var(--chapter-copy); }
+#portfolio-content[data-hero-lab] .current-work .project-number,
+#portfolio-content[data-hero-lab] .current-work .project-stack { color: var(--chapter-muted); }
+#portfolio-content[data-hero-lab] .current-work .project-tags li {
+  color: var(--chapter-copy);
+  border-color: color-mix(in srgb, var(--chapter-ink) 24%, transparent);
+}
+#portfolio-content[data-hero-lab] .current-work [data-chapter-tone='lime'] a:focus-visible { outline-color: var(--plum); }
+#portfolio-content[data-hero-lab] .current-work .project-shell:first-child { margin-top: 0; }
+#portfolio-content[data-hero-lab] .current-work[data-chapter-mode='stacked'] .project-shell {
+  min-height: calc(var(--chapter-height) + var(--chapter-travel));
+  margin-top: calc(-1 * var(--chapter-overlap, 0px));
+}
+#portfolio-content[data-hero-lab] .current-work[data-chapter-mode='stacked'] .project-shell:last-child { min-height: var(--chapter-height); }
+#portfolio-content[data-hero-lab] .current-work[data-chapter-mode='stacked'] .project-row {
+  position: sticky;
+  top: var(--chapter-top);
+  min-height: var(--chapter-viewport);
+}
+@media (max-width: 1023px) {
+  #portfolio-content[data-hero-lab] .current-work .project-row { padding: 24px; border-radius: 24px; }
+  #portfolio-content[data-hero-lab] .current-work .project-shell { margin-top: 24px; }
+}
+@media print {
+  #portfolio-content[data-hero-lab] .current-work .project-shell { min-height: 0 !important; margin-top: 24px !important; }
+  #portfolio-content[data-hero-lab] .current-work .project-row { position: static !important; min-height: 0 !important; transform: none !important; }
+  #portfolio-content[data-hero-lab] .current-work .chapter-shade { display: none; }
+}
+
+/* Retained chapter context; only editorial heads move. Widgets and film pixels
+   remain in their own coordinate systems. Attributes are host-policy-owned. */
+#portfolio-content [data-reader-head] {
+  position: relative;
+  align-self: start;
+  padding-block: 18px;
+  background: var(--paper);
+}
+#portfolio-content [data-reader-head]::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  background: var(--plum);
+  transform: scaleX(var(--reader-progress, 1));
+  transform-origin: left center;
+  pointer-events: none;
+}
+#portfolio-content [data-reader-held] { position: sticky; top: var(--reader-top); z-index: 3; }
+@media (min-width: 1024px) {
+  #portfolio-content .story-question[data-reader-section] { min-height: calc(82svh / var(--lab-zoom, 1)); }
+}
+@media print {
+  #portfolio-content [data-reader-head] { position: static !important; transform: none !important; }
+  #portfolio-content [data-reader-section] { min-height: 0 !important; }
+}

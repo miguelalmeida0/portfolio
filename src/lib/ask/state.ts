@@ -1,4 +1,5 @@
 import { tick } from 'svelte';
+import { isAskShortcut } from './shortcut';
 import { writable } from 'svelte/store';
 import { areaPlan } from './plan';
 import { askView, initialView } from './view';
@@ -12,10 +13,6 @@ import { positionAskPortrait } from './portrait';
 import type { AreaId, AskView, KnowledgeAnswer } from './types';
 export const askController = writable<AskController | undefined>();
 
-// A short, readable transition for fast local answers; remote requests that
-// already take longer display immediately once their evidence is ready.
-export const MIN_ANSWER_PRESENTATION_MS = 1850;
-
 export function createAskController() {
   let view = initialView(), queued = false, near = false;
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -24,33 +21,12 @@ export function createAskController() {
   let restorePortrait = () => {};
   let beat: ReturnType<typeof heartbeat> | undefined;
   let request: AbortController | undefined;
-  let pendingResolve: (() => void) | undefined;
-  let pendingTimer: ReturnType<typeof setTimeout> | undefined;
-  function cancelPresentation() {
-    if (pendingTimer !== undefined) clearTimeout(pendingTimer);
-    pendingTimer = undefined;
-    const resolve = pendingResolve;
-    pendingResolve = undefined;
-    resolve?.();
-  }
-  function preparePresentation(start: number) {
-    const remaining = Math.max(0, MIN_ANSWER_PRESENTATION_MS - (performance.now() - start));
-    if (!remaining) return Promise.resolve();
-    return new Promise<void>(resolve => {
-      pendingResolve = resolve;
-      pendingTimer = setTimeout(() => {
-        pendingResolve = undefined;
-        pendingTimer = undefined;
-        resolve();
-      }, remaining);
-    });
-  }
   let generation = 0;
   let history: string[] = [];
   const set = (patch: Partial<AskView>) => { view = { ...view, ...patch }; askView.set(view); };
   const active = () => view.state !== 'idle' && view.state !== 'closing';
   function stopInteraction() { beat?.stop(); beat = undefined; stopProximity(); stopProximity = () => {}; document.removeEventListener('click', click, true); }
-  function cancelAnswer() { generation++; cancelPresentation(); request?.abort(); request = undefined; stopAnswer(); stopAnswer = () => {}; }
+  function cancelAnswer() { generation++;  request?.abort(); request = undefined; stopAnswer(); stopAnswer = () => {}; }
   async function open() {
     if (view.state === 'closing') { queued = true; return; }
     if (view.state !== 'idle') return;
@@ -128,18 +104,25 @@ export function createAskController() {
   async function ask(id: AreaId) {
     const plan = areaPlan(id); if (!plan || !active()) return;
     cancelAnswer(); clearQuotes(); beat?.silence(4500);
-    const startedAt = performance.now();
     const version = generation;
     set({ state: 'answering', question: plan.question, knowledge: null, fragments: [], complete: false, refusal: false, loading: true, error: undefined });
     try {
       const { prepareAskAnswer, assembleAskAnswer } = await import('$lib/miguel-llm/askConversation');
       const prepared = prepareAskAnswer(plan.question, history, id);
-      if (version === generation && active()) await preparePresentation(startedAt);
       if (version === generation && active()) {
         history = [prepared.question];
         run(plan.question, plan.steps.slice(0, 1).map(step => ({ ...step, lead: '' })), assembleAskAnswer(prepared), id);
       }
     } catch { if (version === generation && active()) set({ state: 'ready', loading: false, error: 'I couldn’t load that answer. Please try again.' }); }
+  }
+  // Contextual page controls open the same guide and answer without a second click.
+  async function explain(id: AreaId) {
+    if (!areaPlan(id)) return;
+    if (view.state === 'closing') {
+      choreography.clear(); queued = false; finishClose(false);
+    }
+    await open();
+    await ask(id);
   }
   async function free(question: string) {
     await answerQuestion(question);
@@ -147,17 +130,21 @@ export function createAskController() {
   async function answerQuestion(question: string, area?: AreaId) {
     question = question.trim(); if (!question || !active()) return;
     cancelAnswer(); clearQuotes(); beat?.silence(4500);
-    const startedAt = performance.now();
     const version = generation;
     request = new AbortController();
-    const recent = [...history];
+    // Page-relative questions name the current case; other follow-ups keep the
+    // conversation's subject. Supply only the authored topic, never route text
+    // as answer facts, and preserve the previous answer/history on navigation.
+    const project = location.pathname.match(/^\/work\/([^/]+)\/?$/)?.[1];
+    const pageContext = project && /\b(this project|this case(?: study)?|on this page|here)\b/i.test(question)
+      ? areaPlan(`project-${project}`) : undefined;
+    const recent = pageContext ? [...history, pageContext.question].slice(-6) : [...history];
     set({ state: 'answering', question, knowledge: null, fragments: [], complete: false, refusal: false, loading: true, error: undefined });
     try {
       const response = await fetch('/api/ask', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question, areas: sourceMap(), history: recent, area }), signal: AbortSignal.any([request.signal, AbortSignal.timeout(18_000)]) });
       if (!response.ok) throw new Error(response.status === 429 ? 'A few too many questions in a row. Give it a minute, then try again.' : response.status === 400 ? 'Please ask a short question about Miguel’s public work, experience or projects.' : 'The answer service is unavailable right now. Please try again.');
       const plan = await response.json();
       const { validateConversationAnswer, resolveAskQuestion } = await import('$lib/miguel-llm/askConversation');
-      if (version === generation && active()) await preparePresentation(startedAt);
       if (version === generation && active()) {
         const answer = validateConversationAnswer(plan.knowledge, question, recent, area);
         if (answer && !answer.conversational) history = [...history, resolveAskQuestion(question, recent)].slice(-6);
@@ -168,16 +155,20 @@ export function createAskController() {
     }
   }
   function click(event: MouseEvent) {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
     const target = event.target instanceof Element ? event.target.closest<HTMLElement>('[data-ask-id]') : null;
-    if (!target || !active()) return;
+    if (!target || !active() || !areaPlan(target.dataset.askId!)) return;
+    const control = (event.target as Element).closest('a, button, input, textarea, select, [role="tab"], [contenteditable="true"]');
+    if (control && control !== target && target.contains(control)) return;
     beat?.silence(4500); event.preventDefault(); event.stopImmediatePropagation(); ask(target.dataset.askId as AreaId);
   }
   function key(event: KeyboardEvent) {
     const el = event.target as HTMLElement;
     if (event.key === 'Escape' && active()) { event.preventDefault(); event.stopImmediatePropagation(); close(); return; }
-    if (event.key === '/' && !el.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) { event.preventDefault(); void open(); return; }
+    if (isAskShortcut(event)) { event.preventDefault(); void open(); return; }
     const area = el.closest<HTMLElement>('[data-ask-id]');
-    if (active() && area && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); event.stopImmediatePropagation(); beat?.silence(4500); ask(area.dataset.askId as AreaId); }
+    const control = el.closest('a, button, input, textarea, select, [role="tab"], [contenteditable="true"]');
+    if (active() && area && areaPlan(area.dataset.askId!) && (!control || control === area || !area.contains(control)) && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); event.stopImmediatePropagation(); beat?.silence(4500); ask(area.dataset.askId as AreaId); }
   }
   const motionChanged = () => { if (motion.matches) beat?.cancelSways(); };
   const openEvent = async (event: Event) => {
@@ -190,6 +181,6 @@ export function createAskController() {
   window.addEventListener('ask:open', openEvent);
   motion.addEventListener('change', motionChanged);
   function dismiss() { queued = false; choreography.clear(); cancelAnswer(); stopInteraction(); finishClose(false); }
-  return { open, close, toggle, ask, free, dismiss, destroy() { dismiss(); history = []; askView.set(initialView()); document.removeEventListener('keydown', key, true); window.removeEventListener('ask:open', openEvent); motion.removeEventListener('change', motionChanged); } };
+  return { open, close, toggle, ask, explain, free, dismiss, destroy() { dismiss(); history = []; askView.set(initialView()); document.removeEventListener('keydown', key, true); window.removeEventListener('ask:open', openEvent); motion.removeEventListener('change', motionChanged); } };
 }
 export type AskController = ReturnType<typeof createAskController>;

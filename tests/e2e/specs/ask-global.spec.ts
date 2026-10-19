@@ -42,7 +42,7 @@ test('CV facts are available from home; sources navigate and conversation surviv
   await page.locator('.ask-sources a').first().click();
   await expect(page).toHaveURL(/\/cv#education/);
   await expect(page.locator('[data-ask-panel]')).toHaveCount(0);
-  await page.keyboard.press('/');
+  await page.keyboard.press('Control+/');
   await expect(page.locator('[data-ask-knowledge]')).toHaveText(answer);
   await page.getByRole('button', { name: 'Move guide to the left' }).click();
   expect((await page.locator('[data-ask-panel]').boundingBox())!.x).toBe(24);

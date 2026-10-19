@@ -125,11 +125,11 @@ for (const [name, options] of [ ['deep link', { location: { hash: '#work' } }], 
 }
 
 for (const type of ['navigate', 'reload']) {
-  test(`${type} starts the Claude intro only when the tab has not seen it`, () => {
+  test(`${type} renders immediately without creating an intro session`, () => {
     const { root, history, session } = boot({ type });
-    assert.equal(root.dataset.presentation, 'pending');
-    assert.equal(history.scrollRestoration, 'manual');
-    assert.equal(session.get('seen-intro'), 'true');
+    assert.equal(root.dataset.presentation, 'complete');
+    assert.equal(history.scrollRestoration, 'auto');
+    assert.equal(session.get('seen-intro'), undefined);
   });
   test(`${type} never overrides the session marker or installs intro input handlers`, () => {
     const { root, history, timers, window } = boot({ type, seen: true });
@@ -140,16 +140,16 @@ for (const type of ['navigate', 'reload']) {
   });
 }
 
-// A deliberate swipe must survive the interval before Svelte hydrates.
-test('prehydration touch contact leaves the intro pending until deliberate movement', () => {
+// Entry must not intercept native input before Svelte hydrates.
+test('prehydration touch remains available immediately', () => {
   const { root, window } = boot();
   const target = eventTarget();
   window.emit('pointerdown', { pointerType: 'touch' });
   window.emit('touchstart', { target, touches: [{ clientY: 100 }] });
-  assert.equal(root.dataset.presentation, 'pending');
+  assert.equal(root.dataset.presentation, 'complete');
   window.emit('touchmove', { target, touches: [{ clientY: 97 }] });
-  assert.equal(root.dataset.presentation, 'pending');
+  assert.equal(root.dataset.presentation, 'complete');
   const move = window.emit('touchmove', { target, touches: [{ clientY: 70 }] });
-  assert.equal(move.defaultPrevented, true);
+  assert.equal(move.defaultPrevented, false);
   assert.equal(root.dataset.presentation, 'complete');
 });

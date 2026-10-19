@@ -4,7 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 test.beforeEach(async ({ page }) => {
   await page.goto('/work/flow');
   await expect(page.locator('main h1')).toHaveText('Flow');
-  await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+  await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
   await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
 });
 

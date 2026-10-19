@@ -1,0 +1,92 @@
+/* Editorial chrome only. Product screenshots, models and controls keep their UI. */
+#portfolio-content[data-hero-lab] [data-typographic-case] {
+  --case-nav-top: 88px;
+  --case-nav-h: 64px;
+  --type-case-display: var(--d1-page-title);
+  --type-case-section: clamp(32px, 3vw, 48px);
+  --type-case-subsection: clamp(24px, 2.2vw, 32px);
+  padding-top: calc(var(--case-nav-top) + var(--case-nav-h) + 24px);
+  font-family: var(--d1-body);
+}
+
+#portfolio-content [data-typographic-case] :is(.cs-f24, .cs-needle, .cs-sv, .cs-leu, .cs-flow) {
+  font-family: var(--d1-body);
+}
+#portfolio-content[data-hero-lab] [data-typographic-case] :is(main.wrap, .pnav > .wrap, .legal-bar.wrap) {
+  width: min(calc(100% - 2 * var(--page-x)), var(--content-max));
+  margin-inline: auto;
+}
+
+/* Existing case styles use important declarations; these few editorial roles
+   deliberately supersede those without changing type inside the live demos. */
+#portfolio-content [data-typographic-case] :is(.hero .case-pitch h1, .head h2, .next > a) {
+  font-family: var(--d1-display) !important;
+  font-weight: 700 !important;
+  font-style: normal;
+  letter-spacing: -.005em !important;
+  text-transform: uppercase;
+  line-height: 1.02 !important;
+}
+#portfolio-content [data-typographic-case] .hero .case-pitch h1 {
+  font-size: var(--d1-page-title) !important;
+  max-width: 19ch !important;
+}
+#portfolio-content [data-typographic-case] .head h2 { font-size: var(--type-case-section) !important; }
+#portfolio-content [data-typographic-case] main > .chapter { padding-top: clamp(48px, 5vw, 80px); }
+#portfolio-content [data-typographic-case] main > .chapter > .head { margin-bottom: 24px !important; }
+#portfolio-content [data-typographic-case] [data-reader-head='case'] { position: relative; padding-block: 0 16px; background: transparent; }
+#portfolio-content [data-typographic-case] .chapter > .bento > .tile { min-height: 0; padding: clamp(24px, 2.5vw, 32px); }
+#portfolio-content [data-typographic-case] .next > a { font-size: var(--d1-section); }
+#portfolio-content [data-typographic-case] :is(.chapter > .story > div > h3, .facts > div > h3, .chapter > .bento > .tile > h3) {
+  font: 700 var(--type-case-subsection)/1.1 var(--d1-display) !important;
+  letter-spacing: -.005em !important;
+  text-transform: uppercase;
+}
+#portfolio-content [data-typographic-case] .hero .case-pitch :is(.sub, .hero-stack) { font-family: var(--d1-body); }
+#portfolio-content [data-typographic-case] .hero .case-pitch .sub { font-size: var(--d1-lead); line-height: 1.5; }
+#portfolio-content [data-typographic-case] :is(.hero .kicker, .head > .eyebrow, .hero-stack dt, .next > span) {
+  font: 500 var(--d1-meta)/1.5 var(--d1-body);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+/* One attached navigation stack. Layout-height measurement also reserves flow. */
+#portfolio-content [data-typographic-case] .pnav {
+  position: fixed !important;
+  inset-inline: 0;
+  top: var(--case-nav-top) !important;
+  z-index: 40;
+  background: var(--lime);
+  border-top: 0;
+  border-bottom: 1px solid var(--rule-ink);
+}
+#portfolio-content [data-typographic-case] .pnav .wrap { min-height: 60px; height: auto; padding-block: 2px; flex-wrap: wrap; row-gap: 4px; }
+#portfolio-content [data-typographic-case] .pnav .pname {
+  font: 700 24px/1.1 var(--d1-display);
+  font-weight: 700 !important;
+  letter-spacing: .01em;
+  text-transform: uppercase;
+}
+#portfolio-content [data-typographic-case] .pnav :is(.back-home, ul a) { font-family: var(--d1-body); border-radius: 0; }
+#portfolio-content [data-typographic-case] .pnav [data-section-indicator] { border-radius: 0; }
+#portfolio-content [data-typographic-case] :is(.case-pitch .btn, .pnav .btn) {
+  border-radius: 0 !important;
+  font: 700 var(--d1-action)/1.1 var(--d1-display);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  min-height: 48px;
+}
+#portfolio-content [data-typographic-case] :is(.case-pitch .btn.primary, .pnav .btn.primary) { background: var(--forest) !important; color: var(--paper) !important; }
+#portfolio-content [data-typographic-case] .case-pitch .tlink { font: 700 var(--d1-action)/1.2 var(--d1-display); text-transform: uppercase; letter-spacing: .04em; }
+#portfolio-content [data-typographic-case] main :is(section[id], div[id]) { scroll-margin-top: calc(var(--case-nav-top) + var(--case-nav-h) + 16px); }
+
+@media (max-width: 1023px) {
+  #portfolio-content[data-hero-lab] [data-typographic-case] { --case-nav-top: 68px; --case-nav-h: 112px; }
+  #portfolio-content [data-typographic-case] .pnav .wrap { min-height: 60px; }
+  #portfolio-content [data-typographic-case] .pnav ul { display: none; }
+  #portfolio-content [data-typographic-case] .pnav .pname { font-size: 21px; }
+}
+@media (max-width: 600px) {
+  #portfolio-content [data-typographic-case] .pnav .pname { font-size: 18px; }
+  #portfolio-content [data-typographic-case] .pnav .btn { font-size: 16px; min-height: 44px; padding-inline: 12px; }
+}

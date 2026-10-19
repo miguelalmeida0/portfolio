@@ -45,7 +45,7 @@ for (const [path, heading] of routes) {
       const destination = await popup;
       destination.on('pageerror', error => errors.push(error.message));
       await expect(destination.locator('main h1')).toHaveText(heading);
-      await expect(destination.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+      await expect(destination.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
       await expect(page.locator('main h1')).toHaveText(routes[0][1]);
       await expect(page.locator('[data-pixel-intro]')).toBeHidden();
       await destination.goto(path === '/story' ? '/cv' : '/story');
@@ -53,7 +53,7 @@ for (const [path, heading] of routes) {
       await expect(destination.locator('main h1')).toHaveText(heading);
       await destination.goForward();
       await expect(destination).toHaveURL(path === '/story' ? /\/cv$/ : /\/story$/);
-      await expect(destination.locator('[data-route-veil]')).toBeHidden();
+      await expect(destination.locator('[data-route-shutter]')).toBeHidden();
       await destination.close();
     }
     expect(errors).toEqual([]);

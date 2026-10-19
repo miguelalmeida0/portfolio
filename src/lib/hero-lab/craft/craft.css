@@ -1,0 +1,30 @@
+/* Isolated Canon routes use unzoomed viewport geometry; existing routes retain their scale. */
+#portfolio-content:has([data-craft]) { zoom: 1; --lab-zoom: 1; }
+[data-craft] { --craft-paper:#e6edbc; --craft-ink:#17372d; --craft-deep:#173c30; --craft-rule:rgba(23,55,45,.35); --craft-display:'Lab Antonio','Arial Narrow',sans-serif; color:var(--craft-ink); background:var(--craft-paper); font-family:var(--hero-font); }
+[data-craft] a { color:inherit; }
+[data-craft] a:focus-visible,[data-craft] button:focus-visible { outline:3px solid var(--plum); outline-offset:5px; }
+[data-craft] [data-craft-opening] { position:relative; isolation:isolate; }
+[data-craft] [data-craft-opening] h1 { margin:0; font-weight:700; }
+[data-craft] .craft-action { display:inline-flex; min-height:48px; align-items:center; justify-content:space-between; gap:32px; border-bottom:1px solid currentColor; text-decoration:none; font-size:16px; font-weight:650; }
+[data-craft] .craft-action span { transition:transform .25s ease; }
+[data-craft] .craft-action:hover span { transform:translate(3px,-3px); }
+[data-craft] .craft-proof { font-size:16px; line-height:1.5; }
+[data-craft] .craft-proof p { margin:0; }
+[data-craft] .craft-proof p+p { margin-top:16px; }
+[data-craft] .craft-meta { font-size:14px; line-height:1.5; margin:0; }
+[data-craft] .craft-word { display:block; }
+[data-craft] .craft-clip { overflow:clip; display:block; padding-bottom:.05em; }
+[data-craft] .craft-linked { min-height:100svh; }
+[data-craft] .craft-linked .d1-page { background:var(--craft-paper); }
+[data-craft='counterform'] .craft-linked { margin-left:168px; --header-height:32px; }
+[data-craft='counterform'] .craft-linked .d1-page { padding-top:32px; }
+[data-craft='bearing'] .craft-linked { --header-height:84px; }
+[data-craft='throughline'] .craft-linked { padding-bottom:76px; --header-height:28px; }
+[data-craft='throughline'] .craft-linked .d1-page { padding-top:28px; }
+@media(max-width:800px) {
+  [data-craft='counterform'] .craft-linked { margin-left:0; --header-height:128px; }
+  [data-craft='counterform'] .craft-linked .d1-page { padding-top:128px; }
+  [data-craft='bearing'] .craft-linked { --header-height:112px; }
+  [data-craft='throughline'] .craft-linked { padding-bottom:90px; }
+}
+@media(prefers-reduced-motion:reduce) { [data-craft] *,[data-craft] *::before,[data-craft] *::after { scroll-behavior:auto!important; transition:none!important; } }

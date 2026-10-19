@@ -3,264 +3,115 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-
-const source = ts.transpileModule(fs.readFileSync('src/lib/motion/routeTransition.ts', 'utf8'), {
-  compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 }
-}).outputText;
-const deferred = () => { let resolve, reject; const promise = new Promise((a, b) => { resolve = a; reject = b; }); return { promise, resolve, reject }; };
-const flush = async () => { for (let i = 0; i < 12; i++) await Promise.resolve(); };
-
-function setup({ reduced = false, mobile = true, native = false } = {}) {
-  const animations = [], events = [], hooks = {}, frames = [];
-  const navigation = deferred();
-  const element = () => ({ hidden: true, style: {}, dataset: {}, animate(keyframes, options) {
-    const done = deferred(); const animation = { ...done, keyframes, options, finished: done.promise, cancel() {} };
-    animations.push(animation); return animation;
-  } });
-  const veil = element();
-  const menu = element();
-  const link = { href: 'https://portfolio.test/work/leu', download: '', target: '', dataset: {}, parentElement: menu };
-  const body = {};
-  const document = { body, activeElement: body, visibilityState: 'visible', documentElement: { dataset: {} },
-    querySelector: () => null, querySelectorAll: () => [], getElementById: id => id === 'work' ? { id } : null };
-  if (native) document.startViewTransition = callback => {
-    events.push('view-transition');
-    const completed = Promise.resolve().then(callback);
-    return {
-      ready: Promise.resolve(),
-      updateCallbackDone: completed,
-      finished: completed,
-      skipTransition() { events.push('transition-skipped'); }
-    };
-  };
-  const modules = {
-    '$app/navigation': {
-      beforeNavigate: fn => hooks.before = fn, onNavigate: fn => hooks.on = fn,
-      preloadData: async () => events.push('preload'),
-      pushState: url => events.push('push:' + url.hash),
-      goto: url => {
-        events.push('goto');
-        hooks.before({ type: 'goto', willUnload: false, cancel() { throw Error('own navigation cancelled'); } });
-        hooks.on({ type: 'goto', from: { url: new URL('https://portfolio.test/') }, to: { url }, complete: navigation.promise });
-        return navigation.promise;
-      }
-    },
-    svelte: { onMount: fn => hooks.mount = fn, onDestroy: fn => hooks.destroy = fn, tick: async () => { events.push('tick'); } },
-    'svelte/store': { writable: initial => { let state = initial; return { set(value) { state = value; }, subscribe(fn) { fn(state); return () => {}; }, get value() { return state; } }; } },
-    './policy': { motionSnapshot: () => ({ reduced }) },
-    './tokens': { easing: { settle: 'cubic-bezier(0.22,1,0.36,1)' } },
-    './smooth-scroll': { resetScrollMotion() {}, syncScrollPosition: () => events.push('scroll-synced'), scrollToElement: (target, options) => events.push('scroll:' + target.id + ':' + options.focus) }
-  };
-  const exports = {};
-  vm.runInNewContext(source, { exports, require: name => modules[name], document, URL,
-    location: { origin: 'https://portfolio.test', pathname: '/', search: '', hash: '' }, matchMedia: () => ({ matches: mobile }),
-    requestAnimationFrame: fn => frames.push(fn), window: { setTimeout, clearTimeout } });
-  const owner = exports.installRouteTransitions(() => veil);
-  const click = (fields = {}) => ({ currentTarget: link, button: 0, defaultPrevented: false,
-    preventDefault() { this.defaultPrevented = true; }, ...fields });
-  return { owner, hooks, animations, frames, veil, events, navigation, document, click,
-    close: () => { assert.equal(veil.style.opacity, '1'); events.push('close'); } };
+const compiled = ts.transpileModule(fs.readFileSync('src/lib/motion/routeTransition.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
+const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
+const flush=async()=>{for(let i=0;i<30;i++)await Promise.resolve();};
+function setup({reduced=false,mobile=false,native=false}={}){
+ let now=0,id=0; const timers=new Map(),events=[],animations=[],hooks={},listeners={};
+ const schedule=(fn,ms=0)=>{timers.set(++id,{fn,at:now+ms});return id;};
+ const advance=async(ms)=>{const end=now+ms;await flush();while(true){const next=[...timers].sort((a,b)=>a[1].at-b[1].at)[0];if(!next||next[1].at>end)break;now=next[1].at;timers.delete(next[0]);next[1].fn();await flush();}now=end;await flush();};
+ const element=()=>({hidden:true,style:{},dataset:{},textContent:'',setAttribute(){},removeAttribute(){},hasAttribute(){return false;},addEventListener(){},
+ focus(){doc.activeElement=this;},animate(frames,options){const d=deferred();const timer=schedule(d.resolve,options.duration+(options.delay||0));const a={frames,options,finished:d.promise,cancel(){timers.delete(timer);d.resolve();}};animations.push(a);return a;}});
+ const strips=Array.from({length:6},element),title=element(),shutter=element(),main=element(),work=element();
+ main.id='main';work.id='work';
+ shutter.querySelectorAll=()=>strips;shutter.querySelector=()=>title;shutter.showPopover=()=>events.push('popover');shutter.hidePopover=()=>{};
+ const doc={body:{},activeElement:null,visibilityState:'visible',documentElement:{dataset:{}},querySelectorAll:()=>[],querySelector:()=>null,getElementById:id=>id==='main'?main:id==='work'?work:null,
+ addEventListener:(type,fn)=>listeners[type]=fn,removeEventListener:()=>{}};doc.activeElement=doc.body;
+ const location={origin:'https://portfolio.test',pathname:'/',search:'',hash:'',href:'https://portfolio.test/'};
+ const navigation=deferred();
+ const at=path=>({url:new URL(path,location.origin)});
+ const nav=(path,type='link',complete=navigation.promise)=>({type,from:at(location.pathname),to:at(path),complete,willUnload:false,cancel(){events.push('cancel');}});
+ const modules={
+ '$app/navigation':{beforeNavigate:fn=>hooks.before=fn,onNavigate:fn=>hooks.on=fn,afterNavigate:fn=>hooks.after=fn,preloadData:async()=>events.push('preload'),pushState:url=>events.push('push:'+url.hash),
+ goto:async url=>{events.push('goto');const n=nav(url.href,'goto');hooks.before(n);await hooks.on(n);await navigation.promise;location.pathname=url.pathname;location.hash=url.hash;}},
+ svelte:{flushSync:fn=>fn(),onMount:fn=>hooks.mount=fn,onDestroy:fn=>hooks.destroy=fn,tick:async()=>{}},
+ 'svelte/store':{writable:value=>({set(v){value=v;},get value(){return value;}})},
+ './policy':{motionSnapshot:()=>({reduced}),motionState:{subscribe:fn=>{hooks.policy=fn;return ()=>{};}}},
+ './tokens':{easing:{settle:'ease',shutter:'ease'}},
+ './smooth-scroll':{resetScrollMotion:()=>events.push('reset-scroll'),syncScrollPosition:()=>events.push('sync-scroll'),scrollToElement:(target)=>events.push('scroll:'+target.id)},
+ '$lib/navigation/destination-label':{destinationLabel:url=>url.pathname==='/story'?'Story':url.pathname==='/cv'?'CV':undefined}
+ };
+ const exports={};const win={innerWidth:mobile?390:1440,setTimeout:schedule,clearTimeout:key=>timers.delete(key),dispatchEvent:e=>events.push(e.type),addEventListener(){},removeEventListener(){},scrollTo:()=>events.push('scroll-top')};
+ vm.runInNewContext(compiled,{exports,require:key=>modules[key],document:doc,window:win,location,URL,innerWidth:win.innerWidth,performance:{now:()=>now},CustomEvent:class{constructor(type){this.type=type;}},setTimeout:schedule,clearTimeout:key=>timers.delete(key),requestAnimationFrame:fn=>schedule(fn,16),matchMedia:()=>({matches:mobile})});
+ if(native)doc.startViewTransition=callback=>{events.push('native');const done=Promise.resolve().then(callback);return{ready:Promise.resolve(),finished:done,updateCallbackDone:done,skipTransition(){}};};
+ const owner=exports.installRouteTransitions(()=>shutter);hooks.mount?.();
+ const click=(path='/story',fields={})=>({button:0,detail:1,clientX:300,defaultPrevented:false,preventDefault(){this.defaultPrevented=true;},currentTarget:{href:new URL(path,location.origin).href,target:'',download:'',dataset:{},hasAttribute:()=>false,getBoundingClientRect:()=>({left:200,width:100})},...fields});
+ return {owner,hooks,nav,navigation,shutter,title,strips,animations,events,advance,doc,main,work,location,click,listeners};
 }
-
-test('menu stays mounted until opaque; reveal waits for navigation, tick and frame', async () => {
-  const s = setup();
-  const work = s.owner.navigateFromMenu(s.click(), s.close);
-  assert.equal(s.owner.mobileState.value, 'covering');
-  assert.equal(s.events.includes('close'), false);
-  assert.equal(s.events.includes('goto'), false);
-  s.animations.forEach(a => a.resolve());
-  await flush();
-  assert.equal(s.owner.mobileState.value, 'covered');
-  assert.deepEqual(s.events.filter(e => ['close', 'goto'].includes(e)), ['close', 'goto']);
-  assert.equal(s.veil.style.opacity, '1');
-  assert.equal(s.frames.length, 0);
-  s.navigation.resolve();
-  await flush();
-  assert.equal(s.owner.mobileState.value, 'covered');
-  assert.equal(s.frames.length, 1);
-  s.frames.shift()();
-  await flush();
-  assert.equal(s.owner.mobileState.value, 'revealing');
-  assert.equal(s.veil.hidden, false);
-  s.animations.at(-1).resolve();
-  await work;
-  assert.equal(s.owner.mobileState.value, 'idle');
-  assert.equal(s.veil.hidden, true);
+test('forward claim animates immediately, waits for readable label and never takes native snapshot',async()=>{
+ const s=setup({native:true});const n=s.nav('/story');s.hooks.before(n);
+ assert.equal(s.shutter.hidden,false);assert.equal(s.owner.routeLabel.value,'Story');
+ assert.equal(s.animations.length,7);assert.equal(s.animations[0].frames[0].transform,'scaleY(0)');
+ let ready=false;const hook=s.hooks.on(n);Promise.resolve(hook).then(()=>ready=true);
+ await s.advance(529);assert.equal(ready,false);await s.advance(1);assert.equal(ready,true);
+ assert.ok(s.events.includes('route:covered'));assert.ok(!s.events.includes('native'));
+ s.navigation.resolve();await s.advance(500);assert.equal(s.shutter.hidden,true);assert.equal(s.owner.mobileState.value,'idle');assert.equal(s.doc.activeElement,s.main);
+});
+test('cover uses top origin and reveal uses bottom origin with transform-only frames',async()=>{
+ const s=setup();const n=s.nav('/cv');s.hooks.before(n);void s.hooks.on(n);
+ assert.equal(s.strips[0].style.transformOrigin,'top');
+ await s.advance(530);s.navigation.resolve();await s.advance(16);
+ assert.equal(s.strips[0].style.transformOrigin,'bottom');
+ for(const a of s.animations)for(const f of a.frames)assert.deepEqual(Object.keys(f),['transform']);
+ await s.advance(500);
+});
+test('reduced motion never opens shutter and restores destination focus',async()=>{
+ const s=setup({reduced:true});const n=s.nav('/story');s.hooks.before(n);const result=await s.hooks.on(n);s.navigation.resolve();if(typeof result==='function')await result();await s.advance(20);
+ assert.equal(s.shutter.hidden,true);assert.equal(s.animations.length,0);assert.equal(s.doc.activeElement,s.main);
+});
+test('busy owner cancels second navigation and failed completion still uncovers',async()=>{
+ const s=setup();const n=s.nav('/story');s.hooks.before(n);void s.hooks.on(n);s.hooks.before(s.nav('/cv'));
+ assert.ok(s.events.includes('cancel'));await s.advance(530);s.navigation.reject(Error('aborted'));await s.advance(500);
+ assert.equal(s.shutter.hidden,true);assert.equal(s.owner.mobileState.value,'idle');
+});
+test('four-second failsafe releases abandoned cover and a late completion cannot cover again',async()=>{
+ const s=setup();const n=s.nav('/story');s.hooks.before(n);void s.hooks.on(n);await s.advance(4000);
+ assert.equal(s.shutter.hidden,true);assert.equal(s.owner.mobileState.value,'idle');
+ s.navigation.resolve();await s.advance(500);assert.equal(s.shutter.hidden,true);
+});
+test('an abort before onNavigate still releases promptly',async()=>{
+ const s=setup();const n=s.nav('/story');n.complete.catch(()=>{});s.hooks.before(n);
+ s.navigation.reject(Error('aborted before route load'));await s.advance(1000);
+ assert.equal(s.shutter.hidden,true);assert.equal(s.owner.mobileState.value,'idle');
+});
+test('a second link click is blocked even when Kit skips beforeNavigate during loading',async()=>{
+ const s=setup();s.hooks.before(s.nav('/story'));const event=s.click('/cv');
+ event.target={closest:()=>event.currentTarget};let stopped=false;event.stopImmediatePropagation=()=>stopped=true;
+ s.listeners.click(event);assert.equal(event.defaultPrevented,true);assert.equal(stopped,true);
+ await s.advance(4000);
+});
+test('menu closes under cover, allows only its goto and releases focus after render',async()=>{
+ const s=setup({mobile:true});const travel=s.owner.navigateFromMenu(s.click(),()=>{assert.equal(s.shutter.hidden,false);s.events.push('close');});
+ assert.equal(s.events.includes('close'),false);await s.advance(530);assert.ok(s.events.includes('close'));assert.ok(s.events.includes('goto'));
+ s.navigation.resolve();await s.advance(500);await travel;assert.equal(s.shutter.hidden,true);assert.equal(s.doc.activeElement,s.main);
+});
+test('modified, download, external and PDF links never claim a curtain',async()=>{
+ for(const fields of [{metaKey:true},{ctrlKey:true},{shiftKey:true},{altKey:true},{button:1},{defaultPrevented:true}]){
+ const s=setup();await s.owner.navigateFromMenu(s.click('/story',fields),()=>{});assert.equal(s.animations.length,0);}
+ for(const path of ['/cv/pdf','/out/needle','mailto:hi@example.com','https://other.test/']){
+ const s=setup();const e=s.click(path);await s.owner.navigateFromMenu(e,()=>{});assert.equal(e.defaultPrevented,false);assert.equal(s.shutter.hidden,true);}
+});
+test('same-page hash closes menu and scrolls without a shutter',async()=>{
+ const s=setup();await s.owner.navigateFromMenu(s.click('/#work'),()=>s.events.push('close'));
+ assert.ok(s.events.includes('scroll:work'));assert.equal(s.shutter.hidden,true);
+});
+test('mobile history uses an unnamed shutter; desktop history uses native snapshots',async()=>{
+ for(const mobile of [true,false]){
+ const s=setup({mobile,native:true});const n=s.nav('/story','popstate');s.hooks.before(n);const hook=s.hooks.on(n);await s.advance(530);await hook;
+ assert.equal(s.owner.routeLabel.value,'');assert.equal(s.events.includes('native'),!mobile);s.navigation.resolve();await s.advance(500);assert.equal(s.shutter.hidden,true);}
 });
 
-test('rapid taps cannot create a second goto; browser traversal is locked during reveal', async () => {
-  const s = setup();
-  const first = s.owner.navigateFromMenu(s.click(), s.close);
-  await s.owner.navigateFromMenu(s.click(), s.close);
-  s.animations.forEach(a => a.resolve()); await flush();
-  await s.owner.navigateFromMenu(s.click(), s.close);
-  assert.equal(s.events.filter(e => e === 'goto').length, 1);
-  let cancelled = false;
-  s.hooks.before({ type: 'popstate', willUnload: false, cancel() { cancelled = true; } });
-  assert.equal(cancelled, true);
-  s.navigation.resolve(); await flush(); s.frames.shift()(); await flush();
-  s.animations.at(-1).resolve(); await first;
-});
-
-test('reduced motion has no animation but still awaits route readiness', async () => {
-  const s = setup({ reduced: true });
-  const work = s.owner.navigateFromMenu(s.click(), s.close);
-  await flush();
-  assert.equal(s.owner.mobileState.value, 'covered');
-  assert.equal(s.veil.hidden, false);
-  assert.equal(s.veil.style.opacity, '1');
-  assert.equal(s.animations.length, 0);
-  s.navigation.resolve(); await flush(); s.frames.shift()(); await work;
-  assert.equal(s.veil.hidden, true);
-});
-
-test('modified, external and download links remain native', async () => {
-  for (const fields of [{ metaKey: true }, { ctrlKey: true }, { shiftKey: true }, { altKey: true }, { button: 1 }, { defaultPrevented: true }]) {
-    const s = setup(); const event = s.click(fields);
-    await s.owner.navigateFromMenu(event, s.close);
-    assert.equal(s.owner.mobileState.value, 'idle');
-    assert.equal(s.events.length, 0);
-  }
-  for (const fields of [{ href: 'https://external.test/' }, { download: 'file' }]) {
-    const s = setup(); const event = s.click(); Object.assign(event.currentTarget, fields);
-    await s.owner.navigateFromMenu(event, s.close);
-    assert.equal(event.defaultPrevented, false);
-  }
-});
-
-test('new-tab links close the menu without covering or intercepting navigation', async () => {
-  const s = setup();
-  const event = s.click();
-  event.currentTarget.target = '_blank';
-  let closeCalls = 0;
-  await s.owner.navigateFromMenu(event, () => {
-    closeCalls++;
-    assert.equal(s.veil.hidden, true);
-    assert.equal(s.owner.mobileState.value, 'idle');
-  });
-  assert.equal(closeCalls, 1);
-  assert.equal(event.defaultPrevented, false);
-  assert.equal(s.veil.hidden, true);
-  assert.equal(s.owner.mobileState.value, 'idle');
-  assert.equal(s.animations.length, 0);
-  assert.deepEqual(s.events, []);
-
-  const handled = s.click({ defaultPrevented: true });
-  handled.currentTarget.target = '_blank';
-  await s.owner.navigateFromMenu(handled, () => assert.fail('An already handled click must not close the menu'));
-});
-
-test('rejected navigation releases the veil and announces recovery', async () => {
-  const s = setup({ reduced: true });
-  const work = s.owner.navigateFromMenu(s.click(), s.close);
-  await flush(); s.navigation.reject(Error('cancelled')); await flush();
-  assert.equal(s.veil.hidden, false);
-  s.frames.shift()(); await work;
-  assert.equal(s.owner.mobileState.value, 'idle');
-  assert.match(s.owner.navigationError.value, /try again/);
-});
-
-test('mobile history cover releases the Kit hook before awaiting navigation.complete', async () => {
-  const s = setup({ reduced: true });
-  await s.hooks.on({ type: 'popstate', from: { url: new URL('https://portfolio.test/work/leu') },
-    to: { url: new URL('https://portfolio.test/') }, complete: s.navigation.promise });
-  assert.equal(s.owner.mobileState.value, 'covered');
-  s.navigation.resolve(); await flush();
-  assert.equal(s.owner.mobileState.value, 'covered');
-  s.frames.shift()(); await flush();
-  assert.equal(s.owner.mobileState.value, 'idle');
-});
-
-test('same-page work menu link closes, updates history and scrolls with focus without a route veil', async () => {
-  const s = setup();
-  const event = s.click();
-  event.currentTarget.href = 'https://portfolio.test/#work';
-  void s.owner.navigateFromMenu(event, () => s.events.push('closed-anchor'));
-  await flush();
-  assert.equal(event.defaultPrevented, true);
-  assert.deepEqual(s.events, ['closed-anchor', 'tick', 'push:#work', 'scroll:work:true']);
-  assert.equal(s.animations.length, 0);
-  assert.equal(s.owner.mobileState.value, 'idle');
-});
-
-
-
-test('Story entry keeps the old and new page in a native transition', async () => {
-  const s = setup({ mobile: false, native: true });
-  const at = path => ({url: new URL('https://portfolio.test' + path)});
-  const journey = s.hooks.on({
-    type: 'link', from: at('/'), to: at('/story'), complete: s.navigation.promise
-  });
-  assert.equal(s.owner.mobileState.value, 'idle');
-  assert.equal(s.document.documentElement.dataset.storyRouteTransition, 'active');
-  assert.equal(s.document.documentElement.dataset.routeDestination, '/story');
-  assert.equal(s.animations.length, 0);
-  await journey;
-  assert.deepEqual(s.events.filter(x => x === 'view-transition'), ['view-transition']);
-  s.navigation.resolve();
-  await flush();
-  assert.equal(s.document.documentElement.dataset.storyRouteTransition, undefined);
-});
-
-test('Story return to Home uses the same route composition', async () => {
-  const s = setup({ mobile: false, native: true });
-  const at = path => ({url: new URL('https://portfolio.test' + path)});
-  const journey = s.hooks.on({
-    type: 'link', from: at('/story'), to: at('/#top'), complete: s.navigation.promise
-  });
-  assert.equal(s.document.documentElement.dataset.storyRouteTransition, 'active');
-  assert.equal(s.document.documentElement.dataset.routeDestination, '/');
-  await journey;
-  s.navigation.resolve();
-  await flush();
-  assert.equal(s.document.documentElement.dataset.storyRouteTransition, undefined);
-});
-
-test('Story history navigation is not intercepted by a mobile blank veil', async () => {
-  const s = setup({ mobile: true, native: true });
-  const at = path => ({url: new URL('https://portfolio.test' + path)});
-  const journey = s.hooks.on({
-    type: 'popstate', from: at('/story'), to: at('/'), complete: s.navigation.promise
-  });
-  assert.equal(s.owner.mobileState.value, 'idle');
-  assert.equal(s.document.documentElement.dataset.storyRouteTransition, 'active');
-  await journey;
-  s.navigation.resolve();
-  await flush();
-});
-
-test('Reduced motion does not start a decorative Story transition', async () => {
-  const s = setup({ mobile: false, native: true, reduced: true });
-  const at = path => ({url: new URL('https://portfolio.test' + path)});
-  await s.hooks.on({type: 'link', from: at('/'), to: at('/story'), complete: Promise.resolve()});
-  assert.equal(s.owner.mobileState.value, 'idle');
-  assert.equal(s.document.documentElement.dataset.storyRouteTransition, undefined);
-  assert.equal(s.events.filter(x => x === 'view-transition').length, 0);
-});
-
-test('tablet fullscreen navigation waits for modal dismissal before committing the route', async () => {
-  const s = setup({ mobile: false, reduced: true });
-  const dismissal = deferred();
-  const event = s.click();
-  const work = s.owner.navigateFromMenu(event, () => dismissal.promise);
-  await flush();
-  assert.equal(event.defaultPrevented, true);
-  assert.equal(s.owner.mobileState.value, 'covered');
-  assert.equal(s.events.includes('goto'), false);
-  dismissal.resolve(); await flush();
-  assert.equal(s.events.includes('goto'), true);
-  s.navigation.resolve(); await flush(); s.frames.shift()(); await work;
-  assert.equal(s.owner.mobileState.value, 'idle');
-});
-
-test('anchor scrolling waits until the modal releases background scroll and focus', async () => {
-  const s = setup();
-  const dismissal = deferred();
-  const event = s.click();
-  event.currentTarget.href = 'https://portfolio.test/#work';
-  const work = s.owner.navigateFromMenu(event, () => dismissal.promise);
-  await flush();
-  assert.equal(s.events.some(e => e.startsWith('scroll:')), false);
-  dismissal.resolve(); await work;
-  assert.deepEqual(s.events, ['tick', 'push:#work', 'scroll:work:true']);
+test('history waits for an interrupted forward commit even when beforeNavigate is skipped',async()=>{
+ const s=setup();const forward=s.nav('/cv');s.hooks.before(forward);void s.hooks.on(forward);
+ const back=deferred();let ready=false;
+ const history=s.hooks.on(s.nav('/','popstate',back.promise));
+ Promise.resolve(history).then(()=>ready=true);
+ await s.advance(100);
+ assert.equal(s.shutter.hidden,true);assert.equal(s.owner.mobileState.value,'idle');
+ assert.equal(ready,false);
+ s.navigation.reject(Error('navigation aborted'));await s.advance(30);
+ const after=await history;assert.equal(ready,true);
+ if(typeof after==='function')after();
+ assert.ok(s.events.includes('sync-scroll'));assert.ok(!s.events.includes('cancel'));
+ back.resolve();await s.advance(500);assert.equal(s.shutter.hidden,true);
 });

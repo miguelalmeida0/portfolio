@@ -1,4 +1,5 @@
 <script>
+import NextProject from '../shared/NextProject.svelte';
   import CircleFill from '$lib/components/experience/CircleFill.svelte';
 import CaseOverview from '../shared/CaseOverview.svelte';
 import '../shared/case-artifact.css';
@@ -28,4 +29,4 @@ import NoticeFull from './NoticeFull.svelte';
       <p>Connectivity Hub kept shipping while its frontend grew from Svelte into React. Two lessons from that move, in plain terms.</p>
     </div>
 
-<LessonCompare/><LessonFoundation/></section><Decisions/><TestingWidget/><TeamSection/><F24Specs/><NoticeFull/><nav class="next" aria-label="Next project"><span class="lbl">Next project</span><a href="/work/second-voice">Second Voice</a></nav></main></div>
+<LessonCompare/><LessonFoundation/></section><Decisions/><TestingWidget/><TeamSection/><F24Specs/><NoticeFull/><NextProject slug="f24"/></main></div>

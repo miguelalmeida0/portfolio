@@ -11,7 +11,7 @@ async function observe(page: Page) {
     const start = performance.now();
     (window as any).__routeSamples = samples;
     const sample = () => {
-      const veil = document.querySelector<HTMLElement>('[data-route-veil]')!;
+      const veil = document.querySelector<HTMLElement>('[data-route-shutter]')!;
       const phase = veil.dataset.phase;
       started ||= phase !== 'idle';
       const r = veil.getBoundingClientRect();
@@ -24,9 +24,9 @@ async function observe(page: Page) {
         menuOpacity: menu ? getComputedStyle(menu).opacity : null,
         menuBackground: menu ? getComputedStyle(menu).backgroundColor : null,
         backdrop: menu ? getComputedStyle(menu, '::backdrop').backgroundColor : null,
-        opacity: Number(getComputedStyle(veil).opacity), hidden: veil.hidden,
+        opacity: Number([...veil.querySelectorAll<HTMLElement>('.route-strip')].filter(n => getComputedStyle(n).display !== 'none').every(n => new DOMMatrixReadOnly(getComputedStyle(n).transform).m22 >= .999)), hidden: veil.hidden,
         fullViewport: r.x === 0 && r.y === 0 && r.width === innerWidth && r.height === innerHeight,
-        topmost: points.every(([x, y]) => document.elementFromPoint(x, y) === veil),
+        topmost: points.every(([x, y]) => veil.contains(document.elementFromPoint(x, y))),
         scrollY,
         nativeTransition: document.documentElement.dataset.routeTransition === 'active'
       });
@@ -38,8 +38,8 @@ async function observe(page: Page) {
 
 async function settled(page: Page, path: string) {
   await expect(page).toHaveURL(new RegExp(path.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$'));
-  await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
-  await expect(page.locator('[data-route-veil]')).toBeHidden();
+  await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
+  await expect(page.locator('[data-route-shutter]')).toBeHidden();
   await expect(page.locator('main h1')).toBeVisible();
 }
 
@@ -48,11 +48,10 @@ async function select(page: Page, label: string) {
   await page.getByRole('navigation', { name: 'Fullscreen navigation' }).getByRole('link', { name: label, exact: true }).click();
 }
 
-test.describe('mobile route veil', () => {
+test.describe('mobile route shutter', () => {
   test.skip(({ isMobile }) => !isMobile, 'Burger flow runs on mobile projects');
   for (const viewport of [{ width: 390, height: 844 }, { width: 393, height: 852 }, { width: 430, height: 932 }]) {
-    // Story uses the same opacity-only full-page veil with a longer settle.
-    // CV retains the original, faster timings asserted by this matrix.
+    // Both destinations use the named downward strip shutter.
     for (const [label, slug] of [['CV', 'cv']]) {
       test(`${viewport.width}: Home → ${label} stays covered through commit`, async ({ page }, testInfo) => {
         await page.setViewportSize(viewport);
@@ -82,7 +81,7 @@ test.describe('mobile route veil', () => {
             expect(s.scrollY).toBe(0);
           }
         }
-        expect(active.at(-1).t - active[0].t).toBeLessThanOrEqual(650);
+        expect(active.at(-1).t - active[0].t).toBeLessThanOrEqual(1200);
         await expect(page.locator('#main')).toBeFocused();
       });
     }
@@ -146,7 +145,7 @@ test.describe('mobile route veil', () => {
     await story.click({ modifiers: ['ControlOrMeta'] });
     const newTab = await popup;
     await newTab.waitForURL('**/story');
-    await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+    await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
     await expect(story).toBeVisible();
     await newTab.close();
     await story.press('Enter');
@@ -154,7 +153,7 @@ test.describe('mobile route veil', () => {
     await expect(page.locator('#main')).toBeFocused();
   });
 
-  test('reduced motion still conceals slow navigation', async ({ page }) => {
+  test('reduced motion leaves the shutter hidden during slow navigation', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await openPortfolioHome(page);
     // Hold the real request to prove readiness is not a 200ms timeout.
@@ -168,10 +167,10 @@ test.describe('mobile route veil', () => {
     });
     await select(page, 'Story');
     try {
-      await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'covered');
+      await expect(page.locator('[data-route-shutter]')).toBeHidden();
       await page.waitForTimeout(350);
-      await expect(page.locator('[data-route-veil]')).toHaveCSS('opacity', '1');
-      expect(await page.locator('[data-route-veil]').evaluate(el => el.getAnimations().length)).toBe(0);
+      await expect(page.locator('[data-route-shutter]')).toBeHidden();
+      expect(await page.locator('[data-route-shutter]').evaluate(el => el.getAnimations().length)).toBe(0);
     } finally { release(); }
     await settled(page, '/story');
   });
@@ -184,5 +183,5 @@ test('desktop navigation retains existing behavior', async ({ page, isMobile }) 
   await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Story', exact: true }).click();
   await expect(page).toHaveURL(/\/story$/);
   await expect(page.locator('main h1')).toBeVisible();
-  await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+  await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
 });

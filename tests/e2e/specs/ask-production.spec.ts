@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
   await page.evaluate(() => document.fonts.ready);
   await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
 });
-async function open(page: Page) { await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled(); await page.keyboard.press('/'); await expect(page.locator('html')).toHaveClass(/ask-on/); }
+async function open(page: Page) { await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled(); await page.keyboard.press('Control+/'); await expect(page.locator('html')).toHaveClass(/ask-on/); }
 async function close(page: Page) { await page.keyboard.press('Escape'); await expect(page.locator('[data-ask-panel]')).toHaveCount(0); }
 
 for (const [width, height] of [[430,932], [393,852], [390,844], [375,812]]) {
@@ -52,7 +52,7 @@ for (const [width, height] of [[430,932], [393,852], [390,844], [375,812]]) {
   });
 }
 
-test('every source is keyboard reachable; slash respects inputs; announcements only complete once', async ({ page }) => {
+test('every source is keyboard reachable; shortcut respects inputs; ready evidence is announced once', async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 963 });
   await open(page);
   for (const area of await page.locator('[data-ask-id]').all()) {
@@ -60,8 +60,10 @@ test('every source is keyboard reachable; slash respects inputs; announcements o
   }
   const cv = page.locator('[data-ask-id="cv"]'); await cv.focus(); await page.keyboard.press('Space');
   await expect(page.locator('.ask-heading')).toHaveText('Can I see his CV?');
-  await expect(page.locator('[data-ask-announcement]')).toHaveText('');
-  await expect(page.locator('[data-ask-announcement]')).toContainText('Based on my published work', { timeout: 6000 });
+  await expect(page.locator('[data-ask-announcement]')).toContainText('Based on my published work', { timeout: 1000 });
+  const announced = await page.locator('[data-ask-announcement]').textContent();
+  await page.waitForTimeout(1400);
+  await expect(page.locator('[data-ask-announcement]')).toHaveText(announced!);
   const input = page.getByRole('textbox', { name: 'Type your own question' }); await input.fill('How / why'); await input.press('/'); await expect(input).toHaveValue('How / why/');
   await close(page); await expect(page.locator('[data-ask-trigger]:visible')).toBeFocused();
   await expect(cv).not.toHaveAttribute('role'); await expect(cv).toHaveAttribute('href', '/cv');
@@ -121,7 +123,7 @@ test('closing hides the answer before returning the photo and re-opening waits f
   const animation = await page.locator('.portrait').evaluate(el => ({ delay: getComputedStyle(el).transitionDelay, duration: getComputedStyle(el).transitionDuration }));
   expect(animation.delay).toBe('0.28s, 0.28s'); expect(animation.duration).toBe('1.15s, 1.15s');
   await expect(page.locator('.ask-tide')).toHaveClass(/is-out/);
-  await page.keyboard.press('/');
+  await page.keyboard.press('Control+/');
   await expect(page.locator('html')).toHaveClass(/ask-on/);
   await expect(page.locator('[data-ask-panel]')).toHaveCount(1);
   await expect(page.locator('.ask-heading')).toHaveText('Ask about anything on this page');

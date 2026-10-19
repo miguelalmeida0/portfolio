@@ -1,0 +1,2 @@
+import {defineConfig} from '@playwright/test';
+export default defineConfig({testDir:'./specs',testMatch:'typographic-intro.spec.ts',timeout:30000,expect:{timeout:8000},workers:1,retries:0,reporter:'list',outputDir:'/tmp/portfolio-intro-20261019/test-results',use:{baseURL:'http://localhost:4275',viewport:{width:1440,height:900},trace:'retain-on-failure'},projects:[{name:'chromium',use:{browserName:'chromium'}},{name:'webkit',use:{browserName:'webkit'}}]});

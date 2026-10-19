@@ -299,11 +299,7 @@ html:has(.cs-leu){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);b
 .cs-leu .next .lbl{color:var(--muted);font-size:14.5px}
 .cs-leu .next a{font-weight:800;font-size:clamp(34px,4vw,56px);letter-spacing:-.045em;text-decoration:none}
 .cs-leu .next a:hover{color:var(--indigo-ink)}
-@media (prefers-reduced-motion: reduce){
-  html:has(.cs-leu){scroll-behavior:auto}
-  .cs-leu *,.cs-leu *::before,.cs-leu *::after{transition-duration:0s!important;animation-duration:0s!important;transition-delay:0s!important}
-  .cs-leu .psg[aria-pressed="true"]{transform:none}
-}
+
 
 /* portfolio identity */
 .cs-leu .top{display:flex;align-items:baseline;gap:18px;padding-block:26px 14px}
@@ -422,7 +418,7 @@ html:has(.cs-leu){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);b
 .cs-leu .graph g.weak .nb{fill:var(--amber-tint)!important;stroke:var(--amber)!important;stroke-width:2!important;stroke-dasharray:5 3!important}
 .cs-leu .graph g.missed .nb{fill:var(--fail-tint)!important;stroke:var(--fail)!important;stroke-width:2!important}
 .cs-leu .graph g.node:focus-visible .nb{stroke:var(--plum)!important;stroke-width:2.6!important}
-.cs-leu .graph.focus .e:not(.hl),.cs-leu .graph.focus .lab:not(.hl),.cs-leu .graph.focus g.node:not(.hl){opacity:.18}
+.cs-leu .graph.focus .e:not(.hl){opacity:.18}
 .cs-leu .graph.focus .e.hl:not(.neg){stroke:var(--forest)!important}
 .cs-leu .dstages{position:relative;--prog:0}
 .cs-leu .dstages::before,.cs-leu .dstages::after{content:"";position:absolute;left:17px;top:30px;bottom:30px;width:2px;border-radius:2px}
@@ -472,6 +468,12 @@ html:has(.cs-leu){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);b
 /* closing */
 @media (prefers-reduced-motion: reduce){
   .cs-leu.cs-leu *,.cs-leu.cs-leu *::before,.cs-leu.cs-leu *::after{transition-duration:0s!important;animation-duration:0s!important;transition-delay:0s!important}
+@media (prefers-reduced-motion: reduce){
+  html:has(.cs-leu){scroll-behavior:auto}
+  .cs-leu *,.cs-leu *::before,.cs-leu *::after{transition-duration:0s!important;animation-duration:0s!important;transition-delay:0s!important}
+  .cs-leu .psg[aria-pressed="true"]{transform:none}
+}
+
 }
 
 /* portfolio identity */
@@ -489,3 +491,8 @@ html:has(.cs-leu){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);b
 }
 
 .cs-leu{--cs-alpha-06:.06;--cs-alpha-22:.22;--cs-alpha-55:.55;--cs-alpha-12:.12;--cs-alpha-25:.25;--cs-alpha-08:.08;--cs-alpha-82:.82;--cs-alpha-28:.28;--cs-alpha-14:.14;--cs-alpha-6:.6;--cs-alpha-35:.35;--cs-alpha-8:.8}
+
+@layer base {
+@media (prefers-reduced-motion: reduce) { .cs-leu.cs-leu.cs-leu *, .cs-leu.cs-leu.cs-leu *::before, .cs-leu.cs-leu.cs-leu *::after, .cs-leu.cs-leu #perf.on .val { transition: none !important; animation: none !important; } }
+html[data-motion='reduced'] .cs-leu.cs-leu.cs-leu *, html[data-motion='reduced'] .cs-leu.cs-leu.cs-leu *::before, html[data-motion='reduced'] .cs-leu.cs-leu.cs-leu *::after, html[data-motion='reduced'] .cs-leu.cs-leu #perf.on .val { transition: none !important; animation: none !important; }
+}

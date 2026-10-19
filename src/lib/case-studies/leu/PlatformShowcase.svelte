@@ -378,6 +378,7 @@
     .platform-gallery:not([data-view='desktop']):not([data-view='phone']):not([data-moment='journey']) figcaption p {
       display: -webkit-box;
       -webkit-line-clamp: 2;
+      line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }

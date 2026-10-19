@@ -2,8 +2,15 @@ import {test,expect,type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 const cards = ['needle','second-voice-ai','leu','flow'];
 const videos = ['needle','second-voice-ai','flow','leu'];
+test.beforeEach(async ({page}) => { await page.emulateMedia({reducedMotion:'no-preference'}); });
 async function home(page: Page) { await page.goto('/#work'); await expect(page.locator('#work h2')).toHaveText('Selected Work'); }
-async function gallery(page: Page) { await home(page); await page.locator('[data-selected-project="flow"]').scrollIntoViewIfNeeded(); }
+async function visibleVideo(page: Page, id: string) {
+ const video=page.locator(`[data-selected-project="${id}"] video`);
+ await video.scrollIntoViewIfNeeded();
+ await expect(video).toBeInViewport();
+ return video;
+}
+async function gallery(page: Page) { await home(page); await visibleVideo(page,'flow'); }
 test('permanent static F24 and four independent projects expose honest links', async ({page})=>{
  await home(page);const f=page.locator('[data-f24-feature]');await expect(f).toBeVisible();await expect(f).toHaveCount(1);
  await expect(f.locator('img')).toHaveCount(2);
@@ -40,30 +47,56 @@ for(const id of videos)test(`${id}: actual silent autoplay advances and crosses 
  await expect.poll(()=>v.evaluate((x:HTMLVideoElement)=>x.currentTime<1.5&&!x.paused),{timeout:5000}).toBe(true);
  await testInfo.attach('actual-media', {body:JSON.stringify(await v.evaluate((x:HTMLVideoElement)=>({source:x.currentSrc,width:x.videoWidth,height:x.videoHeight,ready:x.readyState,time:x.currentTime,muted:x.muted,loop:x.loop,paused:x.paused}))),contentType:'application/json'});expect(errors).toEqual([]);
 });
-test('all four films autoplay without a control and continue offscreen',async({page})=>{
+test('visible films autoplay and pause when they leave the viewport',async({page})=>{
  await home(page);
- await expect(page.locator('#work .preview-toggle')).toHaveCount(0);
+ await expect(page.getByRole('button',{name:'Pause project videos'})).toBeVisible();
  for(const id of videos) {
-  const video=page.locator(`[data-selected-project="${id}"] video`);
+  const video=await visibleVideo(page,id);
   await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>!v.paused&&v.readyState>=2&&v.videoWidth>0),{timeout:30000}).toBe(true);
+  await page.locator('#work h2').scrollIntoViewIfNeeded();
+  await expect(video).not.toBeInViewport();
+  await expect(video).toHaveJSProperty('paused',true);
  }
- const video=page.locator('[data-selected-project="needle"] video');
- await video.scrollIntoViewIfNeeded();
- const start=await video.evaluate((v:HTMLVideoElement)=>v.currentTime);
- await page.evaluate(()=>scrollTo(0,document.body.scrollHeight));
- await page.waitForTimeout(750);
- expect(await video.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeGreaterThan(start);
+ const video=await visibleVideo(page,'needle');
+ await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>!v.paused),{timeout:20000}).toBe(true);
 });
-test('muted project loops autoplay under reduced motion and can be paused by the visitor',async({page})=>{
- await page.emulateMedia({reducedMotion:'reduce'});await home(page);
+for(const preference of ['reduced motion','Save-Data'])test(`${preference} keeps posters until explicit Play, then only visible loops play`,async({page})=>{
+ if(preference==='reduced motion')await page.emulateMedia({reducedMotion:'reduce'});
+ else await page.addInitScript(()=>{
+  const connection=Object.assign(new EventTarget(),{saveData:true});
+  Object.defineProperty(navigator,'connection',{value:connection,configurable:true});
+ });
+ const requests:string[]=[];
+ page.on('request',request=>{if(/\.(mp4|webm)(\?|$)/.test(request.url()))requests.push(request.url());});
+ await home(page);
+ await expect(page.getByRole('button',{name:'Play project videos'})).toBeVisible();
  for(const id of videos) {
-  const video=page.locator(`[data-selected-project="${id}"] video`);
-  await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>!v.paused&&v.readyState>=2),{timeout:25000}).toBe(true);
+  const video=await visibleVideo(page,id);
+  await expect(video).toHaveJSProperty('paused',true);
+  await expect(video).toHaveJSProperty('currentSrc','');
+  await expect(video.locator('source[src]')).toHaveCount(0);
+  await expect(video.locator('..').locator('img')).toBeVisible();
  }
+ expect(requests).toEqual([]);
+ // Keyboard activation must work as well as pointer activation.
+ await page.getByRole('button',{name:'Play project videos'}).focus();
+ await page.keyboard.press('Enter');
+ await expect(page.getByRole('button',{name:'Pause project videos'})).toBeVisible();
+ for(const id of videos) {
+  const video=await visibleVideo(page,id);
+  await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>!v.paused&&v.readyState>=2),{timeout:25000}).toBe(true);
+  await page.locator('#work h2').scrollIntoViewIfNeeded();
+  await expect(video).not.toBeInViewport();
+  await expect(video).toHaveJSProperty('paused',true);
+ }
+ await visibleVideo(page,'needle');
  await page.getByRole('button',{name:'Pause project videos'}).click();
  for(const id of videos) await expect(page.locator(`[data-selected-project="${id}"] video`)).toHaveJSProperty('paused',true);
+ const paused=await visibleVideo(page,'flow');
+ await expect(paused).toHaveJSProperty('paused',true);
  await page.getByRole('button',{name:'Play project videos'}).click();
- for(const id of videos) await expect.poll(()=>page.locator(`[data-selected-project="${id}"] video`).evaluate((v:HTMLVideoElement)=>!v.paused),{timeout:25000}).toBe(true);
+ await visibleVideo(page,'flow');
+ await expect.poll(()=>paused.evaluate((v:HTMLVideoElement)=>!v.paused),{timeout:25000}).toBe(true);
 });
 test('blocked playback and failed media retain real posters and destinations',async({page})=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
@@ -74,8 +107,8 @@ test('missing media remains a usable poster card',async({page})=>{
  await page.route(/\.(mp4|webm)(\?|$)/,r=>r.fulfill({status:404,body:'missing'}));await gallery(page);
  const frame=page.locator('[data-selected-project="flow"] [data-preview]');await expect(frame).toHaveAttribute('data-preview-status','unavailable');await expect(frame.locator('img')).toBeVisible();
 });
-test('no JavaScript retains F24 privacy, all project posters and links',async({browser})=>{
- const context=await browser.newContext({javaScriptEnabled:false});const page=await context.newPage();await page.goto('http://127.0.0.1:4397/#work');
+test('no JavaScript retains F24 privacy, all project posters and links',async({browser,baseURL})=>{
+ const context=await browser.newContext({javaScriptEnabled:false,baseURL});const page=await context.newPage();await page.goto('/#work');
  await expect(page.locator('[data-f24-feature] a')).toHaveCount(2);await expect(page.locator('[data-selected-project]')).toHaveCount(4);await expect(page.locator('#work video[src]')).toHaveCount(0);await expect(page.locator('#work img')).toHaveCount(6);for(const img of await page.locator('#work img').all()){await img.scrollIntoViewIfNeeded();await expect(img).toBeVisible();await expect.poll(()=>img.evaluate((x:HTMLImageElement)=>x.complete&&x.naturalWidth>0)).toBe(true);}await context.close();
 });
 for(const width of [320,375,390,768,1024,1280,1440,1920])test(`section fits at ${width}px`,async({page})=>{
@@ -103,23 +136,21 @@ test('section passes axe and has visible keyboard focus',async({page})=>{
  const a=page.getByRole('link',{name:'F24 case study',exact:true});await a.focus();expect(await a.evaluate(el=>getComputedStyle(el).outlineStyle)).not.toBe('none');
 });
 
-test('videos start loading independently of viewport visibility',async({page})=>{
+test('offscreen videos attach no sources until their first eligible viewport entry',async({page})=>{
  await home(page);
- for(const id of videos) {
-  await expect.poll(()=>page.locator(`[data-selected-project="${id}"] video`).evaluate((v:HTMLVideoElement)=>Boolean(v.currentSrc)),{timeout:10000}).toBe(true);
- }
-});
-test('project loops autoplay even with browser Save-Data enabled',async({page})=>{
- await page.addInitScript(()=>{
-  const connection=Object.assign(new EventTarget(),{saveData:true});
-  Object.defineProperty(navigator,'connection',{value:connection,configurable:true});
- });
- await home(page);
- for(const id of videos) await expect.poll(()=>page.locator(`[data-selected-project="${id}"] video`).evaluate((v:HTMLVideoElement)=>!v.paused&&v.readyState>=2),{timeout:25000}).toBe(true);
+ const first=await visibleVideo(page,'needle');
+ await expect.poll(()=>first.evaluate((v:HTMLVideoElement)=>!v.paused&&v.readyState>=2),{timeout:20000}).toBe(true);
+ const offscreen=page.locator('[data-selected-project="flow"] video');
+ await expect(offscreen).not.toBeInViewport();
+ await expect(offscreen).toHaveJSProperty('currentSrc','');
+ await expect(offscreen.locator('source[src]')).toHaveCount(0);
+ await expect(offscreen).toHaveJSProperty('paused',true);
+ await visibleVideo(page,'flow');
+ await expect.poll(()=>offscreen.evaluate((v:HTMLVideoElement)=>Boolean(v.currentSrc)&&!v.paused&&v.readyState>=2),{timeout:20000}).toBe(true);
 });
 test('background tabs pause video and resume on return',async({page})=>{
  await home(page);
- const video=page.locator('[data-selected-project="flow"] video');
+ const video=await visibleVideo(page,'flow');
  await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>!v.paused),{timeout:25000}).toBe(true);
  const visibility=async(hidden:boolean)=>page.evaluate(value=>{Object.defineProperty(document,'hidden',{configurable:true,value});document.dispatchEvent(new Event('visibilitychange'));},hidden);
  await visibility(true);await expect(video).toHaveJSProperty('paused',true);
@@ -127,7 +158,7 @@ test('background tabs pause video and resume on return',async({page})=>{
 });
 test('Leu falls back from its failed preferred source to real MP4 playback',async({page})=>{
  await page.route(/\.webm(\?|$)/,r=>r.fulfill({status:404,body:'missing preferred source'}));await gallery(page);
- for(const id of ['leu']){const v=page.locator(`[data-selected-project="${id}"] video`);await expect.poll(()=>v.evaluate((x:HTMLVideoElement)=>!x.paused&&x.readyState>=2&&x.videoWidth>0&&x.currentSrc.endsWith('.mp4')),{timeout:20000}).toBe(true);await expect(v).toHaveCSS('opacity','1');const before=await v.evaluate((x:HTMLVideoElement)=>x.currentTime);await page.waitForTimeout(250);expect(await v.evaluate((x:HTMLVideoElement)=>x.currentTime)).toBeGreaterThan(before);}
+ const v=await visibleVideo(page,'leu');await expect.poll(()=>v.evaluate((x:HTMLVideoElement)=>!x.paused&&x.readyState>=2&&x.videoWidth>0&&x.currentSrc.endsWith('.mp4')),{timeout:20000}).toBe(true);await expect(v).toHaveCSS('opacity','1');const before=await v.evaluate((x:HTMLVideoElement)=>x.currentTime);await page.waitForTimeout(250);expect(await v.evaluate((x:HTMLVideoElement)=>x.currentTime)).toBeGreaterThan(before);
 });
 test('slow responses preserve posters and links until real playback begins',async({page})=>{
  let release!:()=>void;const gate=new Promise<void>(resolve=>{release=resolve;});await page.route(/\.(mp4|webm)(\?|$)/,async r=>{await gate;await r.continue();});
@@ -138,11 +169,11 @@ test('unmounting an active loop leaves no client errors',async({page})=>{
  const errors:string[]=[];
  page.on('pageerror',e=>errors.push(e.message));
  await home(page);
- const video=page.locator('[data-selected-project="flow"] video');
+ const video=await visibleVideo(page,'flow');
  await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>!v.paused),{timeout:25000}).toBe(true);
  await page.locator('[data-selected-project="flow"] h4 a').click();
  await expect(page).toHaveURL(/\/work\/flow$/);
- await page.waitForTimeout(250);
+ await expect(page.locator('h1')).toBeVisible();
  expect(errors).toEqual([]);
 });
 test('each chapter film plays uncropped on desktop and mobile',async({page})=>{
@@ -171,10 +202,10 @@ test('section remains usable at 200 percent content zoom',async({page})=>{
 test('keyboard activation reaches every case study independently',async({page})=>{
  for(const id of ['f24',...cards]){await home(page);const a=id==='f24'?page.getByRole('link',{name:'F24 case study',exact:true}):page.locator(`[data-selected-project="${id}"] h4 a`);await a.focus();await page.keyboard.press('Enter');await expect(page).toHaveURL(new RegExp(`/work/${id==='second-voice-ai'?'second-voice':id}$`));await expect(page.locator('h1')).toBeVisible();expect(page.context().pages()).toHaveLength(1);}
 });
-test('touch activates media links and separate public actions without hijacking',async({browser})=>{
- const context=await browser.newContext({viewport:{width:390,height:844},hasTouch:true});const page=await context.newPage();
- for(const id of cards){await page.goto('http://127.0.0.1:4397/#work');const a=page.locator(`[data-selected-project="${id}"] .preview-link`);await a.tap();await expect(page).toHaveURL(new RegExp(`/work/${id==='second-voice-ai'?'second-voice':id}$`));}
- await page.goto('http://127.0.0.1:4397/#work');await context.route('https://**/*',r=>r.fulfill({contentType:'text/html',body:'<title>Verified destination navigation</title>'}));
+test('touch activates media links and separate public actions without hijacking',async({browser,baseURL})=>{
+ const context=await browser.newContext({viewport:{width:390,height:844},hasTouch:true,baseURL});const page=await context.newPage();
+ for(const id of cards){await page.goto('/#work');const a=page.locator(`[data-selected-project="${id}"] .preview-link`);await a.tap();await expect(page).toHaveURL(new RegExp(`/work/${id==='second-voice-ai'?'second-voice':id}$`));}
+ await page.goto('/#work');await context.route('https://**/*',r=>r.fulfill({contentType:'text/html',body:'<title>Verified destination navigation</title>'}));
  for(const link of await page.locator('#work a[target="_blank"]').all()){const href=await link.getAttribute('href');const original=page.url();const opened=page.waitForEvent('popup');await link.tap();const popup=await opened;await expect(popup).toHaveURL(href!);expect(page.url()).toBe(original);await popup.close();}
  await context.close();
 });

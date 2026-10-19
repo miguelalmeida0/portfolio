@@ -141,7 +141,7 @@
         <span aria-hidden="true"><span></span><span></span></span>
       </button>
     </div>
-    <nav aria-label="Fullscreen navigation" data-mobile-menu-content>
+    <nav data-sveltekit-preload-data="hover" aria-label="Fullscreen navigation" data-mobile-menu-content>
       {#each primaryNavigation as link}
         <a href={link.href} aria-current={story && link.href === '/story' ? 'page' : undefined} aria-label={link.label} aria-describedby={`menu-description-${link.label}`} data-mobile-route-link
           data-menu-reveal data-sveltekit-preload-data="tap" aria-disabled={navigationTransitionActive || closing}

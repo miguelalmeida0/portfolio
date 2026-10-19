@@ -20,6 +20,7 @@ export const duration = {
 } as const;
 
 export const easing = {
+  shutter: 'cubic-bezier(0.76, 0, 0.24, 1)',
   /** Long settles: arrival, reveals, chapter entrances. */
   settle: 'cubic-bezier(0.22, 1, 0.36, 1)',
   /** Short responses: press, hover, state swaps. */

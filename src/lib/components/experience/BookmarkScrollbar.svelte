@@ -83,7 +83,7 @@
     aria-orientation="vertical" aria-valuemin={0} aria-valuemax={Math.round(maximum)} aria-valuenow={Math.round(position)}
     tabindex="0" onpointerdown={pointerdown} onpointermove={pointermove} onpointerup={release}
     onpointercancel={release} onlostpointercapture={release} onkeydown={keydown}
-    class="group fixed inset-y-3 right-0 z-40 w-11 touch-none select-none no-print focus-visible:outline-none"
+    class="group fixed inset-y-3 right-0 z-[60] w-6 touch-none select-none no-print focus-visible:outline-none"
     class:bookmark-dragging={dragging}>
     <div data-bookmark-thumb class="absolute inset-x-0 top-0 flex justify-end" style:padding-right={`${SCROLLBAR_EDGE_INSET-1}px`} style:height={`${height}px`} style:transform={`translateY(${top}px)`}>
       <div data-scroll-handle class="pointer-events-none h-full w-0.5 rounded bg-plum opacity-30"></div>

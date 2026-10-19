@@ -9,7 +9,7 @@ test('external sources, live apps and contact profiles open a separate tab', () 
   }
 });
 test('every internal destination stays in the portfolio tab', () => {
-  for (const href of ['/work/f24', '/work/leu', '/work/flow', '/story', '/#work', './cv', '../story', '/out/linkedin', 'https://miguelalmeida.xyz/work/leu', '//miguelalmeida.xyz/cv']) {
+  for (const href of ['/work/f24', '/work/leu', '/work/flow', '/story', '/#work', './cv', '../story', '/out/linkedin', 'https://miguelalmeida.is-a.dev/work/leu', '//miguelalmeida.is-a.dev/cv']) {
     assert.deepEqual(destinationLink(href), { target: undefined, rel: undefined, 'aria-description': undefined });
   }
 });
@@ -18,13 +18,13 @@ test('section focus, system email actions and downloads retain their native beha
   assert.equal(destinationLink('/file.zip', 'file.zip').target, undefined);
 });
 test('resume PDFs open in a new tab, including direct and canonical URLs', () => {
-  for (const href of ['/portfolio.pdf', '/files/miguel-almeida-cv.pdf', '/portfolio.pdf#page=1', 'https://miguelalmeida.xyz/portfolio.pdf']) {
+  for (const href of ['/portfolio.pdf', '/files/miguel-almeida-cv.pdf', '/portfolio.pdf#page=1', 'https://miguelalmeida.is-a.dev/portfolio.pdf']) {
     assert.equal(destinationLink(href).target, '_blank');
     assert.equal(destinationLink(href).rel, 'noopener noreferrer');
   }
 });
 test('the CV reader opens separately while ordinary CV navigation stays in this tab', () => {
-  for (const href of ['/cv/pdf', '/cv/pdf#page=1', 'https://miguelalmeida.xyz/cv/pdf']) {
+  for (const href of ['/cv/pdf', '/cv/pdf#page=1', 'https://miguelalmeida.is-a.dev/cv/pdf']) {
     assert.equal(destinationLink(href).target, '_blank');
     assert.equal(destinationLink(href).rel, 'noopener noreferrer');
   }

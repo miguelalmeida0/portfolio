@@ -3,10 +3,10 @@ import { test } from 'node:test';
 
 const baseURL = process.env.ROUTE_HEALTH_BASE_URL || 'http://localhost:4173';
 const projects = [
-  ['leu', 'https://leu-desktop.vercel.app/', 'https://github.com/miguelalmeida0/leu'],
+  ['leu', 'https://leu.miguelalmeida.xyz/', 'https://github.com/miguelalmeida0/leu'],
   ['needle', 'https://needle.miguelalmeida.xyz', 'https://github.com/miguelalmeida0/needle-portfolio-release'],
   ['flow', undefined, 'https://github.com/miguelalmeida0/flow'],
-  ['second-voice', 'https://secondvoice-ai.vercel.app/second-voice', 'https://github.com/miguelalmeida0/second-voice'],
+  ['second-voice', 'https://secondvoice.miguelalmeida.xyz/', 'https://github.com/miguelalmeida0/second-voice'],
 ];
 
 function anchors(html) {

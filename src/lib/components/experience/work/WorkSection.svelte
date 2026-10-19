@@ -8,6 +8,7 @@
   import { createPreviewController } from './preview-controller';
   import { workMotion } from './work-motion';
   import { chapterTitles } from '$lib/motion/actions/chapterTitles';
+  let { current = false }: { current?: boolean } = $props();
   let section: HTMLElement;
   let controller: ReturnType<typeof createPreviewController> | undefined;
   let blockedIds = $state<string[]>([]);
@@ -15,7 +16,7 @@
   onMount(() => {
     controller = createPreviewController(section, selectedProjects, ids => {
       blockedIds = ids;
-    });
+    }, paused => { videosPaused = paused; });
     return () => controller?.destroy();
   });
   function toggleVideos() {
@@ -24,19 +25,19 @@
   }
 </script>
 
-<section id="work" class="selected-work bg-[var(--forest)] text-[var(--paper)]" aria-labelledby="work-title" bind:this={section} use:workMotion>
+<section data-sveltekit-preload-data="hover" id="work" class="selected-work bg-[var(--forest)] text-[var(--paper)]" class:current-work={current} aria-labelledby="work-title" bind:this={section} use:workMotion={current}>
   <div class="selected-inner mx-auto">
-    <header class="selected-heading flex flex-wrap items-end justify-between gap-6" use:chapterTitles={'h2'}>
-      <h2 id="work-title" data-ask-id="selwork" class="font-extrabold tracking-tight">Selected Work</h2>
+    <header class="selected-heading flex flex-wrap items-end justify-between gap-6" data-current-narrative={current || undefined} use:chapterTitles={current ? '[data-default-work-title]' : 'h2'}>
+      <h2 id="work-title" data-ask-id="selwork" class="font-extrabold tracking-tight">{#if current}<span data-current-word>Selected</span> <span data-current-word>Work</span>{:else}Selected Work{/if}</h2>
       <p>Professional experience.<br />Independent ideas, built.</p>
     </header>
     <article class="f24-feature" data-f24-feature aria-labelledby="f24-title">
-      <a class="f24-photo-link" href="/work/f24" aria-label="F24 case study" {...destinationLink('/work/f24')}>
-        <figure class="f24-moment f24-working">
+      <a class="f24-photo-link" data-current-assembly={current || undefined} href="/work/f24" aria-label="F24 case study" {...destinationLink('/work/f24')}>
+        <figure class="f24-moment f24-working" data-current-piece={current || undefined}>
           <img src="/projects/f24/hackathon-working.webp" alt="Miguel and a colleague working together at their desks during the F24 hackathon." width="640" height="854" loading="lazy" />
           <figcaption>Building together.</figcaption>
         </figure>
-        <figure class="f24-moment f24-team">
+        <figure class="f24-moment f24-team" data-current-piece={current || undefined}>
           <img src="/projects/f24/hackathon-team.webp" alt="The F24 hackathon team gathered beside their presentation, with a colleague joining remotely." width="1000" height="749" loading="lazy" />
           <figcaption>A team effort.</figcaption>
         </figure>
@@ -72,15 +73,18 @@
       </header>
       <div class="project-rows">
         {#each selectedProjects as project, index}
+          <div class="project-shell" data-project-chapter={current ? project.id : undefined} data-chapter-tone={current ? (index % 2 ? 'forest' : 'lime') : undefined} style:--chapter-index={index}>
           <article
             class="project-row"
             class:reversed={index % 2 === 1}
             data-selected-project={project.id}
+            data-current-reveal={current || undefined}
             aria-labelledby={`selected-${project.id}`}
           >
+            {#if current}<span class="chapter-shade" data-chapter-shade aria-hidden="true"></span>{/if}
             <div class="project-media">
               <a class="preview-link" href={project.href} {...destinationLink(project.href)} aria-label={`${project.name} case study`}>
-                <PreviewMedia {project} />
+                {#if current}<div data-current-art><PreviewMedia {project} /></div>{:else}<PreviewMedia {project} />{/if}
               </a>
               {#if blockedIds.includes(project.id)}
                 <button class="preview-retry" type="button"
@@ -90,7 +94,7 @@
             </div>
             <div class="project-info">
               <p class="project-number">{String(index + 1).padStart(2, '0')} / {project.category}</p>
-              <h4 id={`selected-${project.id}`} class="project-title">
+              <h4 id={`selected-${project.id}`} class="project-title" data-current-counter={current || undefined}>
                 <a href={project.href} {...destinationLink(project.href)}>{project.name} <ArrowUpRight size={20} strokeWidth={1.8} aria-hidden="true" /></a>
               </h4>
               <p class="project-line">{project.line}</p>
@@ -99,11 +103,13 @@
               </ul>
               <p class="project-stack" aria-label={`${project.name} technology stack`}>{project.stack.join(' · ')}</p>
               <div class="project-actions">
+                {#if current}<a href={project.href} {...destinationLink(project.href)}>View case study <ArrowUpRight size={18} strokeWidth={1.8} aria-hidden="true" /></a>{/if}
                 {#if project.live}<a href={project.live} {...destinationLink(project.live)}>Live app <ArrowUpRight size={18} strokeWidth={1.8} aria-hidden="true" /></a>{/if}
                 {#if project.code}<a href={project.code} {...destinationLink(project.code)}>Code <ArrowUpRight size={18} strokeWidth={1.8} aria-hidden="true" /></a>{/if}
               </div>
             </div>
           </article>
+          </div>
         {/each}
       </div>
     </div>
@@ -111,6 +117,8 @@
 </section>
 
 <style>
+  .project-shell { display: contents; }
+  .chapter-shade { display: none; }
   .selected-work { margin-top: var(--work-offset, 64px); padding: 56px var(--page-x) 72px; font-family: var(--hero-font); scroll-margin-top: 24px; }
   .selected-inner { max-width: 1800px; }
   .selected-heading { margin-bottom: 28px; }

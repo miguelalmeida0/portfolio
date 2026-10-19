@@ -36,7 +36,7 @@ jobs:
   browser-smoke:
     needs: checks
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -47,14 +47,12 @@ jobs:
           node-version-file: .node-version
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      - name: Run critical desktop and mobile browser smoke
-        run: |
-          mkdir -p .cache/tmp
-          TMPDIR=$PWD/.cache/tmp npx playwright test tests/e2e/specs/ci-smoke.spec.ts tests/e2e/specs/story-motion.spec.ts tests/e2e/specs/story-editorial-transition.spec.ts tests/e2e/specs/cv-highlights-alignment.spec.ts tests/e2e/specs/leu-showcase.spec.ts tests/e2e/specs/product-nav-home.spec.ts \
-            --project=chromium-desktop \
-            --project=chromium-mobile \
-            --workers=2
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm run build
+      - name: Test the published portfolio in Chromium and WebKit
+        env:
+          PORTFOLIO_AUDIT_OUTPUT: ${{ github.workspace }}/test-results/release
+        run: npx playwright test -c tests/e2e/portfolio-release.config.ts
       - name: Upload browser failure evidence
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
@@ -69,7 +67,7 @@ jobs:
   scrollbar-regression:
     needs: checks
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -80,14 +78,12 @@ jobs:
           node-version-file: .node-version
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      - name: Run critical desktop and mobile browser smoke
-        run: |
-          mkdir -p .cache/tmp
-          TMPDIR=$PWD/.cache/tmp npx playwright test tests/e2e/specs/line-m-footer.spec.ts tests/e2e/specs/line-m-journey.spec.ts \
-            --project=chromium-desktop \
-            --project=chromium-mobile \
-            --workers=2
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm run build
+      - name: Test scrollbar input, footer contacts and PDF navigation
+        env:
+          PORTFOLIO_AUDIT_OUTPUT: ${{ github.workspace }}/test-results/scrollbar
+        run: npx playwright test -c tests/e2e/portfolio-release.config.ts --grep 'scrollbar|footer keyboard'
       - name: Upload browser failure evidence
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7

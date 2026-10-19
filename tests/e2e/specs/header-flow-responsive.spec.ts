@@ -38,7 +38,7 @@ test('tablet burger navigates in the same tab and restores focus when resized',a
   await page.getByRole('navigation',{name:'Fullscreen navigation'}).getByRole('link',{name:'Story',exact:true}).click();
   await expect(page).toHaveURL(/\/story$/);
   await expect(page.locator('.story-split')).toBeVisible();
-  await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase','idle');
+  await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase','idle');
   expect(context.pages()).toHaveLength(pages);
   await menu.click();
   await page.locator('#mobile-navigation a').first().focus();

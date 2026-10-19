@@ -72,8 +72,16 @@ export function motionOwner(node: HTMLElement, name: string, setup: Setup) {
       });
     }).catch(() => { /* Enhancement failure leaves server-rendered content readable. */ });
   });
+  const covered = () => {
+    disposed = true; generation++;
+    unsubscribe(); media?.revert(); media = undefined;
+    delete node.dataset.motionOwner;
+    if (runtime) reportMotion(runtime);
+  };
+  window.addEventListener('route:covered', covered);
   return {
     destroy() {
+      window.removeEventListener('route:covered', covered);
       disposed = true; generation++;
       unsubscribe(); media?.revert();
       delete node.dataset.motionOwner;

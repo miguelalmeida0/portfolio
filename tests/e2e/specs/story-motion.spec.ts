@@ -7,14 +7,14 @@ test('opening Story keeps the portfolio transition and a clean portrait', async 
   await page.evaluate(() => {
     (window as any).__storyEditorialSeen = false;
     const observer = new MutationObserver(() => {
-      if (document.documentElement.dataset.storyRouteTransition === 'active') {
+      if (document.querySelector<HTMLElement>('[data-route-shutter]')?.hidden === false) {
         (window as any).__storyEditorialSeen = true;
         observer.disconnect();
       }
     });
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['data-story-route-transition']
+      subtree: true, attributeFilter: ['hidden']
     });
   });
   if (isMobile) {
@@ -33,7 +33,7 @@ test('opening Story keeps the portfolio transition and a clean portrait', async 
   await expect(page.locator('.story-intro-photo img')).toBeVisible();
   await expect(page.locator('.story-intro-photo figcaption')).toHaveCount(0);
   await expect(page.locator('.story-intro-photo picture')).toHaveCSS('height', /\d+(\.\d+)?px/);
-  // Only the full-page opacity fade owns Story navigation; the hero itself
+  // Only the root shutter owns Story navigation; the hero itself
   // must not run a second entrance animation.
   await expect(page.locator('.story-intro-text')).toHaveCSS('animation-name', 'none');
   await expect(page.locator('.story-intro-photo')).toHaveCSS('animation-name', 'none');

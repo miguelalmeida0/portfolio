@@ -2,15 +2,15 @@
 
 **A portfolio of interactive systems, product interfaces and engineering decisions.** Built with Svelte 5, SvelteKit, TypeScript and Tailwind CSS.
 
-[Visit the portfolio](https://miguelalmeida.xyz/) · [Deployment contract](DEPLOYMENT.md) · [Engineering guide](docs/README.md) · [Contributing](CONTRIBUTING.md)
+[Visit the portfolio](https://miguelalmeida.is-a.dev/) · [Deployment contract](DEPLOYMENT.md) · [Engineering guide](docs/README.md) · [Contributing](CONTRIBUTING.md)
 
 ## Selected work
 
 | Project | What to inspect |
 | --- | --- |
-| [Needle](https://needle.miguelalmeida.xyz/) | Semantic artwork search over a prepared 10,000-work museum corpus, with a [case study](https://miguelalmeida.xyz/work/needle) |
+| [Needle](https://needle.miguelalmeida.xyz/) | Semantic artwork search over a prepared 10,000-work museum corpus, with a [case study](https://miguelalmeida.is-a.dev/work/needle) |
 | [Second Voice](https://secondvoice.miguelalmeida.xyz/) | Writing interactions, editorial typography and honest prepared-versus-live states |
-| [Flow case study](https://miguelalmeida.xyz/work/flow) | Voice-driven actions in a directly editable personal computing workspace; [source](https://github.com/miguelalmeida0/flow) |
+| [Flow case study](https://miguelalmeida.is-a.dev/work/flow) | Voice-driven actions in a directly editable personal computing workspace; [source](https://github.com/miguelalmeida0/flow) |
 | [Leu](https://leu.miguelalmeida.xyz/) | Local-first reading and source-linked learning, with a separate native iOS implementation |
 | F24 | Public-safe production engineering case study; private employer source and deployment are not linked |
 

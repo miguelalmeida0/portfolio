@@ -193,6 +193,13 @@ function undo(){
 }
 function redo(){
   if (!S.future.length || S.busy) return;
+  if (S.pending){
+    const pid = S.pending.pid;
+    ui.messages.forEach(m => { if (m.who === 'flow' && m.content.includes(`>P${pid}<`)) m.stale = true; });
+    setStage('gate', 'failed', `P${pid} dropped: calendar changed by redo`);
+    S.pending = null; drawGhosts(); setReplies([]);
+    say('sys', `<span class="pid">P${pid}</span> dropped because Redo changed the calendar. Choose the command again to make a fresh proposal.`);
+  }
   const h = S.future.pop(); S.history.push(h); S.doc = h.after;
   rewind();
   say('flow', `Redid <span class="pid">P${h.pid}</span>.`);

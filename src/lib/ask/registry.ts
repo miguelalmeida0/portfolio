@@ -30,7 +30,7 @@ export function activateRegistry(added: (el: HTMLElement) => void = () => {}) {
   }
   function update() {
     document.querySelectorAll<HTMLElement>('[data-ask-id]').forEach(el => {
-      if (originals.has(el)) return;
+      if (originals.has(el) || !rendered(el)) return;
       const area = areaPlan(el.dataset.askId!);
       if (!area) return;
       originals.set(el, Object.fromEntries(['role', 'tabindex', 'aria-label', 'data-sveltekit-preload-data', 'data-sveltekit-preload-code'].map(key => [key, el.getAttribute(key)])));
@@ -47,7 +47,7 @@ export function activateRegistry(added: (el: HTMLElement) => void = () => {}) {
   update();
   // Only active while asking: mobile navigation and project stages can mount later.
   const observer = new MutationObserver(update);
-  observer.observe(document.querySelector('#portfolio-content')!, { childList: true, subtree: true });
+  observer.observe(document.querySelector('#portfolio-content')!, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden', 'inert'] });
   return () => {
     observer.disconnect();
     originals.forEach((attrs, el) => {

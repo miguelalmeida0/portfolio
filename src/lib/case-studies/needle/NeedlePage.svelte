@@ -1,4 +1,5 @@
 <script>
+import NextProject from '../shared/NextProject.svelte';
   import CircleFill from '$lib/components/experience/CircleFill.svelte';
 import CaseOverview from '../shared/CaseOverview.svelte';
 import '../shared/case-artifact.css';
@@ -80,6 +81,6 @@ import { chapterTitles } from "$lib/motion/actions/chapterTitles";
       <div class="specs-grid"><div class="metrics"><div><b>10,000</b><span>Catalog records</span></div><div><b>120</b><span>Opening previews</span></div><div><b>3</b><span>Simultaneous transforms</span></div><div><b>96</b><span>Retained decoded sources</span></div></div><div class="facts"><div><h3>My role</h3><p>Product design and performance engineering: search initialization, image delivery, cache identity and rendering budgets.</p></div><div><h3>Search model</h3><p>Field-weighted museum metadata and hybrid retrieval in this release. The case study does not claim the experimental neural retrieval system.</p></div></div></div>
       <div class="stories"><div class="story"><div><h3>The graph still has to arrive.</h3></div><dl><dt>Cold visit</dt><dd>Precomputation moves work earlier. A worker moves it away from the interface. The corpus and graph still have to cross the network.</dd><dt>Public host</dt><dd>Host startup is a separate clock from browser initialization. Local captures do not establish public-host latency or uptime.</dd></dl></div><div class="story"><div><h3>Evidence with a boundary.</h3></div><dl><dt>Verified source</dt><dd>The manifest declares 10,000 records and 120 opening images. The graph checksum matches the corpus. The mechanisms above are linked to the pinned release.</dd><dt>Image sample</dt><dd>The encoded file sizes are reproducible from one bundled artwork. They do not establish a whole-page transfer reduction.</dd><dt>Historical performance</dt><dd>The original before/after artifacts are absent from the public package. Startup, LCP, heap, scroll and slow-network gains are not quantified here.</dd></dl></div></div>
     </section>
-    <nav class="next" aria-label="Next project"><span>Next project</span><a href="/work/second-voice">Second Voice</a></nav>
+    <NextProject slug="needle"/>
   </main>
 </div>

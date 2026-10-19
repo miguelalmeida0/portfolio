@@ -12,9 +12,9 @@ test('homepage serves F24 and four independent projects with SSR posters and des
   for (const slug of ['needle', 'second-voice-ai', 'f24', 'flow', 'leu']) assert.ok(work.includes(`href="/work/${slug}"`));
   assert.equal((work.match(/<img\b/g) || []).length, 6, 'SSR retains two photographs and four project posters');
   assert.ok(work.includes('Pause project videos'));
-  assert.ok(work.includes('href="https://leu-desktop.vercel.app/"'));
+  assert.ok(work.includes('href="https://leu.miguelalmeida.xyz/"'));
   assert.ok(!work.includes('https://miguelalmeida0.github.io'));
-  assert.ok(html.includes('data-pixel-intro'));
+  assert.ok(!html.includes('data-pixel-intro'));
 });
 
 for (const slug of ['needle', 'second-voice', 'f24', 'leu', 'flow']) {
@@ -24,7 +24,7 @@ for (const slug of ['needle', 'second-voice', 'f24', 'leu', 'flow']) {
     const html = await response.text();
     assert.equal((html.match(/<h1\b/g) || []).length, 1);
     assert.ok(html.includes('id="pnav"'));
-    assert.ok(html.includes('href="/#work"'));
+    assert.ok(html.includes('href="/#work"'), 'Work returns to the approved direction');
     assert.ok(html.includes('id="try"'), 'Interactive demonstration remains available');
   });
 }

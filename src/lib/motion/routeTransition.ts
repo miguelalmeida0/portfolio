@@ -1,27 +1,14 @@
+import { destinationLabel } from '$lib/navigation/destination-label';
 import { beforeNavigate, goto, onNavigate, preloadData, pushState } from '$app/navigation';
-import { onDestroy, tick } from 'svelte';
+import { flushSync, onDestroy, onMount, tick } from 'svelte';
 import { writable } from 'svelte/store';
-import { motionSnapshot } from './policy';
+import { motionSnapshot, motionState } from './policy';
 import { resetScrollMotion, scrollToElement, syncScrollPosition } from './smooth-scroll';
 import { easing } from './tokens';
 
-/**
- * Progressive-enhancement route continuity built on the native View Transitions API.
- *
- * Deliberate limits, all of them checked against the real content:
- * - Shared media participation is explicitly limited by SHARED_MEDIA_SLUGS.
- *   The current F24, Leu and Flow links use ordinary route navigation; mobile
- *   continuity still uses this owner’s paper veil.
- * - The tile and the case-study hero do not use the same asset, so this carries the
- *   *frame*, not a claim of identical media. Contents cross-fade inside the box.
- * - Exactly one element may hold `--vt-project-media` per document. The case study
- *   assigns it statically (one hero per page); the grid assigns it to the tile being
- *   opened and clears it afterwards.
- * - The desktop native transition does not delay navigation for an animation.
- *   Mobile menu/history navigation uses the same owner's opaque paper veil;
- *   external links, downloads and modified clicks retain browser behavior.
+/** Shared-frame metadata remains available for native desktop history.
+ * Forward page changes use the named downward shutter below.
  */
-
 export const SHARED_MEDIA_SLUGS = ['ghostwriter'] as const;
 
 export const PROJECT_MEDIA_TRANSITION_NAME = 'project-media';
@@ -61,267 +48,258 @@ function releaseClaimedFrames() {
   }
 }
 
-/**
- * Installs the navigation hook. Call once, from the root layout's component body.
- */
-export function installRouteTransitions(getVeil: () => HTMLElement) {
-  // Layout-local state: the menu and native view transitions share this owner.
+/** One owner for named forward shutters and native desktop history. */
+export function installRouteTransitions(getShutter: () => HTMLElement) {
   const mobileState = writable<'idle' | 'covering' | 'covered' | 'revealing'>('idle');
   const navigationError = writable('');
-  let active = false;
-  let ownedNavigation = false;
-  let storyMenuNavigating = false;
-  let disposed = false;
+  const routeLabel = writable('');
+  let active = false, ownedNavigation = false, disposed = false;
   let nativeTransition: ReturnType<StartViewTransition> | undefined;
-  const animations = new Set<Animation>();
-  const ease = easing.settle;
+  type Claim = {
+    url: URL; history: boolean; column: number; strips: HTMLElement[]; title: HTMLElement | null;
+    animations: Set<Animation>; ready: Promise<void>; opaque: Promise<void>;
+    safety?: ReturnType<typeof setTimeout>; finish?: Promise<void>; completion?: Promise<void>;
+    waits: Set<() => void>; released: boolean;
+  };
+  let claim: Claim | undefined;
+  let press: { href: string; x: number; at: number } | undefined;
   const frame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
-
-  async function animate(node: HTMLElement, frames: Keyframe[], duration: number, delay = 0) {
-    if (motionSnapshot().reduced) return;
-    const animation = node.animate(frames, { duration, delay, easing: ease, fill: 'both' });
-    animations.add(animation);
-    try { await animation.finished; } catch { /* Teardown cancels owned animations. */ }
-    finally { animation.cancel(); animations.delete(animation); }
-  }
-
-  // The opaque veil is reserved for existing mobile fallback paths.
-  // Story's enhanced navigation is composed from two page snapshots instead.
-  async function cover(menu?: HTMLElement | null) {
-    active = true;
-    navigationError.set('');
-    nativeTransition?.skipTransition();
-    releaseClaimedFrames();
-    resetScrollMotion();
-    mobileState.set('covering');
-    const veil = getVeil();
-    // Set the final value first; WAAPI owns only the compositor interpolation.
-    veil.hidden = false;
-    veil.style.opacity = '1';
-    await Promise.all([
-      animate(veil, [{ opacity: 0 }, { opacity: 1 }], 190),
-      menu ? animate(menu, [{ opacity: 1, transform: 'translateY(0)' },
-        { opacity: 0, transform: 'translateY(-4px)' }], 120, 70) : Promise.resolve()
-    ]);
-    mobileState.set('covered');
-  }
-
-  function reset() {
-    if (disposed) return;
-    const veil = getVeil();
-    veil.hidden = true;
-    veil.style.opacity = '0';
-    active = false;
-    ownedNavigation = false;
-    mobileState.set('idle');
-  }
-
-  async function reveal() {
-    // goto/navigation.complete has already resolved: DOM, focus and Kit scroll
-    // restoration precede this tick and frame. No timer decides route readiness.
-    await tick();
-    await frame();
-    if (disposed) return;
-    syncScrollPosition();
-    mobileState.set('revealing');
-    const veil = getVeil();
-    veil.style.opacity = '0';
-    await animate(veil, [{ opacity: 1 }, { opacity: 0 }], 260);
-    reset();
-    await tick();
-    // Inert content cannot receive fragment focus until the veil unlocks.
-    restoreNavigationFocus();
-  }
+  const allowed = (url: URL) => url.origin === location.origin && !url.pathname.startsWith('/out/') && url.pathname !== '/cv/pdf';
+  // The craft previews keep their navigation continuous. Their page entrances
+  // own the motion; a covering shutter would lock rapid mobile history input.
+  const decorative = () => !/^\/hero-lab\/(counterform|bearing|throughline)(?:\/|$)/.test(location.pathname)
+    && !motionSnapshot().reduced && document.visibilityState === 'visible';
+  const changed = (url: URL) => url.pathname !== location.pathname;
 
   function restoreNavigationFocus() {
-    if (disposed || document.activeElement !== document.body) return;
+    if (disposed) return;
     let target = document.getElementById('main');
-    try {
-      target = document.getElementById(decodeURIComponent(location.hash.slice(1))) ?? target;
-    } catch { /* An invalid fragment uses the main landmark. */ }
+    try { target = document.getElementById(decodeURIComponent(location.hash.slice(1))) ?? target; } catch {}
     if (!target) return;
-    const hadTabindex = target.hasAttribute('tabindex');
-    if (!hadTabindex) target.setAttribute('tabindex', '-1');
+    const had = target.hasAttribute('tabindex');
+    if (!had) target.setAttribute('tabindex', '-1');
     target.focus({ preventScroll: true });
-    if (!hadTabindex) target.addEventListener('blur', () => target.removeAttribute('tabindex'), { once: true });
+    if (!had) target.addEventListener('blur', () => target?.removeAttribute('tabindex'), { once: true });
   }
+  function release(c: Claim) {
+    if (c.released) return;
+    c.released = true;
+    clearTimeout(c.safety);
+    c.waits.forEach(finish => finish()); c.waits.clear();
+    c.animations.forEach(animation => animation.cancel()); c.animations.clear();
+    [...c.strips, ...(c.title ? [c.title] : [])].forEach(node => { node.style.willChange = ''; });
+    if (claim !== c) return;
+    const shutter = getShutter();
+    shutter.hidden = true;
+    try { shutter.hidePopover?.(); } catch {}
+    active = false; ownedNavigation = false; claim = undefined;
+    mobileState.set('idle');
+  }
+  function wait(c: Claim, ms: number) {
+    return new Promise<void>(resolve => {
+      const done = () => { clearTimeout(timer); c.waits.delete(done); resolve(); };
+      const timer = setTimeout(done, ms);
+      c.waits.add(done);
+    });
+  }
+  function animate(c: Claim, node: HTMLElement, from: string, to: string, ms: number, delay: number, ease: string) {
+    node.style.transform = to;
+    if (c.released || !decorative()) return Promise.resolve();
+    node.style.willChange = 'transform';
+    const animation = node.animate([{ transform: from }, { transform: to }], { duration: ms, delay, easing: ease, fill: 'both' });
+    c.animations.add(animation);
+    return animation.finished.catch(() => {}).finally(() => { animation.cancel(); c.animations.delete(animation); });
+  }
+  function begin(url: URL, history = false, x = innerWidth / 2): Claim {
+    active = true; navigationError.set('');
+    nativeTransition?.skipTransition(); releaseClaimedFrames();
+    const shutter = getShutter();
+    const label = history ? '' : destinationLabel(url) ?? '';
+    // Flush the store's text binding before cover without replacing Svelte's text node.
+    flushSync(() => routeLabel.set(label));
+    const title = shutter.querySelector<HTMLElement>('.route-title-text');
+    const strips = [...shutter.querySelectorAll<HTMLElement>('.route-strip')].slice(0, matchMedia('(max-width: 767px)').matches ? 4 : 6);
+    const c: Claim = { url, history, column: Math.max(0, Math.min(strips.length - 1, Math.floor(x / innerWidth * strips.length))),
+      strips, title, animations: new Set(), ready: Promise.resolve(), opaque: Promise.resolve(), waits: new Set(), released: false };
+    claim = c;
+    shutter.hidden = false;
+    // Native modal menus live in the top layer. The noninteractive popover goes
+    // above them, so the menu can remain mounted until the strips are opaque.
+    try { shutter.showPopover?.(); } catch {}
+    mobileState.set('covering');
+    c.safety = setTimeout(() => {
+      release(c);
+      navigationError.set('Navigation is taking longer than expected. You can try again.');
+      void tick().then(() => { if (!disposed && !active) restoreNavigationFocus(); });
+    }, 4000);
+    c.opaque = Promise.all(strips.map((strip, i) => {
+      strip.style.transformOrigin = 'top';
+      return animate(c, strip, 'scaleY(0)', 'scaleY(1)', 240, Math.abs(i - c.column) * 16, easing.shutter);
+    })).then(() => { if (!c.released) mobileState.set('covered'); });
+    const named = label && title ? animate(c, title, 'translateY(110%)', 'translateY(0)', 280, 90, easing.settle)
+      .then(() => c.released ? undefined : wait(c, 160)) : Promise.resolve();
+    c.ready = Promise.all([c.opaque, named]).then(() => {});
+    return c;
+  }
+  function covered(c: Claim) {
+    if (c.released) return;
+    resetScrollMotion();
+    window.dispatchEvent(new CustomEvent('route:covered'));
+  }
+  function reveal(c: Claim) {
+    if (c.finish) return c.finish;
+    c.finish = (async () => {
+      await tick(); await frame();
+      if (disposed) return;
+      if (c.released || claim !== c) {
+        if (!active && !c.history && location.pathname === c.url.pathname) restoreNavigationFocus();
+        return;
+      }
+      if (!c.history && c.url.hash) window.scrollTo({ top: 0, behavior: 'instant' });
+      syncScrollPosition();
+      mobileState.set('revealing');
+      const movements = c.strips.map((strip, i) => {
+        strip.style.transformOrigin = 'bottom';
+        return animate(c, strip, 'scaleY(1)', 'scaleY(0)', 260, 60 + Math.abs(i - c.column) * 16, easing.shutter);
+      });
+      if (c.title?.textContent) movements.push(animate(c, c.title, 'translateY(0)', 'translateY(-110%)', 200, 0, easing.shutter));
+      if (!c.history && c.url.hash) {
+        try { const target = document.getElementById(decodeURIComponent(c.url.hash.slice(1))); if (target) scrollToElement(target, { duration: 500 }); } catch {}
+      }
+      await Promise.all(movements);
+      release(c);
+      await tick();
+      if (!disposed && !active && !c.history) restoreNavigationFocus();
+    })().catch(() => { release(c); }).finally(() => release(c));
+    return c.finish;
+  }
+  const inputX = (event: MouseEvent, link: HTMLAnchorElement) => {
+    const rect = link.getBoundingClientRect();
+    return event.detail ? event.clientX : rect.left + rect.width / 2;
+  };
+  const rememberPress = (event: MouseEvent) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const link = (event.target as Element | null)?.closest<HTMLAnchorElement>('a[href]');
+    if (!link || link.hasAttribute('download') || (link.target && link.target !== '_self')) return;
+    // Kit skips beforeNavigate while its initial route load is in progress.
+    // Stop a second (including programmatic) link click at the same owner.
+    if (active && allowed(new URL(link.href)) && changed(new URL(link.href))) {
+      event.preventDefault(); event.stopImmediatePropagation(); return;
+    }
+    press = { href: link.href, x: inputX(event, link), at: performance.now() };
+  };
+  onMount(() => {
+    document.addEventListener('click', rememberPress, true);
+    const unsubscribe = motionState.subscribe(({ reduced }) => { if (reduced && claim) release(claim); });
+    const visibility = () => { if (document.visibilityState !== 'visible' && claim) release(claim); };
+    document.addEventListener('visibilitychange', visibility);
+    return () => { unsubscribe(); document.removeEventListener('click', rememberPress, true); document.removeEventListener('visibilitychange', visibility); };
+  });
 
   beforeNavigate(navigation => {
+    // Browser history must supersede a pending decorative transition. Cancelling
+    // popstate after Kit has pushed its URL can leave the old route under that URL.
+    if (navigation.type === 'popstate' && claim) release(claim);
     if (active && !navigation.willUnload) {
-      if (ownedNavigation && navigation.type === 'goto') ownedNavigation = false;
-      else navigation.cancel();
+      if (ownedNavigation && navigation.type === 'goto') { ownedNavigation = false; return; }
+      navigation.cancel(); return;
     }
+    const to = navigation.to?.url;
+    if (navigation.type === 'popstate') routeLabel.set('');
+    if (!to || navigation.willUnload || navigation.type === 'popstate' || !allowed(to) || !changed(to) || !decorative()) return;
+    const x = press?.href === to.href && performance.now() - press.at < 1000 ? press.x : innerWidth / 2;
+    const c = begin(to, false, x);
+    // A later beforeNavigate callback can cancel before onNavigate is reached.
+    // Own that rejection at the initial claim, not only after route loading.
+    void navigation.complete.catch(() => c.ready.then(() => reveal(c))).catch(() => release(c));
   });
 
   async function navigateFromMenu(event: MouseEvent, close: () => void | Promise<void>) {
     const link = event.currentTarget as HTMLAnchorElement;
-    if (!event.defaultPrevented && link.target === '_blank') { close(); return; }
-    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey ||
-      event.shiftKey || event.altKey || link.download || (link.target && link.target !== '_self')) return;
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (link.target && link.target !== '_self') { await close(); return; }
+    if (link.hasAttribute('download') || link.download) return;
     const url = new URL(link.href);
-    if (url.origin === location.origin && url.pathname === location.pathname && url.search === location.search && url.hash) {
+    if (!allowed(url)) return;
+    if (url.pathname === location.pathname && url.search === location.search && url.hash) {
       let target: HTMLElement | null;
       try { target = document.getElementById(decodeURIComponent(url.hash.slice(1))); } catch { return; }
       if (target) {
-        event.preventDefault();
-        await close();
-        await tick();
+        event.preventDefault(); await close(); await tick();
         if (location.hash !== url.hash) pushState(url, {});
-        scrollToElement(target, { focus: true });
-        return;
+        scrollToElement(target, { focus: true }); return;
       }
     }
-    if (url.origin !== location.origin) return;
-
-    // Close the small-screen menu before native page snapshots are taken.
-    // An open menu appearing in the outgoing snapshot breaks continuity.
-    const storyRoute = url.pathname !== location.pathname &&
-      (url.pathname === '/story' || location.pathname === '/story');
-    if (storyRoute && viewTransitionsSupported() && !motionSnapshot().reduced &&
-        document.visibilityState === 'visible') {
-      event.preventDefault();
-      if (active || storyMenuNavigating) return;
-      storyMenuNavigating = true;
-      navigationError.set('');
-      link.dataset.selected = 'true';
-      await close();
-      try {
-        await tick();
-        if (disposed) return;
-        await goto(url);
-        await tick();
-        restoreNavigationFocus();
-      } catch {
-        navigationError.set('Navigation could not finish. Please try again.');
-      } finally {
-        storyMenuNavigating = false;
-        delete link.dataset.selected;
-      }
-      return;
-    }
-
     event.preventDefault();
     if (active) return;
-    link.dataset.selected = 'true';
-    // Fetch during the cover, but keep the old menu mounted until fully opaque.
-    void preloadData(url.href).catch(() => undefined);
-    try {
-      // Only the links fade. The menu panel must stay opaque over the old page.
-      await cover(link.parentElement);
-      if (disposed) return;
+    if (!changed(url) || !decorative()) {
       await close();
-      await tick();
+      try { await goto(url); await tick(); restoreNavigationFocus(); }
+      catch { navigationError.set('Navigation could not finish. Please try again.'); }
+      return;
+    }
+    void preloadData(url.href).catch(() => undefined);
+    const c = begin(url, false, inputX(event, link));
+    try {
+      await c.opaque;
+      if (c.released || disposed) return;
+      await close(); await tick();
+      if (c.released || disposed) return;
       ownedNavigation = true;
       await goto(url);
-      await reveal();
+      await reveal(c);
     } catch {
-      // A rejected/cancelled navigation must never strand an opaque overlay.
-      await reveal();
       navigationError.set('Navigation could not finish. Please try again.');
-    } finally {
-      delete link.dataset.selected;
+      await reveal(c);
     }
   }
 
-  onDestroy(() => {
-    disposed = true;
-    animations.forEach(animation => animation.cancel());
-  });
-
-  onNavigate((navigation) => {
-    resetScrollMotion();
-    // Never snapshot the outgoing menu/page into a competing native transition.
-    if (active) return;
-    const from = navigation.from?.url;
-    const to = navigation.to?.url;
-
-    // Story transitions share the real old and new compositions, rather than
-    // displaying a blank veil between them. Keep both page images overlapping
-    // while the persistent site header is captured in its own stable layer.
-    const storyRoute = Boolean(from && to && from.pathname !== to.pathname &&
-      (from.pathname === '/story' || to.pathname === '/story'));
-    if (!storyRoute && navigation.type === 'popstate' && matchMedia('(max-width: 719px)').matches &&
-      navigation.from?.url.pathname !== navigation.to?.url.pathname) {
-      return cover().then(() => {
-        void navigation.complete.then(reveal, reveal);
+  onNavigate(navigation => {
+    // Kit may skip beforeNavigate during an in-flight route load. Release the
+    // cover, then let that obsolete commit settle before history renders its
+    // destination; otherwise the delayed forward commit can win the race.
+    if (navigation.type === 'popstate' && claim) {
+      const interrupted = claim;
+      release(interrupted);
+      routeLabel.set('');
+      return (interrupted.completion ?? Promise.resolve()).catch(() => {}).then(() => {
+        resetScrollMotion();
+        return () => syncScrollPosition();
       });
     }
-    if (!viewTransitionsSupported() || document.visibilityState !== 'visible') {
-      releaseClaimedFrames();
-      return;
+    const from = navigation.from?.url, to = navigation.to?.url;
+    if (!to || !from || from.pathname === to.pathname || !allowed(to)) return;
+    let current = claim;
+    if (!current && navigation.type === 'popstate' && decorative() && matchMedia('(max-width: 719px)').matches) current = begin(to, true);
+    if (current && !current.released) {
+      const c = current;
+      c.completion = navigation.complete;
+      // Own rejections immediately; an abort while waiting for cover is not unhandled.
+      void navigation.complete.then(() => c.ready.then(() => reveal(c)), () => c.ready.then(() => reveal(c))).catch(() => {}).finally(() => release(c));
+      return c.ready.then(() => covered(c));
     }
-
-    if (motionSnapshot().reduced) {
-      releaseClaimedFrames();
-      return;
-    }
-
-    // A pure hash change on the same page is a scroll, not a route change.
-    if (!to || (from && from.pathname === to.pathname)) {
-      releaseClaimedFrames();
-      return;
-    }
-
-    const startViewTransition = (
-      document as Document & { startViewTransition?: StartViewTransition }
-    ).startViewTransition;
-
-    if (!startViewTransition) {
-      releaseClaimedFrames();
-      return;
-    }
-
-    // Cancel any preceding snapshot before setting this navigation's style
-    // flags. An interrupted transition must not erase the successor's marker.
+    resetScrollMotion();
+    if (!decorative()) return () => { syncScrollPosition(); if (navigation.type !== 'popstate') restoreNavigationFocus(); };
+    if (navigation.type !== 'popstate' || !viewTransitionsSupported()) return;
+    const start = (document as Document & { startViewTransition?: StartViewTransition }).startViewTransition;
+    if (!start) return;
     nativeTransition?.skipTransition();
-
-    // The flag is applied before startViewTransition snapshots the old DOM.
-    // It stays on the root until finished, so both image layers use one
-    // choreography even if page content or scroll position changes.
-    document.documentElement.dataset.routeTransition = 'active';
-    document.documentElement.dataset.routeDestination = to.pathname;
-    if (storyRoute) {
-      document.documentElement.dataset.storyRouteTransition = 'active';
-      const header = document.querySelector<HTMLElement>('.wind-header');
-      const rect = header?.getBoundingClientRect();
-      if (rect && rect.bottom > 0 && rect.top < innerHeight) {
-        document.documentElement.dataset.storyNavigationPinned = 'active';
-      }
-    }
-
-    return new Promise<void>((resolve) => {
-      // Navigation must still complete when a background tab or browser policy
-      // skips the native transition callback.
-      const failSafe = window.setTimeout(resolve, 180);
-      let ownedTransition: ReturnType<StartViewTransition> | undefined;
+    return new Promise<void>(resolve => {
+      const timer = setTimeout(resolve, 180);
+      let owned: ReturnType<StartViewTransition> | undefined;
       const cleanup = () => {
-        window.clearTimeout(failSafe);
-        resolve();
-        // An interrupted transition must never delete its successor's state.
-        if (ownedTransition && nativeTransition !== ownedTransition) return;
-        nativeTransition = undefined;
-        delete document.documentElement.dataset.routeTransition;
-        delete document.documentElement.dataset.routeDestination;
-        delete document.documentElement.dataset.storyRouteTransition;
-        delete document.documentElement.dataset.storyNavigationPinned;
-        releaseClaimedFrames();
+        clearTimeout(timer); resolve();
+        if (nativeTransition === owned) { nativeTransition = undefined; releaseClaimedFrames(); }
       };
       try {
-        const transition = startViewTransition.call(document, async () => {
-          window.clearTimeout(failSafe);
+        owned = nativeTransition = start.call(document, async () => {
           resolve();
-          await navigation.complete;
-          syncScrollPosition();
+          try { await navigation.complete; } finally { syncScrollPosition(); }
         });
-        ownedTransition = nativeTransition = transition;
-        transition.ready.catch(cleanup);
-        // A rapid Back/reload can abort Kit's navigation while the snapshot
-        // callback is awaiting it. Each ViewTransition promise rejects
-        // independently; own the callback rejection as well as ready/finished.
-        transition.updateCallbackDone.catch(cleanup);
-        transition.finished.then(cleanup, cleanup);
+        owned.ready.catch(cleanup); owned.updateCallbackDone.catch(cleanup); owned.finished.then(cleanup, cleanup);
       } catch { cleanup(); }
     });
   });
-  return { mobileState, navigationError, navigateFromMenu };
+  onDestroy(() => { disposed = true; if (claim) release(claim); nativeTransition?.skipTransition(); });
+  return { mobileState, navigationError, routeLabel, navigateFromMenu };
 }

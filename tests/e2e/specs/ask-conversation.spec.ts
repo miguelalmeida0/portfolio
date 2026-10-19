@@ -5,7 +5,7 @@ test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => sessionStorage.setItem('seen-intro', 'true'));
   await page.goto('/');
   await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
-  await page.keyboard.press('/');
+  await page.keyboard.press('Control+/');
 });
 async function ask(page: import('@playwright/test').Page, question: string) {
   const input = page.getByRole('textbox', { name: 'Type your own question' });
@@ -58,7 +58,7 @@ test('mobile greeting, question buttons and close keep the sheet usable', async 
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.keyboard.press('Escape');
   await expect(page.locator('[data-ask-panel]')).toHaveCount(0);
-  await page.keyboard.press('/');
+  await page.keyboard.press('Control+/');
   await ask(page, 'What did he own?');
   // Closing clears the previous conversation. No stale Leu/Flow topic is restored.
   await expect(page.locator('[data-ask-knowledge]')).toContainText('F24');

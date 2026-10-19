@@ -1,5 +1,6 @@
 <svelte:options preserveWhitespace={true} />
 <script>
+import NextProject from '../shared/NextProject.svelte';
   import CircleFill from '$lib/components/experience/CircleFill.svelte';
 import CaseOverview from '../shared/CaseOverview.svelte';
 import '../shared/case-artifact.css';
@@ -11,4 +12,4 @@ import ProductNav from '../shared/ProductNav.svelte';import CommandHero from './
     <h1 id="hero-h">From speech to deterministic state.</h1>
     <p class="sub">Conversation controls your calendar and personal life. Every change is proposed, checked and reversible before it happens.</p>
     <div class="ctas"><a class="btn primary" data-circle-fill href="#try"><CircleFill label="Explore demo" /></a><a class="tlink" href="#engineering">How it's built</a></div>
-  </div><CaseOverview slug="flow"/></section><CommandHero/><CapabilityBento {demo}/><FlowDemo {demo}/><LatencyCompare/><InvestigationStory/><FlowSpecs/><nav class="next" aria-label="Next project"><span class="lbl">Next project</span><a href="/work/leu">Leu</a></nav></main></div>
+  </div><CaseOverview slug="flow"/></section><CommandHero/><CapabilityBento {demo}/><FlowDemo {demo}/><LatencyCompare/><InvestigationStory/><FlowSpecs/><NextProject slug="flow"/></main></div>

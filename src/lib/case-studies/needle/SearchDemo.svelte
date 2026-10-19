@@ -12,6 +12,7 @@
 
 <section class="frame search-demo" id="try" aria-label="Explore a Needle search" data-needle-demo use:artworkMotion>
   <div class="demo-toolbar"><span class="demo-name">Needle <span class="quiet">/ Collection search</span></span><span class="small-label">10,000 Met artworks</span></div>
+  <p class="small-label">Prepared searches — choose a query to explore its results.</p>
   <div class="query-controls" role="group" aria-label="Prepared search queries">
     {#each data.examples as item, i}<button type="button" class="chip" aria-pressed={selected === i} onclick={() => choose(i)}>{item.query}</button>{/each}
   </div>

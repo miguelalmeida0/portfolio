@@ -11,7 +11,7 @@ async function openMenu(page: Page) {
 }
 async function idle(page: Page) {
   await expect(page.locator('#mobile-navigation')).toHaveCount(0);
-  await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+  await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
   await expect(page.locator('#portfolio-content')).not.toHaveAttribute('inert', '');
   await expect(page.locator('body')).not.toHaveCSS('position', 'fixed');
 }

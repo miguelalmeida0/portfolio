@@ -16,33 +16,21 @@ async function instrument(page: Page, reduced = false) {
   await page.addInitScript(() => {
     sessionStorage.setItem('seen-intro', 'true');
     (window as any).__storyPageTransitions = [];
-    const start = document.startViewTransition?.bind(document);
-    if (!start) return;
-    Object.defineProperty(document, 'startViewTransition', {
-      configurable: true,
-      value: (update: () => void | Promise<void>) => {
-        const isStory = document.documentElement.dataset.storyRouteTransition === 'active';
-        const direction = document.documentElement.dataset.routeDestination || '';
-        const transition = start(update);
-        if (!isStory) return transition;
-        const sample: TransitionSample = { direction, ready: false, finished: false };
-        ((window as any).__storyPageTransitions as TransitionSample[]).push(sample);
-        transition.ready.then(() => {
-          const old = getComputedStyle(document.documentElement, '::view-transition-old(root)');
-          const incoming = getComputedStyle(document.documentElement, '::view-transition-new(root)');
-          const header = document.querySelector<HTMLElement>('.wind-header');
-          sample.oldAnimation = old.animationName;
-          sample.newAnimation = incoming.animationName;
-          sample.oldDuration = old.animationDuration;
-          sample.newDuration = incoming.animationDuration;
-          sample.headerName = header ? getComputedStyle(header).viewTransitionName : '';
-          sample.ready = true;
-        }).catch(error => { sample.error = String(error); });
-        transition.finished.then(() => { sample.finished = true; })
-          .catch(error => { sample.error = String(error); });
-        return transition;
+    let current: TransitionSample | undefined;
+    const observer = new MutationObserver(() => {
+      const shutter = document.querySelector<HTMLElement>('[data-route-shutter]');
+      if (!shutter) return;
+      if (!shutter.hidden && !current) {
+        current = { direction: '', ready: false, finished: false };
+        (window as any).__storyPageTransitions.push(current);
+      }
+      if (current && shutter.dataset.phase === 'covered') current.ready = true;
+      if (current && shutter.hidden) {
+        current.direction = location.pathname; current.finished = true; current = undefined;
       }
     });
+    observer.observe(document.documentElement, {subtree:true, attributes:true, attributeFilter:['hidden','data-phase']});
+
   });
   await page.emulateMedia({ reducedMotion: reduced ? 'reduce' : 'no-preference' });
 }
@@ -61,8 +49,8 @@ async function openStory(page: Page, isMobile: boolean) {
 }
 
 async function settled(page: Page) {
-  await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
-  await expect(page.locator('[data-route-veil]')).toBeHidden();
+  await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
+  await expect(page.locator('[data-route-shutter]')).toBeHidden();
   await expect(page.locator('html')).not.toHaveAttribute('data-story-route-transition', 'active');
   await expect(page.locator('#portfolio-content')).not.toHaveAttribute('inert', '');
 }
@@ -77,15 +65,11 @@ async function verifyTransition(page: Page, index: number, destination: string) 
   expect(sample.error).toBeUndefined();
   expect(sample.direction).toBe(destination);
   expect(sample.ready).toBe(true);
-  expect(sample.oldAnimation).toContain('story-editorial-out');
-  expect(sample.newAnimation).toContain('story-editorial-in');
-  expect(sample.headerName).toBe('story-site-header');
-  expect(parseFloat(sample.newDuration!)).toBeGreaterThanOrEqual(.45);
-  expect(parseFloat(sample.newDuration!)).toBeLessThanOrEqual(.7);
+  await expect(page.locator('[data-route-shutter] .route-title-text')).toHaveText(destination === '/story' ? 'Story' : 'Home');
   await settled(page);
 }
 
-test('Story shares the full header and an overlapping editorial transition in both directions', async ({page, isMobile}) => {
+test('Story shares the full header and the named downward shutter in both directions', async ({page, isMobile}) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await instrument(page);

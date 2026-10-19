@@ -42,6 +42,6 @@ test('mobile menu work anchor closes without leaving the homepage', async ({page
   await page.getByRole('button',{name:'Menu',exact:true}).click();
   await page.getByRole('navigation',{name:'Fullscreen navigation'}).getByRole('link',{name:'Work',exact:true}).click();
   await expect(page).toHaveURL(/\/#work$/); await expect(page.locator('#mobile-navigation')).toHaveCount(0);
-  await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase','idle');
+  await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase','idle');
   await expect(page.locator('#work')).toBeInViewport();
 });

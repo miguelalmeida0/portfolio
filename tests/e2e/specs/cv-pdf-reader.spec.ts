@@ -41,7 +41,7 @@ test('PDF canvas and interactive layers stay aligned at every reading scale', as
   }
 });
 
-test('PDF links have readable names and opaque hover and keyboard indicators', async ({ page }) => {
+test('PDF links have readable names and opaque hover and keyboard indicators', async ({ page, browserName }) => {
   await page.goto('/cv/pdf');
   const github = page.locator('.annotationLayer a[href*="github.com"]');
   await expect(github).toBeVisible();
@@ -54,9 +54,11 @@ test('PDF links have readable names and opaque hover and keyboard indicators', a
   expect(await github.boundingBox()).toEqual(bounds);
   await page.mouse.move(0, 0);
   await page.getByRole('region', { name: 'CV pages', exact: true }).focus();
-  // PDF.js exposes its selectable text layer before the link annotations.
-  await page.keyboard.press('Tab');
-  await page.keyboard.press('Tab');
+  // PDF.js exposes selectable text first. This WebKit configuration uses
+  // Option-Tab to include links in sequential keyboard navigation.
+  const next = browserName === 'webkit' ? 'Alt+Tab' : 'Tab';
+  await page.keyboard.press(next);
+  await page.keyboard.press(next);
   const first = page.locator('.annotationLayer a').first();
   await expect(first).toBeFocused();
   await expect(first).toHaveCSS('outline-style', 'solid');

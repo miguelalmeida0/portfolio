@@ -28,3 +28,15 @@ function stats(ops){
 
 function renderOps(ops){return ops.map((o,k)=>({word:o.w,space:k!==0&&!isPunct(o.w),classes:(o.t==='='?'k':o.t==='+'?'i':'d')+(ops[k-1]?.t===o.t&&o.t!=='='?' j':'')+(o.t!=='+'&&o.ai===0?' o0':'')+(o.t!=='-'&&o.bi===0?' r0':''),index:k}));}
 export {tok,isPunct,diff,stats,renderOps};
+
+// A single coherent alternative; the animated tokens are decorative.
+export function accessibleDiff(ops, mode = 'marked') {
+  const sentence = tokens => tokens.map((o,i) => (i && !isPunct(o.w) ? ' ' : '') + o.w).join('');
+  if (mode === 'original') return sentence(ops.filter(o => o.t !== '+'));
+  if (mode === 'rewrite') return sentence(ops.filter(o => o.t !== '-'));
+  const removed = sentence(ops.filter(o => o.t === '-'));
+  const added = sentence(ops.filter(o => o.t === '+'));
+  return 'Original: ' + sentence(ops.filter(o => o.t !== '+')) + ' Rewrite: ' +
+    sentence(ops.filter(o => o.t !== '-')) + (removed ? ' Removed: ' + removed + '.' : '') +
+    (added ? ' Added: ' + added + '.' : '');
+}

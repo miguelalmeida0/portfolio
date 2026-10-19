@@ -14,7 +14,7 @@ for(const [id,words] of [
   ['w-leu',['SwiftUI','PDFKit','Teach It Back','on the device','source']],
   ['city',['Berlin','Remote','F24']]
 ] as const) test(`clicking ${id} rewards the visitor with documented context`,async({page})=>{
-  await page.keyboard.press('/');
+  await page.keyboard.press('Control+/');
   const area=page.locator(`[data-ask-id="${id}"]`); const clicked=await area.innerText();
   await area.click(); const answer=page.locator('[data-ask-knowledge]');
   await expect(answer).toBeVisible();
@@ -36,7 +36,7 @@ test('typed questions use knowledge beyond visible sources and reject invented e
     const body=await res.json(); expect(body.steps).toEqual([]);
     expect(JSON.stringify(body.knowledge)).toContain(expected);
   }
-  await page.keyboard.press('/');
+  await page.keyboard.press('Control+/');
   const input=page.getByRole('textbox',{name:'Type your own question'});
   await input.fill('What has he built in Swift?'); await input.press('Enter');
   await expect(page.locator('[data-ask-knowledge]')).toContainText('Teach It Back');
@@ -53,7 +53,7 @@ test('portrait stays recognisable on the right and returns without drift over te
   const home=(await photo.boundingBox())!, bounds=(await card.boundingBox())!;
   const src=await photo.evaluate((img:HTMLImageElement)=>img.currentSrc);
   for(let i=0;i<10;i++) {
-    await page.keyboard.press('/'); await expect(photo).toHaveCSS('opacity','0.16');
+    await page.keyboard.press('Control+/'); await expect(photo).toHaveCSS('opacity','0.16');
     const rect=(await photo.boundingBox())!;
     expect(rect.y).toBe(home.y); expect(rect.height).toBe(home.height); expect(rect.width).toBe(home.width);
     const visible=bounds.x+bounds.width-rect.x;
@@ -69,7 +69,7 @@ test('portrait stays recognisable on the right and returns without drift over te
   }
 });
 test('rich answers retain whole-page accessibility',async({page})=>{
-  await page.keyboard.press('/'); await page.getByRole('button',{name:'My stack',exact:true}).click();
+  await page.keyboard.press('Control+/'); await page.getByRole('button',{name:'My stack',exact:true}).click();
   await expect(page.locator('[data-ask-announcement]')).toContainText('2026');
   const result=await new AxeBuilder({page}).analyze(); expect(result.violations.map(v=>v.id)).toEqual([]);
 });

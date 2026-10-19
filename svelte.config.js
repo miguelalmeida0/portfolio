@@ -13,6 +13,9 @@ const config = {
   preprocess: vitePreprocess(),
   vitePlugin: { emitCss: false },
   kit: {
+    // Vite's dev watcher regenerates server/internal.js. Sharing that directory
+    // with a build can mix bootstrap IDs and leave the entire site unhydrated.
+    outDir: process.argv.includes('dev') ? '.svelte-kit-dev' : '.svelte-kit',
     adapter: cloudflareAdapter
   }
 };

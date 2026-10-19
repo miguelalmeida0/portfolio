@@ -1,0 +1,20 @@
+/* Hero lab: local OFL faces under lab-only names, so loading this file never
+ * changes typography on the production routes visited later in the session. */
+@font-face { font-family: 'Lab Antonio'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/antonio-700-latin.woff2') format('woff2'); }
+@font-face { font-family: 'Lab Newsreader'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/newsreader-400-latin.woff2') format('woff2'); }
+@font-face { font-family: 'Lab Mono'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/jetbrains-mono-400-latin.woff2') format('woff2'); }
+
+/* `#portfolio-content` renders at 80% on desktop and viewport units shrink with it. */
+#portfolio-content[data-hero-lab] { --lab-zoom: 1; }
+@media screen and (min-width: 1024px) { #portfolio-content[data-hero-lab] { --lab-zoom: .8; } }
+
+/* Only while full motion is about to play: elements wait for their first frame.
+ * Without JavaScript, or with reduced motion, nothing is ever hidden. A failsafe
+ * reveals everything if the choreography never starts. */
+html[data-motion='full'] [data-lab-root]:not([data-lab-ready]) [data-arm] {
+  opacity: 0;
+  animation: lab-failsafe 0s linear 2.2s forwards;
+}
+@keyframes lab-failsafe { to { opacity: 1; } }
+
+[data-lab-root] :focus-visible { outline-offset: 3px; }

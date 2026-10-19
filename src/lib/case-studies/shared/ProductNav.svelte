@@ -1,23 +1,21 @@
 <script>
   import CircleFill from '$lib/components/experience/CircleFill.svelte';
-  import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';
-  import { resetScrollMotion, scrollToPosition, syncScrollPosition } from '$lib/motion/smooth-scroll';
+  import { getContext, onMount } from 'svelte';
+  import { pushState } from '$app/navigation';
+  import { scrollToElement } from '$lib/motion/smooth-scroll';
   import { findProject } from '$lib/experience/projects';
   import { destinationLink } from '$lib/navigation/destination-link';
   import { sectionMotion } from './section-motion';
   let { name, slug = undefined, links, standalone = false, overviewHref = '#overview' } = $props();
   const project = $derived(findProject(slug));
-  async function goHome(event) {
-    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    event.preventDefault();
-    resetScrollMotion();
-    scrollToPosition(0, 0);
-    syncScrollPosition();
-    await goto('/');
-    // Outgoing scroll owners finish teardown before the home position is synced.
-    scrollToPosition(0, 0);
-    syncScrollPosition();
+  const typographic = getContext('typographic-case') === true;
+  const homeHref = '/';
+  function chooseChapter(event) {
+    const id = event.currentTarget.value;
+    const target = document.getElementById(id);
+    if (!target) return;
+    pushState('#' + id, {});
+    scrollToElement(target, { focus: true });
   }
   let sentinel, nav;
   let stuck = $state(false), current = $state('');
@@ -35,11 +33,11 @@
 </script>
 <div id="sentinel" bind:this={sentinel}></div>
 <!-- Preserve flow when pinned, including beyond the case-study wrapper at Contact. -->
-<div aria-hidden="true" style:height={stuck ? `${navHeight}px` : '0px'}></div>
-<nav aria-label={name+' sections'} class="pnav" class:stuck class:standalone id="pnav" bind:this={nav} use:sectionMotion>
+<div aria-hidden="true" style:height={stuck && !typographic ? `${navHeight}px` : '0px'}></div>
+<nav data-sveltekit-preload-data="hover" aria-label={name+' sections'} class="pnav" class:stuck class:standalone id="pnav" bind:this={nav} use:sectionMotion>
   <div class="wrap">
     <div class="project-identity">
-      <a class="back-home" href="/" onclick={goHome} aria-label="Back home" title="Back home">
+      <a class="back-home" href={homeHref} aria-label="Back home" title="Back home">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
           <path d="M19 12H5m6-6-6 6 6 6" />
         </svg>
@@ -57,9 +55,20 @@
       {/if}
     </div>{/if}
   </div>
+  <label class="chapter-picker">On this case
+    <select aria-label="Case study chapter" value={current || links[0]?.[0]} onchange={chooseChapter}>
+      {#each links as [id, label]}<option value={id}>{label}</option>{/each}
+    </select>
+  </label>
   <span data-reading-progress aria-hidden="true"></span>
 </nav>
 <style>
+  .chapter-picker { display: none; }
+  @media (max-width: 1200px) {
+    .chapter-picker { display: flex; align-items: center; gap: 16px; padding: 6px var(--page-x, 20px); border-top: 1px solid var(--line); font: 500 14px/1.4 var(--sans, sans-serif); }
+    .chapter-picker select { flex: 1; min-width: 0; min-height: 44px; padding: 8px; color: var(--ink); background: transparent; border: 0; font: inherit; }
+  }
+
   /* Non-case-study pages share the same controls without project launch actions. */
   .pnav.standalone { --ink: #122A22; --sagebg: #E7ECD9; --plum: #5B153C; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40; background: #F0F3E5; color: var(--ink); border-bottom: 1px solid transparent; font-family: var(--hero-font, 'Figtree', sans-serif); }
   .pnav.standalone.stuck { position: fixed; border-bottom-color: rgba(18, 42, 34, .17); }

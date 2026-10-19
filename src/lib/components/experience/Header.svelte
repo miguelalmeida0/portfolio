@@ -54,7 +54,7 @@
 <header id="top" class="wind-header shell relative z-50 no-print" data-align="left" data-story={story || undefined}>
   <div class="flex items-center justify-between gap-4" inert={open} aria-hidden={open || undefined}>
     {@render identity()}
-    <nav aria-label="Main navigation" class="hidden shrink-0 items-center gap-7 text-sm min-[64rem]:flex">
+    <nav data-sveltekit-preload-data="hover" aria-label="Main navigation" class="hidden shrink-0 items-center gap-7 text-sm min-[64rem]:flex">
       {#each primaryNavigation as link}
         <a data-ask-id={homepage ? `nav-${link.label.toLowerCase()}` : undefined} class="group ink-link hover:text-plum hover:underline" href={link.href} aria-current={story && link.href === '/story' ? 'page' : undefined} data-sveltekit-preload-data={link.href === '/story' ? 'hover' : undefined}>{link.label}{#if link.label === 'CV'} <ArrowRight size={18} aria-hidden="true" class="transition-transform group-hover:translate-x-0.5" />{/if}</a>
       {/each}
