@@ -42,3 +42,16 @@ No remote test/dev history was reset or merged. No tracked source or asset was
 deleted. Cloudflare's existing GitHub main integration is the deployment path.
 The deployment check and public-domain verification must pass before reporting
 the release live.
+
+## Public verification
+
+Cloudflare Pages completed successfully for 1e6cc73. The public domain serves
+the 2026.10.19-typographic-direct-entry build marker and canonical is-a.dev URL.
+Twelve targeted Chromium browser checks passed on the live domain at desktop
+and mobile widths, covering direct entry, role controls, Story, CV/PDF, and
+the complete case-study tour.
+
+The first GitHub browser jobs failed before tests ran because Playwright used
+the config directory as the server working directory. The release config now
+sets the project root explicitly. A local run with CI=1 started the built worker
+and passed both fresh-entry checks. This correction changes test setup only.
