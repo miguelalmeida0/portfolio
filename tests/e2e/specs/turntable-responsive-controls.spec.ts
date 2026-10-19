@@ -63,6 +63,6 @@ test('headline stays centered and inside the hero while resizing during a role t
     expect(box.right).toBeGreaterThanOrEqual(-1);
     expect(box.center).toBeLessThan(2);
   }
-  await expect(page.locator('.mah-photo')).toHaveAttribute('data-rest-role', 'designer');
+  await expect(page.locator('.mah-photo-back')).toHaveCSS('opacity', '1');
   await expect(page.locator('.mah-word')).toHaveText('DESIGNER');
 });

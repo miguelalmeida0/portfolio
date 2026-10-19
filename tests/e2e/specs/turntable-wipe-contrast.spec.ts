@@ -7,7 +7,7 @@ test('copy ink tracks the field edge on every sampled animation frame', async ({
     await expect(page.locator('.mah[data-renderer]')).toBeVisible();
     const pause = page.locator('[data-mah-pause]');
     if (await pause.getAttribute('aria-pressed') !== 'true') await pause.click();
-    await expect(page.locator('.mah-photo')).toHaveAttribute('data-rest-role', 'engineer');
+    await expect(page.locator('.mah-photo-front')).toHaveCSS('opacity', '1');
     await expect(page.locator('.mah')).not.toHaveClass(/is-sweeping/);
     await page.waitForTimeout(650);
     for (const role of ['designer', 'engineer']) {

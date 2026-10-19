@@ -28,7 +28,9 @@
   let controls: HTMLDivElement;
 
   onMount(() => {
-    const header = createTurntableHeader(host, { assets, content, controlsContainer: controls });
+    // Keep the registered photographs intact. The synthetic WebGL body turn
+    // distorts the face between these two poses; use the existing image fade.
+    const header = createTurntableHeader(host, { assets, content, controlsContainer: controls, renderer: 'fallback' });
     // Move the same controls, retaining their listeners, role and pause state.
     // Small screens keep a single-row masthead; controls scroll with the hero.
     const navControls = controls.parentElement!;

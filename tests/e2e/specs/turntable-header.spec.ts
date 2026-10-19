@@ -168,20 +168,20 @@ test.describe('Turntable integration', () => {
   });
 });
 
-test('WebGL renderer completes front-to-back-to-front without page errors', async ({ page }) => {
+test('original portraits crossfade front-to-back-to-front without page errors', async ({ page }) => {
   test.setTimeout(60000);
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto(home);
-  await expect(page.locator('.mah')).toHaveAttribute('data-renderer', 'webgl');
+  await expect(page.locator('.mah')).toHaveAttribute('data-renderer', 'fallback');
   await expect(page.locator('.mah-photo-canvas')).toBeHidden();
   await expect(page.locator('.mah-photo-front')).toBeVisible();
   await page.getByRole('button', { name: 'Product designer', exact: true }).click();
-  await expect(page.locator('.mah-photo-canvas')).toBeVisible();
+  await expect(page.locator('.mah-photo-canvas')).toBeHidden();
   await settled(page, 'designer');
   await expect(page.locator('.mah-photo-canvas')).toBeHidden();
   await expect(page.locator('.mah-photo-back')).toHaveCSS('opacity', '1');
-  await page.screenshot({ path: test.info().outputPath('webgl-designer.png') });
+  await page.screenshot({ path: test.info().outputPath('photo-designer.png') });
   await page.getByRole('button', { name: 'Frontend engineer', exact: true }).click();
   await settled(page, 'engineer');
   expect(errors).toEqual([]);
