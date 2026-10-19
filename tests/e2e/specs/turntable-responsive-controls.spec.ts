@@ -5,6 +5,11 @@ test('compact controls and supporting copy keep a restrained hierarchy', async (
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/');
     await expect(page.locator('.mah-copy > .turntable-switch')).toBeVisible();
+    // The columns enter with staggered translations. Measure the settled layout,
+    // after initialization and both entrances, rather than two animation frames.
+    await expect(page.locator('.mah')).toHaveAttribute('data-renderer', /^(webgl|fallback)$/);
+    await expect(page.locator('.mah-col--left')).toHaveCSS('opacity', '1');
+    await expect(page.locator('.mah-col--right')).toHaveCSS('opacity', '1');
     const tabs = (await page.locator('[data-mah-tabs]').boundingBox())!;
     expect(tabs.width).toBeLessThanOrEqual(200);
     expect(tabs.height).toBeLessThanOrEqual(44);

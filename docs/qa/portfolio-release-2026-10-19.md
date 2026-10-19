@@ -67,3 +67,11 @@ The PDF's Portfolio annotation now uses SITE_ORIGIN, keeping the authored PDF
 unchanged while pointing its interactive link to is-a.dev. The new assertion
 first reproduced the old xyz link. A fresh build and Svelte check passed, followed
 by all 18 targeted PDF/footer tests in Chromium and WebKit.
+
+The following remote run passed all PDF checks and exposed a static-layout test
+sampling the header's staggered entrance: its trace recorded translations of
+12.0721px and 16px while opacity was still below one. The layout test now waits
+for initialization and both column entrances before its unchanged one-pixel
+alignment assertion. Both engines passed two repetitions across all six widths
+(24 viewport checks). Browser engines run in separate CI matrix jobs with the
+same complete suite and aggregate validation gate. No UI code changed.

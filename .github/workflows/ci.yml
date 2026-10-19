@@ -37,6 +37,10 @@ jobs:
     needs: checks
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit]
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -47,17 +51,17 @@ jobs:
           node-version-file: .node-version
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium webkit
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
       - run: npm run build
       - name: Test the published portfolio in Chromium and WebKit
         env:
           PORTFOLIO_AUDIT_OUTPUT: ${{ github.workspace }}/test-results/release
-        run: npx playwright test -c tests/e2e/portfolio-release.config.ts
+        run: npx playwright test -c tests/e2e/portfolio-release.config.ts --project=${{ matrix.browser }}
       - name: Upload browser failure evidence
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
-          name: browser-smoke-failure
+          name: browser-smoke-failure-${{ matrix.browser }}
           path: |
             playwright-report/
             test-results/
