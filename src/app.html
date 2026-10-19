@@ -31,6 +31,15 @@
             ? 'fine'
             : 'coarse';
           root.dataset.presentation = 'complete';
+          // If the application bundle fails, retain the server-rendered photo.
+          // Healthy startup reveals it only after the header measures its frame.
+          var recoverPortrait = function () {
+            document.querySelectorAll('.mah:not([data-portrait-ready])').forEach(function (header) {
+              header.setAttribute('data-portrait-fallback', '');
+            });
+          };
+          window.addEventListener('error', recoverPortrait);
+          window.addEventListener('unhandledrejection', recoverPortrait);
         } catch (e) {
           /* A failed probe leaves the finished, unanimated composition in place. */
         }

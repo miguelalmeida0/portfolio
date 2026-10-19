@@ -1,48 +1,77 @@
 import { expect, test } from '@playwright/test';
 
 for (const width of [390, 1440]) {
-  test('portrait stays intact throughout repeated role changes at ' + width + 'px', async ({ page }) => {
-    await page.setViewportSize({ width, height: 900 });
-    const errors: string[] = [];
-    page.on('pageerror', error => errors.push(error.message));
-    await page.goto('/');
-    await expect(page.locator('.mah')).toHaveAttribute('data-renderer', /webgl|fallback/);
-    await page.getByRole('button', { name: 'Pause the role animation' }).click();
-    await expect(page.locator('.mah-photo')).toHaveCSS('opacity', '1');
-
-    for (const role of ['designer', 'engineer', 'designer', 'engineer']) {
-      await page.getByRole('button', {
-        name: role === 'designer' ? 'Product designer' : 'Frontend engineer', exact: true
-      }).click();
-      const frames = await page.evaluate(() => new Promise<Array<{ intact: boolean; opacity: number; width: number; height: number }>>(resolve => {
-        const photo = document.querySelector<HTMLElement>('.mah-photo')!;
-        const front = photo.querySelector<HTMLElement>('.mah-photo-front')!;
-        const back = photo.querySelector<HTMLElement>('.mah-photo-back')!;
-        const canvas = photo.querySelector<HTMLElement>('canvas')!;
+  for (const delay of [0, 800]) {
+    test('first arrival paints the portrait once at its final size: ' + width + 'px, JS delay ' + delay, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.addInitScript(() => {
+        const frames: Array<{ shown: boolean; opacity: number; x: number; y: number; width: number; height: number }> = [];
+        (window as any).portraitArrival = frames;
         const start = performance.now();
-        const samples: Array<{ intact: boolean; opacity: number; width: number; height: number }> = [];
         function sample() {
-          const f = getComputedStyle(front), b = getComputedStyle(back);
-          const box = photo.getBoundingClientRect();
-          samples.push({
-            intact: f.visibility === 'visible' && b.visibility === 'visible' && getComputedStyle(canvas).display === 'none',
-            opacity: Number(f.opacity) + Number(b.opacity),
-            width: box.width, height: box.height
-          });
-          if (performance.now() - start >= 1900) resolve(samples);
-          else requestAnimationFrame(sample);
+          const photo = document.querySelector<HTMLElement>('.mah-photo');
+          const image = photo?.querySelector<HTMLImageElement>('.mah-photo-front');
+          if (photo && image?.complete && image.naturalWidth) {
+            const style = getComputedStyle(photo), rect = photo.getBoundingClientRect();
+            frames.push({
+              shown: style.visibility === 'visible' && style.display !== 'none' && Number(style.opacity) > 0,
+              opacity: Number(style.opacity), x: rect.x, y: rect.y, width: rect.width, height: rect.height
+            });
+          }
+          if (performance.now() - start < 15000) requestAnimationFrame(sample);
         }
-        sample();
-      }));
-      expect(frames.length).toBeGreaterThan(10);
-      expect(frames.every(frame => frame.intact), 'original photos must never hand off to the distorting canvas').toBe(true);
-      expect(Math.min(...frames.map(frame => frame.opacity))).toBeGreaterThanOrEqual(.99);
-      expect(Math.max(...frames.map(frame => frame.width)) - Math.min(...frames.map(frame => frame.width))).toBeLessThan(1);
-      expect(Math.max(...frames.map(frame => frame.height)) - Math.min(...frames.map(frame => frame.height))).toBeLessThan(1);
-      await expect(page.locator('.mah')).toHaveAttribute('data-role', role);
-      await expect(page.locator('.mah-word')).toHaveText(role === 'designer' ? 'DESIGNER' : 'FRONTEND');
+        requestAnimationFrame(sample);
+      });
+      if (delay) await page.route('**/_app/immutable/entry/*.js', async route => {
+        await new Promise(resolve => setTimeout(resolve, delay));
+        await route.continue();
+      });
+      await page.goto('/');
+      await expect(page.locator('.mah')).toHaveAttribute('data-renderer', /webgl|fallback/);
+      await page.getByRole('button', { name: 'Pause the role animation' }).click();
+      await page.waitForTimeout(1100);
+      const frames = await page.evaluate(() => (window as any).portraitArrival as Array<{ shown: boolean; opacity: number; x: number; y: number; width: number; height: number }>);
+      const first = frames.findIndex(frame => frame.shown);
+      expect(first, 'portrait must become visible').toBeGreaterThanOrEqual(0);
+      const painted = frames.slice(first);
+      expect(painted.length).toBeGreaterThan(10);
+      expect(painted.every(frame => frame.shown && frame.opacity === 1), 'a visible photo must never hide or fade back in during startup').toBe(true);
+      for (const axis of ['x', 'y', 'width', 'height'] as const) {
+        expect(Math.max(...painted.map(frame => frame[axis])) - Math.min(...painted.map(frame => frame[axis])), 'first-paint portrait ' + axis + ' must equal settled geometry').toBeLessThan(1);
+      }
+    });
+  }
+
+  test('original WebGL photo turn remains active in both directions at ' + width + 'px', async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    // Probe the browser independently: an application regression to fallback
+    // must fail this test, while a machine without WebGL cannot exercise it.
+    const webgl = await page.evaluate(() => {
+      const gl = document.createElement('canvas').getContext('webgl');
+      gl?.getExtension('WEBGL_lose_context')?.loseContext();
+      return !!gl;
+    });
+    test.skip(!webgl, 'This browser environment does not provide WebGL');
+    await page.goto('/');
+    await expect(page.locator('.mah')).toHaveAttribute('data-renderer', 'webgl');
+    await page.getByRole('button', { name: 'Pause the role animation' }).click();
+    for (const role of ['designer', 'engineer']) {
+      await page.getByRole('button', { name: role === 'designer' ? 'Product designer' : 'Frontend engineer', exact: true }).click();
+      await expect(page.locator('.mah-photo.is-turning .mah-photo-canvas')).toBeVisible();
+      await expect(page.locator('.mah-photo')).toHaveAttribute('data-rest-role', role);
+      await expect(page.locator('.mah-photo-canvas')).toBeHidden();
       await expect(page.locator(role === 'designer' ? '.mah-photo-back' : '.mah-photo-front')).toHaveCSS('opacity', '1');
+      await expect(page.locator('.mah-word')).toHaveText(role === 'designer' ? 'DESIGNER' : 'FRONTEND');
+      await page.waitForTimeout(700);
     }
-    expect(errors).toEqual([]);
   });
 }
+
+test('without JavaScript the original portrait remains available', async ({ browser, baseURL }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
+  try {
+    const page = await context.newPage();
+    await page.goto(new URL('/', baseURL).href);
+    await expect(page.locator('.mah-photo-front')).toBeVisible();
+  } finally { await context.close(); }
+});

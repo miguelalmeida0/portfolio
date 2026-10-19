@@ -197,6 +197,9 @@ export function createTurntableHeader(container: HTMLElement, options: HeaderOpt
     word.measureFont(display);
     word.build(content.words[role]);
     relayout();
+    // Reveal once in the measured frame. The portrait has no arrival tween;
+    // WebGL exclusively owns the subsequent front/back role turns.
+    root.dataset.portraitReady = '';
     ro.observe(root);
     if (reduce.matches) { root.classList.add('is-reduced'); tabs.classList.add('is-reduced'); }
 
@@ -214,7 +217,6 @@ export function createTurntableHeader(container: HTMLElement, options: HeaderOpt
       const I = MOTION.intro;
       const intro = gsap.timeline({ onComplete: () => { if (autoplay && !destroyed) clock.start(); } })
         .from(root.querySelectorAll('.mah-word .mah-g'), { yPercent: 104, duration: I.letters, ease: 'power4.out', stagger: I.letterStagger })
-        .from(photo, { y: 40, opacity: 0, duration: I.photo, ease: 'power3.out' }, I.photoAt)
         .from(root.querySelectorAll('.mah-col'), { y: 16, opacity: 0, duration: I.copy, ease: 'power3.out', stagger: I.copyStagger }, I.copyAt);
       tweens.push(intro);
     }

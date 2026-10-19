@@ -131,12 +131,16 @@ for (const type of ['navigate', 'reload']) {
     assert.equal(history.scrollRestoration, 'auto');
     assert.equal(session.get('seen-intro'), undefined);
   });
-  test(`${type} never overrides the session marker or installs intro input handlers`, () => {
+  test(`${type} never overrides the session marker or captures intro input`, () => {
     const { root, history, timers, window } = boot({ type, seen: true });
     assert.equal(root.dataset.presentation, 'complete');
     assert.equal(history.scrollRestoration, 'auto');
     assert.equal(timers.length, 0);
-    assert.equal(window.listeners.size, 0);
+    for (const input of ['wheel', 'touchstart', 'touchmove', 'pointerdown', 'keydown']) {
+      const event = window.emit(input, { deltaY: 100, key: 'PageDown', touches: [{ clientY: 70 }] });
+      assert.equal(event.defaultPrevented, false);
+      assert.equal(event.stopped, false);
+    }
   });
 }
 

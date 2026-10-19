@@ -56,6 +56,10 @@
 .mah-g--abs{position:absolute;left:0;right:0;top:0;transform-origin:50% 50%}
 
 /* ---------- photo: registered torso portraits, shared turn frame ---------- */
+/* JS computes the final portrait geometry after fonts settle. Do not paint the
+   provisional server frame first; without JS the original photo stays visible. */
+html[data-motion] .mah:not([data-portrait-ready]):not([data-portrait-fallback]) .mah-photo{visibility:hidden}
+
 .mah-photo{position:absolute;bottom:0;z-index:2;pointer-events:none;overflow:hidden;
   height:var(--mah-ph,70svh);width:calc(var(--mah-ph,70svh)*1016/1065);left:calc(50% - var(--mah-ph,70svh)*508/1065)}
 .mah-photo-img,.mah-photo-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;max-width:none}

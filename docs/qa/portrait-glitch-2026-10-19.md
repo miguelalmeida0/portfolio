@@ -1,3 +1,5 @@
+> Superseded by portrait-arrival-2026-10-19.md. The crossfade addressed the wrong interaction; the original WebGL turn is restored and the first-arrival photo flash is fixed separately.
+
 # Portrait distortion fix — 19 October 2026
 
 Live reproduction captured recurring distortion during FRONTEND / DESIGNER
