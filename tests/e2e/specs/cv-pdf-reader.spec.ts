@@ -70,6 +70,7 @@ test('PDF links open separately and preserve the rendered CV', async ({ page, co
   await page.goto('/cv/pdf');
   const annotations = page.locator('.annotationLayer a[href]');
   await expect(annotations.first()).toBeVisible({ timeout: 20000 });
+  await expect(page.getByRole('link', { name: 'Portfolio — opens in a new tab', exact: true })).toHaveAttribute('href', 'https://miguelalmeida.is-a.dev/');
   const original = page.url();
   const destinations = [
     'https://needle.miguelalmeida.xyz',

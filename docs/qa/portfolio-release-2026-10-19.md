@@ -55,3 +55,15 @@ The first GitHub browser jobs failed before tests ran because Playwright used
 the config directory as the server working directory. The release config now
 sets the project root explicitly. A local run with CI=1 started the built worker
 and passed both fresh-entry checks. This correction changes test setup only.
+
+The next remote run passed 98 browser tests but one WebKit footer/PDF assertion
+expired while the popup's bootstrap scripts were still loading. Its trace showed
+successful responses arriving beyond the assertion window and no reader error.
+The footer test now waits for the popup document load before asserting canvas
+visibility; the assertion timeout is unchanged. Mobile WebKit also passed with
+both entry scripts deliberately delayed 10 seconds (canvas visible at 10.838s).
+
+The PDF's Portfolio annotation now uses SITE_ORIGIN, keeping the authored PDF
+unchanged while pointing its interactive link to is-a.dev. The new assertion
+first reproduced the old xyz link. A fresh build and Svelte check passed, followed
+by all 18 targeted PDF/footer tests in Chromium and WebKit.

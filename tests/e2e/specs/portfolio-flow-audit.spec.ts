@@ -25,7 +25,11 @@ test('footer keyboard contacts, clipboard and actual PDF '+width,async({page,con
  await page.locator('[data-stop="0"]').click();await expect(page.locator('[data-toast]')).toContainText('Address: miguelalmeida1592@gmail.com');
  for(const i of [1,2]){await expect(page.locator('[data-stop="'+i+'"]')).toHaveAttribute('target','_blank');await expect(page.locator('[data-stop="'+i+'"]')).toHaveAttribute('rel',/noopener/);}
  const opened=context.waitForEvent('page');await page.locator('[data-stop="3"]').click();const pdf=await opened;
- await expect(pdf).toHaveURL(/\/cv\/pdf$/);await expect(pdf.locator('canvas').first()).toBeVisible();await pdf.close();
+ await expect(pdf).toHaveURL(/\/cv\/pdf$/);
+ // A popup URL commits before its scripts, styles and fonts finish loading.
+ // Keep the canvas assertion separate from that document-load lifecycle.
+ await pdf.waitForLoadState('load');
+ await expect(pdf.locator('canvas').first()).toBeVisible();await pdf.close();
 });
 }
 test('Ask desktop and narrow landscape retain input, answer and close',async({page},testInfo)=>{

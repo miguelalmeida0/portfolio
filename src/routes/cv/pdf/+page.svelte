@@ -1,5 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { SITE_ORIGIN } from '$lib/config/site';
+  const portfolioHost = new URL(SITE_ORIGIN).hostname;
   import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
   import 'pdfjs-dist/web/pdf_viewer.css';
   import type { PDFViewer } from 'pdfjs-dist/web/pdf_viewer.mjs';
@@ -55,7 +57,8 @@
             // annotations pointed at the currently published project domains.
             const previousHost = url.hostname;
             const migratedHosts: Record<string, string> = {
-              'miguelalmeida.is-a.dev': 'miguelalmeida.xyz',
+              'miguelalmeida.is-a.dev': portfolioHost,
+              'miguelalmeida.xyz': portfolioHost,
               'secondvoice-ai.vercel.app': 'secondvoice.miguelalmeida.xyz',
               'leu-desktop.vercel.app': 'leu.miguelalmeida.xyz'
             };
@@ -70,7 +73,7 @@
             const names: Record<string, string> = {
               'www.linkedin.com': 'LinkedIn',
               'github.com': 'GitHub',
-              'miguelalmeida.xyz': 'Portfolio',
+              [portfolioHost]: 'Portfolio',
               'needle.miguelalmeida.xyz': 'Needle',
               'secondvoice.miguelalmeida.xyz': 'Second Voice',
               'leu.miguelalmeida.xyz': 'Leu'
@@ -83,7 +86,7 @@
             // The four contact cards are 128 × 39 PDF points, radius 8.
             const section = link.parentElement!;
             const contact = ['www.linkedin.com', 'github.com'].includes(url.hostname)
-              || email || (url.hostname === 'miguelalmeida.xyz' && url.pathname === '/');
+              || email || (url.hostname === portfolioHost && url.pathname === '/');
             section.classList.toggle('contact-link', contact);
           }
         });
