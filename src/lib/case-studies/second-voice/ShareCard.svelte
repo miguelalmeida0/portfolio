@@ -4,7 +4,7 @@ import {flushSync} from 'svelte';import {ORIGINAL,REWRITES} from './content';imp
   <section class="chapter" id="privacy" bind:this={root} aria-labelledby="priv-h">
     <div class="head">
       <h2 id="priv-h">Private until you share it.</h2>
-      <p>A writing tool holds personal text. A feature called share is also an authorisation problem, so public has to be a deliberate act.</p>
+      <p>Rewrites stay private unless the writer chooses to share them. This example shows the confirmation step.</p>
     </div>
     <div class="priv">
       <article class="share-card" aria-labelledby="share-l">
@@ -32,6 +32,6 @@ import {flushSync} from 'svelte';import {ORIGINAL,REWRITES} from './content';imp
     </div>
     <div class="observe">
       <div class="yes"><h3>What debugging can see</h3><ul><li>Request id</li><li>Provider and model</li><li>Latency</li><li>Schema fallback state</li><li>Feedback</li><li>Rewrite hash</li></ul><p>Enough to trace a bad rewrite to its request.</p></div>
-      <div class="no"><h3>What it avoids collecting</h3><ul><li>Raw drafts</li><li>Raw rewrites</li></ul><p>Hashes stand in for text wherever that is enough. Observability is not a reason to read people's writing.</p></div>
+      <div class="no"><h3>What it avoids collecting</h3><ul><li>Raw drafts</li><li>Raw rewrites</li></ul><p>Hashes stand in for text wherever that is enough. Logs should not include the writer’s original text.</p></div>
     </div>
   </section>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { buildInfo } from '$lib/build-info';
   import { destinationLink } from '$lib/navigation/destination-link';
   import { onMount, setContext } from 'svelte';
   import { afterNavigate, beforeNavigate } from '$app/navigation';
@@ -80,6 +81,9 @@
 </script>
 
 <svelte:head>
+  <meta name="portfolio-build" content={buildInfo.commit} />
+  <meta name="portfolio-build-time" content={buildInfo.builtAt} />
+  <meta name="portfolio-build-dirty" content={String(buildInfo.dirty)} />
   {@html `<style data-entry-styles>${entryStyles}</style>`}
   <link rel="canonical" href={canonicalUrl} />
   <meta property="og:type" content="website" />

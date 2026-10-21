@@ -58,7 +58,7 @@ export function buildFallbackAnswer(question: string, mode: MiguelLLMMode, _rece
   }
   if (/connectivity|\bf24\b|production (frontend |work |experience)|\b(current employer|work history|professional experience)\b/.test(q)) {
     return make('At F24, the original Svelte frontend moved from initial mockups through production as part of the wider product team. Miguel’s frontend contribution later continued in the React application. The application is now used by hundreds of companies.',
-      [cvExperience[0].bullets[2], 'The company-adoption figure describes the application, not a claim that Miguel alone created its business impact.'],
+      [cvExperience[0].bullets[2], 'Product, design, backend, frontend and QA contributed to the application’s delivery.'],
       ['Production experience|/cv#experience', 'F24 work|/work/f24'], ['What did Miguel personally build?', 'What does his previous team lead say?', 'What kind of role fits Miguel?']);
   }
   if (/richard|recommendation|testimonial|team lead|supervision/.test(q)) {
@@ -76,7 +76,7 @@ export function buildFallbackAnswer(question: string, mode: MiguelLLMMode, _rece
       ['Experience|/cv#experience', 'Second Voice AI|/work/second-voice-ai', 'Flow|/work/flow', 'Leu|/work/leu']);
   }
   if (/\b(start with|strongest|inspect first|best project|which project)\b/.test(q)) {
-    return make('Start with Needle for search and performance engineering. Second Voice AI shows product design and frontend engineering; F24 shows for production Svelte and React experience. Flow explores editable voice actions; Leu explores native, source-linked learning.',
+    return make('Start with Needle for search and performance engineering. Second Voice AI shows product design and frontend engineering; F24 shows production Svelte and React experience. Flow explores editable voice actions; Leu explores native, source-linked learning.',
       currentGuideProjects.slice(0, 3).map(project => project.ownership),
       currentGuideProjects.map(project => `${project.name}|/work/${project.slug}`));
   }

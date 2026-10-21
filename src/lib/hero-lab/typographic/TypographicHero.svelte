@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { motionSnapshot, motionState } from '$lib/motion/policy';
   import { hero } from '$lib/hero-lab/content';
   import { labMotion } from '$lib/hero-lab/runtime';
   import { destinationLink } from '$lib/navigation/destination-link';
@@ -28,7 +29,9 @@
   let controls: HTMLDivElement;
 
   onMount(() => {
-    const header = createTurntableHeader(host, { assets, content, controlsContainer: controls });
+    const header = createTurntableHeader(host, { assets, content, controlsContainer: controls,
+      motion: { reduced: motionSnapshot().reduced, subscribe: notify => motionState.subscribe(state => notify(state.reduced)) }
+    });
     // Move the same controls, retaining their listeners, role and pause state.
     // Small screens keep a single-row masthead; controls scroll with the hero.
     const navControls = controls.parentElement!;
@@ -128,6 +131,7 @@
     .d1 { --turntable-nav-height: 68px; }
     .d1 :global(.mast.has-role-control) { --mast-h: 68px; }
   }
+  .turntable-switch :global(.mah-tabs.is-reduced .mah-tab) { transition: none; }
   @media (prefers-reduced-motion: reduce) {
     .turntable-switch :global(.mah-tab) { transition: none; }
     .turntable-switch :global(.mah-pause), .turntable-switch :global(.mah-tabs::before), .turntable-switch :global(.mah-tabs::after) { display: none; }

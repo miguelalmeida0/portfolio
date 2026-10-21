@@ -92,7 +92,7 @@
       <div class="story-photo-frame"><img src="/projects/f24/hackathon-team.webp" width="1000" height="749"
         alt="Miguel and the F24 hackathon team beside their presentation, with a colleague joining remotely."
         fetchpriority="high" decoding="async" /></div>
-      <figcaption>At F24, building together.</figcaption>
+      <figcaption>With the team at an F24 hackathon.</figcaption>
     </figure>
 
     <div class="journey" role="tablist" aria-label="Career journey" aria-orientation="horizontal">
@@ -120,13 +120,13 @@
     </div>
 
     <div class="band" data-band data-arm>
-      <D1Title tag="h2" text="A little more of the story." class="band-title" />
+      <D1Title tag="h2" text="How I work." class="band-title" />
       <a class="band-link" href="#story-summary">Start with the short version <span aria-hidden="true">↓</span></a>
     </div>
   </section>
 
   <article bind:this={root} class="story-split story-editorial d1-story" data-story-ready={ready || undefined} aria-labelledby="story-title">
-    <section class="story-summary story-summary-first" data-story-section data-chapter="summary" aria-labelledby="story-summary"><ShortVersion /></section>
+    <section class="story-summary story-summary-first" data-story-section data-chapter="summary" aria-labelledby="story-summary"><ShortVersion compact /></section>
     <div class="story-layout">
       <aside class="story-index">
         <p class="story-eyebrow">{data.editorial.indexTitle}</p>

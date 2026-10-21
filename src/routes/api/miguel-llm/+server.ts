@@ -1,3 +1,4 @@
+import { readJsonBody, requestAllowance, BodyError } from '$lib/server/request-safety';
 import { selectedProvider, resolvedModel, requestStructured } from '$lib/server/miguel-provider';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
@@ -9,29 +10,12 @@ import { buildMiguelSystemPrompt } from '$lib/miguel-llm/systemPrompt';
 import { resolveProject } from '$lib/miguel-llm/projectContext';
 import type { MiguelLLMAnswer, MiguelLLMMode, MiguelLLMProvider, MiguelLLMRequest } from '$lib/miguel-llm/types';
 
-const RATE_LIMIT_WINDOW_MS = 60_000;
-const RATE_LIMIT_MAX = 12;
 const MAX_CONTEXT_CHUNKS = 5;
 const MAX_OUTPUT_TOKENS = 420;
 const MAX_SHORT_ANSWER_CHARS = 360;
 const MAX_BULLET_CHARS = 220;
 const MAX_SUGGESTION_CHARS = 100;
 const LOCAL_FALLBACK_MODEL = 'deterministic-local-fallback';
-
-const buckets = new Map<string, { count: number; resetAt: number }>();
-
-function isRateLimited(key: string) {
-  const now = Date.now();
-  const bucket = buckets.get(key);
-
-  if (!bucket || bucket.resetAt <= now) {
-    buckets.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-    return false;
-  }
-
-  bucket.count += 1;
-  return bucket.count > RATE_LIMIT_MAX;
-}
 
 function coerceApiAnswer(
   value: unknown,
@@ -112,7 +96,7 @@ function buildProviderInput(
   return JSON.stringify({
     question,
     voiceDirection:
-      'Answer in Miguel’s approved first-person portfolio voice when appropriate. Choose a fresh opening and natural rhythm for this specific question. Be warm, relaxed, specific, and lightly playful where it fits. Avoid corporate HR language, generic AI hype, repeated catchphrases, and the wording of recent answers.',
+      'Answer in Miguel’s approved first-person portfolio voice when appropriate. Choose a fresh opening and natural rhythm for this specific question. Be direct, specific and conversational. Do not add jokes, slogans, metaphors or personal traits absent from the approved notes. Avoid corporate HR language, generic AI hype, repeated catchphrases, and the wording of recent answers.',
     recentAnswersToAvoidRepeating: recentAnswers,
     approvedFirstPersonDraft: fallback.shortAnswer,
     approvedContext: chunks.map((chunk) => ({
@@ -130,19 +114,21 @@ function buildProviderInput(
   });
 }
 
-export const POST: RequestHandler = async ({ request, getClientAddress }) => {
+export const POST: RequestHandler = async ({ request, getClientAddress, platform }) => {
+  const signal = AbortSignal.any([request.signal, AbortSignal.timeout(15_000)]);
+  const headers = { "Cache-Control": "no-store" };
   let body: MiguelLLMRequest;
 
   try {
-    body = (await request.json()) as MiguelLLMRequest;
+    body = await readJsonBody(request, 32_000, signal) as MiguelLLMRequest;
     if (!body || typeof body !== 'object' || Array.isArray(body)) throw new Error('Invalid body');
-  } catch {
+  } catch (error) {
     return json(
       {
         error: 'Send a JSON body with a question.',
         ...buildFallbackAnswer('What can MiguelLLM answer?', 'recruiter')
       },
-      { status: 400 }
+      { status: error instanceof BodyError ? error.status : signal.aborted ? 408 : 400, headers }
     );
   }
 
@@ -157,18 +143,19 @@ export const POST: RequestHandler = async ({ request, getClientAddress }) => {
         error: validation.reason,
         ...buildFallbackAnswer(validation.question || 'What can MiguelLLM answer?', mode)
       },
-      { status: 400 }
+      { status: 400, headers }
     );
   }
 
   const clientKey = getClientAddress();
-  if (isRateLimited(clientKey)) {
+  const allowance = requestAllowance(clientKey);
+  if (!allowance.allowed) {
     return json(
       {
         error: 'MiguelLLM is receiving too many questions from this session. Try again in a minute.',
         ...buildFallbackAnswer(validation.question, mode)
       },
-      { status: 429 }
+      { status: 429, headers: { ...headers, 'Retry-After': String(allowance.retryAfter) } }
     );
   }
 
@@ -184,7 +171,7 @@ export const POST: RequestHandler = async ({ request, getClientAddress }) => {
     return json({
       ...fallback,
       sources: fallback.sources.length ? fallback.sources : sources
-    });
+    }, { headers });
   }
 
   try {
@@ -196,15 +183,15 @@ export const POST: RequestHandler = async ({ request, getClientAddress }) => {
       recentAnswers,
       fallback
     );
-    const parsed = await requestStructured(input, buildMiguelSystemPrompt(mode), MAX_OUTPUT_TOKENS);
+    const parsed = await requestStructured(input, buildMiguelSystemPrompt(mode), MAX_OUTPUT_TOKENS, signal, { client: clientKey, namespace: platform?.env?.PORTFOLIO_BUDGET });
     const answer = coerceApiAnswer(parsed, fallback, sources, provider, model, mode);
 
-    return json(answer);
+    return json(answer, { headers });
   } catch {
     return json({
       ...fallback,
       model: LOCAL_FALLBACK_MODEL,
       sources: fallback.sources.length ? fallback.sources : sources
-    });
+    }, { headers });
   }
 };

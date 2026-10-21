@@ -7,11 +7,12 @@ const { storyOpening } = await loadLocalTs('src/lib/hero-lab/typographic/pages/s
   stubs: { '$lib/story/story.json': `export default ${JSON.stringify(story)}` }
 });
 
-test('expanded chapters retain canonical first-person accounts and stable Ask destinations', () => {
+test('career tabs add distinct information while retaining stable Ask destinations', () => {
   assert.equal(storyOpening.chapters.length,3);
   for (const [i, chapter] of storyOpening.chapters.entries()) {
     assert.equal(chapter.area,`story-intro-${i}`);
-    assert.equal(chapter.paragraphs[0],story.questions[i].answer);
+    assert.notEqual(chapter.paragraphs[0],story.questions[i].answer);
+    assert.ok(chapter.paragraphs.every(text => text.length > 20));
     assert.equal(chapter.paragraphs.length,2);
     for (const source of chapter.sourceIds) assert.ok(story.questions.some(q => q.id === source));
   }

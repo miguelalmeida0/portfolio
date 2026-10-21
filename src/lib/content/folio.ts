@@ -18,7 +18,7 @@ export const site = {
   linkedin: 'https://www.linkedin.com/in/miguelalmeida1/',
   github: 'https://github.com/miguelalmeida0',
   temperatureC: 12,
-  tagline: 'Made by hand, in Berlin.'
+  tagline: 'Designed and built by Miguel Almeida in Berlin.'
 };
 
 export const navigation: MetaLink[] = [
@@ -71,15 +71,15 @@ export const selectedWork: SelectedWorkItem[] = projects.map(project => ({
 export const approach: ApproachItem[] = [
   {
     title: 'Calm',
-    body: 'I try to remove noise before I add flair. The best interfaces usually feel slower, clearer, and more deliberate than the product requirements first suggest.'
+    body: 'I start with the information someone needs and the action they want to take. Extra controls and decoration need a reason to be there.'
   },
   {
     title: 'Reliable',
-    body: 'I like boring systems in the best sense: predictable states, stable components, good naming, and enough care that edge cases stop feeling like surprises.'
+    body: 'I work through loading, empty and error states, and test how the interface recovers.'
   },
   {
     title: 'Crafted',
-    body: 'Design is part of the engineering work. I care about the small seams — spacing, focus, motion, hierarchy — because that is where trust accumulates.'
+    body: 'I work on layout, spacing, keyboard focus and motion as part of building the interface.'
   }
 ];
 
@@ -108,7 +108,7 @@ export const experienceTeaser: ExperienceTeaserItem[] = [
 ];
 
 export const manifestoQuote =
-  'The calmest products are rarely the simplest. They are the ones where someone cared enough to make hard things feel obvious.';
+  'I care about clear interfaces, readable code and what happens when a request fails.';
 
 export const conversationFlows: ConversationFlow[] = [
   {
@@ -177,7 +177,7 @@ export const conversationFlows: ConversationFlow[] = [
 ];
 
 export const cvBio =
-  'At F24 I cut request volume by 75% in a key alerting workflow, expanded regression test files 10x from 3 to 30, shipped message assistance across 13 languages, and helped raise the frontend suite to 7,000+ passing tests across 954 files. My scope spans architecture, business logic, resilience and release quality. I build product systems, not just screens.';
+  'At F24 I cut request volume by 75% in a key alerting workflow, expanded regression test files 10x from 3 to 30, shipped message assistance across 13 languages, and helped raise the frontend suite to 7,000+ passing tests across 954 files. I worked on frontend architecture, business logic, error handling and release checks with the wider product team.';
 
 export const professionalRecommendation = {
   name: 'Richard Nespithal',
@@ -202,18 +202,18 @@ export const cvContactPills: MetaLink[] = [
 ];
 
 export const cvHighlights = [
-  { value: '5,500+', label: 'Customer reach', detail: 'customers worldwide' },
-  { value: '75%', label: 'Workflow gain', detail: 'fewer alerting requests' },
+  { value: '2,000+', label: 'Checks I wrote', detail: 'within the shared frontend suite' },
+  { value: '75%', label: 'Fewer requests', detail: 'in one alerting workflow' },
   { value: '10x', label: 'Regression tests', detail: 'test files: 3 to 30' },
-  { value: '7,000+', label: 'Automated tests', detail: 'across 954 test files' }
+  { value: '7,000+', label: 'Shared test suite', detail: 'team total across 954 files' }
 ];
 
 export const cvSignals = [
   { title: 'Product engineering', detail: 'UI + business logic' },
-  { title: 'Frontend architecture', detail: 'boundaries + contracts' },
+  { title: 'Frontend architecture', detail: 'shared components and typed APIs' },
   { title: 'Security + resilience', detail: 'high-stakes workflows' },
   { title: 'Design systems', detail: 'tokens + reusable UI' },
-  { title: 'AI interfaces', detail: 'validated workflows' }
+  { title: 'AI interfaces', detail: 'checking and editing model output' }
 ];
 
 export const cvExperience: CvExperienceEntry[] = [
@@ -273,7 +273,7 @@ export const cvLanguages = [
 ];
 
 export const cvCta =
-  'Frontend engineer for hard products where product judgment, reliability, and interface craft matter.';
+  'Get in touch about frontend or design engineering work.';
 
 export const storyChapters: StoryChapter[] = [
   {
@@ -282,10 +282,10 @@ export const storyChapters: StoryChapter[] = [
     kicker: '✦ Story · The pivot',
     title: 'A design education, and a different way of seeing products.',
     body: [
-      'The UX Design Institute gave structure to instincts I already had: that hierarchy matters, that the quiet details matter, and that clarity is a form of respect.',
+      'At the UX Design Institute, I studied how to understand user needs, organize information and test interface designs.',
       'It also made me curious about the layer underneath the mockups — the code that actually makes an interface behave.'
     ],
-    quote: 'Good design is often just good judgment, repeated carefully.'
+    quote: 'I wanted to understand how to turn the designs into working interfaces.'
   },
   {
     id: 'first-code',
@@ -313,10 +313,10 @@ export const storyChapters: StoryChapter[] = [
     kicker: '✦ Story · Building from zero',
     title: 'Production work made reliability a daily frontend concern.',
     body: [
-      'Those years were about accumulation. Components, flows, bug fixes, rewrites, architecture decisions — the quiet work that slowly makes a product feel dependable.',
-      'I spent that time close to design and product, shaping interfaces that had to stay calm even as the surface area grew.'
+      'I built components and workflows, fixed bugs and worked on frontend architecture as the product grew.',
+      'I worked with design and product on interfaces for new and existing workflows.'
     ],
-    quote: 'Products people depend on should never feel like they were made in a hurry.'
+    quote: 'Loading, error handling and recovery became part of my everyday frontend work.'
   },
   {
     id: 'mid-level',

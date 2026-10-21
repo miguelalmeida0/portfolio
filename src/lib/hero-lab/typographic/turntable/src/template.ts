@@ -31,12 +31,12 @@ export function renderHeader(c: HeaderContent, a: HeaderAssets, role: Role, them
   return `
 <section class="mah" data-role="${role}" data-theme="${theme}" data-layout="auto" aria-label="Introduction">
   ${heading}
-  <div class="mah-room" aria-hidden="true"><img class="mah-room-img" src="${esc(a.room)}" alt="" decoding="async"><span class="mah-fog"></span></div>
+  <div class="mah-room" aria-hidden="true"><img class="mah-room-img" ${role === 'designer' ? 'src' : 'data-src'}="${esc(a.room)}" alt="" decoding="async"><span class="mah-fog"></span></div>
   <div class="mah-stage">
     <div class="mah-word" aria-hidden="true"></div>
     <div class="mah-photo" role="img" aria-label="${esc(c.photoLabel)}">
       <img class="mah-photo-img mah-photo-front" src="${esc(a.front)}" alt="" width="${GEOMETRY.photoW}" height="${GEOMETRY.photoH}" decoding="async">
-      <img class="mah-photo-img mah-photo-back" src="${esc(a.back)}" alt="" width="${GEOMETRY.photoW}" height="${GEOMETRY.photoH}" style="${backStyle}" decoding="async">
+      <img class="mah-photo-img mah-photo-back" ${role === 'designer' ? 'src' : 'data-src'}="${esc(a.back)}" alt="" width="${GEOMETRY.photoW}" height="${GEOMETRY.photoH}" style="${backStyle}" decoding="async">
       <canvas class="mah-photo-canvas" aria-hidden="true"></canvas>
     </div>
   </div>

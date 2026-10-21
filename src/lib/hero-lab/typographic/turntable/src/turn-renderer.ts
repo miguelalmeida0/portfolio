@@ -12,6 +12,7 @@ export class TurnRenderer {
   private state = { a0: 0, p: 0, blur: 0 };
   private lastP = 0;
   private tween: gsap.core.Tween | null = null;
+  private destroyed = false;
 
   private constructor(
     private gl: WebGLRenderingContext,
@@ -20,11 +21,12 @@ export class TurnRenderer {
     private u: Uniforms,
   ) {}
 
-  static async create(box: HTMLElement, front: HTMLImageElement, back: HTMLImageElement, role: Role): Promise<TurnRenderer | null> {
+  static async create(box: HTMLElement, front: HTMLImageElement, back: HTMLImageElement, role: Role, signal?: AbortSignal): Promise<TurnRenderer | null> {
+    if (signal?.aborted) return null;
     const canvas = box.querySelector<HTMLCanvasElement>('canvas');
     if (!canvas) return null;
     try { await Promise.all([front.decode(), back.decode()]); } catch { /* decode() can reject for cached images; sizes are still valid */ }
-    if (!front.naturalWidth || !back.naturalWidth) return null;
+    if (signal?.aborted || !front.naturalWidth || !back.naturalWidth) return null;
     const gl = canvas.getContext('webgl', { premultipliedAlpha: true, alpha: true, antialias: false });
     if (!gl) return null;
     const compile = (type: number, src: string) => {
@@ -84,6 +86,7 @@ export class TurnRenderer {
   }
 
   resize(): void {
+    if (this.destroyed) return;
     const rect = this.box.getBoundingClientRect();
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     const w = Math.max(2, Math.round(rect.width * dpr)), h = Math.max(2, Math.round(rect.height * dpr));
@@ -93,6 +96,7 @@ export class TurnRenderer {
 
   /** Jump to a role without animating. */
   set(role: Role): void {
+    if (this.destroyed) return;
     this.tween?.kill();
     this.box.dataset.restRole = role;
     this.box.classList.remove('is-turning');
@@ -102,6 +106,7 @@ export class TurnRenderer {
 
   /** Turn to `role`. Always the same direction: front → back → front is one revolution. */
   turnTo(role: Role): Promise<void> {
+    if (this.destroyed) return Promise.resolve();
     const T = MOTION.turn;
     this.tween?.kill();
     this.state = { a0: role === 'designer' ? 0 : Math.PI, p: 0, blur: 0 };
@@ -125,17 +130,21 @@ export class TurnRenderer {
           this.box.classList.remove('is-turning');
           resolve();
         },
+        onInterrupt: resolve,
       });
     });
   }
 
   destroy(): void {
+    if (this.destroyed) return;
+    this.destroyed = true;
     this.tween?.kill();
-    this.box.classList.remove('is-turning');
+    if (this.box.isConnected !== false) this.box.classList.remove('is-turning');
     this.gl.getExtension('WEBGL_lose_context')?.loseContext();
   }
 
   private draw(): void {
+    if (this.destroyed) return;
     const { gl, u, state } = this;
     gl.viewport(0, 0, this.canvas.width, this.canvas.height);
     gl.clearColor(0, 0, 0, 0);

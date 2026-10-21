@@ -217,3 +217,12 @@
   #portfolio-content [data-reader-head] { position: static !important; transform: none !important; }
   #portfolio-content [data-reader-section] { min-height: 0 !important; }
 }
+
+/* Keep display lettering expressive and utility text easy to read. */
+#portfolio-content[data-hero-lab]:has([data-direction='typographic']) :is(.feature-label, .gallery-count, .project-stack, .c-date, .c-project-stack, .c-highlights dt, .short-kicker, .story-eyebrow, .question-number, .scene-caption) {
+  font-family: var(--d1-body); font-weight: 400; letter-spacing: 0; text-transform: none;
+}
+#portfolio-content[data-hero-lab]:has([data-direction='typographic']) :is(.story-answer, .short-introduction, .c-project-description) { font-weight: 400; }
+@media (min-width: 1024px) {
+  #portfolio-content[data-hero-lab]:has([data-direction='typographic']) { --d1-body-size: 21.25px; }
+}

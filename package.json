@@ -22,7 +22,8 @@
     "start": "wrangler pages dev .svelte-kit/cloudflare --ip 127.0.0.1 --port 4173 --log-level error --show-interactive-dev-session=false",
     "test:unit": "node --test tests/unit/*.test.mjs",
     "test:routes": "node --test tests/routes/*.test.mjs",
-    "test:dev-watch": "node --test tests/dev/*.test.mjs"
+    "test:dev-watch": "node --test tests/dev/*.test.mjs",
+    "verify:promotion": "node scripts/verify-promotion.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",

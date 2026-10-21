@@ -2,7 +2,7 @@
 <script>import {onMount} from 'svelte';import {lifecycle} from '../shared/lifecycle';import {STAGES} from './data';import ConceptGraph from './ConceptGraph.svelte';let {learner}=$props();let active=$state(0),steps;onMount(()=>{const life=lifecycle();life.observe(new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)active=Number(e.target.dataset.i)}),{rootMargin:'-45% 0px -45% 0px'}),[...steps.children]);return life.destroy;});</script>
 <section class="chapter" id="architecture" aria-labelledby="chain-h">
     <div class="head">
-      <h2 id="chain-h">One source, seven places to lose trust.</h2>
+      <h2 id="chain-h">Where extraction errors spread</h2>
       <p>Corruption did not stay in the extractor. Every later stage could look consistent while reasoning about the wrong text.</p>
     </div>
     <div class="strip" aria-hidden="true"><p id="stripLabel">{STAGES[active].nm}</p><div class="bars" id="stripBars">{#each STAGES as s,i}<i class:on={i<=active}></i>{/each}</div></div>

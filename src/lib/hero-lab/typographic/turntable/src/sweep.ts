@@ -19,7 +19,9 @@ export function runSweep(opts: {
   toDesigner: boolean;
   items: SweepItem[];
   paintCopy?: (edge: number) => void;
+  signal?: AbortSignal;
 }): Promise<void> {
+  if (opts.signal?.aborted) return Promise.resolve();
   const { root, room, items } = opts;
   const width = root.clientWidth;
   const pending = items.map((i) => ({ ...i, at: i.x / width, done: false }));
@@ -36,11 +38,15 @@ export function runSweep(opts: {
   root.classList.add('is-sweeping');
   const P = { progress: 0 };
   return new Promise((resolve) => {
-    gsap.to(P, {
+    const finish = () => { opts.signal?.removeEventListener('abort', cancel); resolve(); };
+    const cancel = () => { tween.kill(); finish(); };
+    const tween = gsap.to(P, {
       progress: 1 + 2 / width, duration: MOTION.sweep.duration, ease: MOTION.sweep.ease,
       onUpdate: () => paint(P.progress),
-      onComplete: () => { for (const it of pending) if (!it.done) { it.done = true; it.run(); } resolve(); },
+      onComplete: () => { for (const it of pending) if (!it.done) { it.done = true; it.run(); } finish(); },
+      onInterrupt: finish,
     });
+    opts.signal?.addEventListener('abort', cancel, { once: true });
   });
 }
 

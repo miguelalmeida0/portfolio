@@ -2,7 +2,7 @@
 <script>import {onMount} from 'svelte';import {lifecycle} from '../shared/lifecycle';let filled=$state(false),element;onMount(()=>{const life=lifecycle();if(life.reduce.matches)filled=true;else life.observe(new IntersectionObserver((es,o)=>es.forEach(e=>{if(e.isIntersecting){filled=true;o.disconnect()}}),{threshold:.35}),[element]);return life.destroy;});</script>
 <section class="chapter" id="results" aria-labelledby="res-h">
     <div class="head">
-      <h2 id="res-h">Persist the work, then stop redoing it.</h2>
+      <h2 id="res-h">Saving results for faster document reopening.</h2>
       <p>Both speed gains came from one move: separating incremental work from persisted work, so reopening a document reads what was already established instead of rebuilding it.</p>
     </div>
     <div class="bento" id="perf" class:on={filled} bind:this={element}>

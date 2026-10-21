@@ -59,8 +59,8 @@ let life;onMount(()=>{life=lifecycle();return life.destroy;});const wait=ms=>new
 </script>
   <section class="chapter" aria-labelledby="gates-h">
     <div class="head">
-      <h2 id="gates-h">Behind Rewrite, the request has to earn a model call.</h2>
-      <p>Generation costs real resources, so the server, not the button, decides. Run a request, then replay it: an operation that already exists never reaches the model twice.</p>
+      <h2 id="gates-h">Checks before a rewrite request</h2>
+      <p>The server checks whether a generation request is allowed. Run a request, then replay it: an operation that already exists never reaches the model twice.</p>
     </div>
     <div class="frame" id="gates"><div class="window">
       <div>

@@ -2,7 +2,7 @@
 
 </script>
   <section class="chapter" id="team" aria-labelledby="team-h">
-    <div class="head"><h2 id="team-h">A team product, and the contribution to it.</h2></div>
+    <div class="head"><h2 id="team-h">My contribution within the team.</h2></div>
     <div class="team">
       <figure style="margin:0"><img class="photo" src="/projects/f24/hackathon.webp" alt="Colleagues gathered for a presentation at an F24 hackathon." width="1024" height="685" loading="lazy" /><figcaption class="photo-cap">Sharing the work at the F24 hackathon.</figcaption></figure>
       <div>

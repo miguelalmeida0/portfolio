@@ -92,7 +92,7 @@ export function editorialAnswer(question: string, projectSlug?: string): Editori
 
   if (match(q, /\b(recommendation|references|former manager|team lead say|colleague say)\b/)) {
     return make('reference', [
-      ['I have a recommendation in my CV, with its original attribution. I’d rather you read my former teammate’s exact words than have this guide dress them up.', ['Professional recommendation|/cv#recommendation']],
+      ['I have a recommendation in my CV, with its original attribution. You can read my former team lead’s original words there.', ['Professional recommendation|/cv#recommendation']],
       ['My work samples show how I document decisions, test risky states, and separate shipped behavior from things I still need to verify.', [...work, ...cv]]
     ], ['What did Miguel own at F24?', 'How does he collaborate?', 'What should a senior engineer review first?']);
   }
@@ -100,7 +100,7 @@ export function editorialAnswer(question: string, projectSlug?: string): Editori
   if (match(q, /\b(how (does|do) (he|miguel) (work|collaborate)|collaboration|collaborat|teammates|cross functional|with design|with product|with backend|team player|handoff)\b/)) {
     return make('collaboration', [
       ['I like working closely with the people shaping a product. At F24 I partnered with Design, Product, Backend, and QA to turn mockups and real constraints into maintainable, testable UI.', [...cv, ...story]],
-      ['I try to own the whole interaction, not just the pixels: contracts, failure states, keyboard behavior, and what happens after release.', story]
+      ['My frontend work includes API integration, error handling, keyboard behaviour and release checks.', story]
     ], ['What did he own end to end?', 'How does he test UX decisions?', 'What kind of team suits him?']);
   }
 
@@ -141,7 +141,7 @@ export function editorialAnswer(question: string, projectSlug?: string): Editori
 
   if (match(q, /\b(weakness|growth area|what would he improve|still learning|gets better|working on personally|working on improving|working to improve)\b/) && !projectSlug) {
     return make('growth', [
-      ['I’m working on knowing when to stop polishing. I can spend longer than planned refining an interaction because I genuinely care about how it feels.', story],
+      ['I’m working on spending less time polishing details once the main interaction works well.', story],
       ['What helps me is defining the acceptance bar early: make the critical behavior reliable, verify edge cases, and plan optional polish for a separate pass.', [...story, ...cv]]
     ], ['What motivates him?', 'How does he decide something is ready?', 'How does he approach UI reliability?']);
   }
@@ -149,7 +149,7 @@ export function editorialAnswer(question: string, projectSlug?: string): Editori
   if (match(q, /\b(what does he do for fun|hobbies|outside (?:of )?work|free time|music|films|movies|tv shows|personal interests|as a person)\b/) && !projectSlug) {
     return make('personal', [
       ['Outside work, I’m a pretty relaxed homebody. I love music, films, and TV, and I keep finding new technology to explore. Sometimes a tiny side project turns into a rather detailed experiment.', story],
-      ['I’m especially drawn to AI workflows and those small interface details that make something feel right. Curiosity isn’t just a line on my CV.', [...story, ...work]]
+      ['I’m especially drawn to AI workflows and those small interface details that make something feel right. I often explore those interests through my own projects.', [...story, ...work]]
     ], ['How did he start in UX?', 'What inspires his projects?', 'Which project feels most personal?']);
   }
 
@@ -170,7 +170,7 @@ export function editorialAnswer(question: string, projectSlug?: string): Editori
   if (match(q, /\b(who is miguel|tell me about miguel|tell me about yourself|describe miguel|introduce miguel|who are you|quick introduction|thirty second intro|30 second intro|in a nutshell)\b/) && !projectSlug) {
     return make('introduction', [
       ['I’m a Portuguese frontend engineer based in Berlin. I started in UX design, have worked on production software at F24 since 2022, and love building independent products.', [...story, ...cv]],
-      ['I care about small details: interactions that make sense, resilient frontend systems, and AI features you can actually understand. I’m also always up for a good film or a stubborn technical puzzle.', [...story, ...needle, ...sv]]
+      ['I care about small details: interactions that make sense, resilient frontend systems, and AI features you can actually understand. Outside work, I like music, films and exploring new technology.', [...story, ...needle, ...sv]]
     ], ['What did he build at F24?', 'Which project should I start with?', 'How did UX shape his work?']);
   }
 
@@ -209,12 +209,12 @@ export function projectIntroduction(slug: string): EditorialAnswer | undefined {
     needle: 'I built Needle to make 10,000 artworks searchable by meaning. It combines hybrid HNSW/exact retrieval, Web Workers, and a visual result view that stays usable even when the collection gets dense.',
     'second-voice-ai': 'I built Second Voice around a simple rule: your original stays visible, and every rewrite shows exactly what AI changed. I designed the editing experience, comparison, and recovery states around that.',
     leu: 'I built Leu to help people understand what they read without losing their place. Questions, feedback, learner state, and narration all link back to the PDF passage in a native SwiftUI/PDFKit interface.',
-    flow: 'I built Flow to turn spoken instructions into structured, editable actions. The hard part is making those actions safe to inspect, confirm, undo, and correct—not simply recognizing a sentence.',
+    flow: 'I built Flow to turn spoken instructions into structured, editable actions. You can review and confirm a proposal, edit the result or undo it.',
     f24: 'At F24 I helped build the original production Svelte/TypeScript frontend, then continued shipping features and shared UI architecture as React became part of the codebase.'
   };
   return make(`project-${slug}`, [
     [openings[slug], source],
-    [`My documented contribution: ${item.ownership} The case study also explains what I verified and what still needs work.`, source]
+    [`${item.ownership} The case study includes technical details and the checks I ran.`, source]
   ], [
     `What was the hardest decision in ${item.name}?`,
     `What evidence supports ${item.name}?`,

@@ -5,11 +5,11 @@ test('CV uses a page heading and metrics open their grounded answer directly', a
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Experience.');
   const metric = page.locator('[data-ask-id="cv-highlight-0"]');
   await expect(metric).toBeEnabled();
-  await expect(metric.locator('[data-count]')).toHaveText('5,500+');
+  await expect(metric.locator('[data-count]')).toHaveText('2,000+');
   await metric.click();
   await expect(page.locator('[data-ask-panel]')).toBeVisible();
-  await expect(page.locator('[data-ask-knowledge]')).toContainText('5,500+');
-  await expect(page.locator('[data-ask-knowledge]')).toContainText('customers worldwide');
+  await expect(page.locator('[data-ask-knowledge]')).toContainText('2,000+');
+  await expect(page.locator('[data-ask-knowledge]')).toContainText('within the shared frontend suite');
   await expect(page.locator('[data-ask-panel]')).toHaveCount(1);
   await page.getByRole('button', { name: 'Move guide to the left' }).click();
   const popup = page.waitForEvent('popup');
@@ -25,12 +25,12 @@ for (const width of [1440, 390]) {
     await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
     const tabs = page.getByRole('tablist', { name: 'Career journey' }).getByRole('tab');
     await expect(tabs).toHaveCount(3);
-    await expect(page.getByRole('tabpanel')).toContainText('aviation was where I began my career');
+    await expect(page.getByRole('tabpanel')).toContainText('My first career was in aviation');
     await tabs.nth(1).click();
-    await expect(page.getByRole('tabpanel')).toContainText('Start with the person.');
+    await expect(page.getByRole('tabpanel')).toContainText('Studying UX design');
     await page.keyboard.press('ArrowDown');
     await expect(tabs.nth(2)).toBeFocused();
-    await expect(page.getByRole('tabpanel')).toContainText("Berlin");
+    await expect(page.getByRole('tabpanel')).toContainText("React");
     await page.getByRole('button', { name: 'Ask about frontend', exact: true }).click();
     await expect(page.locator('[data-ask-knowledge]')).toContainText('React');
     // An open guide must not hijack the journey's own controls.

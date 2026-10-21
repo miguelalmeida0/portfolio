@@ -14,8 +14,8 @@ const { initialView } = await loadLocalTs('src/lib/ask/view.ts');
 const timerModule = await loadLocalTs('src/lib/ask/timers.ts');
 const source = fs.readFileSync(process.env.ASK_STATE_SOURCE || 'src/lib/ask/state.ts', 'utf8');
 
-function setup(pathname = '/hero-lab/typographic/cv') {
-  const view = writable(initialView()), listeners = new Map(), requests = [];
+function setup(pathname = '/hero-lab/typographic/cv', reduced = true) {
+  const view = writable(initialView()), listeners = new Map(), windowListeners = new Map(), requests = [];
   const location = { pathname };
   class Element {
     dataset = {}; control = null;
@@ -36,20 +36,21 @@ function setup(pathname = '/hero-lab/typographic/cv') {
     './proximity': { proximity: () => () => {} },
     './answer': { clearQuotes() {}, answerSequence: (_steps, _free, _reduced, update) => { update([], true); return () => {}; } },
     './timers': timerModule, './portrait': { positionAskPortrait: () => () => {} },
+    '$lib/motion/policy': { motionSnapshot: () => ({ reduced }), motionState: { subscribe: fn => { fn({ reduced }); return () => {}; } } },
     '$lib/miguel-llm/askConversation': answers
   };
   const exports = {};
   vm.runInNewContext(ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText, {
     exports, require: name => { assert.ok(name in modules, name); return modules[name]; },
-    document, window: { addEventListener() {}, removeEventListener() {} }, location, Element,
+    document, window: { addEventListener: (name,fn) => windowListeners.set(name,fn), removeEventListener: name => windowListeners.delete(name) }, location, Element,
     AbortController, AbortSignal,
     fetch: async (_url, options) => {
       const body = JSON.parse(options.body); requests.push(body);
       return { ok: true, json: async () => ({ steps: [], knowledge: answers.assembleAskAnswer(answers.prepareAskAnswer(body.question, body.history, body.area)) }) };
     },
-    matchMedia: () => ({ matches: true, addEventListener() {}, removeEventListener() {} })
+    matchMedia: () => ({ matches: reduced, addEventListener() {}, removeEventListener() {} })
   });
-  return { controller: exports.createAskController(), read: () => get(view), listeners, Element, location, requests };
+  return { controller: exports.createAskController(), read: () => get(view), listeners, windowListeners, Element, location, requests };
 }
 
 test('a topic click opens the idle guide and answers from its authored record', async () => {
@@ -57,13 +58,13 @@ test('a topic click opens the idle guide and answers from its authored record', 
   try {
     await h.controller.explain('cv-highlight-0');
     assert.equal(h.read().state, 'ready');
-    assert.match(h.read().knowledge.paragraphs.join(' '), /5,500\+.*customers worldwide/);
+    assert.match(h.read().knowledge.paragraphs.join(' '), /2,000\+.*shared frontend suite/);
     assert.equal(h.read().error, undefined);
   } finally { h.controller.destroy(); }
 });
 
 test('a new contextual topic during closing survives the old close timer', async () => {
-  const h = setup();
+  const h = setup(undefined, false);
   try {
     await h.controller.open(); h.controller.close();
     assert.equal(h.read().state, 'closing');
@@ -112,4 +113,17 @@ test('current-project questions follow the route while ordinary follow-ups prese
     await h.controller.free('What went wrong in Flow here?');
     assert.ok(h.read().knowledge.sources.includes('Flow engineering case study|/work/flow'), 'explicit projects win over the route');
   } finally { h.controller.destroy(); }
+});
+
+test('an obsolete contextual opening cannot answer inside a reopened interaction',async()=>{
+ const h=setup(undefined,false);try{
+  const obsolete=h.controller.explain('cv-highlight-0');h.controller.close();const fresh=h.controller.open();
+  await Promise.all([obsolete,fresh]);assert.equal(h.read().knowledge,null);assert.equal(h.read().question,initialView().question);
+ }finally{h.controller.destroy();}
+});
+test('an obsolete contextual window event cannot answer inside a reopened interaction',async()=>{
+ const h=setup(undefined,false);try{
+  const obsolete=h.windowListeners.get('ask:open')({detail:{projectSlug:'flow'}});h.controller.close();const fresh=h.controller.open();
+  await Promise.all([obsolete,fresh]);assert.equal(h.read().knowledge,null);assert.equal(h.read().question,initialView().question);
+ }finally{h.controller.destroy();}
 });

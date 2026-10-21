@@ -3,9 +3,9 @@
   "questions": [
     {
       "id": "hi",
-      "question": "How did you get into tech?",
-      "lead": "I started out in aviation.",
-      "answer": "I've been interested in computers since I was a kid, but aviation was where I began my career. I later studied UX design and moved into frontend engineering. Having worked in both design and development helps me think about the whole product.",
+      "question": "How do you get started?",
+      "lead": "I need to understand what the interface has to do.",
+      "answer": "I like working through an example before adding more detail. A screen has to show the right information, make the next action clear and stay usable when data changes. The example beside this text lets you change what appears.",
       "scene": {
         "caption": "My background",
         "actions": [
@@ -16,9 +16,9 @@
     },
     {
       "id": "ux",
-      "question": "What did you learn from UX?",
-      "lead": "To understand the problem before designing a screen.",
-      "answer": "I learned to ask what someone is trying to do, what they need to know, and where they might get stuck. I still ask those questions when I'm building an interface.",
+      "question": "How does UX affect your frontend work?",
+      "lead": "I think about the person using the screen.",
+      "answer": "UX design taught me to ask what someone is trying to do before choosing a layout. When I implement it, that includes the order of information, clear controls and the feedback after an action.",
       "scene": {
         "caption": "Questions I ask before designing",
         "actions": [
@@ -29,9 +29,9 @@
     },
     {
       "id": "build",
-      "question": "Why did you move into frontend?",
-      "lead": "I wanted to build my own designs.",
-      "answer": "I enjoyed UX, but I wanted to work on the implementation too. Frontend gave me the chance to build the interactions, handle loading and error states, and see a feature through from start to finish.",
+      "question": "What happens beyond the mockup?",
+      "lead": "I work through the states the design needs.",
+      "answer": "A finished mockup usually shows one moment. I also need to build what happens while data loads, when there are no results and when a request fails. Try those states in the example.",
       "scene": {
         "caption": "An interface in different states",
         "actions": [
@@ -161,7 +161,8 @@
     ],
     "outro": "I'm based in Berlin and have worked at F24 for four years on crisis management software. Outside work, I've built Second Voice, Flow, Leu and Needle.",
     "copyLabel": "Copy my introduction",
-    "copyText": "Hi, I'm Miguel Almeida.\n\nI've been interested in computers since I was a kid. I started my career in aviation, then moved into UX design and frontend engineering.\n\nI'm based in Berlin and work at F24 on crisis management and critical communication software. I built the original Svelte frontend and now work in React.\n\nI also build my own projects, including Second Voice, Flow, Leu and Needle.\n\nmiguelalmeida1592@gmail.com"
+    "copyText": "Hi, I'm Miguel Almeida.\n\nI've been interested in computers since I was a kid. I started my career in aviation, then moved into UX design and frontend engineering.\n\nI'm based in Berlin and work at F24 on crisis management and critical communication software. I built the original Svelte frontend and now work in React.\n\nI also build my own projects, including Second Voice, Flow, Leu and Needle.\n\nmiguelalmeida1592@gmail.com",
+    "compactIntro": "I’m a frontend engineer in Berlin with a background in UX design. I work with React, TypeScript and Svelte. At F24, I build production software; outside work, I design and build my own projects."
   },
   "progress": {
     "format": "Question {n} of {total} · {left} left",
@@ -373,9 +374,9 @@
     "intro": "I've been interested in computers since I was a kid, but I started my career in aviation. After that I studied UX design, then moved into frontend engineering. These days I'm based in Berlin, working at F24 and building my own projects outside work.",
     "indexTitle": "On this page",
     "topics": [
-      "My background",
-      "Getting into UX",
-      "Learning frontend",
+      "Getting started",
+      "UX in practice",
+      "Interface states",
       "Working at F24",
       "Details that matter",
       "Personal projects",

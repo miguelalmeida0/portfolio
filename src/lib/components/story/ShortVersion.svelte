@@ -2,6 +2,7 @@
   import { onDestroy } from 'svelte';
   import data from '$lib/story/story.json';
 
+  let { compact = false }: { compact?: boolean } = $props();
   let result = $state('');
   let timer: ReturnType<typeof setTimeout>;
   let alive = true;
@@ -10,7 +11,7 @@
     clearTimeout(timer);
     let text = data.ui.copyFailed;
     try {
-      await navigator.clipboard.writeText(data.shortVersion.copyText);
+      await navigator.clipboard.writeText(compact ? data.shortVersion.compactIntro : data.shortVersion.copyText);
       text = data.ui.copied;
     } catch {
       // The introduction remains selectable when the Clipboard API is blocked.
@@ -30,12 +31,12 @@
   <div class="short-opening">
     <div>
       <p class="short-kicker">{data.shortVersion.kicker}</p>
-      <h2 id="story-summary" tabindex="-1">{data.shortVersion.title}</h2>
-      <p class="short-introduction">{data.shortVersion.intro}</p>
+      <h2 id="story-summary" tabindex="-1">{compact ? 'A short introduction' : data.shortVersion.title}</h2>
+      <p class="short-introduction">{compact ? data.shortVersion.compactIntro : data.shortVersion.intro}</p>
     </div>
   </div>
 
-  <ol class="short-journey" aria-label="My path into frontend">
+  {#if !compact}<ol class="short-journey" aria-label="My path into frontend">
     {#each data.shortVersion.chapters as chapter, i}
       <li>
         <span class="short-step">{String(i + 1).padStart(2, '0')}</span>
@@ -44,10 +45,10 @@
         <p class="short-chapter-copy">{chapter.text}</p>
       </li>
     {/each}
-  </ol>
+  </ol>{/if}
 
   <div class="short-footer">
-    <p class="short-outro">{data.shortVersion.outro}</p>
+    {#if !compact}<p class="short-outro">{data.shortVersion.outro}</p>{/if}
     <div class="short-actions">
       <button type="button" data-story-copy onclick={copy}>
         {result || data.shortVersion.copyLabel}

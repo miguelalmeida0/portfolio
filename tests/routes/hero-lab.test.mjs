@@ -83,11 +83,11 @@ test('/hero-lab/typographic/story keeps every Story chapter in Direction 01', as
   const html = decode(raw);
   assert.match(html, /<h1[^>]*id="story-title"/);
   const title = html.match(/<h1[^>]*id="story-title"[^>]*>([\s\S]*?)<\/h1>/)?.[1];
-  assert.equal(title?.replace(/<!--[\s\S]*?-->|<[^>]+>/g, ''), 'Curious by nature.A builder by choice.');
-  assert.match(html, /Computers have been an interest of mine since I was a kid\./, 'current biographical opening');
+  assert.equal(title?.replace(/<!--[\s\S]*?-->|<[^>]+>/g, ''), 'Frontend engineer.UX background.');
+  assert.match(html, /I’m based in Berlin\./, 'current biographical opening');
   assert.equal((html.match(/role="tab"/g) || []).length, 3, 'three career chapters');
   assert.equal((html.match(/role="tabpanel"/g) || []).length, 3, 'three chapter panels');
-  assert.ok(html.includes(storyData.shortVersion.intro), 'short version');
+  assert.ok(html.includes(storyData.shortVersion.compactIntro), 'short version');
   for (const question of storyData.questions) {
     assert.ok(html.includes(`id="story-${question.id}"`), question.id);
     assert.ok(html.includes(question.answer), `${question.id} answer`);

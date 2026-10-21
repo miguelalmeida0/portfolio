@@ -2,7 +2,7 @@
 <script>import {XV} from './data';let view=$state('page');function key(e,v){if(!['ArrowRight','ArrowLeft'].includes(e.key))return;e.preventDefault();const keys=['page','raw','canon'];view=keys[(keys.indexOf(v)+(e.key==='ArrowRight'?1:2))%3];e.currentTarget.parentElement.querySelector('[data-v='+view+']').focus();}</script>
 <section class="chapter" id="source" aria-labelledby="pdf-h">
     <div class="head">
-      <h2 id="pdf-h">A readable PDF is not readable text.</h2>
+      <h2 id="pdf-h">When PDF text extraction goes wrong.</h2>
       <p>On screen the page looked fine. Extraction dropped characters from titles, split letter-spaced labels and pulled running headers into the text, and every question, explanation and provenance link consumed that damaged text.</p>
     </div>
     <div class="unframed">

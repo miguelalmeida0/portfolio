@@ -49,9 +49,9 @@
     {#if !standalone}<div class="project-actions">
       {#if project?.source}<a class="btn sm code" href={project.source} {...destinationLink(project.source)}>Code</a>{/if}
       {#if project?.live}
-        <a class="btn primary sm" data-circle-fill="compact" href={project.live.href} {...destinationLink(project.live.href)}><CircleFill label="Try it" /></a>
+        <a class="btn primary sm" data-circle-fill="compact" href={project.live.href} {...destinationLink(project.live.href)}><CircleFill label="Open live app" /></a>
       {:else if !project?.source}
-        <a class="btn primary sm" data-circle-fill="compact" href="#try"><CircleFill label="Explore demo" /></a>
+        <a class="btn primary sm" data-circle-fill="compact" href="#try"><CircleFill label="Try the case demo" /></a>
       {/if}
     </div>{/if}
   </div>

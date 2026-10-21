@@ -90,3 +90,15 @@
   #portfolio-content [data-typographic-case] .pnav .pname { font-size: 18px; }
   #portfolio-content [data-typographic-case] .pnav .btn { font-size: 16px; min-height: 44px; padding-inline: 12px; }
 }
+
+/* These selectors stop at editorial chrome; product examples retain their type. */
+#portfolio-content [data-typographic-case] .hero .case-pitch :is(.sub, .case-ownership) { font: 400 var(--d1-body-size)/1.6 var(--d1-body); letter-spacing: 0; max-width: 62ch; }
+#portfolio-content [data-typographic-case] .case-pitch .case-ownership { margin: 16px 0 0; color: var(--ink); }
+#portfolio-content [data-typographic-case] :is(.chapter > .head > .eyebrow, .case-pitch .kicker) { font-family: var(--d1-body); font-weight: 500; letter-spacing: 0; text-transform: none; }
+#portfolio-content [data-typographic-case] :is(.case-pitch .tlink, .pnav .back-home) { text-transform: none; letter-spacing: 0; }
+
+@media (max-width: 600px) {
+  /* Long destination labels wrap as a group instead of crushing project names. */
+  #portfolio-content [data-typographic-case] .pnav .project-identity { flex: 0 0 auto; min-width: min-content; }
+  #portfolio-content [data-typographic-case] .pnav .pname { white-space: nowrap; overflow-wrap: normal; }
+}

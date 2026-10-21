@@ -128,13 +128,13 @@ export function visitorIntentAnswer(question: string, area?: string, projectSlug
     case 'work':
       return create([
         ["At F24, I work on production critical-communication software. Outside that, I build my own products from design to implementation.", [...cv, ...f24]],
-        ["My selected work includes Needle (semantic artwork search), Second Voice (AI writing and edit comparison), Leu (PDF learning), and Flow (reversible voice actions). Each case study shows the real technical decisions and limitations.", work]
+        ["My selected work includes Needle (semantic artwork search), Second Voice (AI writing and edit comparison), Leu (PDF learning), and Flow (reversible voice actions). Each case study explains what I built, how it works and its limitations.", work]
       ], ['Which project should I start with?', 'What does Needle do?', 'What did you build at F24?']);
 
     case 'f24':
       return create([
         ["I've been building production frontend software at F24 since August 2022. I worked on the original Svelte and TypeScript frontend, then continued delivering React features and reusable patterns with the wider product team.", [...cv, ...f24]],
-        ["My CV documents alerting workflow improvements, business logic, test coverage, and multilingual message assistance. I can explain the specific impact without claiming the entire platform was my work alone.", cv]
+        ["My CV documents alerting workflow improvements, business logic, test coverage, and multilingual message assistance. Those results describe my contribution within the wider product team.", cv]
       ], ['What measurable impact did you have at F24?', 'How did Svelte and React overlap?', 'How do you test critical workflows?']);
   }
 }

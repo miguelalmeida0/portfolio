@@ -9,5 +9,5 @@
 
 <figure class="case-artifact" data-case-artifact data-project={slug}>
   <img src={media?.poster ?? '/projects/f24/illustrative-recovery.jpg'} alt={media?.alt ?? 'Fictional configuration screen: a failed save keeps the entered information and offers Retry.'} width="1440" height={widescreen ? 810 : 1000} fetchpriority="high" />
-  <figcaption>{slug === 'f24' ? 'Illustrative recovery state from the demo below. Fictional names and data; no internal F24 screens.' : slug === 'leu' ? 'Leu’s native learning walkthrough. The interactive example below is a web model.' : slug === 'flow' ? 'Recorded Flow interface. Controlled speech input; microphone recognition is not demonstrated.' : 'The actual product. The interactive examples below use prepared data.'}</figcaption>
+  <figcaption>{slug === 'f24' ? 'Illustrative recovery state from the demo below. Fictional names and data; no internal F24 screens.' : slug === 'leu' ? 'Leu’s browser interface. The learning example below uses prepared answers; native iPhone recordings are labelled separately.' : slug === 'flow' ? 'Recorded Flow interface. Controlled speech input; microphone recognition is not demonstrated.' : 'The actual product. The interactive examples below use prepared data.'}</figcaption>
 </figure>

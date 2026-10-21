@@ -59,9 +59,14 @@ export function installRouteTransitions(getShutter: () => HTMLElement) {
     url: URL; history: boolean; column: number; strips: HTMLElement[]; title: HTMLElement | null;
     animations: Set<Animation>; ready: Promise<void>; opaque: Promise<void>;
     safety?: ReturnType<typeof setTimeout>; finish?: Promise<void>; completion?: Promise<void>;
-    waits: Set<() => void>; released: boolean;
+    waits: Set<() => void>; released: boolean; superseded: boolean;
   };
   let claim: Claim | undefined;
+  // A shutter may be released before Kit finishes the commit it was gating.
+  // Keep that boundary independently so a later route always renders last.
+  let pendingCommit: Promise<void> | undefined;
+  let queued: { url: URL; close: () => void | Promise<void>; behind?: Promise<void> } | undefined;
+  let intent = 0;
   let press: { href: string; x: number; at: number } | undefined;
   const frame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
   const allowed = (url: URL) => url.origin === location.origin && !url.pathname.startsWith('/out/') && url.pathname !== '/cv/pdf';
@@ -95,6 +100,32 @@ export function installRouteTransitions(getShutter: () => HTMLElement) {
     active = false; ownedNavigation = false; claim = undefined;
     mobileState.set('idle');
   }
+  function invalidateQueued() { intent++; queued = undefined; }
+  function supersedeHistory() {
+    invalidateQueued();
+    if (claim) { claim.superseded = true; release(claim); }
+  }
+  function queueLatest(url: URL, close: () => void | Promise<void> = () => {}) {
+    const version = ++intent;
+    const interrupted = claim;
+    queued = { url, close, behind: interrupted?.completion ?? pendingCommit };
+    if (interrupted) interrupted.superseded = true;
+    void (interrupted?.completion ?? pendingCommit ?? Promise.resolve()).catch(() => {}).then(async () => {
+      if (disposed || version !== intent || !queued) return;
+      const latest = queued;
+      if (claim === interrupted && interrupted) release(interrupted);
+      await latest.close();
+      if (disposed || version !== intent) return;
+      queued = undefined;
+      try { await goto(latest.url); }
+      catch {
+        if (!disposed && version === intent) {
+          if (claim?.url.href === latest.url.href) release(claim);
+          navigationError.set('Navigation could not finish. Please try again.');
+        }
+      }
+    }).catch(() => { if (!disposed && version === intent) { queued = undefined; navigationError.set('Navigation could not finish. Please try again.'); } });
+  }
   function wait(c: Claim, ms: number) {
     return new Promise<void>(resolve => {
       const done = () => { clearTimeout(timer); c.waits.delete(done); resolve(); };
@@ -120,7 +151,7 @@ export function installRouteTransitions(getShutter: () => HTMLElement) {
     const title = shutter.querySelector<HTMLElement>('.route-title-text');
     const strips = [...shutter.querySelectorAll<HTMLElement>('.route-strip')].slice(0, matchMedia('(max-width: 767px)').matches ? 4 : 6);
     const c: Claim = { url, history, column: Math.max(0, Math.min(strips.length - 1, Math.floor(x / innerWidth * strips.length))),
-      strips, title, animations: new Set(), ready: Promise.resolve(), opaque: Promise.resolve(), waits: new Set(), released: false };
+      strips, title, animations: new Set(), ready: Promise.resolve(), opaque: Promise.resolve(), waits: new Set(), released: false, superseded: false };
     claim = c;
     shutter.hidden = false;
     // Native modal menus live in the top layer. The noninteractive popover goes
@@ -152,7 +183,7 @@ export function installRouteTransitions(getShutter: () => HTMLElement) {
       await tick(); await frame();
       if (disposed) return;
       if (c.released || claim !== c) {
-        if (!active && !c.history && location.pathname === c.url.pathname) restoreNavigationFocus();
+        if (!active && !c.history && !c.superseded && location.pathname === c.url.pathname) restoreNavigationFocus();
         return;
       }
       if (!c.history && c.url.hash) window.scrollTo({ top: 0, behavior: 'instant' });
@@ -169,7 +200,7 @@ export function installRouteTransitions(getShutter: () => HTMLElement) {
       await Promise.all(movements);
       release(c);
       await tick();
-      if (!disposed && !active && !c.history) restoreNavigationFocus();
+      if (!disposed && !active && !c.history && !c.superseded) restoreNavigationFocus();
     })().catch(() => { release(c); }).finally(() => release(c));
     return c.finish;
   }
@@ -181,37 +212,46 @@ export function installRouteTransitions(getShutter: () => HTMLElement) {
     if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     const link = (event.target as Element | null)?.closest<HTMLAnchorElement>('a[href]');
     if (!link || link.hasAttribute('download') || (link.target && link.target !== '_self')) return;
+    if (!active && queued && allowed(new URL(link.href))) invalidateQueued();
     // Kit skips beforeNavigate while its initial route load is in progress.
     // Stop a second (including programmatic) link click at the same owner.
-    if (active && allowed(new URL(link.href)) && changed(new URL(link.href))) {
-      event.preventDefault(); event.stopImmediatePropagation(); return;
+    // Kit can push the pending URL before its DOM commit. A link back to that
+    // path must still be intercepted, or it can supersede the queued destination.
+    if (active && allowed(new URL(link.href))) {
+      event.preventDefault(); event.stopImmediatePropagation(); queueLatest(new URL(link.href)); return;
     }
     press = { href: link.href, x: inputX(event, link), at: performance.now() };
   };
   onMount(() => {
     document.addEventListener('click', rememberPress, true);
+    window.addEventListener('popstate', supersedeHistory, true);
     const unsubscribe = motionState.subscribe(({ reduced }) => { if (reduced && claim) release(claim); });
     const visibility = () => { if (document.visibilityState !== 'visible' && claim) release(claim); };
     document.addEventListener('visibilitychange', visibility);
-    return () => { unsubscribe(); document.removeEventListener('click', rememberPress, true); document.removeEventListener('visibilitychange', visibility); };
+    return () => { unsubscribe(); document.removeEventListener('click', rememberPress, true); document.removeEventListener('visibilitychange', visibility); window.removeEventListener('popstate', supersedeHistory, true); };
   });
 
   beforeNavigate(navigation => {
     // Browser history must supersede a pending decorative transition. Cancelling
     // popstate after Kit has pushed its URL can leave the old route under that URL.
-    if (navigation.type === 'popstate' && claim) release(claim);
+    if (navigation.type === 'popstate') supersedeHistory();
     if (active && !navigation.willUnload) {
       if (ownedNavigation && navigation.type === 'goto') { ownedNavigation = false; return; }
-      navigation.cancel(); return;
+      navigation.cancel();
+      const to = navigation.to?.url;
+      if (to && allowed(to)) queueLatest(to);
+      return;
     }
+    if (queued) invalidateQueued();
     const to = navigation.to?.url;
     if (navigation.type === 'popstate') routeLabel.set('');
     if (!to || navigation.willUnload || navigation.type === 'popstate' || !allowed(to) || !changed(to) || !decorative()) return;
     const x = press?.href === to.href && performance.now() - press.at < 1000 ? press.x : innerWidth / 2;
     const c = begin(to, false, x);
+    c.completion = navigation.complete;
     // A later beforeNavigate callback can cancel before onNavigate is reached.
     // Own that rejection at the initial claim, not only after route loading.
-    void navigation.complete.catch(() => c.ready.then(() => reveal(c))).catch(() => release(c));
+    void navigation.complete.catch(() => release(c));
   });
 
   async function navigateFromMenu(event: MouseEvent, close: () => void | Promise<void>) {
@@ -221,6 +261,7 @@ export function installRouteTransitions(getShutter: () => HTMLElement) {
     if (link.hasAttribute('download') || link.download) return;
     const url = new URL(link.href);
     if (!allowed(url)) return;
+    if (!active && queued) invalidateQueued();
     if (url.pathname === location.pathname && url.search === location.search && url.hash) {
       let target: HTMLElement | null;
       try { target = document.getElementById(decodeURIComponent(url.hash.slice(1))); } catch { return; }
@@ -231,7 +272,7 @@ export function installRouteTransitions(getShutter: () => HTMLElement) {
       }
     }
     event.preventDefault();
-    if (active) return;
+    if (active) { queueLatest(url, close); return; }
     if (!changed(url) || !decorative()) {
       await close();
       try { await goto(url); await tick(); restoreNavigationFocus(); }
@@ -255,31 +296,43 @@ export function installRouteTransitions(getShutter: () => HTMLElement) {
   }
 
   onNavigate(navigation => {
+    // Accepted intent may bypass beforeNavigate while Kit is already loading.
+    // A queue-owned goto clears its request just before dispatch, so it retains
+    // authorization while a genuinely newer navigation cancels older work.
+    if (queued && queued.behind !== navigation.complete) invalidateQueued();
     // Kit may skip beforeNavigate during an in-flight route load. Release the
     // cover, then let that obsolete commit settle before history renders its
     // destination; otherwise the delayed forward commit can win the race.
-    if (navigation.type === 'popstate' && claim) {
-      const interrupted = claim;
-      release(interrupted);
+    const previous = pendingCommit;
+    pendingCommit = navigation.complete;
+    const finished = () => { if (pendingCommit === navigation.complete) pendingCommit = undefined; };
+    void navigation.complete.then(finished, finished);
+    const prior = previous && previous !== navigation.complete ? previous.catch(() => {}) : Promise.resolve();
+    if (navigation.type === 'popstate' && previous && previous !== navigation.complete) {
+      supersedeHistory();
       routeLabel.set('');
-      return (interrupted.completion ?? Promise.resolve()).catch(() => {}).then(() => {
+      return prior.then(() => {
         resetScrollMotion();
-        return () => syncScrollPosition();
+        return () => { syncScrollPosition(); if (!disposed) restoreNavigationFocus(); };
       });
     }
     const from = navigation.from?.url, to = navigation.to?.url;
     if (!to || !from || from.pathname === to.pathname || !allowed(to)) return;
     let current = claim;
+    if (current?.completion && current.completion !== navigation.complete) {
+      current.superseded = true; release(current); current = undefined;
+    }
+    if (!current && navigation.type !== 'popstate' && decorative()) current = begin(to);
     if (!current && navigation.type === 'popstate' && decorative() && matchMedia('(max-width: 719px)').matches) current = begin(to, true);
     if (current && !current.released) {
       const c = current;
       c.completion = navigation.complete;
       // Own rejections immediately; an abort while waiting for cover is not unhandled.
       void navigation.complete.then(() => c.ready.then(() => reveal(c)), () => c.ready.then(() => reveal(c))).catch(() => {}).finally(() => release(c));
-      return c.ready.then(() => covered(c));
+      return Promise.all([prior, c.ready]).then(() => covered(c));
     }
     resetScrollMotion();
-    if (!decorative()) return () => { syncScrollPosition(); if (navigation.type !== 'popstate') restoreNavigationFocus(); };
+    if (!decorative()) return prior.then(() => () => { syncScrollPosition(); if (!disposed && navigation.type !== 'popstate') restoreNavigationFocus(); });
     if (navigation.type !== 'popstate' || !viewTransitionsSupported()) return;
     const start = (document as Document & { startViewTransition?: StartViewTransition }).startViewTransition;
     if (!start) return;
@@ -300,6 +353,6 @@ export function installRouteTransitions(getShutter: () => HTMLElement) {
       } catch { cleanup(); }
     });
   });
-  onDestroy(() => { disposed = true; if (claim) release(claim); nativeTransition?.skipTransition(); });
+  onDestroy(() => { disposed = true; intent++; queued = undefined; if (claim) release(claim); nativeTransition?.skipTransition(); });
   return { mobileState, navigationError, routeLabel, navigateFromMenu };
 }

@@ -61,3 +61,29 @@ test('retina turns render at twice the displayed size', () => {
     assert.equal(canvas.height, 840);
   } finally { instance.destroy(); }
 });
+
+// Regression: ENG-06 — a disposed renderer must settle its pending turn.
+// Found by /qa on 2026-10-21. Report: implementation-evidence/progress.md
+test('destroying a portrait settles the pending turn and rejects later painting',async()=>{
+ const {instance,box}=setup();let finished=false;
+ const turn=instance.turnTo('designer');turn.then(()=>finished=true);
+ instance.destroy();await Promise.resolve();
+ assert.equal(finished,true);
+ const rest=box.dataset.restRole;
+ instance.set('designer');
+ assert.equal(box.dataset.restRole,rest);
+});
+
+test('canceled image decoding cannot initialize WebGL on an obsolete header',async()=>{
+ let decoded;const imageReady=new Promise(resolve=>decoded=resolve);let contexts=0;
+ const image={decode:()=>imageReady,naturalWidth:1016};
+ const box={querySelector:()=>({getContext(){contexts++;return null;}})};
+ const controller=new AbortController();
+ const created=renderer.TurnRenderer.create(box,image,image,'engineer',controller.signal);
+ controller.abort();decoded();await created;
+ assert.equal(contexts,0);
+});
+test('disposing an unattached decoded renderer releases resources without a detached DOM write',()=>{
+ const {instance,box}=setup();let writes=0;box.isConnected=false;box.classList.remove=()=>writes++;
+ instance.destroy();assert.equal(writes,0);
+});

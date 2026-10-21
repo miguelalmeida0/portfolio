@@ -179,3 +179,5 @@ html[data-motion] .mah:not([data-portrait-ready]):not([data-portrait-fallback]) 
 /* ---------- reduced motion: no cycle, no transitions; the tabs switch instantly ---------- */
 .mah.is-reduced .mah-pause{display:none}
 @media (prefers-reduced-motion:reduce){.mah *,.mah *::before,.mah *::after{transition-duration:.01ms!important}}
+
+.mah.is-reduced *,.mah.is-reduced *::before,.mah.is-reduced *::after{transition:none!important}

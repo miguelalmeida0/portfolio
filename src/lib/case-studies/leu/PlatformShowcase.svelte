@@ -1,11 +1,11 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
   const scenes = [
-    { id: 'journey', label: 'The journey', title: 'A place to return. A page to understand.', description: 'Pick up where you left off, stay with the passage, then put it in your own words.', phone: 'iphone-flow-20261009.webp' },
-    { id: 'home', label: 'Home', title: 'Your place is still here.', description: 'The book, the page, the next step. A quiet invitation to keep reading.', phone: 'iphone-home-20261009.webp' },
-    { id: 'library', label: 'Library', title: 'Everything you brought, together.', description: 'A shelf of your own books, with your current passage ready to open.', phone: 'iphone-library-20261009.webp' },
-    { id: 'read', label: 'Read', title: 'Stay with the thought.', description: 'Read the passage, hear it aloud, or ask for an explanation without losing the source.', phone: 'iphone-hero-20261009.webp' },
-    { id: 'words', label: 'Tell it back', title: 'Tell it to a curious friend.', description: 'Explain the page in your own words. See which ideas got across and which need another look.', phone: 'iphone-words-20261009.webp' }
+    { id: 'journey', label: 'The journey', title: 'Reading and learning in Leu', description: 'Pick up where you left off, stay with the passage, then put it in your own words.', phone: 'iphone-flow-20261009.webp' },
+    { id: 'home', label: 'Home', title: 'Continue reading', description: 'Open your current book and return to the page where you stopped.', phone: 'iphone-home-20261009.webp' },
+    { id: 'library', label: 'Library', title: 'Your PDF library', description: 'A shelf of your own books, with your current passage ready to open.', phone: 'iphone-library-20261009.webp' },
+    { id: 'read', label: 'Read', title: 'Read and select a passage', description: 'Read the passage, hear it aloud, or ask for an explanation without losing the source.', phone: 'iphone-hero-20261009.webp' },
+    { id: 'words', label: 'Tell it back', title: 'Explain it in your own words', description: 'Explain the page in your own words. See which ideas got across and which need another look.', phone: 'iphone-words-20261009.webp' }
   ];
   // Preserve the native phone journey. Desktop is its own six-screen gallery:
   // a desktop Journey panorama would needlessly duplicate the product walkthrough.
@@ -15,7 +15,7 @@
     { ...scenes[3], desktop: 'desktop-select-20261011.webp' },
     { id: 'explain', label: 'Explain', title: 'Make the passage clearer.', description: 'An explanation alongside the real source, with the page and its meaning kept in view.', phone: scenes[3].phone, desktop: 'desktop-explain-20261011.webp' },
     { ...scenes[4], desktop: 'desktop-own-words-20261011.webp' },
-    { id: 'study', label: 'Study', title: 'Bring the ideas back.', description: 'Turn reading into active recall, on your own terms and at your own pace.', phone: scenes[4].phone, desktop: 'desktop-study-20261011.webp' }
+    { id: 'study', label: 'Study', title: 'Review what you read', description: 'Answer study questions about passages from your book.', phone: scenes[4].phone, desktop: 'desktop-study-20261011.webp' }
   ];
   const views = ['Together', 'Phone', 'Desktop'] as const;
   let selected = $state('journey');
@@ -34,8 +34,8 @@
 
 <section class="platform-showcase" id="platforms" aria-label="Leu across phone and browser" data-leu-showcase>
   <header class="showcase-heading">
-    <div><h2 id="platforms-h">The experience, on every screen.</h2><p class="showcase-deck">Explore the real iPhone and browser interfaces.</p></div>
-    <p class="platform-note">Native on iPhone.<br />At home in your browser.</p>
+    <div><h2 id="platforms-h">iPhone and browser versions</h2><p class="showcase-deck">Explore the real iPhone and browser interfaces.</p></div>
+    <p class="platform-note">SwiftUI on iPhone.<br />React in the browser.</p>
   </header>
   <div class="showcase-controls" data-platform={view.toLowerCase()}>
     <div class="scene-switch" role="group" aria-label={view === 'Desktop' ? 'Choose a desktop screen' : 'Choose a moment'}>
@@ -97,7 +97,7 @@
     </figure>
   </div>
   <footer class="scene-bar">
-    <p>One book. One passage. Every step stays connected.</p>
+    <p>Return to the same passage from questions and feedback.</p>
     <a href="#try">Try the learning loop <svg aria-hidden="true" viewBox="0 0 20 20"><path d="M4 10h12m-5-5 5 5-5 5" /></svg></a>
     <span class="showcase-status" role="status">{scene.label}. {view === 'Together' ? overview ? 'Learning journey shown.' : 'Phone and browser shown.' : `${view} shown.`}</span>
   </footer>

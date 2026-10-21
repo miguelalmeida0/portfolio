@@ -50,6 +50,8 @@ export interface HeaderAssets {
 
 export interface HeaderOptions {
   assets: HeaderAssets;
+  /** Host policy adapter; standalone consumers fall back to the OS preference. */
+  motion?: { reduced: boolean; subscribe: (notify: (reduced: boolean) => void) => () => void };
   /** Optional navbar host for the single role switch, owned by this instance. */
   controlsContainer?: HTMLElement;
   content?: Partial<HeaderContent>;

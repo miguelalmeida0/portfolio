@@ -18,14 +18,14 @@ import NoticeFull from './NoticeFull.svelte';
 </script>
 <div use:chapterTitles class="cs-f24"><LegalBar/><ProductNav name="F24 Connectivity Hub" slug="f24" links={[["overview","Overview"],["states","States"],["migration","Migration"],["decisions","Decisions"],["testing","Testing"]]}/><main class="wrap" id="main">  <section class="hero" id="overview" aria-labelledby="hero-h"><div class="case-pitch">
     <p class="kicker">F24, frontend architecture and product delivery, 2022-now</p>
-    <h1 id="hero-h">From mockup to production system.</h1>
-    <p class="sub">Built Connectivity Hub's original Svelte frontend within the product team, and continued shipping as React joined the architecture.</p>
-    <div class="ctas"><a class="btn" data-circle-fill href="#try"><CircleFill label="Explore demo" /></a><a class="tlink" href="#decisions">Architecture decisions</a></div>
+    <h1 id="hero-h">Building Connectivity Hub’s frontend.</h1>
+    <p class="sub">I built Connectivity Hub’s original Svelte frontend within F24’s product team and later continued feature development in React.</p>
+    <div class="ctas"><a class="btn" data-circle-fill href="#try"><CircleFill label="Try the case demo" /></a><a class="tlink" href="#decisions">Architecture decisions</a></div>
   </div><CaseOverview slug="f24"/></section>
 
 <SituationStory/><StatesExplorer/>  <section class="chapter" id="migration" aria-labelledby="mig-h">
     <div class="head">
-      <h2 id="mig-h">Changing the engine while the product keeps running.</h2>
+      <h2 id="mig-h">Moving from Svelte to React.</h2>
       <p>Connectivity Hub kept shipping while its frontend grew from Svelte into React. Two lessons from that move, in plain terms.</p>
     </div>
 

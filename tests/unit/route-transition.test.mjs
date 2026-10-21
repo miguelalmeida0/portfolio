@@ -36,7 +36,7 @@ function setup({reduced=false,mobile=false,native=false}={}){
  if(native)doc.startViewTransition=callback=>{events.push('native');const done=Promise.resolve().then(callback);return{ready:Promise.resolve(),finished:done,updateCallbackDone:done,skipTransition(){}};};
  const owner=exports.installRouteTransitions(()=>shutter);hooks.mount?.();
  const click=(path='/story',fields={})=>({button:0,detail:1,clientX:300,defaultPrevented:false,preventDefault(){this.defaultPrevented=true;},currentTarget:{href:new URL(path,location.origin).href,target:'',download:'',dataset:{},hasAttribute:()=>false,getBoundingClientRect:()=>({left:200,width:100})},...fields});
- return {owner,hooks,nav,navigation,shutter,title,strips,animations,events,advance,doc,main,work,location,click,listeners};
+ return {owner,hooks,nav,navigation,shutter,title,strips,animations,events,advance,doc,main,work,location,click,listeners,setReduced(value){reduced=value;hooks.policy({reduced:value});}};
 }
 test('forward claim animates immediately, waits for readable label and never takes native snapshot',async()=>{
  const s=setup({native:true});const n=s.nav('/story');s.hooks.before(n);
@@ -114,4 +114,82 @@ test('history waits for an interrupted forward commit even when beforeNavigate i
  if(typeof after==='function')after();
  assert.ok(s.events.includes('sync-scroll'));assert.ok(!s.events.includes('cancel'));
  back.resolve();await s.advance(500);assert.equal(s.shutter.hidden,true);
+});
+
+// Regression: ENG-08 — visual release must retain the pending navigation commit.
+// Found by /qa on 2026-10-21. Report: implementation-evidence/progress.md
+test('history retains the interrupted commit after beforeNavigate releases its shutter',async()=>{
+ const s=setup();const forward=s.nav('/cv');s.hooks.before(forward);void s.hooks.on(forward);
+ const back=deferred();const n=s.nav('/','popstate',back.promise);
+ s.hooks.before(n);
+ let ready=false;const history=s.hooks.on(n);Promise.resolve(history).then(()=>ready=true);
+ await s.advance(100);
+ assert.equal(s.shutter.hidden,true);
+ assert.equal(ready,false,'Back must wait for the obsolete forward commit before it can render last');
+ s.navigation.resolve();await s.advance(30);
+ const after=await history;assert.equal(ready,true);
+ if(typeof after==='function')after();
+ back.resolve();await s.advance(500);
+ assert.equal(s.shutter.hidden,true);assert.ok(!s.events.includes('cancel'));
+});
+
+test('rapid link requests coalesce to the latest destination instead of being discarded',async()=>{
+ const s=setup();const forward=s.nav('/story');s.hooks.before(forward);void s.hooks.on(forward);
+ for(const path of ['/cv','/work/needle']){
+  const event=s.click(path);event.target={closest:()=>event.currentTarget};event.stopImmediatePropagation=()=>{};
+  s.listeners.click(event);
+  assert.equal(event.defaultPrevented,true,'the owner intercepts the in-flight link');
+ }
+ s.navigation.resolve();await s.advance(2000);
+ assert.equal(s.location.pathname,'/work/needle');
+ assert.equal(s.shutter.hidden,true);
+});
+
+test('a reduced-motion destination still follows an already released forward commit',async()=>{
+ const s=setup();const forward=s.nav('/cv');s.hooks.before(forward);void s.hooks.on(forward);
+ s.setReduced(true);
+ const next=deferred();const destination=s.nav('/story','goto',next.promise);s.hooks.before(destination);
+ let ready=false;const hook=s.hooks.on(destination);Promise.resolve(hook).then(()=>ready=true);
+ await s.advance(100);assert.equal(ready,false,'turning decoration off must not bypass commit ordering');
+ s.navigation.resolve();await s.advance(20);assert.equal(ready,true);
+ next.resolve();await s.advance(20);assert.equal(s.shutter.hidden,true);
+});
+
+for(const before of [false,true]) test('fresh navigation invalidates queued intent after visual release, beforeNavigate='+before,async()=>{
+ const s=setup();const first=s.nav('/story');s.hooks.before(first);void s.hooks.on(first);
+ const queued=s.click('/cv');queued.target={closest:()=>queued.currentTarget};queued.stopImmediatePropagation=()=>{};s.listeners.click(queued);
+ s.setReduced(true);
+ const last=deferred();const destination=s.nav('/work/needle','goto',last.promise);
+ if(before)s.hooks.before(destination);const commit=s.hooks.on(destination);
+ s.navigation.resolve();await s.advance(20);await commit;
+ assert.equal(s.events.includes('goto'),false,'the older queued CV request must never dispatch after Needle');
+ last.resolve();await s.advance(50);
+});
+
+test('fresh captured intent invalidates an obsolete queue while its menu close is asynchronous',async()=>{
+ const s=setup();const first=s.nav('/story');s.hooks.before(first);void s.hooks.on(first);
+ const closing=deferred();void s.owner.navigateFromMenu(s.click('/cv'),()=>closing.promise);
+ s.setReduced(true);s.navigation.resolve();await s.advance(20);
+ const latest=s.click('/work/needle');latest.target={closest:()=>latest.currentTarget};latest.stopImmediatePropagation=()=>{};s.listeners.click(latest);
+ closing.resolve();await s.advance(100);
+ assert.equal(s.events.includes('goto'),false,'an old close continuation cannot authorize navigation');
+});
+
+test('the original delayed onNavigate cannot invalidate the newer intent queued behind it',async()=>{
+ const s=setup();const first=s.nav('/story');s.hooks.before(first);
+ const latest=s.click('/cv');latest.target={closest:()=>latest.currentTarget};latest.stopImmediatePropagation=()=>{};s.listeners.click(latest);
+ void s.hooks.on(first);s.navigation.resolve();await s.advance(2000);
+ assert.equal(s.location.pathname,'/cv');assert.equal(s.shutter.hidden,true);
+});
+
+test('links to the pending path are intercepted after Kit pushes its URL before rendering',async()=>{
+ const s=setup();const first=s.nav('/story');s.hooks.before(first);void s.hooks.on(first);
+ // A fast route load pushes the URL before the shutter permits its DOM commit.
+ s.location.pathname='/story';
+ for(const path of ['/cv','/story','/cv']){
+  const event=s.click(path);event.target={closest:()=>event.currentTarget};event.stopImmediatePropagation=()=>{};
+  s.listeners.click(event);assert.equal(event.defaultPrevented,true,'even the pending path must stay with the active navigation owner');
+ }
+ s.navigation.resolve();await s.advance(2000);
+ assert.equal(s.location.pathname,'/cv');assert.equal(s.shutter.hidden,true);
 });

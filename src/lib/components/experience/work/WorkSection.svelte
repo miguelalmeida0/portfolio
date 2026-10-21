@@ -29,23 +29,23 @@
   <div class="selected-inner mx-auto">
     <header class="selected-heading flex flex-wrap items-end justify-between gap-6" data-current-narrative={current || undefined} use:chapterTitles={current ? '[data-default-work-title]' : 'h2'}>
       <h2 id="work-title" data-ask-id="selwork" class="font-extrabold tracking-tight">{#if current}<span data-current-word>Selected</span> <span data-current-word>Work</span>{:else}Selected Work{/if}</h2>
-      <p>Professional experience.<br />Independent ideas, built.</p>
+      <p>My work at F24 and projects I built outside work.</p>
     </header>
     <article class="f24-feature" data-f24-feature aria-labelledby="f24-title">
       <a class="f24-photo-link" data-current-assembly={current || undefined} href="/work/f24" aria-label="F24 case study" {...destinationLink('/work/f24')}>
         <figure class="f24-moment f24-working" data-current-piece={current || undefined}>
           <img src="/projects/f24/hackathon-working.webp" alt="Miguel and a colleague working together at their desks during the F24 hackathon." width="640" height="854" loading="lazy" />
-          <figcaption>Building together.</figcaption>
+          <figcaption>Working at the F24 hackathon.</figcaption>
         </figure>
         <figure class="f24-moment f24-team" data-current-piece={current || undefined}>
           <img src="/projects/f24/hackathon-team.webp" alt="The F24 hackathon team gathered beside their presentation, with a colleague joining remotely." width="1000" height="749" loading="lazy" />
-          <figcaption>A team effort.</figcaption>
+          <figcaption>The hackathon team.</figcaption>
         </figure>
       </a>
       <div class="f24-editorial">
         <p class="feature-label">Professional experience</p>
         <h3 id="f24-title" class="font-extrabold tracking-tight">F24</h3>
-        <p class="feature-headline font-bold tracking-tight">From mockups to production.</p>
+        <p class="feature-headline font-bold tracking-tight">Building Connectivity Hub’s frontend.</p>
         <p class="feature-body">{f24Ownership.body} A product used by hundreds of companies.</p>
         <ul class="capabilities flex flex-wrap gap-2" aria-label="F24 contributions">
           {#each f24Ownership.tags as tag}<li>{tag}</li>{/each}

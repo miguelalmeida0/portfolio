@@ -1,10 +1,9 @@
 /* All visual rules are conditional or target nodes mounted only during Ask.
    The palette and motion values come from the supplied ask.tokens.css. */
-@font-face { font-family: 'Newsreader'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/newsreader-400-latin.woff2') format('woff2'); }
 .ask-present {
   --ask-lime: #E3EDC2; --ask-sage: #E7ECD9; --ask-plum: #5B153C; --ask-ink: #122A22;
   --ask-paper: #F9F7EF; --ask-muted: #5C6B5F; --ask-spring: #C9E08A;
-  --ask-ui: 'Figtree', sans-serif; --ask-read: 'Newsreader', serif;
+  --ask-ui: 'Figtree', sans-serif; --ask-read: var(--ask-ui);
   --ask-out: cubic-bezier(.22,1,.36,1); --ask-inout: cubic-bezier(.65,0,.35,1);
   --ask-tide-ease: cubic-bezier(.45,0,.25,1); --ask-sway-ease: cubic-bezier(.45,0,.55,1); --ask-pop-ease: cubic-bezier(.34,1.56,.64,1);
 }
@@ -64,7 +63,7 @@ html.ask-present [data-ask-id].is-asked, html.ask-on [data-ask-id]:focus-visible
 .ask-answer-scroll > .ask-heading { margin-bottom: 14px; }
 .ask-answer-scroll > .ask-disclosure { margin-bottom: 14px; }
 .ask-answer-scroll { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; }
-.ask-answer { font: 400 21px/1.55 var(--ask-read); }
+.ask-answer { font: 400 18px/1.6 var(--ask-read); }
 .ask-knowledge { font: 400 17px/1.55 var(--ask-ui); }
 .ask-knowledge p + p { margin-top: 12px; }
 .ask-knowledge ul { list-style: disc; padding-left: 20px; margin-top: 14px; }
@@ -130,3 +129,12 @@ html.ask-present [data-ask-id].is-asked, html.ask-on [data-ask-id]:focus-visible
   .ask-floating .ask-panel { top: 12px; bottom: 12px; }
   .ask-floating .ask-close, .ask-floating .ask-dock-toggle { top: 24px; }
 }
+
+/* Functional exit owns 220ms; reopening cancels the old entrance delay. */
+.ask-closing .ask-panel, .ask-closing .ask-close, .ask-closing .ask-flag { transition-duration: .22s; transition-delay: 0s; }
+.ask-closing [data-ask-id]::before { transition-duration: .22s; }
+.ask-reopening.ask-on .ask-panel, .ask-reopening.ask-on .ask-close { transition-duration: .22s; transition-delay: 0s; }
+html[data-motion='reduced'] .ask-tide { display: none; }
+html[data-motion='reduced'] :is(.ask-present [data-ask-id], .ask-present [data-ask-id]::before, .ask-present .portrait-card .portrait, .ask-panel, .ask-close, .ask-chip, .ask-flag, .ask-phrase, .ask-form button, .ask-answer.loading .ask-intro::after) { animation: none !important; transition: none !important; }
+html[data-motion='reduced'] :is(.ask-present [data-ask-id], .ask-panel, .ask-close, .ask-flag, .ask-answer.loading .ask-intro::after) { transform: none !important; }
+html[data-motion='reduced'] .ask-answer.loading .ask-intro::after { opacity: 1; }

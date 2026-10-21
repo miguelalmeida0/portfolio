@@ -1,3 +1,4 @@
+import { readJsonBody, reserveRemoteCall, type BudgetContext } from './request-safety';
 import { env } from '$env/dynamic/private';
 import type { MiguelLLMProvider } from '$lib/miguel-llm/types';
 const LOCAL_FALLBACK_MODEL = 'deterministic-local-fallback';
@@ -95,7 +96,7 @@ async function callCerebras(input: string, systemPrompt: string, model: string, 
     throw new Error(`Cerebras provider returned ${response.status}.`);
   }
 
-  const payload = (await response.json()) as {
+  const payload = (await readJsonBody(response, 128_000, signal)) as {
     choices?: Array<{ message?: { content?: string } }>;
   };
 
@@ -133,15 +134,20 @@ async function callOpenAIResponses(input: string, systemPrompt: string, model: s
     throw new Error(`OpenAI provider returned ${response.status}.`);
   }
 
-  const payload = await response.json();
+  const payload = await readJsonBody(response, 128_000, signal);
   const content = extractOpenAIResponseText(payload);
   if (!content) throw new Error('OpenAI provider returned an empty answer.');
   return parseJsonText(content);
 }
 
-export async function requestStructured(input: string, systemPrompt: string, maxTokens = 420, signal?: AbortSignal) {
+export async function requestStructured(input: string, systemPrompt: string, maxTokens = 420, signal?: AbortSignal, budget?: BudgetContext) {
   const provider = selectedProvider();
   const model = resolvedModel(provider);
   if (provider === 'local-fallback') return null;
+  const bounded = signal ? AbortSignal.any([signal, AbortSignal.timeout(15_000)]) : AbortSignal.timeout(15_000);
+  if (!await reserveRemoteCall(budget, env, bounded)) return null;
+  maxTokens = Math.min(420, Math.max(1, Math.floor(maxTokens)));
+  signal = bounded;
+  signal.throwIfAborted();
   return provider === 'cerebras' ? callCerebras(input, systemPrompt, model, maxTokens, signal) : callOpenAIResponses(input, systemPrompt, model, maxTokens, signal);
 }

@@ -10,7 +10,7 @@ export class SplitWord {
   private fontSize = 200;
   private containerWidth = 0;
   private scale = 1;
-  private transitions = new Set<gsap.core.Timeline>();
+  private transitions = new Map<gsap.core.Timeline, Promise<void>>();
   capRatio = 0.74;
 
   constructor(private el: HTMLElement, private measure: HTMLElement) {}
@@ -76,11 +76,11 @@ export class SplitWord {
   }
 
   async settled(): Promise<void> {
-    await Promise.all([...this.transitions].map(timeline => timeline.then(() => undefined)));
+    await Promise.all(this.transitions.values());
   }
 
   destroy(): void {
-    this.transitions.forEach(timeline => timeline.kill());
+    this.transitions.forEach((_, timeline) => timeline.kill());
     this.transitions.clear();
   }
 
@@ -100,15 +100,18 @@ export class SplitWord {
     a.classList.add('mah-g--abs'); b.classList.add('mah-g--abs');
     cell.append(a, b);
     gsap.set(b, { scaleX: 0 });
+    let resolve!: () => void;
+    const completion = new Promise<void>(done => { resolve = done; });
+    const finish = () => { this.transitions.delete(timeline); resolve(); };
     const timeline = gsap.timeline({ onComplete: () => {
       cell.innerHTML = ''; cell.appendChild(this.glyph(to));
-      this.transitions.delete(timeline);
-    } })
+      finish();
+    }, onInterrupt: finish })
       .to(a, { color: newColor, duration: L.recolor, ease: 'none' }, 0)
       .to(a, { scaleX: 0, duration: L.squeezeOut, ease: L.squeezeOutEase }, 0)
       .to(b, { scaleX: 1, duration: L.open, ease: L.openEase }, L.openAt)
       .to(cell, { width: w1, duration: L.width, ease: L.widthEase, onUpdate: this.center }, L.widthAt);
-    this.transitions.add(timeline);
+    this.transitions.set(timeline, completion);
   }
 
   private glyph(ch: string, color?: string): HTMLElement {

@@ -3,7 +3,7 @@ import RadioGroup from '../shared/RadioGroup.svelte';import {LOG,STATES} from '.
 </script>
   <section class="chapter" aria-labelledby="st-h">
     <div class="head">
-      <h2 id="st-h">Most of a screen is not the happy path.</h2>
+      <h2 id="st-h">Loading, empty and error states.</h2>
       <p>An activity history turns a large backend dataset into something people can inspect. Switch its state, search, filter and sort, and open a row.</p>
     </div>
     <div class="frame" id="states"><div class="window">
