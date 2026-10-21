@@ -84,14 +84,14 @@ export function installRouteTransitions(getShutter: () => HTMLElement) {
     // owner so it cancels an earlier tween instead of competing with it.
     const destination = to.url.href;
     let cancelled = false;
-    const inputs = ['wheel', 'touchstart', 'keydown'] as const;
+    const inputs = ['wheel', 'touchstart', 'keydown', 'pointerdown'] as const;
     const cancel = () => {
       cancelled = true;
-      inputs.forEach(name => window.removeEventListener(name, cancel));
+      inputs.forEach(name => window.removeEventListener(name, cancel, true));
       if (cancelFragmentAlignment === cancel) cancelFragmentAlignment = undefined;
     };
     cancelFragmentAlignment = cancel;
-    inputs.forEach(name => window.addEventListener(name, cancel, { once: true, passive: true }));
+    inputs.forEach(name => window.addEventListener(name, cancel, { once: true, passive: true, capture: true }));
     void document.fonts.ready.then(frame).then(() => {
       if (cancelled || disposed || location.href !== destination) return;
       try {

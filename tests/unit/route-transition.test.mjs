@@ -203,11 +203,11 @@ test('late font layout realigns a cross-route fragment through the shared scroll
  fonts.resolve();await s.advance(20);assert.ok(s.events.includes('scroll:work'));
  assert.equal(s.listeners['window:wheel'],undefined);
 });
-for(const input of ['wheel','touchstart','keydown'])test('late fragment alignment yields to '+input,async()=>{
+for(const input of ['wheel','touchstart','keydown','pointerdown'])test('late fragment alignment yields to '+input,async()=>{
  const s=setup({reduced:true}),fonts=deferred();s.doc.fonts={status:'loading',ready:fonts.promise};
  const n=s.nav('/story#work');s.location.href=n.to.url.href;
  assert.equal(typeof s.hooks.after,'function');s.hooks.after(n);
- s.listeners['window:'+input]();fonts.resolve();await s.advance(20);
+ s.listeners['window:'+input]?.();fonts.resolve();await s.advance(20);
  assert.ok(!s.events.includes('scroll:work'));assert.equal(s.listeners['window:wheel'],undefined);
 });
 test('late font alignment never overrides history, changed destinations or disposal',async()=>{

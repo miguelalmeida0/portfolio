@@ -35,8 +35,8 @@ The 36 conflicts were resolved against the current production architecture.
 Valid F24 fragment destinations, case Ask sources, pointer scaling, responsive
 portrait decode, and independent browser support changes carry forward.
 Late-font fragment alignment uses the shared scroll owner and cancels on user
-input, subsequent navigation, or disposal. Five new regression cases failed
-before this reconciliation and passed afterward (25 route-transition tests).
+input, subsequent navigation, or disposal. Six new regression cases failed
+before this reconciliation and passed afterward (26 route-transition tests).
 
 Removed VideoLoop and old story-scroll tests remain deleted: PreviewMedia and
 the current Story suite replace them. Historical browser tests/snapshots remain
@@ -56,3 +56,10 @@ Pre-commit checks: 420/421 unit tests passed; the build-identity test exceeded
 Node's default child-process output buffer on the large uncommitted merge diff.
 Svelte reported zero errors/warnings after its configuration fallback. Neither
 counts as final release acceptance; repeat both on the clean merge commit.
+
+Final review identified mouse/pen scrollbar input as an additional cancellation
+path. Its regression failed before the fix and passes afterward; pointerdown
+is captured alongside wheel, touch and keyboard input. No other important
+reconciliation issue was found. The first clean merge passed all 421 unit tests,
+56 route checks, type checks and production build. Final CI must include this
+pointer correction as well.
