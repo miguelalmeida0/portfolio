@@ -61,6 +61,7 @@ export function createTurntableHeader(container: HTMLElement, options: HeaderOpt
   let rendererOwner: AbortController | null = null;
   const autoplay = options.autoplay !== false;
   let renderer: TurnRenderer | null = null;
+  let rendererSource = '';
   let rendererState: HeaderInstance['renderer'] = 'pending';
   let busy = false, destroyed = false, resizeQueued = false;
   const lifetime = new AbortController();
@@ -240,6 +241,7 @@ export function createTurntableHeader(container: HTMLElement, options: HeaderOpt
       if (destroyed || reduced || owner.signal.aborted) { r?.destroy(); return; }
       r?.set(role);
       renderer = r;
+      rendererSource = front.currentSrc;
       rendererState = r ? 'webgl' : 'fallback';
       root.dataset.renderer = rendererState;
       root.classList.toggle('has-gl', !!r);
@@ -248,10 +250,14 @@ export function createTurntableHeader(container: HTMLElement, options: HeaderOpt
   async function refreshPortraitTexture(): Promise<void> {
     if (!booted || reduced || destroyed) return;
     const source = front.currentSrc;
+    // decode() may resolve before the matching load event is delivered. The
+    // existing renderer already owns those pixels; rebuilding it would lose
+    // the canvas context while trying to attach the very same photograph.
+    if (!renderer || source === rendererSource) return;
     // A responsive <picture> can change sources during a turn. Finish that turn
     // before rebuilding its textures, so the canvas and resting image agree.
     if (processing) await processing;
-    if (destroyed || reduced || front.currentSrc !== source) return;
+    if (destroyed || reduced || front.currentSrc !== source || source === rendererSource) return;
     rendererOwner?.abort();
     renderer?.destroy(); renderer = null;
     root.classList.remove('has-gl');

@@ -6,12 +6,22 @@ Flow/Leu action colors, zero-duration reduced-motion transitions, and usable Ind
 navigation while hero fonts load. The scrollbar retains its original pointer
 mapping; correcting undersized prose restores the document's intended scroll range.
 Project-title links also retain a physical 44px hit area under desktop scaling.
+Linux CI additionally exposed synchronous case-header resize feedback and a late
+portrait load notification that rebuilt an already-current WebGL renderer. Header
+measurement now runs after resize delivery, and same-source portrait loads retain
+their existing renderer.
 
 Existing regression assertions remain unchanged. Additional regressions cover
 all project-card prose and opening the desktop Index while fonts are pending.
+They also cover native desktop navigation without JavaScript, same-source portrait
+load notifications, deferred header measurement and local asset byte ranges.
 The release configuration includes `selected-work-approved.spec.ts`, so actual
 video playback, looping, fallback, visibility policy, and project navigation run
 in CI as well as the public-domain verification.
+CI runs the entire Chromium suite on Linux and the entire WebKit suite on macOS
+to exercise Safari's native media backend. Linux GStreamer's independently
+reproduced startup-clock defect remains documented in `tests/e2e/BROWSER_RUNTIME.md`;
+no playback assertions or timeouts were relaxed.
 
 ## Local acceptance
 
@@ -32,6 +42,8 @@ PORTFOLIO_AUDIT_URL=http://127.0.0.1:4285 npx playwright test -c tests/e2e/portf
 ```
 
 This runs the production-built SvelteKit Cloudflare worker with Workers Assets.
+The local-only asset wrapper supplies exact byte ranges when the emulator ignores
+an uncached Range request, matching the public Pages asset behavior.
 The legacy `pages dev` asset handler returns a whole-file chunked `200` for
 uncached byte-range requests, which prevents intercepted WebKit media playback.
 See `tests/e2e/BROWSER_RUNTIME.md` for the previously documented server limitation.

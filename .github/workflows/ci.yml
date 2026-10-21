@@ -35,7 +35,8 @@ jobs:
 
   browser-smoke:
     needs: checks
-    runs-on: ubuntu-latest
+    # WebKit exercises Safari's native media backend; the full suite is unchanged.
+    runs-on: ${{ matrix.browser == 'webkit' && 'macos-15' || 'ubuntu-latest' }}
     timeout-minutes: 20
     strategy:
       fail-fast: false

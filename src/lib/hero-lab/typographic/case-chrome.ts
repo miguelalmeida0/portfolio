@@ -7,11 +7,17 @@ export function caseChrome(root: HTMLElement) {
     root.style.setProperty('--case-nav-top', `${mast.offsetHeight}px`);
     root.style.setProperty('--case-nav-h', `${nav.offsetHeight}px`);
   };
-  const observer = new ResizeObserver(measure);
+  // Both variables affect the observed header's layout. Commit them after the
+  // resize delivery finishes so font changes cannot feed back into that cycle.
+  let frame = 0;
+  const observer = new ResizeObserver(() => {
+    if (!frame) frame = requestAnimationFrame(() => { frame = 0; measure(); });
+  });
   observer.observe(mast); observer.observe(nav);
   measure();
   return { destroy() {
     observer.disconnect();
+    cancelAnimationFrame(frame);
     root.style.removeProperty('--case-nav-top');
     root.style.removeProperty('--case-nav-h');
   } };

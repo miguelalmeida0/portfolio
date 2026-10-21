@@ -1,5 +1,16 @@
 import { expect, test } from '@playwright/test';
 
+test('a late load notification for the same portrait preserves its WebGL renderer', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.mah')).toHaveAttribute('data-renderer', 'webgl');
+  await page.getByRole('button', { name: 'Pause the role animation' }).click();
+  await page.locator('.mah-photo-front').evaluate(image => image.dispatchEvent(new Event('load')));
+  await page.waitForTimeout(500);
+  await expect(page.locator('.mah')).toHaveAttribute('data-renderer', 'webgl');
+  await page.getByRole('button', { name: 'Play the role animation' }).click();
+  await expect(page.locator('.mah-photo.is-turning .mah-photo-canvas')).toBeVisible({timeout:10000});
+});
+
 for (const width of [390, 1440]) {
   for (const delay of [0, 800]) {
     test('first arrival paints the portrait once at its final size: ' + width + 'px, JS delay ' + delay, async ({ page }) => {

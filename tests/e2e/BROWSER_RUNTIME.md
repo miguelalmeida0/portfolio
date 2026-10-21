@@ -45,3 +45,34 @@ the browser checks also cover playback from a fresh server cache.
 The real-worker regression checks retain decoded frame, playback progression,
 reduced motion, fallback and navigation assertions. No application video, poster,
 layout or timeout is changed to accommodate the test server.
+
+### Uncached range parity (21 October 2026)
+
+The expanded release suite also intercepts delayed media requests, which disables
+the browser cache. Workers Assets still returned whole-file `200` responses for
+some of those range requests. Linux WebKit reproduced stalled playback and a
+startup clock correction with a plain video, while the same public Pages asset
+played steadily. Playwright 1.64.1 reproduced the issue too; the repository stays
+on 1.61.1.
+
+`scripts/local-cloudflare-worker.mjs` wraps only the local `ASSETS` binding. It
+executes the compiled Pages worker unchanged and converts an ignored single-range
+request into an exact `206` response from the actual asset bytes. Full responses
+advertise byte-range support. Existing partial responses, encoded responses and
+stale `If-Range` requests pass through. Unit tests check exact range bodies,
+lengths and `416` behavior. The
+production Pages configuration, application routing and media files are unchanged.
+
+### Native WebKit release gate
+
+The full WebKit release job runs on `macos-15`, using Safari's native media
+backend. Chromium and the independent two-browser scrollbar job stay on Linux.
+The job names, test selection, assertions, timeouts, zero-retry policy and required
+`validate` dependencies are unchanged.
+
+After correcting range behavior, Linux GStreamer's startup `currentTime` still
+moved backward in a plain native video (for example, 0.531s to 0.112s), independent
+of the portfolio controller. The same issue persisted in the isolated 1.64.1
+runtime comparison. This Linux media behavior remains unresolved; native macOS
+WebKit is the release platform for video playback and loop-boundary acceptance.
+Do not describe the native release gate as a Linux media pass.
