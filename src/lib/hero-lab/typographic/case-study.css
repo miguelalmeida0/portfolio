@@ -69,14 +69,14 @@
 }
 #portfolio-content [data-typographic-case] .pnav :is(.back-home, ul a) { font-family: var(--d1-body); border-radius: 0; }
 #portfolio-content [data-typographic-case] .pnav [data-section-indicator] { border-radius: 0; }
-#portfolio-content [data-typographic-case] :is(.case-pitch .btn, .pnav .btn) {
+#portfolio-content [data-typographic-case] :is(.case-pitch .btn, .pnav .btn):not([data-circle-fill], [data-flow-action]) {
   border-radius: 0 !important;
   font: 700 var(--d1-action)/1.1 var(--d1-display);
   letter-spacing: .04em;
   text-transform: uppercase;
   min-height: 48px;
 }
-#portfolio-content [data-typographic-case] :is(.case-pitch .btn.primary, .pnav .btn.primary) { background: var(--forest) !important; color: var(--paper) !important; }
+#portfolio-content [data-typographic-case] :is(.case-pitch .btn.primary, .pnav .btn.primary):not([data-circle-fill], [data-flow-action]) { background: var(--forest) !important; color: var(--paper) !important; }
 #portfolio-content [data-typographic-case] .case-pitch .tlink { font: 700 var(--d1-action)/1.2 var(--d1-display); text-transform: uppercase; letter-spacing: .04em; }
 #portfolio-content [data-typographic-case] main :is(section[id], div[id]) { scroll-margin-top: calc(var(--case-nav-top) + var(--case-nav-h) + 16px); }
 
@@ -98,7 +98,13 @@
 #portfolio-content [data-typographic-case] :is(.case-pitch .tlink, .pnav .back-home) { text-transform: none; letter-spacing: 0; }
 
 @media (max-width: 600px) {
-  /* Long destination labels wrap as a group instead of crushing project names. */
+  /* Reserve separate columns for the full project name and launch actions.
+     Stack the actions inside their column when mobile space is limited. */
+  #portfolio-content [data-typographic-case] .pnav .wrap { display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 12px; padding-block: 8px; }
   #portfolio-content [data-typographic-case] .pnav .project-identity { flex: 0 0 auto; min-width: min-content; }
+  #portfolio-content [data-typographic-case] .pnav .project-identity { flex-direction: column; align-items: flex-start; gap: 4px; }
   #portfolio-content [data-typographic-case] .pnav .pname { white-space: nowrap; overflow-wrap: normal; }
+  #portfolio-content [data-typographic-case] .pnav .project-actions { min-width: 0; margin: 0; flex-direction: column; align-items: stretch; }
+  #portfolio-content [data-typographic-case] .pnav .project-actions .flow-layer { padding-inline: 12px; gap: 8px; }
+  #portfolio-content [data-typographic-case] .pnav .project-actions .flow-label { min-width: 0; white-space: normal; }
 }

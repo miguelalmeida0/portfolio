@@ -1,4 +1,5 @@
 <script>
+import CircleFill from '$lib/components/experience/CircleFill.svelte';
 import {onMount,flushSync} from 'svelte';import {QP} from './data';import {lifecycle} from '../shared/lifecycle';let root,life;let qs=$state(QP.map(()=> 'idle')),busy=false,allBusy=$state(false),deps=$state([]),finished=$state(false);const labels={idle:'Not compared',checking:'Comparing',done:'Compared'};onMount(()=>{life=lifecycle();return life.destroy;});const wait=ms=>new Promise(r=>life.later(r,life.reduce.matches?0:ms));async function check(i){qs[i]='checking';deps=QP[i].deps;await wait(750);qs[i]='done';}function finish(){finished=true;flushSync();root.querySelector('#resetCmp').focus();}async function checkOne(i){if(busy||qs[i]==='done')return;busy=true;await check(i);deps=[];busy=false;if(qs.every(x=>x==='done'))finish();root.querySelector('[data-i="'+i+'"]').focus();}async function compareAll(){if(busy)return;busy=true;allBusy=true;for(let i=0;i<QP.length;i++)if(qs[i]!=='done')await check(i);deps=[];busy=false;finish();}function reset(){qs=QP.map(()=> 'idle');deps=[];finished=false;allBusy=false;flushSync();root.querySelector('#compare').focus();}
 </script>
     <div class="frame lesson" id="parity" bind:this={root}><div class="window">
@@ -16,7 +17,7 @@ import {onMount,flushSync} from 'svelte';import {QP} from './data';import {lifec
         <div class="qbox">
           <p class="label" id="q-l">The question each screen asks</p>
           <ol class="qparts" id="qparts" aria-labelledby="q-l">{#each QP as q,i}<li><button type="button" class="qrow" data-i={i} data-s={qs[i]} onclick={()=>checkOne(i)}><span class="qn" aria-hidden="true">{qs[i]==='done'?'✓':i+1}</span><span><b>{q.t}</b><small>{q.d}</small></span><span class="qs">{labels[qs[i]]}</span></button></li>{/each}</ol>
-          <div class="q-actions"><button class="btn" type="button" id="compare" hidden={finished} disabled={allBusy} onclick={compareAll}>Compare the questions</button><button class="tlink" type="button" id="resetCmp" hidden={!finished} onclick={reset}>Start over</button></div>
+          <div class="q-actions"><button class="btn" type="button" id="compare" hidden={finished} disabled={allBusy} onclick={compareAll} data-flow-action><CircleFill label={`Compare the questions`} /></button><button class="tlink" type="button" id="resetCmp" hidden={!finished} onclick={reset}>Start over</button></div>
         </div>
         <article class="scr" id="scrNew" aria-label="Rebuilt screen, built in React" aria-live="polite">
           <div class="scr-top"><span class="scr-name">Rebuilt<small>React</small></span><span class={finished?'pill hl':'pill plum'} data-dep="count" class:hit={deps.includes('count')} id="newCount">{finished?'24 entries':'Showing nothing'}</span></div>

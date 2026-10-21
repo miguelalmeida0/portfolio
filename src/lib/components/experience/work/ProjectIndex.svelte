@@ -7,7 +7,7 @@
   <nav aria-label="Selected projects">
     <ol class="project-index">
       {#each workProjects as item}
-        <li><button type="button" data-project-row data-ask-id={item.id === 'second-voice' ? 'w-sv' : `w-${item.id}`} aria-current={item.id === project.id ? 'true' : undefined} onclick={() => select(item)}>
+        <li><button type="button" data-project-row  aria-current={item.id === project.id ? 'true' : undefined} onclick={() => select(item)}>
           <span class="project-name">{item.name}{' '}<span class="subtitle">{item.sub}</span></span>
         </button></li>
       {/each}

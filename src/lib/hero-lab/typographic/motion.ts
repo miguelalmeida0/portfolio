@@ -12,7 +12,7 @@ export const typographicMotion: LabSetup = (root, { desktop }, { gsap, ScrollTri
     defaults: { ease: 'none' },
     scrollTrigger: { trigger: stage, start: 'top top', end: 'bottom top', scrub: desktop ? .45 : .2, invalidateOnRefresh: true }
   });
-  exit.fromTo(q('.mah-portrait-drift'), { yPercent: 0 }, { yPercent: desktop ? 4 : 5, duration: 1, immediateRender: false }, 0);
+  exit.fromTo(q('.mah-portrait-drift'), { yPercent: 0 }, { yPercent: () => stage.dataset.layout === 'wide' ? 4 : 0, duration: 1, immediateRender: false }, 0);
   // Preserve the old two-sided type exit on the new word's cells. The source
   // animates glyph scale and cell width, leaving cell translation to scrolling.
   const spread = { progress: 0 };

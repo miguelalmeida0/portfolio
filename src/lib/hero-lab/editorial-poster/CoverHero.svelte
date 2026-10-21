@@ -39,23 +39,23 @@
 
     <!-- Cover lines: a strict left column of real facts under hairlines. -->
     <div class="ep-lines" data-lines>
-      <p class="ep-greeting" data-arm data-line data-ask-id="hi">{hero.greeting}</p>
-      <h1 id="intro-heading" aria-label={hero.roleLabel} data-ask-id="role">
+      <p class="ep-greeting" data-arm data-line >{hero.greeting}</p>
+      <h1 id="intro-heading" aria-label={hero.roleLabel} >
         {#each hero.role as line}<span class="h-line"><span class="h-mask"><span class="h-text" data-heading-text data-h-line>{line}</span></span></span>{/each}
       </h1>
       <div class="ep-rules">
         <span class="ep-rule" data-rule aria-hidden="true"></span>
         <div class="ep-pair">
           <p class="ep-fact" data-arm data-line>{hero.experience}</p>
-          <p class="ep-fact" data-arm data-line data-ask-id="f24">{hero.impact}</p>
+          <p class="ep-fact" data-arm data-line >{hero.impact}</p>
         </div>
         <span class="ep-rule" data-rule aria-hidden="true"></span>
-        <p class="ep-stack" data-arm data-line data-ask-id="stack">{hero.stackLine}</p>
+        <p class="ep-stack" data-arm data-line >{hero.stackLine}</p>
         <span class="ep-rule" data-rule aria-hidden="true"></span>
       </div>
       <div class="ep-actions" data-arm data-line>
-        <PosterAction href={cvHref} label={hero.cv.label} data-ask-id="cv" />
-        <PosterAction href={hero.contact.href} label={hero.contact.label} variant="line" data-ask-id="touch" />
+        <PosterAction href={cvHref} label={hero.cv.label}  />
+        <PosterAction href={hero.contact.href} label={hero.contact.label} variant="line"  />
       </div>
     </div>
   </section>

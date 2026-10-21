@@ -18,9 +18,9 @@
   <section class="xh-stage" data-xh-stage aria-labelledby="intro-heading">
     <span class="xh-grid" aria-hidden="true">{#each Array(9) as _, k}<span data-grid-line style:--k={k}></span>{/each}</span>
 
-    <p class="xh-hello" data-arm data-meta data-ask-id="hi">{hero.greeting}</p>
+    <p class="xh-hello" data-arm data-meta >{hero.greeting}</p>
 
-    <h1 id="intro-heading" class="xh-title" aria-label={hero.roleLabel} data-ask-id="role">
+    <h1 id="intro-heading" class="xh-title" aria-label={hero.roleLabel} >
       <span class="xh-strips" data-figure>
         <XStrips count={8} sizes="(max-width: 1023px) 90vw, 40vw">
           {#snippet overlay(i)}
@@ -37,12 +37,12 @@
 
     <div class="xh-facts" data-xh-side>
       <p class="xh-fact" data-arm data-meta>{hero.experience}</p>
-      <p class="xh-fact xh-stack" data-arm data-meta data-ask-id="stack">{hero.stackLine}</p>
-      <p class="xh-fact" data-arm data-meta data-ask-id="f24">{hero.impact}</p>
+      <p class="xh-fact xh-stack" data-arm data-meta >{hero.stackLine}</p>
+      <p class="xh-fact" data-arm data-meta >{hero.impact}</p>
     </div>
     <div class="xh-actions" data-arm data-meta data-xh-side>
-      <XAction href={cvHref} label={hero.cv.label} data-ask-id="cv" />
-      <XAction href={hero.contact.href} label={hero.contact.label} variant="line" data-ask-id="touch" />
+      <XAction href={cvHref} label={hero.cv.label}  />
+      <XAction href={hero.contact.href} label={hero.contact.label} variant="line"  />
     </div>
   </section>
 </div>

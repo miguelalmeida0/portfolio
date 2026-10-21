@@ -15,11 +15,11 @@
   <section class="d2-stage" data-d2-stage aria-labelledby="intro-heading">
     <!-- Plane 0: the backdrop of the shot (contracts with the lens on exit). -->
     <div class="d2-backdrop" data-backdrop aria-hidden="true"></div>
-    <p class="d2-hello" data-roll data-ask-id="hi"><span data-hello data-arm>{hero.greeting}</span></p>
+    <p class="d2-hello" data-roll ><span data-hello data-arm>{hero.greeting}</span></p>
 
     <!-- One heading, three depth planes inside the shot: the title behind him,
          the photograph, the lower-third line in front of him. -->
-    <h1 id="intro-heading" aria-label={hero.roleLabel} data-ask-id="role">
+    <h1 id="intro-heading" aria-label={hero.roleLabel} >
       <span class="d2-back" data-back aria-hidden="true">
         <span class="d2-back-line" data-back-line data-arm>
           {#each backWords as word, w}<span class="d2-w" data-word={w} data-heading-text>{#each [...word] as glyph}<span class="d2-g" data-g>{glyph}</span>{/each}</span>{#if w < backWords.length - 1}{' '}{/if}{/each}
@@ -39,17 +39,17 @@
 
     <ul class="d2-credits" data-roll>
       <li class="d2-credit" data-credit data-arm><p>{hero.experience}</p></li>
-      <li class="d2-credit" data-credit data-arm><p data-ask-id="stack">{hero.stackLine}</p></li>
-      <li class="d2-credit" data-credit data-arm><p data-ask-id="f24">{hero.impact}</p></li>
+      <li class="d2-credit" data-credit data-arm><p >{hero.stackLine}</p></li>
+      <li class="d2-credit" data-credit data-arm><p >{hero.impact}</p></li>
     </ul>
 
     <div class="d2-lower" data-lower>
       <div class="d2-actions" data-arm data-actions>
-        <a href={hero.cv.href} class="d2-cv" data-ask-id="cv" {...destinationLink(hero.cv.href)}>
+        <a href={hero.cv.href} class="d2-cv"  {...destinationLink(hero.cv.href)}>
           <span class="d2-cv-base">{hero.cv.label} <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></span>
           <span class="d2-cv-wipe" aria-hidden="true">{hero.cv.label} <svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></span>
         </a>
-        <a href={hero.contact.href} class="d2-touch" data-ask-id="touch" {...destinationLink(hero.contact.href)}><span class="d2-touch-label">{hero.contact.label}</span> <span class="d2-touch-arrow" aria-hidden="true">→</span></a>
+        <a href={hero.contact.href} class="d2-touch"  {...destinationLink(hero.contact.href)}><span class="d2-touch-label">{hero.contact.label}</span> <span class="d2-touch-arrow" aria-hidden="true">→</span></a>
       </div>
     </div>
   </section>

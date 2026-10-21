@@ -18,7 +18,7 @@ const workspace=createWorkspace();
 <div use:chapterTitles class="cs-sv"><ProductNav name="Second Voice" slug="second-voice-ai" links={[["overview","Overview"],["state","State"],["voices","Voices"],["gates","Behind submit"],["privacy","Privacy"],["release","Release"]]}/><main class="wrap" id="main">  <section class="hero" id="overview" aria-labelledby="hero-h"><div class="case-pitch">
     <p class="kicker">Second Voice, design and engineering, independent product, 2026</p>
     <h1 id="hero-h">Choose a literary voice. See exactly what changes.</h1>
-    <p class="sub" data-ask-id="project-second-voice-ai">Compare the original with the rewrite to see which words changed. Your draft and last result stay available if a request fails.</p>
+    <p class="sub" >Compare the original with the rewrite to see which words changed. Your draft and last result stay available if a request fails.</p>
     <CaseRole slug="second-voice-ai" /><div class="ctas"><a class="btn" data-circle-fill href="#try"><CircleFill label="Try the case demo" /></a><a class="tlink" href="#gates">How it's built</a></div>
   </div><CaseOverview slug="second-voice-ai"/></section>
 

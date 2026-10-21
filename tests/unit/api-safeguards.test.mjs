@@ -66,26 +66,20 @@ async function endpoints(env = {MIGUEL_LLM_PROVIDER:'local-fallback'}) {
 function event(path, body, client = 'shared-api-client') {
   return {request:new Request(`https://local.invalid/api/${path}`,{method:'POST',body:JSON.stringify(body)}),getClientAddress:()=>client};
 }
-test('both real handlers share the burst allowance and return Retry-After and no-store', async () => {
-  const api=await endpoints();
-  for(let i=0;i<12;i++) {
-    const response=await (i%2?api.legacy:api.ask)(event('test',{question:'What is his stack?',areas:{}}));
-    assert.equal(response.status,200);
-  }
-  for(const handler of [api.ask,api.legacy]) {
-    const response=await handler(event('test',{question:'What is his stack?',areas:{}}));
-    assert.equal(response.status,429);assert.match(response.headers.get('retry-after'),/^\d+$/);
-    assert.equal(response.headers.get('cache-control'),'no-store');
-  }
-});
-test('both real handlers reject oversized bodies and aborted requests before doing work',async()=>{
-  const api=await endpoints();
-  for(const handler of [api.ask,api.legacy]) {
-    assert.equal((await handler(event('test',{question:'hello',areas:{},padding:'x'.repeat(32_000)}))).status,413);
-    const controller=new AbortController();controller.abort();
-    const input=event('test',{question:'hello',areas:{}});
-    input.request=new Request(input.request,{signal:controller.signal});
-    assert.equal((await handler(input)).status,408);
+test('retired handlers reject repeated, oversized and aborted requests without reading their bodies', async () => {
+  const api = await endpoints();
+  for (const handler of [api.ask, api.legacy]) {
+    for (let i=0; i<14; i++) {
+      const response = await handler(event('test', { question: 'hello' }));
+      assert.equal(response.status, 410);
+      assert.equal(response.headers.get('cache-control'), 'no-store');
+    }
+    const body = { get request() { throw Error('A retired endpoint must not read the request'); } };
+    assert.equal((await handler(body)).status, 410);
+    const abort = new AbortController(); abort.abort();
+    const input = event('test', { padding: 'x'.repeat(32000) });
+    input.request = new Request(input.request, { signal: abort.signal });
+    assert.equal((await handler(input)).status, 410);
   }
 });
 test('configured provider keys alone cannot cause either public endpoint to spend',async()=>{

@@ -16,7 +16,7 @@
 
     <div class="stories">
       <article class="story">
-        <div><h3 data-ask-id="project-flow-incident-event-loss">A scheduling operation could lose an event.</h3><p class="said">“Move lunch after standup and protect my workout.”</p></div>
+        <div><h3 >A scheduling operation could lose an event.</h3><p class="said">“Move lunch after standup and protect my workout.”</p></div>
         <dl>
           <dt>Observed</dt><dd>During arrangeDay, flexible events could disappear. In compound commands, a second failure could leave the first operation applied.</dd>
           <dt>Cause</dt><dd>The early path coupled interpretation to mutation. Demo-specific event IDs and seeded times hid weaknesses against user-created data.</dd>

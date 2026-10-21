@@ -5,15 +5,12 @@
   import { duration, easing } from '$lib/motion/tokens';
   import { resetScrollMotion, syncScrollPosition } from '$lib/motion/smooth-scroll';
 
-  let { identity, navigateFromMenu, navigationTransitionActive, guideReady, askActive, story = false,
-    onAsk, onClosed, restoreFocus }: {
+  let { identity, navigateFromMenu, navigationTransitionActive, story = false,
+    onClosed, restoreFocus }: {
     identity: Snippet;
     story?: boolean;
     navigateFromMenu: (event: MouseEvent, close: () => Promise<void>) => Promise<void>;
     navigationTransitionActive: boolean;
-    guideReady: boolean;
-    askActive: boolean;
-    onAsk: () => void;
     onClosed: () => void;
     restoreFocus: () => void;
   } = $props();
@@ -106,13 +103,12 @@
     // The top layer supplies background inertness, including on case-study routes.
     dialog.showModal();
     closeButton.focus({ preventScroll: true });
-    // Take these keys before the page's global Ask handler can act behind the modal.
+    // Escape closes the menu without invoking any page action.
     const shortcut = (event: KeyboardEvent) => {
-      if (!['Escape', '/'].includes(event.key) || event.metaKey || event.ctrlKey || event.altKey) return;
+      if (event.key !== 'Escape' || event.metaKey || event.ctrlKey || event.altKey) return;
       event.preventDefault(); event.stopImmediatePropagation();
       if (closing || navigationTransitionActive) return;
-      if (event.key === 'Escape') void close();
-      else onAsk();
+      void close();
     };
     window.addEventListener('keydown', shortcut, true);
     const frame = requestAnimationFrame(() => { entered = true; });
@@ -152,10 +148,6 @@
         </a>
       {/each}
     </nav>
-    <div class="menu-footer" data-menu-reveal>
-      <button class="mobile-guide-trigger" data-ask-trigger type="button" aria-expanded={askActive}
-        disabled={!guideReady || navigationTransitionActive || closing} aria-label={askActive ? 'Close Ask MiguelLLM' : 'Ask MiguelLLM'} onclick={onAsk}>Ask MiguelLLM</button>
-    </div>
   </div>
 </dialog>
 
@@ -178,9 +170,7 @@
   .menu-description { color: var(--muted); font-size: 12px; line-height: 1.4; letter-spacing: .08em; transition: color var(--motion-feedback) ease, transform var(--motion-indicator) var(--motion-settle); }
   nav a:focus-visible .menu-label { transform: translateX(6px); color: var(--plum); }
   nav a:focus-visible .menu-description { color: var(--ink); transform: translateX(3px); }
-  .menu-footer { border-top: 1px solid var(--rule-ink); padding-top: var(--s-4); }
-  .mobile-guide-trigger { display: inline-flex; align-items: center; min-height: 48px; padding: 0; border: 0; background: transparent; color: var(--plum); font: 400 18px/1.4 var(--hero-font); cursor: pointer; text-underline-offset: 5px; }
-  .mobile-guide-trigger:hover { text-decoration: underline; }
+
   dialog :global(:focus-visible) { outline: 2px solid var(--plum); outline-offset: 6px; }
   @media (hover: hover) {
     nav a:hover .menu-label { transform: translateX(6px); color: var(--plum); }
@@ -210,7 +200,7 @@
     nav { padding-block: var(--s-2); }
     nav a { min-height: 56px; padding-block: var(--s-1); }
     .menu-label { font-size: clamp(36px, 8dvh, 48px); }
-    .menu-footer { padding-top: var(--s-2); }
+
     .menu-shell { padding-bottom: max(var(--s-2), env(safe-area-inset-bottom)); }
   }
   [data-reduced='true'] :is(.menu-label, .menu-rule, .menu-description, .menu-close > span > span) { transition: none; }

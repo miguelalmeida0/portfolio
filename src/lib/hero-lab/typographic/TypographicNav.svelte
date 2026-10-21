@@ -3,9 +3,8 @@
   import { beforeNavigate, pushState } from '$app/navigation';
   import { hero } from '$lib/hero-lab/content';
   import { d1Navigation, d1Routes, type D1Page, type D1Section } from './site';
-  import { lockPage, toggleAsk } from '$lib/hero-lab/sheet';
+  import { lockPage } from '$lib/hero-lab/sheet';
   import { scrollToElement } from '$lib/motion/smooth-scroll';
-  import { askController, askView } from '$lib/ask/state';
   import { motionState } from '$lib/motion/policy';
   import { gsap } from 'gsap';
   import { curves } from '$lib/hero-lab/runtime';
@@ -107,11 +106,6 @@
     if (location.hash !== url.hash) pushState(url, {});
     scrollToElement(target, { focus: true });
   }
-  async function requestAsk() {
-    // The native close event may arrive after Ask has focused its input.
-    travelling = true;
-    if (await hide() && !disposed) toggleAsk(false);
-  }
   beforeNavigate(() => { travelling = true; closeNow(); });
   onMount(() => {
     indexReady = true;
@@ -130,10 +124,6 @@
       if (innerWidth >= 1024 && dialog?.open) closeNow();
     };
     update();
-    const restoreAskTrigger = () => {
-      if (trigger?.getClientRects().length) trigger.focus({ preventScroll: true });
-    };
-    window.addEventListener('ask:restore-trigger', restoreAskTrigger);
     window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', resize);
     const measure = new ResizeObserver(place);
@@ -154,7 +144,6 @@
       disposed = true;
       stopSheetMotion(); unlock(); unsubscribe();
       cancelAnimationFrame(frame);
-      window.removeEventListener('ask:restore-trigger', restoreAskTrigger);
       window.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', resize);
       observer.disconnect(); measure.disconnect();
@@ -166,18 +155,17 @@
   <div class="mast-row">
     <a href={homeHref} class="identity" data-identity-home aria-label={hero.homeLabel} data-nav-arrive>
       <span class="wordmark">{hero.name.first} {hero.name.last}</span>
-      <span class="city" data-ask-id="city">{hero.city}</span>
+      <span class="city" >{hero.city}</span>
     </a>
     {#if roleControl}<div class="mast-role-control">{@render roleControl()}</div>{/if}
     <nav aria-label="Main navigation" class="d1-links" data-nav-arrive>
       {#each links as link}
-        <a href={link.href} data-ask-id={`nav-${link.label.toLowerCase()}`} data-roll aria-current={link.current ? 'page' : undefined}>
+        <a href={link.href}  data-roll aria-current={link.current ? 'page' : undefined}>
           <span class="roll" aria-hidden="true"><span>{link.label}</span><span>{link.label}</span></span>
           <span class="sr-only">{link.label}</span>
         </a>
       {/each}
-      <button type="button" class="ask" data-ask-trigger disabled={!$askController}
-        aria-expanded={$askView.state !== 'idle'} onclick={() => toggleAsk(true)}>Ask MiguelLLM</button>
+
     </nav>
     <button bind:this={trigger} type="button" class="index-toggle" aria-haspopup="dialog" aria-expanded={open}
       aria-controls="d1-index" disabled={!indexReady} onclick={show} data-nav-arrive>Index</button>
@@ -224,8 +212,7 @@
         {/each}
       </ul>
     {/if}
-    <button type="button" class="sheet-ask" disabled={!$askController}
-      onclick={requestAsk}>Ask MiguelLLM</button>
+
   </div>
 </dialog>
 
@@ -254,9 +241,6 @@
   /* The page you are on keeps its rule drawn and its plum face up. */
   .d1-links a[aria-current='page'] { color: var(--plum); }
   .d1-links a[aria-current='page']::after { transform: scaleX(1); }
-  .ask { min-height: calc(44px / var(--lab-zoom, 1)); padding: 0 16px; border: 2px solid var(--plum); color: var(--plum); font: 700 15px/1 var(--hero-font); background: transparent; cursor: pointer; transition: background-color .3s, color .3s; }
-  .ask:hover, .ask[aria-expanded='true'] { background: var(--plum); color: var(--paper); }
-  .ask:disabled { opacity: .5; cursor: default; }
   .mast-rule { position: absolute; inset-inline: 0; width: min(calc(100% - 2 * var(--page-x)), var(--content-max)); margin-inline: auto; bottom: 0; height: 2px; background: var(--ink); transform-origin: left; }
   /* Reading progress runs along the masthead rule in plum. */
   .mast-progress { position: absolute; inset: 0; background: var(--plum); transform: scaleX(0); transform-origin: left; }
@@ -271,8 +255,6 @@
   .section-mark { position: absolute; left: 0; bottom: 8px; width: 1px; height: 3px; transform-origin: left center; background: var(--plum); opacity: 0; transition: transform .55s cubic-bezier(.16,1,.3,1), opacity .3s; pointer-events: none; }
   .section-mark.shown { opacity: 1; }
   .index-toggle { display: none; min-height: 44px; min-width: 44px; padding: 0 4px; font: 700 20px/1 'Lab Antonio', 'Arial Narrow', sans-serif; letter-spacing: .05em; text-transform: uppercase; color: var(--ink); background: none; border: 0; cursor: pointer; border-bottom: 2px solid var(--plum); }
-  .identity:focus-visible, .ask:focus-visible, .index-toggle:focus-visible,
-  .sheet-close:focus-visible, .sheet-ask:focus-visible { outline: 3px solid var(--plum); outline-offset: 4px; }
   @media (max-width: 1023px) {
     .mast { --mast-h: 68px; }
     .d1-links, .mast-sections { display: none; }
@@ -307,8 +289,7 @@
   .sheet-label { margin-top: 22px; font: 400 12px/1 'Lab Mono', monospace; text-transform: uppercase; letter-spacing: .06em; }
   .sheet-sections { margin-top: 8px; gap: 0; grid-template-columns: 1fr 1fr; column-gap: 16px; }
   .sheet-sections a { display: flex; align-items: center; min-height: 44px; padding: 0; border-bottom: 1px solid rgb(20 42 34 / .25); font: 700 20px/1 'Lab Antonio', 'Arial Narrow', sans-serif; text-transform: uppercase; letter-spacing: .03em; }
-  .sheet-ask { margin-top: auto; min-height: 52px; border: 2px solid var(--plum); background: var(--plum); color: var(--paper); font: 700 16px/1 var(--hero-font); cursor: pointer; }
-  @media (prefers-reduced-motion: reduce) { .mast::before, .mast-rule, .mast-sections, .sections-row, .section-mark, .roll > span, .d1-links a::after, .ask, .sections-row a { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .mast::before, .mast-rule, .mast-sections, .sections-row, .section-mark, .roll > span, .d1-links a::after, .sections-row a { transition: none; } }
   :global(html[data-motion='reduced']) .mast::before,
   :global(html[data-motion='reduced']) .mast-rule,
   :global(html[data-motion='reduced']) .mast-sections,

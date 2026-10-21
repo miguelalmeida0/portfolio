@@ -60,9 +60,10 @@
    provisional server frame first; without JS the original photo stays visible. */
 html[data-motion] .mah:not([data-portrait-ready]):not([data-portrait-fallback]) .mah-photo{visibility:hidden}
 
-.mah-photo{position:absolute;bottom:0;z-index:2;pointer-events:none;overflow:hidden;
+.mah-photo{position:absolute;bottom:var(--mah-photo-bottom,0px);z-index:2;pointer-events:none;overflow:hidden;
   height:var(--mah-ph,70svh);width:calc(var(--mah-ph,70svh)*1016/1065);left:calc(50% - var(--mah-ph,70svh)*508/1065)}
 .mah-photo-img,.mah-photo-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;max-width:none}
+.mah-photo-img{object-fit:contain;object-position:center}
 .mah-photo-canvas{display:none}
 .mah.has-gl .mah-photo.is-turning .mah-photo-canvas{display:block}
 .mah.has-gl .mah-photo.is-turning .mah-photo-img{visibility:hidden}

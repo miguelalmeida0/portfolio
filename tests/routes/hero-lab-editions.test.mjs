@@ -25,16 +25,16 @@ for (const slug of slugs) {
     assert.ok(html.includes('>Berlin<') || html.includes('Berlin'), 'Berlin');
     assert.ok(html.includes('/images/wind-full-720.avif 720w, /images/wind-full-1086.avif 1086w'), 'portrait sources');
     assert.match(html, /<img[^>]*alt="Miguel Almeida"/);
-    assert.ok(html.includes('data-ask-trigger'), 'Ask MiguelLLM');
+    assert.doesNotMatch(html, /data-ask-trigger|data-ask-id/);
     assert.ok(html.includes('data-identity-home'), 'identity home link');
     assert.ok(html.includes('id="work"') && html.includes('Selected Work'), 'Selected Work');
-    for (const name of ['F24', 'Needle', 'Second Voice AI', 'Leu', 'Flow']) assert.ok(html.includes(name), name);
+    for (const name of ['F24', 'Needle', 'Second Voice', 'Leu']) assert.ok(html.includes(name), name);
     assert.ok(html.includes('id="contact"'), 'contact footer');
     assert.ok(html.includes('name="robots" content="noindex"'));
     assert.ok(!/<header[^>]*class="wind-header/.test(html), 'own navigation, not the production header');
     assert.equal((html.match(/id="intro-heading"/g) || []).length, 1);
     for (const href of [...links, '#work', '#contact']) assert.ok(html.includes(`href="${href}"`), `link ${href}`);
-    assert.ok(new RegExp(`href="/hero-lab/typographic/cv"[^>]*data-ask-id="cv"|data-ask-id="cv"[^>]*href="/hero-lab/typographic/cv"`).test(html), 'View CV opens the supported CV');
+    assert.ok(html.includes('href="/hero-lab/typographic/cv"'), 'View CV opens the supported CV');
     for (const href of links) assert.equal((await get(href)).status, 200, `linked destination ${href}`);
   });
 

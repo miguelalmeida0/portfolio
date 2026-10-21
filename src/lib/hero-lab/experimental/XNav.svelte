@@ -4,9 +4,8 @@
   import { page } from '$app/stores';
   import { gsap } from 'gsap';
   import { hero } from '$lib/hero-lab/content';
-  import { followMenuLink, lockPage, toggleAsk } from '$lib/hero-lab/sheet';
+  import { followMenuLink, lockPage } from '$lib/hero-lab/sheet';
   import { curves } from '$lib/hero-lab/runtime';
-  import { askController, askView } from '$lib/ask/state';
   import { motionState } from '$lib/motion/policy';
   import { editionNavigation, editionPageOf, editionRoutes } from '$lib/hero-lab/editions/site';
 
@@ -65,17 +64,16 @@
   <div class="x-rail" bind:this={rail} data-x-rail>
     <a href={homeHref} class="x-id" data-identity-home aria-label={hero.homeLabel}>
       <span class="x-name">{hero.name.first} {hero.name.last}</span>
-      <span class="x-city" data-ask-id="city">{hero.city}</span>
+      <span class="x-city" >{hero.city}</span>
     </a>
     <nav aria-label="Main navigation" class="x-links">
       {#each links as link}
-        <a href={link.href} data-ask-id={`nav-${link.label.toLowerCase()}`} aria-current={link.current ? 'page' : undefined}>
+        <a href={link.href}  aria-current={link.current ? 'page' : undefined}>
           <span class="x-link-fill" aria-hidden="true"></span><span class="x-link-label">{link.label}</span>
         </a>
       {/each}
     </nav>
-    <button type="button" class="x-ask" data-ask-trigger disabled={!$askController}
-      aria-expanded={$askView.state !== 'idle'} onclick={() => toggleAsk(true)}><span>Ask MiguelLLM</span></button>
+
   </div>
 
   <!-- Compact: a top bar and a full-screen menu. -->
@@ -102,7 +100,7 @@
         </li>
       {/each}
     </ul>
-    <button type="button" class="x-sheet-ask" disabled={!$askController} onclick={async () => { await hide(); toggleAsk(false); }}>Ask MiguelLLM</button>
+
   </div>
 </dialog>
 
@@ -122,11 +120,6 @@
   .x-links a:is(:hover, :focus-visible), .x-links a[aria-current='page'] { color: var(--plum); }
   .x-links a[aria-current='page']::after { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 5px; background: var(--ink); }
   .x-links a:focus-visible { outline: 3px solid var(--ink); outline-offset: -5px; }
-  .x-ask { min-height: 168px; padding: 18px 0; border: 0; border-top: 1px solid rgb(228 237 191 / .3); background: transparent; color: var(--lime); cursor: pointer; transition: background-color .3s, color .3s; }
-  .x-ask span { display: inline-block; writing-mode: vertical-rl; transform: rotate(180deg); font: 600 15px/1 var(--hero-font); letter-spacing: .02em; }
-  .x-ask:hover, .x-ask[aria-expanded='true'] { background: var(--lime); color: var(--plum); }
-  .x-ask:focus-visible { outline: 3px solid var(--lime); outline-offset: -6px; }
-  .x-ask:disabled { opacity: .5; cursor: default; }
 
   .x-bar { display: none; }
   @media (max-width: 1023px) {
@@ -152,9 +145,8 @@
   .x-sheet-num { padding-bottom: 12px; font: 400 13px/1 'Lab Mono', monospace; }
   .x-sheet-mask { display: block; overflow: hidden; }
   .x-sheet-word { display: block; font: 700 clamp(60px, 18vw, 104px)/.9 'Lab Antonio', 'Arial Narrow', sans-serif; text-transform: uppercase; }
-  li a:focus-visible, .x-sheet-close:focus-visible, .x-sheet-ask:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
-  .x-sheet-ask { margin-top: auto; min-height: 52px; border: 2px solid var(--lime); background: var(--lime); color: var(--plum); font: 700 16px/1 var(--hero-font); cursor: pointer; }
-  @media (prefers-reduced-motion: reduce) { .x-link-label, .x-link-fill, .x-ask { transition: none; } }
+  li a:focus-visible, .x-sheet-close:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { .x-link-label, .x-link-fill { transition: none; } }
 
   /* The rail takes the left edge of the whole direction, footer included. */
   @media (min-width: 1024px) {

@@ -11,6 +11,6 @@ import ProductNav from '../shared/ProductNav.svelte';import CommandHero from './
 <div use:chapterTitles class="cs-flow"><ProductNav name="Flow" slug="flow" links={[['overview','Overview'],['latency','Latency'],['engineering','Engineering'],['specs','Specs']]}/><main class="wrap" id="main"><section class="hero" id="overview" aria-labelledby="hero-h"><div class="case-pitch">
     <p class="kicker">Flow, a voice-first personal interface</p>
     <h1 id="hero-h">Change your schedule by voice.</h1>
-    <p class="sub" data-ask-id="project-flow">Ask Flow to move a meeting, review the proposed change, then confirm it. You can edit the result or undo it afterward.</p>
+    <p class="sub" >Ask Flow to move a meeting, review the proposed change, then confirm it. You can edit the result or undo it afterward.</p>
     <CaseRole slug="flow" /><div class="ctas"><a class="btn primary" data-circle-fill href="#try"><CircleFill label="Try the case demo" /></a><a class="tlink" href="#engineering">How it's built</a></div>
   </div><CaseOverview slug="flow"/></section><CommandHero/><CapabilityBento {demo}/><FlowDemo {demo}/><LatencyCompare/><InvestigationStory/><FlowSpecs/><NextProject slug="flow"/></main></div>

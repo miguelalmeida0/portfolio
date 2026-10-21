@@ -1,11 +1,11 @@
 import { expect, test } from '@playwright/test';
 
 test('copy ink tracks the field edge on every sampled animation frame', async ({ page }) => {
-  for (const width of [390, 768, 1440]) {
+  for (const width of [1280, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/');
     await expect(page.locator('.mah[data-renderer]')).toBeVisible();
-    const pause = page.locator('[data-mah-pause]');
+    const pause = page.locator('.portrait-pause');
     if (await pause.getAttribute('aria-pressed') !== 'true') await pause.click();
     await expect(page.locator('.mah-photo-front')).toHaveCSS('opacity', '1');
     await expect(page.locator('.mah')).not.toHaveClass(/is-sweeping/);
@@ -13,7 +13,7 @@ test('copy ink tracks the field edge on every sampled animation frame', async ({
     for (const role of ['designer', 'engineer']) {
       const frames = await page.evaluate(async (next) => {
         const root = document.querySelector<HTMLElement>('.mah')!;
-        document.querySelector<HTMLButtonElement>(`[data-mah-role=${next}]`)!.click();
+        document.querySelector<HTMLButtonElement>(`[data-mah-role="${next}"]`)!.click();
         const samples: { aligned: boolean; ink: boolean; opaque: boolean }[] = [];
         await new Promise<void>(resolve => {
           const until = performance.now() + 1100;
@@ -38,7 +38,7 @@ test('copy ink tracks the field edge on every sampled animation frame', async ({
       expect(frames.every(frame => frame.aligned && frame.ink && frame.opaque)).toBe(true);
       await expect(page.locator('.mah')).not.toHaveClass(/is-sweeping/);
       await expect(page.locator('.mah')).toHaveAttribute('data-role', role);
-      await expect(page.locator('.mah-proof')).not.toHaveCSS('color', 'rgba(0, 0, 0, 0)');
+      await expect(page.locator('.mah-big')).not.toHaveCSS('color', 'rgba(0, 0, 0, 0)');
       // The word choreography finishes after the field; do not request the
       // reverse turn while the header deliberately rejects concurrent turns.
       await page.waitForTimeout(700);

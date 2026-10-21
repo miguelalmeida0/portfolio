@@ -2,8 +2,6 @@
   import { onMount } from 'svelte';
   import { gsap } from 'gsap';
   import { hero, labNavigation } from '$lib/hero-lab/content';
-  import { toggleAsk } from '$lib/hero-lab/sheet';
-  import { askController, askView } from '$lib/ask/state';
   import { motionState } from '$lib/motion/policy';
   import { curves } from '$lib/hero-lab/runtime';
 
@@ -85,13 +83,10 @@
   </a>
   <span class="d3-sep" aria-hidden="true"></span>
   {#each labNavigation as link}
-    <a href={link.href} class="d3-link" data-dock-link={link.href} data-ask-id={`nav-${link.label.toLowerCase()}`}
+    <a href={link.href} class="d3-link" data-dock-link={link.href}
       aria-current={current === link.href ? 'location' : undefined}>{link.label}</a>
   {/each}
-  <button type="button" class="d3-link d3-ask" data-ask-trigger aria-label="Ask MiguelLLM" disabled={!$askController}
-    aria-expanded={$askView.state !== 'idle'} onclick={() => toggleAsk(true)}>
-    <span class="d3-ask-full">Ask MiguelLLM</span><span class="d3-ask-short" aria-hidden="true">Ask</span>
-  </button>
+
 </nav>
 </div>
 
@@ -106,10 +101,6 @@
   .d3-link[aria-current] { color: var(--ink); }
   @media (hover: hover) { .d3-link:not([aria-current]):hover, .d3-home:hover { background: rgb(249 247 238 / .1); } }
   .d3-home:focus-visible, .d3-link:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
-  .d3-ask { color: var(--lime); }
-  .d3-ask[aria-expanded='true'] { background: rgb(228 237 191 / .16); }
-  .d3-ask:disabled { opacity: .5; cursor: default; }
-  .d3-ask-short { display: none; }
   @media (max-width: 767px) {
     .d3-dock-wrap { left: 10px; right: 10px; bottom: max(10px, env(safe-area-inset-bottom)); }
     .d3-dock { width: 100%; justify-content: space-between; }

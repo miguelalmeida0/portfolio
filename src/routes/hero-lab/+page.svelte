@@ -39,7 +39,7 @@
 <section class="lab shell" aria-labelledby="lab-title">
   <header class="lab-head">
     <h1 id="lab-title">Hero lab</h1>
-    <p>Three working directions for the homepage hero. Each one runs above the unchanged Selected Work, contact, footer and Ask MiguelLLM. The production homepage at <a href="/">/</a> is untouched.</p>
+    <p>Three working directions for the homepage hero. Each one runs above the unchanged Selected Work, contact and footer. The production homepage at <a href="/">/</a> is untouched.</p>
     <div class="lab-device" role="group" aria-label="Preview size">
       <button type="button" aria-pressed={device === 'desktop'} onclick={() => (device = 'desktop')}>Desktop 1440</button>
       <button type="button" aria-pressed={device === 'mobile'} onclick={() => (device = 'mobile')}>Mobile 390</button>

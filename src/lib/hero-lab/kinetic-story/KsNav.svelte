@@ -4,9 +4,8 @@
   import { gsap } from 'gsap';
   import { hero } from '$lib/hero-lab/content';
   import { curves } from '$lib/hero-lab/runtime';
-  import { followMenuLink, lockPage, toggleAsk } from '$lib/hero-lab/sheet';
+  import { followMenuLink, lockPage } from '$lib/hero-lab/sheet';
   import { editionNavigation, editionRoutes, type EditionPage } from '$lib/hero-lab/editions/site';
-  import { askController, askView } from '$lib/ask/state';
   import { motionState } from '$lib/motion/policy';
 
   let { page = 'home' }: { page?: EditionPage } = $props();
@@ -64,19 +63,18 @@
   <div class="row">
     <a href={homeHref} class="identity" data-identity-home aria-label={hero.homeLabel} data-arm>
       <span class="name">{hero.name.first} {hero.name.last}</span>
-      <span class="city" data-ask-id="city">{hero.city}</span>
+      <span class="city" >{hero.city}</span>
     </a>
     <nav aria-label="Main navigation" class="links" data-arm>
       {#each links as link}
-        <a href={link.href} data-ask-id={`nav-${link.label.toLowerCase()}`} aria-current={link.current ? 'page' : undefined}>
+        <a href={link.href}  aria-current={link.current ? 'page' : undefined}>
           <span class="sr-only">{link.label}</span>
           <span class="flip" aria-hidden="true">
             {#each [...link.label] as ch, i}<span class="flip-c" style:--d="{i * 28}ms"><span>{ch}</span><span>{ch}</span></span>{/each}
           </span>
         </a>
       {/each}
-      <button type="button" class="ask" data-ask-trigger disabled={!$askController}
-        aria-expanded={$askView.state !== 'idle'} onclick={() => toggleAsk(true)}>Ask MiguelLLM</button>
+
     </nav>
     <button bind:this={trigger} type="button" class="menu-toggle" aria-haspopup="dialog" aria-expanded={open}
       aria-controls="ks-menu" onclick={show} data-arm>Menu</button>
@@ -101,8 +99,7 @@
         </li>
       {/each}
     </ol>
-    <button type="button" class="menu-ask" disabled={!$askController}
-      onclick={async () => { await hide(); toggleAsk(false); }}>Ask MiguelLLM</button>
+
   </div>
 </dialog>
 
@@ -128,10 +125,7 @@
   .links a:focus-visible .flip-c > span:last-child { transform: none; }
   .links a::after { content: ''; position: absolute; left: 4px; right: 4px; bottom: 7px; height: 3px; background: var(--lime); transform: scaleX(0); transform-origin: left; transition: transform .45s cubic-bezier(.16,1,.3,1); }
   .links a[aria-current='page']::after { transform: scaleX(1); }
-  :is(.links a, .identity, .ask, .menu-toggle):focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
-  .ask { min-height: calc(44px / var(--lab-zoom, 1)); padding: 0 16px; border: 2px solid var(--lime); background: transparent; color: var(--lime); font: 700 15px/1 var(--hero-font); cursor: pointer; transition: background-color .3s, color .3s; }
-  .ask:hover, .ask[aria-expanded='true'] { background: var(--lime); color: var(--forest); }
-  .ask:disabled { opacity: .5; cursor: default; }
+  :is(.links a, .identity, .menu-toggle):focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
   .rule { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: rgb(228 237 191 / .22); }
   .progress { position: absolute; inset: 0; background: var(--lime); transform: scaleX(0); transform-origin: left; }
   .menu-toggle { display: none; min-height: 44px; min-width: 44px; padding: 0 14px; border: 2px solid var(--lime); background: none; color: var(--lime); font: 700 18px/1 'Lab Antonio', 'Arial Narrow', sans-serif; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
@@ -155,7 +149,6 @@
   .menu-word { display: inline-flex; font: 700 clamp(58px, 18vw, 104px)/.9 'Lab Antonio', 'Arial Narrow', sans-serif; text-transform: uppercase; }
   .menu-mask { display: inline-block; overflow: hidden; padding-block: .05em; }
   .menu-mask > span { display: inline-block; }
-  .menu-list a:focus-visible, .menu-close:focus-visible, .menu-ask:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
-  .menu-ask { margin-top: auto; min-height: 52px; border: 0; background: var(--lime); color: var(--forest); font: 700 16px/1 var(--hero-font); cursor: pointer; }
-  @media (prefers-reduced-motion: reduce) { .ks-nav, .flip-c > span, .links a::after, .ask { transition: none; } }
+  .menu-list a:focus-visible, .menu-close:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { .ks-nav, .flip-c > span, .links a::after { transition: none; } }
 </style>

@@ -5,12 +5,12 @@ export type SelectedProject = {
   id: string; name: string; line: string; category: string; tags: string[]; stack: string[];
   poster: string; alt: string; initialAspectRatio: number;
   href: string; live?: string; code?: string; sources: PreviewSource[];
+  challenge?: string; evidence?: string;
 };
 const treatments = [
-  { id: 'needle', name: 'Needle', line: 'Search 10,000 artworks. A semantic search engine.', tags: ['Semantic search', 'Web Workers', 'HNSW retrieval'] },
-  { id: 'second-voice-ai', name: 'Second Voice AI', line: 'Choose a literary voice. See exactly what changes.', tags: ['AI rewriting', 'Edit comparison', 'Request recovery'] },
-  { id: 'leu', name: 'Leu', line: 'A PDF reader with passage-linked learning questions.', tags: ['Source-linked learning', 'SwiftUI', 'On-device narration'] },
-  { id: 'flow', name: 'Flow', line: 'Review and confirm calendar changes requested by voice.', tags: ['Voice-first actions', 'Undo / redo', 'Persistent state'] }
+  { id: 'needle', name: 'Needle', line: 'Describe a picture. Find it among 10,000 Met artworks.', challenge: 'Nearest-neighbour search that runs entirely in the browser, with no search server.', evidence: 'Search in a Web Worker', tags: ['Semantic search', 'Web Workers', 'HNSW retrieval'] },
+  { id: 'second-voice-ai', name: 'Second Voice', line: 'Choose a literary voice. See exactly what changes.', challenge: 'Showing every edit the AI made, and recovering cleanly when a request fails.', evidence: 'Edit-by-edit comparison', tags: ['AI rewriting', 'Edit comparison', 'Request recovery'] },
+  { id: 'leu', name: 'Leu', line: 'Read a passage. Find the gap. Return to the exact source.', challenge: 'Keeping learning questions connected to the original passage, with on-device narration in the native app.', evidence: 'Source-linked learning', tags: ['Source-linked learning', 'SwiftUI', 'On-device narration'] },
 ];
 export const selectedProjects: SelectedProject[] = treatments.map(item => {
   const project = projects.find(p => p.slug === item.id)!;

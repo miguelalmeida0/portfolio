@@ -1,7 +1,5 @@
 import { pushState } from '$app/navigation';
 import { scrollToElement, smoothScrollInstance } from '$lib/motion/smooth-scroll';
-import { askController } from '$lib/ask/state';
-import { get } from 'svelte/store';
 
 /** Hold the page still behind a modal menu; returns the release. */
 export function lockPage() {
@@ -29,9 +27,4 @@ export function followMenuLink(event: MouseEvent, close: () => Promise<void> | v
     if (location.hash !== url.hash) pushState(url, {});
     scrollToElement(target, { focus: true });
   });
-}
-
-/** The header's Ask control, shared by all three navigation systems. */
-export function toggleAsk(restoreFocusOnClose = true) {
-  get(askController)?.toggle(restoreFocusOnClose);
 }

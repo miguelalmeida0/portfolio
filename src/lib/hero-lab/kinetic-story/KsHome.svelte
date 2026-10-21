@@ -21,8 +21,8 @@
   <KsNav page="home" />
 
   <section class="hero" data-hero aria-labelledby="intro-heading">
-    <p class="ks-greeting" data-arm data-meta data-ask-id="hi">{hero.greeting}</p>
-    <h1 id="intro-heading" aria-label={hero.roleLabel} data-ask-id="role">
+    <p class="ks-greeting" data-arm data-meta >{hero.greeting}</p>
+    <h1 id="intro-heading" aria-label={hero.roleLabel} >
       {#each lines as line, i}
         <span class="line" class:second={i > 1} data-line data-heading-text><Chars text={line} /></span>
       {/each}
@@ -37,11 +37,11 @@
 
     <div class="ks-facts" data-facts>
       <p class="ks-years" data-arm data-meta>{hero.experience}</p>
-      <p class="ks-stack" data-arm data-meta data-ask-id="stack">{hero.stackLine}</p>
-      <p class="ks-impact" data-arm data-meta data-ask-id="f24">{hero.impact}</p>
+      <p class="ks-stack" data-arm data-meta >{hero.stackLine}</p>
+      <p class="ks-impact" data-arm data-meta >{hero.impact}</p>
       <div class="ks-actions" data-arm data-meta>
-        <KsAction href={cvHref} label={hero.cv.label} data-ask-id="cv" />
-        <a href={hero.contact.href} class="ks-touch" data-ask-id="touch" {...destinationLink(hero.contact.href)}><span>{hero.contact.label}</span> <span aria-hidden="true">→</span></a>
+        <KsAction href={cvHref} label={hero.cv.label}  />
+        <a href={hero.contact.href} class="ks-touch"  {...destinationLink(hero.contact.href)}><span>{hero.contact.label}</span> <span aria-hidden="true">→</span></a>
       </div>
     </div>
   </section>

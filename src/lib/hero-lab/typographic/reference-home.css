@@ -1,0 +1,120 @@
+/* Supplied homepage composition. Keep these changes local to the homepage. */
+.reference-hero {
+  --turntable-nav-height: 80px;
+  position: relative;
+  padding-top: var(--turntable-nav-height);
+  background: #1c352b;
+  color: #142d23;
+  font-family: var(--hero-font);
+}
+.reference-hero [data-mast].mast.hero-overlay,
+.reference-hero [data-mast].mast.hero-overlay::before { background: #1c352b; }
+.reference-hero [data-mast].mast.hero-overlay { --mast-h: 80px; --ink: #faf8ee; --plum: #e2edba; --paper: #1c352b; }
+.reference-hero .mast-row { width: 92.2%; max-width: none; }
+.reference-hero .mast-rule { display: none; }
+.reference-hero .d1-links { gap: 32px; }
+/* Keep the compact navigation usable while the hero measures its display font.
+   Once ready, the existing desktop links resume their approved layout. */
+.reference-hero:has(.index-toggle:enabled):has(.mah:not([data-portrait-ready])) .d1-links { display: none; }
+.reference-hero:has(.index-toggle:enabled):has(.mah:not([data-portrait-ready])) .index-toggle { display: inline-flex; align-items: center; }
+.reference-hero .city { margin-left: 20px; font-size: 18px; color: #c0cdbb; }
+.reference-hero-frame { position: relative; zoom: calc(1 / var(--lab-zoom, 1)); }
+.reference-hero .mah { --mah-offset-top: calc(var(--turntable-nav-height) * var(--lab-zoom, 1)); }
+.reference-hero .mah-word { z-index: 1; }
+.reference-hero .mah-portrait-drift { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.reference-hero .mah-copy { padding-bottom: 28px; align-items: flex-end; }
+.reference-hero .mah-col--left { width: var(--mah-colw); }
+.reference-hero .mah-big { max-width: 23ch; font-size: clamp(23px, 1.7vw, 28px); line-height: 1.18; letter-spacing: -.025em; }
+.reference-hero .mah-line { margin-top: 14px; }
+.reference-hero .mah-line-text { font-size: 16px; line-height: 1.55; }
+.reference-hero .mah-ctas { gap: 24px; margin-top: 20px; }
+.reference-hero .mah-btn { display: inline-flex; align-items: center; gap: 16px; border-radius: 999px; padding: 11px 16px 11px 20px; font: 600 16px/1.2 var(--mah-text); text-transform: none; letter-spacing: 0; }
+.reference-hero .mah-link { font: 600 16px/1.2 var(--mah-text); text-transform: none; letter-spacing: 0; text-decoration: underline; text-underline-offset: 7px; }
+.reference-hero .mah-col--right { width: 20vw; max-width: 260px; }
+.mah-featured-project { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 10px; align-items: center; padding: 10px; background: #faf8ee; color: #142d23; border: 1px solid #d3d9bd; border-radius: 18px; text-decoration: none; }
+.mah-featured-project img { display: block; width: 100%; height: auto; aspect-ratio: 1.15; object-fit: cover; border-radius: 12px; }
+.mah-featured-project strong { display: block; margin: 3px 0; font: 600 16px/1.2 var(--hero-font); }
+.mah-featured-label { display: block; color: #526657; font: 600 10px/1.3 var(--hero-font); letter-spacing: .1em; text-transform: uppercase; }
+.mah-featured-description { display: block; color: #526657; font: 400 12px/1.4 var(--hero-font); }
+.mah-featured-project:focus-visible { outline: 3px solid #68143e; outline-offset: 4px; }
+.hero-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); list-style: none; margin: 0; padding: 0; border-bottom: 1px solid #435a47; color: #c9d6b7; }
+.hero-facts li { padding: 14px 24px; font-size: 17.5px; line-height: 1.5; border-right: 1px solid #435a47; }
+.hero-facts li:last-child { border-right: 0; }
+.hero-facts strong { font-weight: 600; }
+#portfolio-content[data-hero-lab] .current-work.reference-work { margin-top: 0; padding: 0; background: #1c352b; }
+#portfolio-content[data-hero-lab] .reference-work > .selected-inner { width: 92.2%; max-width: none; padding-block: 40px 72px; }
+#portfolio-content[data-hero-lab] .reference-work .selected-heading { justify-content: flex-start; align-items: baseline; gap: 36px; margin-bottom: 36px; padding-bottom: 0; border-bottom: 0; }
+#portfolio-content[data-hero-lab] .reference-work #work-title { font-size: clamp(72px, 7vw, 128px); line-height: 1; }
+#portfolio-content[data-hero-lab] .reference-work .selected-heading > p { max-width: none; font-size: 16px; letter-spacing: .12em; text-transform: uppercase; }
+
+/* Tablet: the cropped portrait forms one column; the introduction forms the other. */
+@media (min-width: 640px) and (max-width: 1279px) {
+  .reference-hero .mah[data-layout] { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: center; height: auto; min-height: 0; }
+  .reference-hero .mah[data-layout] .mah-stage { grid-column: 1; position: relative; inset: auto; height: var(--mah-stage-h); }
+  .reference-hero .mah[data-layout] .mah-copy { grid-column: 2; position: relative; inset: auto; display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; max-width: none; margin: 0; padding: 28px 24px; gap: 24px; align-items: start; }
+  .reference-hero .mah[data-layout=auto] { --mah-stage-h: clamp(360px, 42vw, 520px); --mah-ph: calc(var(--mah-stage-h) * .83); --mah-photo-bottom: 0px; }
+}
+@media (max-width: 1279px) {
+  .reference-hero .mah[data-layout] .mah-col { width: 100%; min-width: 0; max-width: none; }
+  .reference-hero .mah[data-layout] .mah-col--right { margin: 0; padding: 0; border: 0; max-width: 300px; }
+  .reference-hero .mah[data-layout] .mah-big { font-size: 22px; line-height: 1.25; text-wrap: pretty; }
+  .reference-hero .mah[data-layout] .mah-line { margin-top: 6px; }
+  .reference-hero .mah[data-layout] .mah-line-text { font-size: 15px; line-height: 1.4; }
+  .reference-hero .mah[data-layout] .mah-ctas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 18px; gap: 12px; }
+  .reference-hero .mah[data-layout] .mah-btn,
+  .reference-hero .mah[data-layout] .mah-link { display: flex; justify-content: center; align-items: center; width: 100%; min-height: 48px; padding: 10px 12px; border: 1px solid var(--mah-fg); border-radius: 999px; font-size: 14px; line-height: 1.2; text-align: center; white-space: nowrap; text-decoration: none; }
+  .hero-facts li { padding: 12px 20px; font-size: 13px; line-height: 1.45; }
+}
+@media (max-width: 1023px) {
+  .reference-hero { --turntable-nav-height: 56px; }
+  .reference-hero [data-mast].mast.hero-overlay { --mast-h: 56px; }
+  .reference-hero .mast-row { width: calc(100% - 40px); margin-inline: 20px; gap: 12px; }
+  .reference-hero .identity { gap: 10px; }
+  .reference-hero .wordmark { font-size: 22px; }
+  .reference-hero .city { margin-left: 0; font-size: 12px; }
+  .reference-hero .index-toggle { font-size: 17px; }
+}
+@media (max-width: 639px) {
+  .reference-hero .mah[data-layout] { display: block; height: auto; min-height: 0; }
+  .reference-hero .mah[data-layout] .mah-stage { position: relative; inset: auto; height: var(--mah-stage-h); }
+  .reference-hero .mah[data-layout=auto] { --mah-stage-h: clamp(300px, min(90vw, 46svh), 360px); --mah-ph: calc(var(--mah-stage-h) * .83); --mah-photo-bottom: 0px; }
+  .reference-hero .mah[data-layout] .mah-copy { position: relative; inset: auto; display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; max-width: none; margin: 0; padding: 16px 20px 20px; gap: 16px; align-items: start; }
+  .reference-hero .mah[data-layout] .mah-big { font-size: 19px; max-width: none; line-height: 1.3; }
+  .reference-hero .mah[data-layout] .mah-line-text { font-size: 14px; }
+  .reference-hero .mah[data-layout] .mah-col--right { max-width: none; }
+  .reference-hero .mah-featured-project { grid-template-columns: 40px minmax(0, 1fr) 16px; padding: 10px 12px; gap: 10px; border-radius: 12px; }
+  .reference-hero .mah-featured-project::after { content: '↗'; font-size: 18px; }
+  .reference-hero .mah-featured-project img { aspect-ratio: 1; border-radius: 6px; }
+  .reference-hero .mah-featured-project strong { display: inline; margin: 0 0 0 8px; font-size: 14px; }
+  .reference-hero .mah-featured-label { display: inline; font-size: 9px; }
+  .reference-hero .mah-featured-description { margin-top: 3px; font-size: 12px; }
+  .hero-facts { grid-template-columns: 1fr; padding: 10px 20px; gap: 4px; }
+  .hero-facts li { padding: 0; border: 0; font-size: 12px; }
+  #portfolio-content[data-hero-lab] .reference-work > .selected-inner { width: calc(100% - 32px); padding-block: 28px 36px; }
+  #portfolio-content[data-hero-lab] .reference-work .selected-heading { margin-bottom: 20px; }
+  #portfolio-content[data-hero-lab] .reference-work #work-title { font-size: 54px; }
+  #portfolio-content[data-hero-lab] .reference-work .selected-heading > p { display: none; }
+}
+
+.hero-facts .hero-facts-stack { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.hero-facts .portrait-pause { flex: none; display: grid; place-items: center; width: 32px; height: 32px; margin-block: -4px; border: 1px solid #526657; border-radius: 50%; background: transparent; color: inherit; cursor: pointer; font-size: 12px; }
+.hero-facts .portrait-pause:focus-visible { outline: 2px solid #faf8ee; outline-offset: 3px; }
+@media (pointer: coarse) { .hero-facts .portrait-pause { width: 44px; height: 44px; } }
+
+/* Stable homepage actions, including during the Frontend/Designer sweep. */
+.reference-hero .mah .mah-ctas [data-home-action] {
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  min-height: 48px; box-sizing: border-box; padding: 12px 22px;
+  border: 1px solid transparent; border-radius: 999px;
+  background: #1c352b; color: #faf8ee;
+  font: 600 15px/1.3 var(--mah-text); letter-spacing: 0; text-transform: none;
+  text-decoration: none; white-space: nowrap;
+  transition: none; transform: none;
+}
+.reference-hero .mah .mah-ctas .mah-link[data-home-action] { background: #faf8ee; color: #142d23; }
+.reference-hero .mah .mah-ctas [data-home-action] svg { width: 18px; height: 18px; flex: none; }
+.reference-hero .mah .mah-ctas [data-home-action]:focus-visible { outline: 3px solid #faf8ee; outline-offset: 3px; box-shadow: 0 0 0 6px #68143e; }
+@media (max-width: 1279px) {
+  .reference-hero .mah .mah-ctas [data-home-action] { padding: 10px 12px; gap: 8px; font-size: 13px; }
+  .reference-hero .mah .mah-ctas [data-home-action] svg { width: 14px; height: 14px; }
+}

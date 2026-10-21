@@ -28,7 +28,7 @@ import { chapterTitles } from "$lib/motion/actions/chapterTitles";
   <main class="wrap" id="main">
     <section class="hero" id="overview" aria-labelledby="hero-h"><div class="case-pitch">
       <p class="kicker">Needle, a visual search engine for 10,000 artworks</p>
-      <h1 id="hero-h" data-ask-id="project-needle">Search a collection of 10,000 artworks.</h1>
+      <h1 id="hero-h" >Search a collection of 10,000 artworks.</h1>
       <p class="sub">Search by description and browse matching artworks. This case study explains how I built the search, image loading and collection view.</p>
       <dl class="hero-stack"><dt>Built with</dt><dd>React, TypeScript, HNSW, Web Workers, Node.js, Sharp and Docker.</dd></dl>
       <CaseRole slug="needle" /><div class="ctas"><a class="btn primary" data-circle-fill href="#try"><CircleFill label="Try the case demo" /></a><a class="tlink" href="#engineering">How it’s built</a></div>

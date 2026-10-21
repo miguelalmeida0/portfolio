@@ -16,12 +16,12 @@
   <section class="d3-stage" data-d3-stage aria-labelledby="intro-heading">
     <a href="#top" class="d3-identity" aria-label={hero.homeLabel}>
       <span class="d3-wordmark" data-arm>{hero.name.first} {hero.name.last}</span>
-      <span class="d3-city" data-arm data-ask-id="city">{hero.city}</span>
+      <span class="d3-city" data-arm >{hero.city}</span>
     </a>
 
     <!-- One heading, three planes: a magnetic type wall behind him, the
          photograph, and a sticker-cut line in front of him. -->
-    <h1 id="intro-heading" class="d3-title" aria-label={hero.roleLabel} data-ask-id="role">
+    <h1 id="intro-heading" class="d3-title" aria-label={hero.roleLabel} >
       <span class="d3-wall" data-wall aria-hidden="true">
         {#each wall as word}
           <span class="d3-wall-line" data-heading-text>{#each glyphs(word) as glyph}<span class="d3-g" data-g><span class="d3-gm" data-gm><span class="d3-gi" data-gi>{glyph}</span></span></span>{/each}</span>
@@ -36,13 +36,13 @@
     </h1>
 
     <div class="d3-copy" data-copy>
-      <p class="d3-hello" data-arm data-ask-id="hi">{hero.greeting}</p>
+      <p class="d3-hello" data-arm >{hero.greeting}</p>
       <p class="d3-years" data-arm>{hero.experience}</p>
-      <p class="d3-tech" data-arm data-ask-id="stack">{hero.stackLine}</p>
-      <p class="d3-reach" data-arm data-ask-id="f24">{hero.impact}</p>
+      <p class="d3-tech" data-arm >{hero.stackLine}</p>
+      <p class="d3-reach" data-arm >{hero.impact}</p>
       <div class="d3-actions" data-arm>
-        <a href={hero.cv.href} data-circle-fill data-ask-id="cv" {...destinationLink(hero.cv.href)}><CircleFill label={hero.cv.label} /></a>
-        <a href={hero.contact.href} class="d3-touch" data-ask-id="touch" {...destinationLink(hero.contact.href)}>{hero.contact.label} <span aria-hidden="true">→</span></a>
+        <a href={hero.cv.href} data-circle-fill  {...destinationLink(hero.cv.href)}><CircleFill label={hero.cv.label} /></a>
+        <a href={hero.contact.href} class="d3-touch"  {...destinationLink(hero.contact.href)}>{hero.contact.label} <span aria-hidden="true">→</span></a>
       </div>
     </div>
 

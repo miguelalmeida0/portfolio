@@ -47,7 +47,7 @@
     </div>
     <ul><li data-section-indicator aria-hidden="true"></li>{#each links as [id, label]}<li><a href={'#' + id} aria-current={current ? String(current === id) : undefined}>{label}</a></li>{/each}</ul>
     {#if !standalone}<div class="project-actions">
-      {#if project?.source}<a class="btn sm code" href={project.source} {...destinationLink(project.source)}>Code</a>{/if}
+      {#if project?.source}<a class="btn sm code" data-flow-action="compact" href={project.source} {...destinationLink(project.source)}><CircleFill label="Code" /></a>{/if}
       {#if project?.live}
         <a class="btn primary sm" data-circle-fill="compact" href={project.live.href} {...destinationLink(project.live.href)}><CircleFill label="Open live app" /></a>
       {:else if !project?.source}

@@ -2,6 +2,18 @@ import {test,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 const routes=['/','/story','/cv','/work/f24','/work/needle','/work/second-voice','/work/leu','/work/flow'];
+test('all homepage project prose retains a readable physical size', async ({ page }) => {
+ await page.emulateMedia({ reducedMotion: 'reduce' });
+ await page.goto('/');
+ for (const width of [320, 390, 768, 1024, 1440]) {
+  await page.setViewportSize({ width, height: 900 });
+  for (const paragraph of await page.locator('.f24-overview .description, .collection-intro p, .collection-line, .collection-detail').all()) {
+   const size = await paragraph.evaluate(el => parseFloat(getComputedStyle(el).fontSize) * el.getBoundingClientRect().width / (el as HTMLElement).offsetWidth);
+   expect(size, `${width}px: ${await paragraph.innerText()}`).toBeGreaterThanOrEqual(16);
+  }
+ }
+});
+
 for(const width of [320,390,768,1024,1440]) {
  test(`editorial pages remain readable and usable at ${width}px`,async({page},info)=>{
   test.setTimeout(120_000);
@@ -17,30 +29,26 @@ for(const width of [320,390,768,1024,1440]) {
    const text=await page.locator('body').innerText();
    expect(text).not.toMatch(/Curious by nature|A builder by choice|From speech to deterministic state|Reuse is a decision|A quieter way to read/);
    if(route.startsWith('/work/') && route!=='/work/f24') await expect(page.locator('.case-pitch .case-ownership')).toContainText('I ');
-   const reading=await page.locator('.case-pitch .sub,.c-bio,.story-answer,.feature-body').first().evaluate(el=>{const style=getComputedStyle(el);return {font:style.fontFamily,pixels:parseFloat(style.fontSize)*el.getBoundingClientRect().width/(el as HTMLElement).offsetWidth};});
+   const reading=await page.locator('.case-pitch .sub,.c-bio,.story-answer,.f24-overview .description').first().evaluate(el=>{const style=getComputedStyle(el);return {font:style.fontFamily,pixels:parseFloat(style.fontSize)*el.getBoundingClientRect().width/(el as HTMLElement).offsetWidth};});
    expect(reading.font).toMatch(/Figtree/);expect(reading.pixels,`${route}: reading text physical size`).toBeGreaterThanOrEqual(16);
    const name=route==='/'?'home':route.replaceAll('/','-').slice(1);
    await page.screenshot({path:info.outputPath(`${name}-${width}.png`)});
   }
-  await page.goto('/story');await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
+  await page.goto('/story');await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase','idle');
   const tabs=page.getByRole('tablist',{name:'Career journey'});
   await tabs.getByRole('tab').first().focus();await page.keyboard.press('ArrowRight');
   await expect(tabs.getByRole('tab').nth(1)).toHaveAttribute('aria-selected','true');
   await expect(page.locator('#journey-panel-1')).toBeVisible();
   await expect(page.getByRole('button',{name:'Copy my introduction'})).toBeVisible();
   await page.keyboard.press('Control+/');
-  const input=page.getByRole('textbox',{name:'Type your own question'});await expect(input).toBeFocused();
-  await input.fill('What is your stack?');await input.press('Enter');
-  await expect(page.locator('[data-ask-knowledge]')).toContainText('React');
-  await expect(page.locator('.ask-answer')).toHaveCSS('font-family',/Figtree/);
-  await input.press('Escape');await expect(page.locator('[data-ask-panel]')).toHaveCount(0);
+  await expect(page.locator('[data-ask-panel], [data-ask-trigger]')).toHaveCount(0);
   expect(errors).toEqual([]);
  });
 }
 
 test('case captions, destination labels, scoped metrics and release identity agree',async({page,request})=>{
  await page.emulateMedia({reducedMotion:'reduce'});
- await page.goto('/cv');await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
+ await page.goto('/cv');await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase','idle');
  await expect(page.locator('.c-highlights')).toContainText('Checks I wrote');
  await expect(page.locator('.c-highlights')).toContainText('Shared test suite');
  await expect(page.locator('.c-highlights')).not.toContainText('5,500');
@@ -70,7 +78,7 @@ test('editorial pages have no serious automated accessibility violations',async(
 test('media blocking and offline navigation leave useful content and PDF links',async({page,context})=>{
  await page.emulateMedia({reducedMotion:'reduce'});
  await page.route(/\.(?:webp|avif|jpg|png|mp4|webm)(?:\?|$)/,route=>route.abort());
- await page.goto('/work/needle');await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
+ await page.goto('/work/needle');await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase','idle');
  await expect(page.locator('.case-pitch h1')).toBeVisible();
  await page.getByRole('button',{name:'a blue scarab',exact:true}).click();
  await expect(page.locator('[data-needle-demo] .inspector h3')).toHaveText('Scarab Decorated with Scrolls');
@@ -86,12 +94,12 @@ test('media blocking and offline navigation leave useful content and PDF links',
 for(const width of [320,390]) test(`case navigation keeps project names and actions separate at ${width}px`,async({page})=>{
  await page.setViewportSize({width,height:900});await page.emulateMedia({reducedMotion:'reduce'});
  for(const route of routes.filter(route=>route.startsWith('/work/'))) {
-  await page.goto(route);await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();await page.evaluate(()=>document.fonts.ready);
+  await page.goto(route);await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase','idle');await page.evaluate(()=>document.fonts.ready);
   const identity=page.locator('.pnav .project-identity');
   const metrics=await identity.locator('.pname').evaluate(el=>({height:el.getBoundingClientRect().height,line:parseFloat(getComputedStyle(el).lineHeight)}));
   expect(metrics.height,`${route}: project name must stay on one line`).toBeLessThanOrEqual(metrics.line+1);
   for(const control of await page.locator('a[data-circle-fill]').all()) {
-   const label=(await control.locator('.fill-label').boundingBox())!;const orbit=(await control.locator('.fill-orbit').boundingBox())!;
+   const label=(await control.locator('.flow-label').boundingBox())!;const orbit=(await control.locator('.flow-arrow').boundingBox())!;
    expect(label.x+label.width,`${route}: button text must clear its arrow`).toBeLessThanOrEqual(orbit.x-4);
   }
   const a=(await identity.boundingBox())!;const b=(await page.locator('.pnav .project-actions').boundingBox())!;
@@ -103,7 +111,7 @@ for(const width of [320,390]) test(`case navigation keeps project names and acti
 });
 
 test('copying the short introduction copies the introduction shown on screen',async({page})=>{
- await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/story');await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
+ await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/story');await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase','idle');
  await page.evaluate(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async(text:string)=>{(window as Window & {copiedIntro?:string}).copiedIntro=text;}}}));
  const expected=await page.locator('.short-introduction').innerText();await page.locator('[data-story-copy]').click();
  expect(await page.evaluate(()=>(window as Window & {copiedIntro?:string}).copiedIntro)).toBe(expected);

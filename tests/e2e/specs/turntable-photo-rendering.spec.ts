@@ -42,7 +42,7 @@ for (const width of [390, 1440]) {
     });
   }
 
-  test('original WebGL photo turn remains active in both directions at ' + width + 'px', async ({ page }) => {
+  test('automatic WebGL photo turn remains active in both directions at ' + width + 'px', async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     // Probe the browser independently: an application regression to fallback
     // must fail this test, while a machine without WebGL cannot exercise it.
@@ -54,10 +54,9 @@ for (const width of [390, 1440]) {
     test.skip(!webgl, 'This browser environment does not provide WebGL');
     await page.goto('/');
     await expect(page.locator('.mah')).toHaveAttribute('data-renderer', 'webgl');
-    await page.getByRole('button', { name: 'Pause the role animation' }).click();
+    await expect(page.locator('.portrait-turn')).toHaveCount(0);
     for (const role of ['designer', 'engineer']) {
-      await page.getByRole('button', { name: role === 'designer' ? 'Product designer' : 'Frontend engineer', exact: true }).click();
-      await expect(page.locator('.mah-photo.is-turning .mah-photo-canvas')).toBeVisible();
+      await expect(page.locator('.mah-photo.is-turning .mah-photo-canvas')).toBeVisible({timeout:10000});
       await expect(page.locator('.mah-photo')).toHaveAttribute('data-rest-role', role);
       await expect(page.locator('.mah-photo-canvas')).toBeHidden();
       await expect(page.locator(role === 'designer' ? '.mah-photo-back' : '.mah-photo-front')).toHaveCSS('opacity', '1');

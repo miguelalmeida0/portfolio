@@ -7,18 +7,18 @@
   <div class="content-card" data-hero-card>
     <div class="top-group">
       <div class="greeting-row">
-        <p class="greeting" data-ask-id="hi">Hi, I’m Miguel.</p>
+        <p class="greeting" >Hi, I’m Miguel.</p>
       </div>
       <WindHeadline />
       <p class="experience font-semibold">4+ years building production software.</p>
-      <p class="hero-stack" data-ask-id="stack">React&nbsp;· TypeScript&nbsp;· Svelte&nbsp;· JavaScript</p>
+      <p class="hero-stack" >React&nbsp;· TypeScript&nbsp;· Svelte&nbsp;· JavaScript</p>
     </div>
     <div class="bottom-group">
       <div class="supporting-copy">
-        <p class="experience" data-ask-id="f24">Built a product used by hundreds of companies.</p>
+        <p class="experience" >Built a product used by hundreds of companies.</p>
       </div>
       <div class="hero-actions">
-        <a href="/cv" class="primary" data-ask-id="cv" {...destinationLink("/cv")}>
+        <a href="/cv" class="primary"  {...destinationLink("/cv")}>
           <span class="cv-label">View CV</span>
           <span class="cv-reveal" aria-hidden="true">View CV</span>
           <span class="cv-orbit" aria-hidden="true">
@@ -26,7 +26,7 @@
             <svg class="cv-arrow cv-arrow-in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
           </span>
         </a>
-        <a href="#contact" class="secondary" data-ask-id="touch" {...destinationLink("#contact")}>Get in touch <span aria-hidden="true">→</span></a>
+        <a href="#contact" class="secondary"  {...destinationLink("#contact")}>Get in touch <span aria-hidden="true">→</span></a>
       </div>
     </div>
   </div>

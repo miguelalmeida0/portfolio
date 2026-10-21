@@ -17,7 +17,7 @@ run a parallel direct deployment. Always verify the public domain afterward.
 
 Use a fresh main-based checkout for future release preparation. Never deploy
 an older outer workspace or overwrite divergent work in a historical checkout.
-Read docs/qa/portfolio-release-2026-10-19.md for the verification commands.
+Read docs/qa/portfolio-release-2026-10-21.md for the current verification commands.
 The historical recovery notes below document the earlier source location and
 assets that must continue to be preserved.
 

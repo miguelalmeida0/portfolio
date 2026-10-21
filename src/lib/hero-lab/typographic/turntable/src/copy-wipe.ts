@@ -9,7 +9,7 @@ export function prepareCopyWipe(root: HTMLElement, previous: HTMLElement, next: 
     root.style.setProperty(`--mah-wipe-new-${name}`, newStyle.getPropertyValue(`--mah-${name}`));
   }
   const targets = Array.from(root.querySelectorAll<HTMLElement>(
-    '.mah-big, .mah-stack, .mah-line-text, .mah-btn, .mah-cta-label'
+    '.mah-big, .mah-stack, .mah-line-text, .mah-btn:not([data-home-action]), .mah-cta-label'
   ));
   return {
     paint(edge: number) {

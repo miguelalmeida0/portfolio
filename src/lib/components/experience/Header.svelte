@@ -4,14 +4,10 @@
   import FullscreenNavigation from './FullscreenNavigation.svelte';
   import { primaryNavigation } from '$lib/content/navigation';
   import ArrowRight from '@lucide/svelte/icons/arrow-right';
-  let { navigateFromMenu, onGuideToggle, navigationTransitionActive, guideOpen = false, guideReady = false, homepage = false, askActive = false, story = false }: {
+  let { navigateFromMenu, navigationTransitionActive, homepage = false, story = false }: {
     navigateFromMenu: (event: MouseEvent, close: () => void | Promise<void>) => Promise<void>;
-    onGuideToggle: (restoreFocusOnClose: boolean) => void;
     navigationTransitionActive: boolean;
-    guideOpen?: boolean;
-    guideReady?: boolean;
     homepage?: boolean;
-    askActive?: boolean;
     story?: boolean;
   } = $props();
   let open = $state(false);
@@ -21,8 +17,6 @@
   beforeNavigate(() => { if (open) void menu?.close(false, true); });
   afterNavigate(() => { open = false; });
   onMount(() => {
-    const restoreAsk = () => trigger?.focus({ preventScroll: true });
-    window.addEventListener('ask:restore-trigger', restoreAsk);
     const desktop = matchMedia('(min-width: 1024px)');
     const closeOnDesktop = async () => {
       if (!desktop.matches || !open) return;
@@ -31,15 +25,10 @@
     };
     desktop.addEventListener('change', closeOnDesktop);
     return () => {
-      window.removeEventListener('ask:restore-trigger', restoreAsk);
       desktop.removeEventListener('change', closeOnDesktop);
     };
   });
-  async function toggleGuide() {
-    const fromMenu = open;
-    if (fromMenu) await menu?.close();
-    onGuideToggle(!fromMenu);
-  }
+
 
 </script>
 
@@ -47,7 +36,7 @@
     <a href="/#top" data-identity-home data-mobile-route-link={open || undefined} onclick={event => { if (open) void navigateFromMenu(event, () => menu?.close(false, true)); }} class="group flex min-h-11 min-w-0 shrink-0 items-center gap-3 rounded-lg sm:gap-4" aria-label="Miguel Almeida, Berlin — home">
       <span class="flex min-w-0 flex-col items-start sm:flex-row sm:items-center sm:gap-7">
         <span data-identity-name class="identity-name font-wordmark relative inline-block origin-top-left whitespace-nowrap text-base leading-tight font-bold tracking-[-.035em] transition-colors group-hover:text-plum min-[24rem]:text-lg sm:text-xl"><span data-identity-first class="inline-block">MIGUEL</span> <span data-identity-last class="inline-block">ALMEIDA</span><span data-identity-rule aria-hidden="true" class="pointer-events-none absolute inset-x-0 -bottom-1 h-0.5 origin-left bg-plum"></span></span>
-        <span data-identity-location data-ask-id={homepage ? 'city' : undefined} class="mt-1 text-xs sm:mt-0 sm:text-sm">Berlin</span>
+        <span data-identity-location  class="mt-1 text-xs sm:mt-0 sm:text-sm">Berlin</span>
       </span>
     </a>
 {/snippet}
@@ -56,17 +45,17 @@
     {@render identity()}
     <nav data-sveltekit-preload-data="hover" aria-label="Main navigation" class="hidden shrink-0 items-center gap-7 text-sm min-[64rem]:flex">
       {#each primaryNavigation as link}
-        <a data-ask-id={homepage ? `nav-${link.label.toLowerCase()}` : undefined} class="group ink-link hover:text-plum hover:underline" href={link.href} aria-current={story && link.href === '/story' ? 'page' : undefined} data-sveltekit-preload-data={link.href === '/story' ? 'hover' : undefined}>{link.label}{#if link.label === 'CV'} <ArrowRight size={18} aria-hidden="true" class="transition-transform group-hover:translate-x-0.5" />{/if}</a>
+        <a  class="group ink-link hover:text-plum hover:underline" href={link.href} aria-current={story && link.href === '/story' ? 'page' : undefined} data-sveltekit-preload-data={link.href === '/story' ? 'hover' : undefined}>{link.label}{#if link.label === 'CV'} <ArrowRight size={18} aria-hidden="true" class="transition-transform group-hover:translate-x-0.5" />{/if}</a>
       {/each}
-      <button class="guide-trigger" data-ask-trigger type="button" aria-expanded={askActive} disabled={!guideReady || navigationTransitionActive} aria-label={askActive ? 'Close Ask MiguelLLM' : 'Ask MiguelLLM'} onclick={toggleGuide}>Ask MiguelLLM</button>
+
     </nav>
-    <button bind:this={trigger} type="button" onclick={() => open = true} disabled={!guideReady || navigationTransitionActive} aria-label="Menu" aria-expanded={open} aria-controls="mobile-navigation" class="menu-toggle">
+    <button bind:this={trigger} type="button" onclick={() => open = true} disabled={navigationTransitionActive} aria-label="Menu" aria-expanded={open} aria-controls="mobile-navigation" class="menu-toggle">
       <span class="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
     </button>
   </div>
   {#if open}
     <FullscreenNavigation bind:this={menu} {identity} {navigateFromMenu} {navigationTransitionActive}
-      {guideReady} {askActive} {story} onAsk={toggleGuide}
+      {story}
       onClosed={() => { open = false; }} restoreFocus={() => trigger?.focus({ preventScroll: true })} />
   {/if}
 </header>
@@ -86,10 +75,7 @@
   @media (hover: hover) { .menu-toggle:hover { background: rgb(20 42 34 / 5%); border-color: rgb(20 42 34 / 28%); } }
   @media (min-width: 1024px) { .menu-toggle { display: none; } }
   @media (prefers-reduced-motion: reduce) { .menu-toggle, .menu-icon > span { transition: none; } }
-  .guide-trigger { flex-shrink: 0; min-height: 44px; font: inherit; white-space: nowrap; color: var(--plum); text-underline-offset: 4px; }
-  .guide-trigger:hover { text-decoration: underline; }
   /* The same control opens and closes Ask; make the active state visible. */
-  .guide-trigger[aria-expanded='true'] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
   .wind-header :focus-visible { outline: 3px solid var(--plum); outline-offset: 2px; }
   .wind-header nav[aria-label="Main navigation"] { gap: var(--s-7); }
   .wind-header nav[aria-label="Main navigation"] a[aria-current='page'] {

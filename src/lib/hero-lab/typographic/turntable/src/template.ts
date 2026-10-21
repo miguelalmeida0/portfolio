@@ -1,3 +1,4 @@
+import { renderActionLabel } from '../../../../components/experience/action-label';
 import type { HeaderAssets, HeaderContent, Role } from './types';
 import { GEOMETRY } from './config';
 import { portraitPlacement } from './portrait-frame';
@@ -13,7 +14,7 @@ const PAUSE_ICON =
 export function renderRoleControls(c: HeaderContent, role: Role, compact = false): string {
   const tab = (r: Role) =>
     `<button type="button" class="mah-tab" data-mah-role="${r}" aria-label="${esc(c.roleLabels[r])}" aria-pressed="${r === role}">${esc(compact ? (r === 'engineer' ? 'Frontend' : 'Designer') : c.roleLabels[r])}<i aria-hidden="true"></i></button>`;
-  return `<div class="mah-tabs" data-ask-id="role" data-mah-part data-mah-tabs data-on="${role}" role="group" aria-label="${esc(c.rolesGroupLabel)}">
+  return `<div class="mah-tabs" data-mah-part data-mah-tabs data-on="${role}" role="group" aria-label="${esc(c.rolesGroupLabel)}">
     ${tab('engineer')}${tab('designer')}
     <button type="button" class="mah-pause" data-mah-pause aria-pressed="false" aria-label="Pause the role animation">${PAUSE_ICON}</button>
   </div>`;
@@ -23,7 +24,15 @@ export function renderRoleControls(c: HeaderContent, role: Role, compact = false
 export function renderHeader(c: HeaderContent, a: HeaderAssets, role: Role, theme: string, includeControls = true): string {
   const heading = c.headingLevel ? `<h${c.headingLevel} id="intro-heading" class="mah-sr">${esc(c.heading)}</h${c.headingLevel}>` : '';
   const ctas = c.ctas
-    .map((x) => `<a class="${x.variant === 'primary' ? 'mah-btn' : 'mah-link'}" data-mah-part href="${esc(x.href)}" data-ask-id="${x.variant === 'primary' ? 'cv' : 'touch'}"><span class="mah-cta-label">${esc(x.label)}</span></a>`)
+    .map((x) => {
+      // Homepage actions keep their own fixed palette, outside both the role
+      // sweep and the shared hover animation used elsewhere in the portfolio.
+      const behavior = c.introduction ? 'data-home-action' : `data-flow-action="${x.variant === 'primary' ? '' : 'paper'}" data-mah-part`;
+      const label = c.introduction
+        ? `<span>${esc(x.label)}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>`
+        : renderActionLabel(x.label);
+      return `<a class="${x.variant === 'primary' ? 'mah-btn' : 'mah-link'}" ${behavior} href="${esc(x.href)}">${label}</a>`;
+    })
     .join('');
   const off = (r: Role) => (r === role ? '' : ' is-off');
   const back = portraitPlacement('designer');
@@ -35,7 +44,10 @@ export function renderHeader(c: HeaderContent, a: HeaderAssets, role: Role, them
   <div class="mah-stage">
     <div class="mah-word" aria-hidden="true"></div>
     <div class="mah-photo" role="img" aria-label="${esc(c.photoLabel)}">
-      <img class="mah-photo-img mah-photo-front" src="${esc(a.front)}" alt="" width="${GEOMETRY.photoW}" height="${GEOMETRY.photoH}" decoding="async">
+      <picture>
+        ${a.frontCompact ? `<source media="(max-width: 1279px)" srcset="${esc(a.frontCompact)}">` : ''}
+        <img class="mah-photo-img mah-photo-front" src="${esc(a.front)}" alt="" width="${GEOMETRY.photoW}" height="${GEOMETRY.photoH}" decoding="async">
+      </picture>
       <img class="mah-photo-img mah-photo-back" ${role === 'designer' ? 'src' : 'data-src'}="${esc(a.back)}" alt="" width="${GEOMETRY.photoW}" height="${GEOMETRY.photoH}" style="${backStyle}" decoding="async">
       <canvas class="mah-photo-canvas" aria-hidden="true"></canvas>
     </div>
@@ -44,14 +56,19 @@ export function renderHeader(c: HeaderContent, a: HeaderAssets, role: Role, them
     <div class="mah-col mah-col--left">
       ${includeControls ? renderRoleControls(c, role) : ''}
       <p class="mah-big" data-mah-part>${esc(c.years)}</p>
-      <div class="mah-line" data-ask-id="stack" data-mah-part data-mah-line>
-        <ul class="mah-stack${off('engineer')}" data-for="engineer" aria-label="Stack">${c.stack.map((s) => `<li>${esc(s)}</li>`).join('')}</ul>
-        <p class="mah-line-text${off('designer')}" data-for="designer">${esc(c.designerLine)}</p>
+      <div class="mah-line" data-mah-part data-mah-line>
+        ${c.introduction ? `<p class="mah-line-text${off('engineer')}" data-for="engineer">${esc(c.introduction.engineer)}</p>` : `<ul class="mah-stack${off('engineer')}" data-for="engineer" aria-label="Stack">${c.stack.map((s) => `<li>${esc(s)}</li>`).join('')}</ul>`}
+        <p class="mah-line-text${off('designer')}" data-for="designer">${esc(c.introduction?.designer ?? c.designerLine)}</p>
       </div>
+      ${c.introduction ? `<div class="mah-ctas">${ctas}</div>` : ''}
     </div>
     <div class="mah-col mah-col--right">
-      <p class="mah-big mah-proof" data-ask-id="f24" data-mah-part>${esc(c.proof)}</p>
-      <div class="mah-ctas">${ctas}</div>
+      ${c.introduction ? `<a class="mah-featured-project" href="${esc(c.introduction.project.href)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${esc(c.introduction.project.name)} app in a new tab">
+        <img src="${esc(c.introduction.project.image)}" alt="" width="120" height="104" />
+        <span><span class="mah-featured-label">Latest project</span><strong>${esc(c.introduction.project.name)}</strong><span class="mah-featured-description">${esc(c.introduction.project.description)}</span></span>
+      </a>` : `
+      <p class="mah-big mah-proof" data-mah-part>${esc(c.proof)}</p>
+      <div class="mah-ctas">${ctas}</div>`}
     </div>
   </div>
   <span class="mah-measure" aria-hidden="true"></span>

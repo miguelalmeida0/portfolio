@@ -75,7 +75,7 @@
             <p class="question-number">{String(i + 1).padStart(2, '0')} / 08</p>
             <h2 id={`story-${question.id}-title`}>{question.question}</h2>
             <p class="story-lead">{question.lead}</p>
-            <p class="story-answer" data-ask-id={`story-${question.id}`}>{question.answer}</p>
+            <p class="story-answer" >{question.answer}</p>
             {#if i === 7}<ul class="story-tools">{#each data.tools as tool}<li>{tool}</li>{/each}</ul>{/if}
           </div>
           <ScenePanel index={i} {runners} {run} {ready} />

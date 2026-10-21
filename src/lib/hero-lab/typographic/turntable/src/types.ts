@@ -13,6 +13,7 @@ export type EngineerTheme = 'lime' | 'plum' | 'auto';
 export interface HeaderCta {
   label: string;
   href: string;
+  askId?: string;
   /** `primary` renders the filled button, `link` the underlined text link. */
   variant: 'primary' | 'link';
 }
@@ -37,12 +38,16 @@ export interface HeaderContent {
   photoLabel: string;
   /** Accessible name of the role tab group. */
   rolesGroupLabel: string;
+  /** Portfolio editorial introduction; standalone headers keep the compact copy. */
+  introduction?: { engineer: string; designer: string; project: { name: string; description: string; image: string; href: string } };
 }
 
 export interface HeaderAssets {
-  /** Repaired front torso cut-out, transparent background, 1016×1065. */
+  /** Transparent front portrait; contained at its original aspect ratio. */
   front: string;
-  /** Matching back torso cut-out, registered to the same 1016×1065 frame. */
+  /** Optional torso crop selected by the browser on phone and tablet layouts. */
+  frontCompact?: string;
+  /** Transparent back portrait; contained in the shared 1016×1065 turn frame. */
   back: string;
   /** Fog room background for the designer state. */
   room: string;
@@ -50,6 +55,7 @@ export interface HeaderAssets {
 
 export interface HeaderOptions {
   assets: HeaderAssets;
+  presentation?: 'compact' | 'editorial';
   /** Host policy adapter; standalone consumers fall back to the OS preference. */
   motion?: { reduced: boolean; subscribe: (notify: (reduced: boolean) => void) => () => void };
   /** Optional navbar host for the single role switch, owned by this instance. */

@@ -64,46 +64,17 @@ test('a completed menu close still performs the requested section jump', async (
   assert.deepEqual(menu.actions, ['history', 'scroll']);
 });
 
-test('leaving the route during menu close cancels the queued Ask action', async () => {
-  const menu = setup();
-  assert.equal(typeof menu.requestAsk, 'function');
-  const pending = menu.requestAsk();
-  menu.hooks.before();
-  await pending;
-  assert.deepEqual(menu.actions, []);
+test('closing the index returns keyboard focus to its trigger', async () => {
+  const menu = setup(); let focused = 0;
+  menu.setTrigger({ focus: () => focused++ });
+  const pending = menu.hide(); menu.finish(); await pending; menu.closed();
+  assert.equal(focused, 1);
 });
 
-test('a completed menu close still opens Ask', async () => {
-  const menu = setup();
-  assert.equal(typeof menu.requestAsk, 'function');
-  const pending = menu.requestAsk();
-  menu.finish();
-  await pending;
-  assert.deepEqual(menu.actions, ['ask']);
-});
-
-test('Ask focus restoration returns to visible Index and unregisters on navigation teardown', () => {
-  const menu = setup();
-  let focused = 0;
-  const trigger = { getClientRects: () => [{}], focus: () => { focused++; } };
-  menu.setTrigger(trigger);
-  const cleanup = menu.hooks.mount();
-  menu.listeners.get('ask:restore-trigger')?.();
-  assert.equal(focused, 1, 'mobile Index receives focus after Ask closes');
-  trigger.getClientRects = () => [];
-  menu.listeners.get('ask:restore-trigger')?.();
-  assert.equal(focused, 1, 'a hidden Index must not receive focus');
-  cleanup();
-  assert.equal(menu.listeners.has('ask:restore-trigger'), false);
-});
-
-test('the delayed native close event cannot steal focus from the opened Ask input', async () => {
-  const menu = setup();
-  let focused = 0;
-  menu.setTrigger({ focus: () => { focused++; } });
-  const pending = menu.requestAsk();
-  menu.finish(); await pending;
-  menu.closed();
-  assert.deepEqual(menu.actions, ['ask']);
+test('following a section link keeps focus at the destination after native close', async () => {
+  const menu = setup(); let focused = 0;
+  menu.setTrigger({ focus: () => focused++ });
+  const pending = menu.travel(menu.event); menu.finish(); await pending; menu.closed();
+  assert.deepEqual(menu.actions, ['history', 'scroll']);
   assert.equal(focused, 0);
 });

@@ -19,7 +19,7 @@ import NoticeFull from './NoticeFull.svelte';
 <div use:chapterTitles class="cs-f24"><LegalBar/><ProductNav name="F24 Connectivity Hub" slug="f24" links={[["overview","Overview"],["states","States"],["migration","Migration"],["decisions","Decisions"],["testing","Testing"]]}/><main class="wrap" id="main">  <section class="hero" id="overview" aria-labelledby="hero-h"><div class="case-pitch">
     <p class="kicker">F24, frontend architecture and product delivery, 2022-now</p>
     <h1 id="hero-h">Building Connectivity Hub’s frontend.</h1>
-    <p class="sub" data-ask-id="project-f24">I built Connectivity Hub’s original Svelte frontend within F24’s product team and later continued feature development in React.</p>
+    <p class="sub" >I built Connectivity Hub’s original Svelte frontend within F24’s product team and later continued feature development in React.</p>
     <div class="ctas"><a class="btn" data-circle-fill href="#try"><CircleFill label="Try the case demo" /></a><a class="tlink" href="#decisions">Architecture decisions</a></div>
   </div><CaseOverview slug="f24"/></section>
 

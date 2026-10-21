@@ -34,9 +34,10 @@ for (const slug of directions) {
     const { status, html: raw } = await get(`/hero-lab/${slug}`);
     assert.equal(status, 200);
     const html = decode(raw);
-    for (const text of slug === 'typographic' ? exact.slice(1) : exact) assert.ok(html.includes(text), `${slug}: missing ${text}`);
+    for (const text of slug === 'typographic' ? ['4 years in frontend engineering.', '6 years in UX.', 'See the work', 'View CV', 'Latest project'] : exact) assert.ok(html.includes(text), `${slug}: missing ${text}`);
     if (slug === 'typographic') {
-      for (const tech of ['React', 'TypeScript', 'Svelte', 'JavaScript']) assert.ok(html.includes(`<li>${tech}</li>`), `Turntable stack: ${tech}`);
+      const facts = html.match(/<ul[^>]*class="hero-facts"[^>]*>([\s\S]*?)<\/ul>/)?.[1];
+      for (const tech of ['React', 'TypeScript', 'Svelte', 'Playwright']) assert.ok(facts?.includes(tech), `Experience strip: ${tech}`);
       assert.match(html, /<h1 id="intro-heading"[^>]*>Miguel Almeida, frontend engineer and product designer in Berlin<\/h1>/);
     } else {
       assert.ok(html.includes('React · TypeScript · Svelte · JavaScript'), `${slug}: stack line`);
@@ -46,7 +47,8 @@ for (const slug of directions) {
     assert.ok(html.includes('>Berlin<'), `${slug}: Berlin`);
     // Each direction retains its supplied portrait and accessible name.
     if (slug === 'typographic') {
-      for (const asset of ['miguel-front-contour.webp', 'miguel-back-repaired.webp', 'room.jpg']) assert.ok(html.includes(`/turntable-header/${asset}`), `Turntable asset: ${asset}`);
+      assert.ok(html.includes('/images/wind-full-1086.webp'), 'Full portrait asset');
+      for (const asset of ['miguel-back-repaired.webp', 'room.jpg']) assert.ok(html.includes(`/turntable-header/${asset}`), `Turntable asset: ${asset}`);
       assert.match(html, /role="img" aria-label="Miguel Almeida\./);
     } else {
       assert.ok(html.includes('/images/wind-full-720.avif 720w, /images/wind-full-1086.avif 1086w'), `${slug}: portrait sources`);
@@ -56,16 +58,17 @@ for (const slug of directions) {
     // Story and CV links stay inside the direction.
     const cv = '/cv';
     const story = '/story';
-    assert.ok(new RegExp(`href="${cv}"[^>]*data-ask-id="cv"|data-ask-id="cv"[^>]*href="${cv}"`).test(html), `${slug}: View CV`);
-    assert.match(html, /href="#contact"[^>]*data-ask-id="touch"|data-ask-id="touch"[^>]*href="#contact"/);
+    assert.ok(html.includes('href="/cv"'), `${slug}: View CV`);
+
     for (const href of ['#work', story, cv, '#contact']) assert.ok(html.includes(`href="${href}"`), `${slug}: nav ${href}`);
-    assert.ok(html.includes('data-ask-trigger'), `${slug}: Ask MiguelLLM control`);
+    if (slug === 'typographic') assert.ok(!html.includes('Ask about my work'));
+    assert.doesNotMatch(html, /data-ask-trigger|data-ask-id/);
     // The unchanged portfolio below the hero.
     const workHeading = html.match(/<h2\b[^>]*id="work-title"[^>]*>([\s\S]*?)<\/h2>/)?.[1];
     assert.ok(html.includes('id="work"'), `${slug}: Work anchor`);
-    assert.equal(workHeading?.replace(/<!--[\s\S]*?-->|<[^>]+>/g, '').replace(/\s+/g, ' ').trim(), 'Selected Work', `${slug}: Selected Work heading`);
-    for (const name of ['F24', 'Needle', 'Second Voice AI', 'Leu', 'Flow']) assert.ok(html.includes(name), `${slug}: ${name}`);
-    for (const href of ['/work/f24', '/work/needle', '/work/second-voice-ai', '/work/leu', '/work/flow']) assert.ok(html.includes(`href="${href}"`), `${slug}: ${href}`);
+    assert.equal(workHeading?.replace(/<!--[\s\S]*?-->|<[^>]+>/g, '').replace(/\s+/g, ' ').trim(), slug === 'typographic' ? 'Work' : 'Selected Work', `${slug}: Work heading`);
+    for (const name of ['F24', 'Needle', 'Second Voice', 'Leu']) assert.ok(html.includes(name), `${slug}: ${name}`);
+    for (const href of ['/work/f24', '/work/needle', '/work/second-voice-ai', '/work/leu']) assert.ok(html.includes(`href="${href}"`), `${slug}: ${href}`);
     assert.ok(html.includes('id="contact"'), `${slug}: contact footer`);
     assert.ok(html.includes('name="robots" content="noindex"'), `${slug}: noindex`);
     // Exactly one heading-level identity and one main navigation per prototype.
@@ -124,7 +127,7 @@ test('/hero-lab/typographic/cv keeps the full CV in Direction 01', async () => {
     assert.ok(html.includes(`href="${href}"`), href);
   const cvProjects = readFileSync('src/lib/content/cv-projects.ts', 'utf8');
   for (const [, text] of cvProjects.matchAll(/(?:name|description): '([^']+)'/g)) assert.ok(html.includes(decode(text)), `project: ${text}`);
-  for (const id of ['cv-summary', 'cv-job-0', 'cv-job-1', 'cv-skills', 'cv-education', 'cv-languages', 'cv-recommendation']) assert.ok(html.includes(`data-ask-id="${id}"`), id);
+  assert.doesNotMatch(html, /data-ask-id|metric-ask|Close LLM/);
   assert.equal((html.match(/aria-label="Main navigation"/g) || []).length, 1);
   assert.ok(html.includes('name="robots" content="noindex"'));
 });

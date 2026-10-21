@@ -1,4 +1,5 @@
 <script>
+import CircleFill from '$lib/components/experience/CircleFill.svelte';
 import {flushSync} from 'svelte';import {ORIGINAL,REWRITES} from './content';import {diff} from './diff';import DiffText from './DiffText.svelte';let shared=$state(false),confirm=$state(false),root;function focus(id){flushSync();root.querySelector('#'+id).focus();}
 </script>
   <section class="chapter" id="privacy" bind:this={root} aria-labelledby="priv-h">
@@ -11,10 +12,10 @@ import {flushSync} from 'svelte';import {ORIGINAL,REWRITES} from './content';imp
         <p class="cap">Interactive sharing example. Nothing is published.</p>
         <div class="share-head"><p class="label" id="share-l">Your rewrite</p><span class={'pill vis '+(shared?'plum':'dark')} id="visPill">{shared?'Public':'Private'}</span></div>
         <p class="mv small" data-mode="rewrite" id="shareText"><DiffText mode="rewrite" ops={diff(ORIGINAL,REWRITES.lyrical.strong)}/></p>
-        <div class="share-actions" id="shareActions">{#if shared}<button class="btn sm quiet" type="button" id="unshare" onclick={()=>{shared=false;focus('share');}}>Make private again</button>{:else}<button class="btn sm" type="button" id="share" onclick={()=>{confirm=true;focus('doShare');}}>Share this rewrite</button>{/if}</div>
+        <div class="share-actions" id="shareActions">{#if shared}<button class="btn sm quiet" type="button" id="unshare" onclick={()=>{shared=false;focus('share');}} data-flow-action><CircleFill label={`Make private again`} /></button>{:else}<button class="btn sm" type="button" id="share" onclick={()=>{confirm=true;focus('doShare');}} data-flow-action><CircleFill label={`Share this rewrite`} /></button>{/if}</div>
         <div class="confirm" id="confirm" hidden={!confirm}>
           <p>Preview how sharing this rewrite would work? This example does not publish text or change an account.</p>
-          <div class="row" style="display:flex;gap:12px;flex-wrap:wrap"><button class="btn sm" type="button" id="doShare" onclick={()=>{shared=true;confirm=false;focus('unshare');}}>Simulate public link</button><button class="btn sm quiet" type="button" id="cancelShare" onclick={()=>{confirm=false;focus('share');}}>Cancel</button></div>
+          <div class="row" style="display:flex;gap:12px;flex-wrap:wrap"><button class="btn sm" type="button" id="doShare" onclick={()=>{shared=true;confirm=false;focus('unshare');}} data-flow-action><CircleFill label={`Simulate public link`} /></button><button class="btn sm quiet" type="button" id="cancelShare" onclick={()=>{confirm=false;focus('share');}} data-flow-action><CircleFill label={`Cancel`} /></button></div>
         </div>
         <p class="linkline" id="linkline" hidden={!shared}>Example public-link state <span class="mono">/r/7f3a9c</span></p>
       </article>

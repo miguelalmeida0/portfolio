@@ -2,6 +2,7 @@
 @import './styles/tokens.css';
 @import './styles/page-system.css';
 @import './styles/desktop-density.css';
+@import './styles/flow-actions.css';
 @source './routes';
 @source './lib/components/experience';
 @source './lib/experience';
@@ -54,10 +55,10 @@
   @keyframes route-fade-in { from { opacity: 0; } to { opacity: 1; } }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: 0s !important; transition-delay: 0s !important; scroll-behavior: auto !important; }
   }
   html[data-motion="reduced"] { scroll-behavior: auto; }
-  html[data-motion="reduced"] *, html[data-motion="reduced"] *::before, html[data-motion="reduced"] *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  html[data-motion="reduced"] *, html[data-motion="reduced"] *::before, html[data-motion="reduced"] *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: 0s !important; transition-delay: 0s !important; scroll-behavior: auto !important; }
   @media print { nav, button, .no-print, footer { display: none !important; } body { background: white; color: black; } a { text-decoration: none; } }
 }
 @utility shell { width: min(calc(100% - 2 * var(--page-x)), var(--content-max)); margin-inline: auto; }

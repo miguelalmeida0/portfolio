@@ -1,4 +1,5 @@
 <script lang="ts">
+  import CircleFill from "$lib/components/experience/CircleFill.svelte";
   import { onMount, type Snippet } from 'svelte';
   import {page as routePage} from '$app/stores';
   import data from '$lib/story/story.json';
@@ -16,7 +17,6 @@
   import D1Title from './D1Title.svelte';
   import { storyMotion } from './story-motion';
   import { storyOpening } from './story-opening';
-  import AskTopic from '$lib/components/ask/AskTopic.svelte';
   import './d1-pages.css';
 
   let {previewBase='', navigation}:{previewBase?:string;navigation?:Snippet}=$props();
@@ -111,9 +111,9 @@
         {#each storyOpening.chapters as step, i}
           <div class="intro-panel" id={`journey-panel-${i}`} role="tabpanel" aria-labelledby={`journey-step-${i}`} tabindex="0" hidden={introStep !== i} inert={introStep !== i}>
             <h2 class="intro-chapter-title">{step.heading}</h2>
-            <div class="s-copy" data-ask-id={step.area}>{#each step.paragraphs as paragraph}<p>{paragraph}</p>{/each}</div>
-            <AskTopic area={step.area} label={`Ask about ${step.title.toLowerCase()}`} explicit />
-            {#if i < 2}<button class="journey-next" type="button" onclick={() => { introStep = i + 1; document.getElementById(`journey-step-${i + 1}`)?.focus({ preventScroll: true }); }}>Next: {storyOpening.chapters[i + 1].title}<span aria-hidden="true">→</span></button>{/if}
+            <div class="s-copy" >{#each step.paragraphs as paragraph}<p>{paragraph}</p>{/each}</div>
+
+            {#if i < 2}<button class="journey-next" data-flow-action type="button" onclick={() => { introStep = i + 1; document.getElementById(`journey-step-${i + 1}`)?.focus({ preventScroll: true }); }}><CircleFill label={`Next: ${storyOpening.chapters[i + 1].title}`} /></button>{/if}
           </div>
         {/each}
       </div>
@@ -145,7 +145,7 @@
               <p class="question-number">{String(i + 1).padStart(2, '0')} / 08</p>
               <D1Title id={`story-${question.id}-title`} text={question.question} size="chapter" />
               <p class="story-lead" data-settle>{question.lead}</p>
-              <p class="story-answer" data-settle data-ask-id={`story-${question.id}`}>{question.answer}</p>
+              <p class="story-answer" data-settle >{question.answer}</p>
               {#if i === 7}<ul class="story-tools" data-settle>{#each data.tools as tool}<li>{tool}</li>{/each}</ul>{/if}
             </div>
             <div data-current-reading><div data-current-surface><ScenePanel index={i} {runners} {run} {ready} /></div></div>
@@ -185,7 +185,7 @@
   .j-row::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--plum); transform: scaleX(0); transform-origin: left; transition: transform .35s cubic-bezier(.16,1,.3,1); }
   .j-row[aria-selected='true'] { color: var(--plum); }
   .j-row[aria-selected='true']::after { transform: scaleX(1); }
-  .j-row:focus-visible, .journey-next:focus-visible { outline: 2px solid var(--plum); outline-offset: 6px; }
+  .j-row:focus-visible { outline: 2px solid var(--plum); outline-offset: 6px; }
   .j-cell { display: grid; gap: 9px; overflow: clip; }
   .j-label { font: 500 13px/1.4 var(--d1-body); }
   .j-word { display: block; min-width: 0; padding-block: .06em; font: 700 clamp(25px, 2.5vw, 40px)/1.1 var(--d1-display); text-transform: uppercase; letter-spacing: 0; }
@@ -197,9 +197,7 @@
   .intro-chapter-title { margin: 0 0 18px; font: 600 clamp(24px, 2vw, 32px)/1.2 var(--d1-body); letter-spacing: -.02em; }
   .s-copy { max-width: 54ch; margin-bottom: 20px; font: 400 var(--d1-body-size)/1.65 var(--d1-body); text-wrap: pretty; }
   .s-copy p + p { margin-top: 16px; }
-  .journey-next { display: flex; align-items: center; gap: 16px; min-height: 48px; margin-top: 20px; padding: 0; border: 0; background: none; color: var(--plum); font: 600 17px/1.3 var(--d1-body); cursor: pointer; }
-  .journey-next span { transition: transform .25s ease; }
-  .journey-next:is(:hover, :focus-visible) span { transform: translateX(5px); }
+  .journey-next { margin-top: 20px; }
   .d1-page:global([data-lab-motion='full']) .intro-panel:not([hidden]) { animation: intro-arrive .45s cubic-bezier(.16,1,.3,1); }
   @keyframes intro-arrive { from { opacity: .35; transform: translateY(12px); } to { opacity: 1; transform: none; } }
   .band { grid-column: 1 / -1; grid-row: 4; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px 40px; margin-inline: calc(-1 * var(--page-x)); padding: 40px var(--page-x); background: var(--forest); color: var(--paper); transform-origin: left center; }
@@ -217,9 +215,8 @@
     .band { margin-inline: -24px; padding: 32px 24px; }
   }
   @media (max-width: 380px) { .s-stage { padding-inline: 20px; } .band { margin-inline: -20px; padding-inline: 20px; } .j-label { min-height: 2.8em; } }
-  @media (prefers-reduced-motion: reduce) { .j-row::after, .journey-next span { transition: none; } .intro-panel { animation: none !important; } .story-photo { position: relative; top: auto; } }
+  @media (prefers-reduced-motion: reduce) { .j-row::after { transition: none; } .intro-panel { animation: none !important; } .story-photo { position: relative; top: auto; } }
   :global(html[data-motion='reduced']) .j-row::after,
-  :global(html[data-motion='reduced']) .journey-next span { transition: none; }
   :global(html[data-motion='reduced']) .intro-panel { animation: none; }
   :global(html[data-motion='reduced']) .story-photo { position: relative; top: auto; }
 </style>

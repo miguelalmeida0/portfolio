@@ -4,7 +4,7 @@ test.beforeEach(async ({ page }) => { await page.emulateMedia({ reducedMotion: '
 
 test('Flow Redo invalidates a pending lunch proposal without reverting the restored review', async ({ page }) => {
   await page.goto('/work/flow#try');
-  await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
+  await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase','idle');
   const demo = page.locator('#demo');
   const review = demo.locator('.ev[data-id="review"]');
   const lunch = demo.locator('.ev[data-id="lunch0"]');
@@ -39,7 +39,7 @@ test('Flow Redo invalidates a pending lunch proposal without reverting the resto
 
 test('Second Voice consumes the next-request failure and Retry restores the submitted rewrite', async ({ page }) => {
   await page.goto('/work/second-voice#try');
-  await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
+  await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase','idle');
   const workspace = page.getByRole('region', { name: 'Rewrite workspace' });
   const result = workspace.locator('#mv');
   const accessibleResult = result.locator('.diff-accessible');

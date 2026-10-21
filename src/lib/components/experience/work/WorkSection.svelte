@@ -3,7 +3,10 @@
   import { destinationLink } from '$lib/navigation/destination-link';
   import ArrowUpRight from '@lucide/svelte/icons/arrow-up-right';
   import { f24Ownership } from '$lib/content/work-projects';
+  import CircleFill from '../CircleFill.svelte';
   import PreviewMedia from './PreviewMedia.svelte';
+  import ProjectCollection from './ProjectCollection.svelte';
+  import F24Overview from './F24Overview.svelte';
   import { selectedProjects } from './selected-projects';
   import { createPreviewController } from './preview-controller';
   import { workMotion } from './work-motion';
@@ -25,12 +28,13 @@
   }
 </script>
 
-<section data-sveltekit-preload-data="hover" id="work" class="selected-work bg-[var(--forest)] text-[var(--paper)]" class:current-work={current} aria-labelledby="work-title" bind:this={section} use:workMotion={current}>
+<section data-sveltekit-preload-data="hover" id="work" class="selected-work bg-[var(--forest)] text-[var(--paper)]" class:current-work={current} class:reference-work={current} aria-labelledby="work-title" bind:this={section} use:workMotion={current}>
   <div class="selected-inner mx-auto">
     <header class="selected-heading flex flex-wrap items-end justify-between gap-6" data-current-narrative={current || undefined} use:chapterTitles={current ? '[data-default-work-title]' : 'h2'}>
-      <h2 id="work-title" data-ask-id="selwork" class="font-extrabold tracking-tight">{#if current}<span data-current-word>Selected</span> <span data-current-word>Work</span>{:else}Selected Work{/if}</h2>
-      <p>My work at F24 and projects I built outside work.</p>
+      <h2 id="work-title"  class="font-extrabold tracking-tight">{#if current}Work{:else}Selected Work{/if}</h2>
+      <p>{current ? 'F24 · Needle · Second Voice · Leu' : 'My work at F24 and projects I built outside work.'}</p>
     </header>
+    {#if current}<F24Overview />{:else}
     <article class="f24-feature" data-f24-feature aria-labelledby="f24-title">
       <a class="f24-photo-link" data-current-assembly={current || undefined} href="/work/f24" aria-label="F24 case study" {...destinationLink('/work/f24')}>
         <figure class="f24-moment f24-working" data-current-piece={current || undefined}>
@@ -50,21 +54,15 @@
         <ul class="capabilities flex flex-wrap gap-2" aria-label="F24 contributions">
           {#each f24Ownership.tags as tag}<li>{tag}</li>{/each}
         </ul>
-        <a class="case-action inline-flex items-center justify-center" href="/work/f24" {...destinationLink('/work/f24')}>
-          <span class="case-label">View case study</span>
-          <span class="case-reveal" aria-hidden="true">View case study</span>
-          <span class="case-orbit" aria-hidden="true">
-            <svg class="case-arrow case-arrow-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
-            <svg class="case-arrow case-arrow-in" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
-          </span>
-        </a>
+        <a class="case-action" data-flow-action="light" href="/work/f24" {...destinationLink('/work/f24')}><CircleFill label="View case study" /></a>
       </div>
     </article>
-    <div class="independent-projects" aria-labelledby="projects-heading">
+    {/if}
+    {#if !current}<div class="independent-projects" aria-labelledby="projects-heading">
       <header class="gallery-heading">
         <h3 id="projects-heading">Independent projects</h3>
         <div class="gallery-controls">
-          <span class="gallery-count">04 projects</span>
+          <span class="gallery-count">{String(selectedProjects.length).padStart(2, '0')} projects</span>
           <button class="video-toggle" type="button"
             aria-label={videosPaused ? 'Play project videos' : 'Pause project videos'}
             title={videosPaused ? 'Play videos' : 'Pause videos'}
@@ -112,8 +110,9 @@
           </div>
         {/each}
       </div>
-    </div>
+    </div>{/if}
   </div>
+  {#if current}<ProjectCollection {blockedIds} {videosPaused} {toggleVideos} retryVideos={() => controller?.retryAll()} />{/if}
 </section>
 
 <style>
@@ -136,100 +135,7 @@
   .feature-body { font-size: var(--type-body); line-height: var(--leading-body); margin: 22px 0; color: var(--sage); }
   .capabilities { list-style: none; padding: 0; margin: 0; }
   .capabilities li { border: 1px solid color-mix(in srgb,var(--sage) 40%,transparent); border-radius: var(--r-pill); padding: 7px 13px; font-size: 14px; line-height: 1.25; color: var(--sage); }
-  .case-action {
-    --case-duration: 450ms;
-    --case-ease: cubic-bezier(0.785, 0.135, 0.15, 0.86);
-    --case-scale: 1;
-    --case-icon: calc(36px * var(--case-scale));
-    --case-inset: calc(5px * var(--case-scale));
-    --case-padding: 0 62px 0 28px;
-    --case-clip: inset(calc(50% - var(--case-icon) / 2) var(--case-inset) calc(50% - var(--case-icon) / 2) calc(100% - var(--case-icon) - var(--case-inset)) round 999px);
-    --case-orbit-bg: var(--plum);
-    --case-orbit-ink: var(--lime);
-    --case-arrow-out: translate(-50%, -50%) scale(1);
-    --case-arrow-in: translate(-170%, -50%) scale(0);
-    position: relative;
-    isolation: isolate;
-    box-sizing: border-box;
-    flex-shrink: 0;
-    justify-content: flex-start;
-    min-height: max(58px, calc(48px * var(--case-scale)));
-    padding: var(--case-padding);
-    overflow: hidden;
-    border: 2px solid var(--lime);
-    border-radius: var(--r-pill);
-    background: var(--lime);
-    color: var(--ink);
-    font-size: 21px;
-    font-weight: 750;
-    line-height: 1;
-    margin-top: 30px;
-    white-space: nowrap;
-    text-decoration: none;
-    touch-action: manipulation;
-  }
-  .case-action span, .case-arrow { pointer-events: none; }
-  .case-label { position: relative; }
-  /* Clip the plum surface and its lime label together: text never fades
-     through an intermediate color or appears on the wrong background. */
-  .case-reveal {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    padding: var(--case-padding);
-    background: var(--plum);
-    color: var(--lime);
-    clip-path: var(--case-clip);
-    transition: clip-path var(--case-duration) var(--case-ease);
-  }
-  .case-orbit {
-    position: absolute;
-    right: var(--case-inset);
-    top: 50%;
-    width: var(--case-icon);
-    height: var(--case-icon);
-    transform: translateY(-50%);
-    overflow: hidden;
-    border-radius: 50%;
-    background: var(--case-orbit-bg);
-    color: var(--case-orbit-ink);
-  }
-  .case-arrow {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: calc(19px * var(--case-scale));
-    height: calc(19px * var(--case-scale));
-    transition: transform var(--case-duration) var(--case-ease);
-  }
-  .case-arrow-out { transform: var(--case-arrow-out); }
-  .case-arrow-in { transform: var(--case-arrow-in); }
-  .case-action:is(:focus-visible, :active) {
-    --case-clip: inset(0 0 0 0 round 999px);
-    --case-orbit-bg: var(--lime);
-    --case-orbit-ink: var(--plum);
-    --case-arrow-out: translate(65%, -50%) scale(0);
-    --case-arrow-in: translate(-50%, -50%) scale(1);
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .case-action:hover {
-      --case-clip: inset(0 0 0 0 round 999px);
-      --case-orbit-bg: var(--lime);
-      --case-orbit-ink: var(--plum);
-      --case-arrow-out: translate(65%, -50%) scale(0);
-      --case-arrow-in: translate(-50%, -50%) scale(1);
-    }
-  }
-  .case-action:focus-visible { outline: 3px solid var(--paper); outline-offset: 4px; }
-  /* Keep the circle and touch target sized consistently within the site's 80% desktop zoom.
-     Keep the inherited typography at its existing size. */
-  @media screen and (min-width: 1024px) {
-    .case-action { --case-scale: 1.25; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .case-reveal, .case-arrow { transition: none; }
-  }
+  .case-action { margin-top: 30px; }
   .independent-projects { padding-top: clamp(40px, 5vw, 80px); }
   .gallery-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: clamp(26px, 3vw, 44px); }
   .gallery-heading h3 { font: 700 var(--type-collection)/var(--leading-heading) var(--hero-font); letter-spacing: -.035em; }
@@ -251,14 +157,12 @@
   .project-number { margin: 0 0 9px; color: var(--sage); font: 650 var(--type-small)/1.5 var(--hero-font); letter-spacing: .13em; text-transform: uppercase; }
   .project-title { margin: 0; font: 400 var(--type-project-title)/1.12 Georgia, 'Iowan Old Style', 'Baskerville', serif; letter-spacing: -.025em; }
   .project-title a { display: inline-flex; align-items: baseline; gap: 12px; max-width: 100%; color: var(--paper); text-decoration: none; }
-  .project-title span { display: inline-block; flex: 0 0 auto; color: var(--sage); font: 400 19px/1 var(--hero-font); }
   .project-line { max-width: 43ch; margin: 11px 0 17px; color: var(--paper); font: 400 var(--type-body)/1.5 var(--hero-font); }
   .project-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin: 0; padding: 0; }
   .project-tags li { flex: 0 0 auto; border: 0; background: color-mix(in srgb, var(--sage) 13%, transparent); color: var(--paper); font: 500 var(--type-small)/1.35 var(--hero-font); padding: 7px 11px; }
   .project-stack { margin: 17px 0 0; max-width: 52ch; color: var(--sage); font: 400 var(--type-small)/1.6 var(--hero-font); font-style: normal; letter-spacing: 0; overflow-wrap: anywhere; }
   .project-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 24px; margin-top: 16px; }
   .project-actions a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--paper); font: 600 var(--type-ui)/1.3 var(--hero-font); text-decoration: underline; text-underline-offset: 5px; }
-  .project-actions span { font: 400 17px/1 var(--hero-font); }
   .selected-work :global(a:focus-visible), .selected-work button:focus-visible { outline: 3px solid var(--lime); outline-offset: 5px; }
   .selected-work .case-action:focus-visible { outline-color: var(--paper); }
   @media (max-width: 1279px) {

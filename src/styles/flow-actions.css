@@ -1,0 +1,41 @@
+/* Shared solid actions; data-circle-fill is a compatibility marker. */
+html body :is([data-flow-action], [data-circle-fill]) {
+  --flow-bg: #1c352b; --flow-fg: #faf8ee;
+  --flow-scale: 1; --flow-size: 16px; --flow-height: 48px; --flow-pad: 24px;
+  position: relative; isolation: isolate; box-sizing: border-box;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: calc(var(--flow-height) * var(--flow-scale)) !important;
+  min-width: 44px; max-width: 100%; padding: 0 !important; gap: 0 !important;
+  border: 1px solid transparent !important; border-radius: 999px !important;
+  background: var(--flow-bg) !important; color: var(--flow-fg) !important;
+  font: 600 calc(var(--flow-size) * var(--flow-scale))/1.3 var(--hero-font, sans-serif) !important;
+  letter-spacing: 0 !important; text-transform: none !important; text-decoration: none !important;
+  overflow: hidden; cursor: pointer; touch-action: manipulation;
+  transform: none !important; box-shadow: inset 0 0 0 999px transparent !important;
+  transition: box-shadow 160ms ease-out !important;
+}
+html body :is([data-flow-action], [data-circle-fill])::before,
+html body :is([data-flow-action], [data-circle-fill])::after { content: none !important; }
+html body .flow-layer { position: relative; display: flex; align-items: center; justify-content: center; gap: 14px; align-self: stretch; box-sizing: border-box; width: 100%; padding: 12px calc(var(--flow-pad) * var(--flow-scale)); pointer-events: none; }
+html body .flow-label { display: block; text-align: center; }
+html body .flow-arrow { display: block; width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+html body :is([data-flow-action], [data-circle-fill]):focus-visible {
+  outline: 3px solid #faf8ee !important; outline-offset: 3px;
+  box-shadow: 0 0 0 6px #68143e !important;
+}
+@media (hover: hover) and (pointer: fine) {
+  html body :is([data-flow-action], [data-circle-fill]):not(:disabled, [aria-disabled='true']):hover:not(:focus-visible) {
+    box-shadow: inset 0 0 0 999px rgb(255 255 255 / .045) !important;
+  }
+}
+html body :is([data-flow-action], [data-circle-fill]):not(:disabled, [aria-disabled='true']):active:not(:focus-visible) { box-shadow: inset 0 0 0 999px rgb(0 0 0 / .04) !important; }
+html body :is([data-flow-action], [data-circle-fill]):is(:disabled, [aria-disabled='true']) { cursor: not-allowed; opacity: .6; }
+html body [data-circle-fill] { --flow-bg: #68143e; }
+html body [data-flow-action='light'] { --flow-bg: #e2edba; --flow-fg: #142d23; }
+html body [data-flow-action='paper'] { --flow-bg: #faf8ee; --flow-fg: #142d23; }
+html body :is([data-flow-action='compact'], [data-circle-fill='compact']) { --flow-height: 44px; --flow-size: 14px; --flow-pad: 20px; }
+@media (min-width: 1024px) { html body :is([data-flow-action], [data-circle-fill]) { --flow-scale: 1.25; } }
+@media (prefers-reduced-motion: reduce) { html body :is([data-flow-action], [data-circle-fill]) { transition: none !important; } }
+html[data-motion='reduced'] body :is([data-flow-action], [data-circle-fill]) { transition: none !important; }
+@media (forced-colors: active) { html body :is([data-flow-action], [data-circle-fill]) { border: 1px solid ButtonText !important; } }
+html body :is([data-flow-action], [data-circle-fill])[hidden] { display: none !important; }

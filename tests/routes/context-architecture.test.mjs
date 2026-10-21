@@ -2,15 +2,17 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 const base = process.env.ROUTE_HEALTH_BASE_URL || 'http://localhost:4173';
 
-test('homepage serves F24 and four independent projects with SSR posters and destinations', async () => {
+test('homepage serves F24 and three independent projects with SSR posters and destinations', async () => {
   const response = await fetch(base);
   assert.equal(response.status, 200);
   const html = await response.text();
   const work = html.slice(html.indexOf('id="work"'), html.indexOf('</main>'));
   assert.equal((work.match(/data-f24-feature/g) || []).length, 1);
-  assert.deepEqual([...work.matchAll(/data-selected-project="([^"]+)"/g)].map(x => x[1]), ['needle', 'second-voice-ai', 'leu', 'flow']);
-  for (const slug of ['needle', 'second-voice-ai', 'f24', 'flow', 'leu']) assert.ok(work.includes(`href="/work/${slug}"`));
-  assert.equal((work.match(/<img\b/g) || []).length, 6, 'SSR retains two photographs and four project posters');
+  assert.deepEqual([...work.matchAll(/data-selected-project="([^"]+)"/g)].map(x => x[1]), ['needle', 'second-voice-ai', 'leu']);
+  for (const slug of ['needle', 'second-voice-ai', 'f24', 'leu']) assert.ok(work.includes(`href="/work/${slug}"`));
+  assert.ok(!work.includes('href="/work/flow"'));
+  assert.ok(html.includes('3 projects'));
+  assert.equal((work.match(/<img\b/g) || []).length, 5, 'SSR retains two photographs and three project posters');
   assert.ok(work.includes('Pause project videos'));
   assert.ok(work.includes('href="https://leu.miguelalmeida.xyz/"'));
   assert.ok(!work.includes('https://miguelalmeida0.github.io'));

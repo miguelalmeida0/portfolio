@@ -1,4 +1,5 @@
 <script lang="ts">
+  import CircleFill from '$lib/components/experience/CircleFill.svelte';
   import type {Snippet} from 'svelte';
   import { cvBio, cvHighlights, cvSignals, cvExperience, cvEducation, cvLanguages, cvSkills, professionalRecommendation, site } from '$lib/content/folio';
   import { cvProjects } from '$lib/content/cv-projects';
@@ -9,8 +10,6 @@
   import D1Action from './D1Action.svelte';
   import D1Title from './D1Title.svelte';
   import { cvMotion } from './cv-motion';
-  import AskTopic from '$lib/components/ask/AskTopic.svelte';
-  import { askController } from '$lib/ask/state';
   import './d1-pages.css';
 
   let {previewBase='',navigation}:{previewBase?:string;navigation?:Snippet}=$props();
@@ -29,22 +28,20 @@
     <div class="c-heading">
       <p class="c-meta" data-meta>Berlin, Germany</p>
       <D1Title tag="h1" id="cv-name" text="Experience." class="c-name" />
-      <p class="c-role" data-meta><AskTopic area="cv-role" label={role} /></p>
+      <p class="c-role" data-meta><span>{role}</span></p>
       <p class="c-line" data-meta>I build the interfaces teams rely on when seconds matter.</p>
-      <p class="c-stack" data-meta><AskTopic area="cv-signal-1" label="Product architecture" /><AskTopic area="cv-signal-3" label="Design engineering" /></p>
+      <p class="c-stack" data-meta><span>Product architecture</span><span>Design engineering</span></p>
     </div>
     <div class="c-actions">
       <div class="c-buttons">
         <div class="c-action-arrival" data-cv-action>
-          <a class="c-pdf-action c-pdf-open" href="/cv/pdf" {...destinationLink('/cv/pdf')}>
-            <span class="c-action-label">Open CV PDF</span>
-            <span class="c-action-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M8 24 24 8M8 8h16v16" /></svg></span>
+          <a class="c-pdf-action c-pdf-open" data-circle-fill href="/cv/pdf" {...destinationLink('/cv/pdf')}>
+            <CircleFill label="Open CV PDF" />
           </a>
         </div>
         <div class="c-action-arrival" data-cv-action>
-          <a class="c-pdf-action c-pdf-download" href="/files/miguel-almeida-cv.pdf" download="Miguel-Almeida-CV.pdf" {...destinationLink('/files/miguel-almeida-cv.pdf', 'Miguel-Almeida-CV.pdf')}>
-            <span class="c-action-label">Download PDF</span>
-            <span class="c-action-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 5v18m-7-7 7 7 7-7M6 27h20" /></svg></span>
+          <a class="c-pdf-action c-pdf-download" data-flow-action="secondary" href="/files/miguel-almeida-cv.pdf" download="Miguel-Almeida-CV.pdf" {...destinationLink('/files/miguel-almeida-cv.pdf', 'Miguel-Almeida-CV.pdf')}>
+            <CircleFill label="Download PDF" />
           </a>
         </div>
       </div>
@@ -59,11 +56,11 @@
         <div>
           <span class="h-rule" data-rule aria-hidden="true"></span>
           <dt>{highlight.label}</dt>
-          <dd><strong><button class="metric-ask" type="button" data-ask-id={`cv-highlight-${i}`} disabled={!$askController} aria-label={`Ask about ${highlight.label}: ${highlight.value}`} onclick={() => $askController?.explain(`cv-highlight-${i}`)}><span aria-hidden="true" data-count={highlight.value}>{highlight.value}</span><span class="sr-only">{highlight.value}</span><span class="metric-hint" aria-hidden="true">↗</span></button></strong><span class="h-detail">{highlight.detail}</span></dd>
+          <dd><strong><span aria-hidden="true" data-count={highlight.value}>{highlight.value}</span><span class="sr-only">{highlight.value}</span></strong><span class="h-detail">{highlight.detail}</span></dd>
         </div>
       {/each}
     </dl>
-    <p class="c-bio" data-settle data-ask-id="cv-summary">{cvBio}</p>
+    <p class="c-bio" data-settle >{cvBio}</p>
     <a href={'mailto:' + site.email} class="c-email" {...destinationLink('mailto:' + site.email)}>{site.email}</a>
   </section>
 
@@ -72,7 +69,7 @@
       <section id="experience" aria-labelledby="experience-title">
         <D1Title id="experience-title" text="Professional experience" />
         {#each cvExperience as entry, i}
-          <div class="c-job" data-ask-id={`cv-job-${i}`} data-current-reading>
+          <div class="c-job"  data-current-reading>
             <span class="c-rule" data-rule aria-hidden="true"></span>
             <div data-current-surface>
             <p class="c-date">{entry.years} / {entry.company} / {entry.location}</p>
@@ -89,7 +86,7 @@
       <section id="projects" class="c-projects" aria-labelledby="projects-title">
         <D1Title id="projects-title" text="Selected engineering work" />
         {#each cvProjects as project}
-          <div class="c-project" data-ask-id={`cv-project-${project.slug}`} data-current-reading>
+          <div class="c-project"  data-current-reading>
             <span class="c-rule" data-rule aria-hidden="true"></span>
             <div data-current-surface>
             <h3 class="c-h3 c-project-title" data-settle><a href={project.href} {...destinationLink(project.href)}>{project.name}</a></h3>
@@ -108,21 +105,21 @@
     <aside class="c-aside">
       <section id="signals" aria-labelledby="signals-title">
         <h2 id="signals-title" class="c-h2" data-rise-title><span class="mask"><span data-rise-word>Core signals</span></span></h2>
-        <dl class="c-signals">{#each cvSignals as signal, i}<div data-settle data-ask-id={`cv-signal-${i}`}><dt>{signal.title}</dt><dd>{signal.detail}</dd></div>{/each}</dl>
+        <dl class="c-signals">{#each cvSignals as signal, i}<div data-settle ><dt>{signal.title}</dt><dd>{signal.detail}</dd></div>{/each}</dl>
       </section>
-      <section id="skills" data-ask-id="cv-skills" aria-labelledby="skills-title" tabindex="-1">
+      <section id="skills"  aria-labelledby="skills-title" tabindex="-1">
         <h2 id="skills-title" class="c-h2" data-rise-title><span class="mask"><span data-rise-word>Stack</span></span></h2>
         <ul class="c-skills">{#each cvSkills as skill}<li>{skill}</li>{/each}</ul>
       </section>
-      <section id="education" data-ask-id="cv-education" aria-labelledby="education-title" tabindex="-1">
+      <section id="education"  aria-labelledby="education-title" tabindex="-1">
         <h2 id="education-title" class="c-h2" data-rise-title><span class="mask"><span data-rise-word>Education</span></span></h2>
         {#each cvEducation as item}<div class="c-education" data-settle><p class="c-date">{item.year}</p><h3>{item.title}</h3><p class="c-place">{item.place}</p></div>{/each}
       </section>
-      <section id="languages" data-ask-id="cv-languages" aria-labelledby="languages-title">
+      <section id="languages"  aria-labelledby="languages-title">
         <h2 id="languages-title" class="c-h2" data-rise-title><span class="mask"><span data-rise-word>Languages</span></span></h2>
         <ul class="c-languages">{#each cvLanguages as language}<li>{language}</li>{/each}</ul>
       </section>
-      <figure id="recommendation" class="c-recommendation" data-ask-id="cv-recommendation" data-settle>
+      <figure id="recommendation" class="c-recommendation"  data-settle>
         <blockquote>“{professionalRecommendation.quote}”</blockquote>
         <figcaption><span class="c-who">{professionalRecommendation.name}</span><br /><span class="c-place">{professionalRecommendation.role}</span></figcaption>
       </figure>
@@ -146,24 +143,6 @@
   .c-action-arrival { min-width: 0; }
   .c-pdf-action { --icon-fill: var(--paper); --icon-ink: var(--plum); position: relative; isolation: isolate; display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 92px; padding: 18px 24px; overflow: hidden; background: var(--plum); color: var(--paper); text-decoration: none; font: 700 clamp(26px, 2.6vw, 40px)/1.1 var(--d1-display); letter-spacing: .025em; text-transform: uppercase; transition: transform .3s cubic-bezier(.16,1,.3,1); }
   .c-pdf-download { --icon-fill: var(--lime); --icon-ink: var(--ink); background: var(--ink); color: var(--lime); }
-  /* Stable fills distinguish the choices; the hovered action alone gains a rule and lit icon. */
-  .c-pdf-action::before { content: ''; position: absolute; inset: auto 24px 10px; height: 2px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .4s cubic-bezier(.16,1,.3,1); }
-  .c-action-label { transition: transform .4s cubic-bezier(.16,1,.3,1); }
-  .c-action-icon { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border: 1px solid currentColor; }
-  .c-action-icon svg { width: 32px; height: 32px; fill: none; stroke: currentColor; stroke-width: 2; transition: transform .4s cubic-bezier(.16,1,.3,1); }
-  .c-pdf-action:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
-  .c-pdf-action:focus-visible::before { transform: scaleX(1); }
-  .c-pdf-action:focus-visible .c-action-icon { background: var(--icon-fill); color: var(--icon-ink); border-color: var(--icon-fill); }
-  .c-pdf-open:focus-visible svg { transform: translate(3px, -3px); }
-  .c-pdf-download:focus-visible svg { transform: translateY(3px); }
-  @media (hover: hover) and (pointer: fine) {
-    .c-pdf-action:hover { transform: translateY(-3px); }
-    .c-pdf-action:hover::before { transform: scaleX(1); }
-    .c-pdf-action:hover .c-action-icon { background: var(--icon-fill); color: var(--icon-ink); border-color: var(--icon-fill); }
-    .c-pdf-action:hover .c-action-label { transform: translateX(4px); }
-    .c-pdf-open:hover svg { transform: translate(3px, -3px); }
-    .c-pdf-download:hover svg { transform: translateY(3px); }
-  }
   .c-pdf-action:active { transform: translateY(1px) scale(.985); }
   .c-email { display: flex; align-items: center; justify-content: center; width: fit-content; max-width: 100%; min-height: 44px; margin: 12px auto 0; color: var(--lime); font: 500 var(--d1-meta)/1.4 var(--d1-body); text-decoration: underline; text-underline-offset: 5px; overflow-wrap: anywhere; }
   .c-email:hover { color: var(--paper); }
@@ -181,14 +160,6 @@
   .c-highlights dd { display: contents; }
   .c-highlights strong { order: 1; font: 700 clamp(56px, 5.5vw, 88px)/1 'Lab Antonio', 'Arial Narrow', sans-serif; font-variant-numeric: tabular-nums; color: var(--lime); }
   .h-detail { order: 3; margin-top: 6px; font-size: 16px; color: #E1E8DF; }
-  .metric-ask { position: relative; display: inline-flex; align-items: center; padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
-  .metric-hint { position: absolute; left: 100%; top: 0; margin-left: 4px; font: 500 16px/1 var(--d1-body); transition: transform .25s ease; }
-  .metric-ask:is(:hover, :focus-visible) { color: var(--paper); }
-  .metric-ask:is(:hover, :focus-visible) .metric-hint { transform: translate(2px, -2px); }
-  .metric-ask:focus-visible { outline: 2px solid var(--lime); outline-offset: 5px; }
-  .metric-ask:disabled { cursor: wait; }
-  :global(html.ask-on) .c-summary :global([data-ask-id]) { color: var(--paper); background: rgb(228 237 191 / .14); }
-  :global(html.ask-on) .c-summary :global([data-ask-id].is-quoted) { color: var(--ink); background: var(--lime); }
 
   /* Reading body: ruled columns, no cards. */
   .c-body { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: clamp(40px, 6vw, 120px); padding: 44px var(--page-x) clamp(64px, 7vw, 112px); }
@@ -238,8 +209,6 @@
     .c-stack { gap: 4px 16px; font-size: 13px; }
     .c-buttons { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
     .c-pdf-action { flex-direction: column-reverse; align-items: flex-start; gap: 10px; min-height: 100px; padding: 14px; font-size: clamp(19px, 5.2vw, 26px); }
-    .c-action-icon { width: 28px; height: 28px; border: 0; }
-    .c-action-icon svg { width: 28px; height: 28px; }
     .c-bio { text-align: left; }
     .c-summary, .c-body { padding-inline: 20px; }
     .c-summary { padding-top: 24px; }
@@ -253,11 +222,6 @@
   }
   @media (prefers-reduced-motion: reduce) { .c-project-title a { transition: none; } }
   @media (prefers-reduced-motion: reduce) {
-    .c-pdf-action, .c-pdf-action::before, .c-action-label, .c-action-icon svg, .metric-hint { transition: none; }
   }
-  :global(html[data-motion='reduced']) .metric-hint { transition: none; }
-  :global(html[data-motion='reduced']) .c-pdf-action,
-  :global(html[data-motion='reduced']) .c-pdf-action::before,
-  :global(html[data-motion='reduced']) .c-action-label,
-  :global(html[data-motion='reduced']) .c-action-icon svg { transition: none; }
+  :global(html[data-motion='reduced']) .c-pdf-action { transition: none; }
 </style>

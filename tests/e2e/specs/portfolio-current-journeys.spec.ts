@@ -1,6 +1,6 @@
 import {test,expect,type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-async function ready(page:Page,path:string){await page.goto(path);await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();}
+async function ready(page:Page,path:string){await page.goto(path);await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase','idle');}
 for(const width of [390,1440]){
  test.describe('current journeys '+width,()=>{
  test.beforeEach(async({page})=>{await page.setViewportSize({width,height:900});await page.emulateMedia({reducedMotion:'reduce'});});

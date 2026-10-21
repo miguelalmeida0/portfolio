@@ -4,6 +4,45 @@ import { loadLocalTs } from '../../scripts/lib/load-local-ts.mjs';
 
 const { computeLayout } = await loadLocalTs('src/lib/hero-lab/typographic/turntable/src/layout.ts');
 
+test('editorial portrait stays prominent while overlapping only the headline edge', () => {
+  for (const width of [390, 768, 1280, 1512, 1907]) {
+    const l = computeLayout(width, 750, 820, 3.79, .83, width * .039, 180, 'editorial');
+    const capHeight = l.fontSize * .83;
+    const photoArea = l.stageHeight - (l.photoBottom ?? 0);
+    const overlap = l.wordTop + capHeight - (photoArea - l.photoHeight);
+    assert.ok(l.photoHeight >= photoArea * .82, `${width}: portrait shrinks beneath the headline`);
+    // The transparent top of the source leaves the visible head below this frame edge.
+    assert.ok(overlap > 0 && overlap <= capHeight * .38, `${width}: portrait hides too much of the headline`);
+  }
+});
+
+test('compact portraits leave no empty control row and tablets fit their portrait column', () => {
+  for (const width of [320, 390, 639, 640, 768, 1024, 1279]) {
+    const l = computeLayout(width, 760, 844, 3.79, .83, 20, 220, 'editorial');
+    assert.equal(l.photoBottom, 0);
+    assert.equal(l.stageWidth, width < 640 ? width : width / 2);
+    assert.ok(l.fontSize * 3.79 <= l.stageWidth - 32);
+    assert.ok(l.photoHeight * 1016 / 1065 <= l.stageWidth);
+    assert.ok(l.stageHeight <= (width < 640 ? 360 : 520));
+  }
+});
+
+test('editorial hero keeps side copy clear of the portrait without growing into a full-screen poster', () => {
+  for (const width of [1280, 1512, 1907, 2560]) {
+    const layout = computeLayout(width, 900, 1000, 3.79, .83, width * .039, 300, 'editorial');
+    assert.ok(layout.stageHeight <= 640, 'wide monitors stretch the header');
+    assert.ok(layout.fontSize * 3.79 <= Math.min(width * .6, 1000) + .01, 'headline overwhelms the introduction');
+    const photoLeft = (width - layout.photoHeight * 1016 / 1065) / 2;
+    assert.ok(photoLeft >= layout.gutter + layout.columnWidth, 'portrait overlaps the introduction');
+    assert.ok(layout.wordTop + layout.fontSize * .83 > layout.stageHeight - layout.photoHeight, 'portrait detaches from the word');
+  }
+});
+
+test('editorial hero reserves space below the headline for wrapped introduction copy', () => {
+  const layout = computeLayout(1280, 720, 800, 3.79, .83, 50, 350, 'editorial');
+  assert.ok(layout.stageHeight - 350 >= layout.wordTop + layout.fontSize * .83 + 20);
+});
+
 test('medium header reserves room for its measured supporting content', () => {
   const layout = computeLayout(1020, 620, 744, 3.79, .83, 34.68, 184);
   assert.ok(layout.stageHeight + 184 <= 620, 'supporting content falls below the available header');

@@ -80,9 +80,9 @@
 #portfolio-content[data-homepage] .index-column nav { grid-column: 1; grid-row: 1 / 3; align-self: start; }
 #portfolio-content[data-homepage] .project-index { display: grid; grid-template-columns: minmax(0,1fr); gap: var(--s-1); }
 #portfolio-content[data-homepage] .project-index button { padding: calc(var(--s-2) + var(--s-1)/2) 0 calc(var(--s-2) + var(--s-1)/2) calc(var(--s-4) + var(--s-1)); border: 0; border-radius: 0; opacity: 1; }
-html:not(.ask-on) #portfolio-content[data-homepage] .project-index button { background: transparent; color: var(--fg-muted); }
+#portfolio-content[data-homepage] .project-index button { background: transparent; color: var(--fg-muted); }
 #portfolio-content[data-homepage] .project-index button::after { inset: 10px auto 10px 0; width: 3px; border-radius: 2px; background: transparent; }
-html:not(.ask-on) #portfolio-content[data-homepage] .project-index button[aria-current='true'] { color: var(--fg); }
+#portfolio-content[data-homepage] .project-index button[aria-current='true'] { color: var(--fg); }
 #portfolio-content[data-homepage] .project-index button[aria-current='true']::after { background: var(--bar); }
 #portfolio-content[data-homepage] .project-index button:not(:focus-visible) { outline: none; }
 #portfolio-content[data-homepage] .project-index button:focus-visible { outline: 3px solid var(--fg); outline-offset: var(--s-1); }

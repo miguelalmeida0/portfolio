@@ -83,7 +83,7 @@ export function createTurntableHeader(container: HTMLElement, options: HeaderOpt
     if (destroyed) return;
     if (busy) resizeQueued = true;
     const width = root.clientWidth;
-    const gutter = Math.min(56, Math.max(16, width * 0.034));
+    const gutter = options.presentation === 'editorial' ? Math.max(20, width * .039) : Math.min(56, Math.max(16, width * 0.034));
     root.style.setProperty('--mah-gutter', `${gutter}px`);
     const per = Math.max(word.per(content.words.engineer), word.per(content.words.designer));
     // Select the CSS layout before measuring: a resize across the breakpoint
@@ -91,14 +91,15 @@ export function createTurntableHeader(container: HTMLElement, options: HeaderOpt
     root.dataset.layout = width >= GEOMETRY.wideMin ? 'wide' : 'narrow';
     const availableHeight = window.innerHeight - (root.getBoundingClientRect().top + window.scrollY);
     const height = root.dataset.layout === 'wide' ? Math.max(640, availableHeight) : availableHeight;
-    const L = computeLayout(width, height, window.innerHeight, per, word.capRatio, gutter, q<HTMLElement>('.mah-copy').offsetHeight);
+    const L = computeLayout(width, height, window.innerHeight, per, word.capRatio, gutter, q<HTMLElement>('.mah-copy').offsetHeight, options.presentation);
     root.dataset.layout = L.wide ? 'wide' : 'narrow';
     root.style.setProperty('--mah-stage-h', `${L.stageHeight}px`);
     root.style.setProperty('--mah-word-top', `${L.wordTop}px`);
     root.style.setProperty('--mah-ph', `${Math.max(120, L.photoHeight)}px`);
+    root.style.setProperty('--mah-photo-bottom', `${L.photoBottom ?? 0}px`);
     root.style.setProperty('--mah-colw', `${L.columnWidth}px`);
-    if (busy) word.resizeDuringTurn(L.fontSize, width);
-    else word.fit(content.words[role], L.fontSize, width);
+    if (busy) word.resizeDuringTurn(L.fontSize, L.stageWidth ?? width);
+    else word.fit(content.words[role], L.fontSize, L.stageWidth ?? width);
     renderer?.resize();
   }
 
@@ -244,6 +245,19 @@ export function createTurntableHeader(container: HTMLElement, options: HeaderOpt
       root.classList.toggle('has-gl', !!r);
     });
   }
+  async function refreshPortraitTexture(): Promise<void> {
+    if (!booted || reduced || destroyed) return;
+    const source = front.currentSrc;
+    // A responsive <picture> can change sources during a turn. Finish that turn
+    // before rebuilding its textures, so the canvas and resting image agree.
+    if (processing) await processing;
+    if (destroyed || reduced || front.currentSrc !== source) return;
+    rendererOwner?.abort();
+    renderer?.destroy(); renderer = null;
+    root.classList.remove('has-gl');
+    startRenderer();
+  }
+  front.addEventListener('load', refreshPortraitTexture);
   function startFog(): void {
     own(gsap.to(fog, { xPercent: MOTION.fog.xPercent, yPercent: MOTION.fog.yPercent, duration: MOTION.fog.duration, ease: 'sine.inOut', yoyo: true, repeat: -1 }));
   }
@@ -340,6 +354,7 @@ export function createTurntableHeader(container: HTMLElement, options: HeaderOpt
       window.removeEventListener('resize', onResize);
       document.removeEventListener('visibilitychange', onVisibility);
       stopMotion();
+      front.removeEventListener('load', refreshPortraitTexture);
       renderer?.destroy();
       if (options.controlsContainer) options.controlsContainer.innerHTML = '';
       container.innerHTML = '';

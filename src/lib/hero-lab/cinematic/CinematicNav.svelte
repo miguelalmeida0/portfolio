@@ -3,8 +3,7 @@
   import { beforeNavigate } from '$app/navigation';
   import { gsap } from 'gsap';
   import { hero, labNavigation } from '$lib/hero-lab/content';
-  import { followMenuLink, lockPage, toggleAsk } from '$lib/hero-lab/sheet';
-  import { askController, askView } from '$lib/ask/state';
+  import { followMenuLink, lockPage } from '$lib/hero-lab/sheet';
   import { motionState } from '$lib/motion/policy';
   import { curves } from '$lib/hero-lab/runtime';
 
@@ -47,14 +46,13 @@
   <div class="d2-bar-inner" data-arm>
     <a href="#top" class="d2-identity" data-identity-home aria-label={hero.homeLabel}>
       <span class="d2-name">Miguel Almeida</span>
-      <span class="d2-city" data-ask-id="city">{hero.city}</span>
+      <span class="d2-city" >{hero.city}</span>
     </a>
     <nav aria-label="Main navigation" class="d2-nav">
       {#each labNavigation as link}
-        <a href={link.href} class="d2-focus" data-ask-id={`nav-${link.label.toLowerCase()}`}>{link.label}<span class="d2-marks" aria-hidden="true"></span></a>
+        <a href={link.href} class="d2-focus" >{link.label}<span class="d2-marks" aria-hidden="true"></span></a>
       {/each}
-      <button type="button" class="d2-focus d2-ask" data-ask-trigger disabled={!$askController}
-        aria-expanded={$askView.state !== 'idle'} onclick={() => toggleAsk(true)}>Ask MiguelLLM<span class="d2-marks" aria-hidden="true"></span></button>
+
     </nav>
     <button bind:this={trigger} type="button" class="d2-menu d2-focus" aria-haspopup="dialog" aria-expanded={open}
       aria-controls="d2-menu" onclick={show}>Menu<span class="d2-marks" aria-hidden="true"></span></button>
@@ -77,9 +75,7 @@
         </li>
       {/each}
       <li data-credit>
-        <button type="button" class="d2-credit-ask" disabled={!$askController} onclick={async () => { await hide(); toggleAsk(false); }}>
-          <span class="d2-credit-name">Ask MiguelLLM</span>
-        </button>
+
       </li>
     </ul>
   </div>
@@ -104,8 +100,6 @@
   .d2-focus:is(:hover, :focus-visible, [aria-expanded='true']) .d2-marks::after { opacity: 1; transform: none; }
   .d2-focus:focus-visible .d2-marks::before, .d2-focus:focus-visible .d2-marks::after { width: 12px; height: 12px; border-width: 2.5px 0 0 2.5px; }
   .d2-focus:focus-visible .d2-marks::after { border-width: 0 2.5px 2.5px 0; }
-  .d2-ask { color: var(--d2-accent, #e4edbf); }
-  .d2-ask:disabled { opacity: .5; cursor: default; }
   .d2-menu { display: none; }
   @media (max-width: 1023px) {
     .d2-bar { --d2-bar-h: 60px; }
@@ -121,9 +115,9 @@
   .d2-sheet-top { display: flex; align-items: center; justify-content: space-between; min-height: 52px; }
   .d2-close { margin-right: -14px; }
   ul { list-style: none; margin: auto 0 0; padding: 0; display: grid; gap: 4px; }
-  li a, .d2-credit-ask { display: grid; gap: 6px; width: 100%; padding: 14px 4px; color: inherit; text-decoration: none; text-align: left; background: none; border: 0; border-top: 1px solid rgb(241 238 227 / .16); cursor: pointer; font: inherit; }
+  li a { display: grid; gap: 6px; width: 100%; padding: 14px 4px; color: inherit; text-decoration: none; text-align: left; background: none; border: 0; border-top: 1px solid rgb(241 238 227 / .16); cursor: pointer; font: inherit; }
   .d2-credit-role { font: 400 12px/1 'Lab Mono', ui-monospace, monospace; letter-spacing: .12em; color: var(--d2-muted, #a9b7ae); }
   .d2-credit-name { font: 400 44px/1 'Lab Newsreader', Georgia, serif; letter-spacing: -.02em; }
-  li a:focus-visible, .d2-credit-ask:focus-visible { outline: 2px solid var(--d2-accent, #e4edbf); outline-offset: 2px; }
+  li a:focus-visible { outline: 2px solid var(--d2-accent, #e4edbf); outline-offset: 2px; }
   @media (prefers-reduced-motion: reduce) { .d2-marks::before, .d2-marks::after, .d2-focus { transition: none; } }
 </style>
