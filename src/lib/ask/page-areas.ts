@@ -1,5 +1,7 @@
 import story from '$lib/story/story.json' with { type: 'json' };
-import { cvExperience, cvEducation, cvLanguages, cvSkills, professionalRecommendation } from '$lib/content/folio';
+import { cvBio, cvHighlights, cvSignals, cvExperience, cvEducation, cvLanguages, cvSkills, professionalRecommendation } from '$lib/content/folio';
+import { introSteps } from '$lib/story/intro';
+import { cvProjects } from '$lib/content/cv-projects';
 import { projects } from '$lib/experience/projects';
 import { flowIncidents } from '$lib/content/flow-investigation';
 import { incidents as leuIncidents } from '$lib/content/leu-investigation';
@@ -7,6 +9,12 @@ import { incidents as leuIncidents } from '$lib/content/leu-investigation';
 // Facts come from the same authored records rendered by CV, Story and Work.
 // Page text is only used for highlighting, never accepted as new knowledge.
 export const pageAreas = [
+  { id: 'cv-role', question: 'What does Miguel do as a frontend engineer?', label: 'Frontend engineer', text: cvBio, sources: ['CV|/cv'] },
+  ...cvHighlights.map((h, i) => ({ id: `cv-highlight-${i}`, question: `What does the ${h.value} figure on Miguel’s CV represent?`, label: h.label, text: `${h.label}: ${h.value} ${h.detail}.`, sources: ['Career highlights|/cv#cv-highlights'] })),
+  ...cvSignals.map((s, i) => ({ id: `cv-signal-${i}`, question: `How does Miguel approach ${s.title.toLowerCase()}?`, label: s.title, text: `${s.title}: ${s.detail}. ${cvBio}`, sources: ['Core signals|/cv#signals'] })),
+  ...introSteps.map(step => ({ id: step.area, question: `How does ${step.title.toLowerCase()} fit into Miguel’s story?`, label: step.title, text: `${step.copy} ${step.text}`, sources: ['Story|/story'] })),
+  { id: 'cv-summary', question: 'What is Miguel’s frontend engineering experience?', label: 'CV summary', text: cvBio, sources: ['CV|/cv'] },
+  ...cvProjects.map(p => ({ id: `cv-project-${p.slug}`, question: `What is on Miguel’s CV about ${p.name}?`, label: p.name, text: `${p.description}. ${p.stack}. ${p.bullets.join(' ')}`, sources: [`CV projects|/cv#projects-title`] })),
   ...story.questions.map(q => ({ id: `story-${q.id}`, question: q.question, label: q.question, text: `${q.lead} ${q.answer}`, sources: ['Story|/story'] })),
   ...cvExperience.map((role, i) => ({ id: `cv-job-${i}`, question: `What did Miguel do as ${role.role} at ${role.company}?`, label: role.role, text: `${role.years}: ${role.role}, ${role.company}, ${role.location}. ${role.bullets.join(' ')}`, sources: ['Professional experience|/cv#experience'] })),
   { id: 'cv-education', question: 'What did Miguel study?', label: 'Education', text: cvEducation.map(e => `${e.year}: ${e.title}, ${e.place}.`).join(' '), sources: ['Education|/cv#education'] },
@@ -26,4 +34,4 @@ export function pageAreaForQuestion(question: string) {
   if (/freelance/.test(q)) return pageAreas.find(a => a.id === 'cv-job-1');
   return pageAreas.find(a => a.question.toLowerCase() === q);
 }
-export type PageAreaId = `story-${string}` | `cv-job-${number}` | 'cv-education' | 'cv-languages' | 'cv-skills' | 'cv-recommendation' | `project-${string}`;
+export type PageAreaId = `story-${string}` | `cv-job-${number}` | `cv-highlight-${number}` | `cv-signal-${number}` | 'cv-role' | 'cv-summary' | 'cv-education' | 'cv-languages' | 'cv-skills' | 'cv-recommendation' | `project-${string}`;

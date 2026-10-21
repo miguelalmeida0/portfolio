@@ -2,7 +2,7 @@ import { expect, test } from '../fixtures';
 import AxeBuilder from '@axe-core/playwright';
 
 for (const width of [1440, 390]) for (const [route, area, answer] of [
-  ['/cv', 'cv-job-0', 'production'], ['/story', 'story-hi', 'frontend developer'],
+  ['/cv', 'cv-job-0', 'production'], ['/story', 'story-hi', 'frontend engineer'],
   ['/work/f24', 'project-f24', 'Svelte'], ['/work/flow', 'project-flow', 'Flow'],
   ['/work/leu', 'project-leu', 'PDF'], ['/work/second-voice-ai', 'project-second-voice-ai', 'rewrite']
 ]) test(`shared Ask on ${route} at ${width}px`, async ({ page }) => {
@@ -35,7 +35,7 @@ test('CV facts are available from home; sources navigate and conversation surviv
   await page.addInitScript(() => sessionStorage.setItem('seen-intro', 'true'));
   await page.goto('/');
   await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
-  await page.keyboard.press('/');
+  await page.keyboard.press('Control+/');
   const input = page.getByRole('textbox', { name: 'Type your own question' });
   await input.fill('What did Miguel study?'); await input.press('Enter');
   await expect(page.locator('.ask-sources a').first()).toHaveAttribute('href', '/cv#education');
@@ -43,7 +43,7 @@ test('CV facts are available from home; sources navigate and conversation surviv
   await page.locator('.ask-sources a').first().click();
   await expect(page).toHaveURL(/\/cv#education/);
   await expect(page.locator('[data-ask-panel]')).toHaveCount(0);
-  await page.keyboard.press('/');
+  await page.keyboard.press('Control+/');
   await expect(page.locator('[data-ask-knowledge]')).toHaveText(answer);
   if (page.viewportSize()!.width >= 768) {
     await page.getByRole('button', { name: 'Move guide to the left' }).click();
@@ -62,7 +62,7 @@ test('project route supplies the subject, and investigation headings explain the
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/work/flow');
   await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
-  await page.keyboard.press('/');
+  await page.keyboard.press('Control+/');
   const input = page.getByRole('textbox', { name: 'Type your own question' });
   await input.fill('What went wrong here?'); await input.press('Enter');
   await expect(page.locator('[data-ask-knowledge]')).toContainText('rollback');

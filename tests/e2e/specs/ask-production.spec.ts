@@ -1,6 +1,7 @@
-import { test, expect, type Page } from '../fixtures';
+import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import sharp from 'sharp';
+import { readFile } from 'node:fs/promises';
 
 test.describe.configure({ mode: 'default' });
 test.beforeEach(async ({ page }) => {
@@ -9,11 +10,11 @@ test.beforeEach(async ({ page }) => {
   await page.evaluate(() => document.fonts.ready);
   await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
 });
-async function open(page: Page) { await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled(); await page.keyboard.press('/'); await expect(page.locator('html')).toHaveClass(/ask-on/); }
+async function open(page: Page) { await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled(); await page.keyboard.press('Control+/'); await expect(page.locator('html')).toHaveClass(/ask-on/); }
 async function close(page: Page) { await page.keyboard.press('Escape'); await expect(page.locator('[data-ask-panel]')).toHaveCount(0); }
 
 for (const [width, height] of [[430,932], [393,852], [390,844], [375,812]]) {
-  test(`mobile sheet, area tap, keyboard, swipe and focus at ${width}`, async ({ page, browserName }) => {
+  test(`mobile sheet, area tap, keyboard, swipe and focus at ${width}`, async ({ page }) => {
     await page.setViewportSize({ width, height });
     const photo = await page.locator('.portrait').boundingBox();
     await page.getByRole('button', { name: 'Menu', exact: true }).click();
@@ -36,25 +37,11 @@ for (const [width, height] of [[430,932], [393,852], [390,844], [375,812]]) {
     const violations = (await new AxeBuilder({ page }).include('[data-ask-panel]').analyze()).violations;
     expect(violations.map(v => v.id)).toEqual([]);
     // The scrollable answer must not own the sheet-dismiss gesture.
-    const cdp = browserName === 'chromium' ? await page.context().newCDPSession(page) : undefined;
+    const cdp = await page.context().newCDPSession(page);
     async function swipe(y: number) {
-      if (cdp) {
-        await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 30, y }] });
-        for (let delta = 20; delta <= 100; delta += 20) await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 30, y: y + delta }] });
-        await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-      } else {
-        // CDP supplies real touch input only in Chromium. Other engines still
-        // exercise the same bubbling gesture contract at the rendered target.
-        await page.evaluate(y => {
-          const target = document.elementFromPoint(30, y)!;
-          for (const [type, offset] of [['touchstart', 0], ['touchend', 100]] as const) {
-            const event = new Event(type, { bubbles: true, cancelable: true });
-            const point = { clientX: 30, clientY: y + offset };
-            Object.defineProperties(event, { touches: { value: type === 'touchstart' ? [point] : [] }, changedTouches: { value: [point] } });
-            target.dispatchEvent(event);
-          }
-        }, y);
-      }
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 30, y }] });
+      for (let delta = 20; delta <= 100; delta += 20) await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 30, y: y + delta }] });
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
     }
     await swipe(box.y + 160);
     await expect(panel).toBeVisible();
@@ -65,18 +52,18 @@ for (const [width, height] of [[430,932], [393,852], [390,844], [375,812]]) {
   });
 }
 
-test('every source is keyboard reachable; slash respects inputs; announcements only complete once', async ({ page }) => {
+test('every source is keyboard reachable; shortcut respects inputs; ready evidence is announced once', async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 963 });
   await open(page);
   for (const area of await page.locator('[data-ask-id]').all()) {
-    if (await area.evaluate(el => /^H[1-6]$/.test(el.tagName))) await expect(area).toHaveRole('heading');
-    else await expect(area).toHaveRole('button');
-    await expect(area).toHaveAttribute('tabindex', '0'); await expect(area).toHaveAttribute('aria-label', /^Ask: /);
+    await expect(area).toHaveAttribute('role', 'button'); await expect(area).toHaveAttribute('tabindex', '0'); await expect(area).toHaveAttribute('aria-label', /^Ask: /);
   }
   const cv = page.locator('[data-ask-id="cv"]'); await cv.focus(); await page.keyboard.press('Space');
   await expect(page.locator('.ask-heading')).toHaveText('Can I see his CV?');
-  await expect(page.locator('[data-ask-announcement]')).toHaveText('');
-  await expect(page.locator('[data-ask-announcement]')).toContainText('Grounded in Miguel', { timeout: 6000 });
+  await expect(page.locator('[data-ask-announcement]')).toContainText('Based on my published work', { timeout: 1000 });
+  const announced = await page.locator('[data-ask-announcement]').textContent();
+  await page.waitForTimeout(1400);
+  await expect(page.locator('[data-ask-announcement]')).toHaveText(announced!);
   const input = page.getByRole('textbox', { name: 'Type your own question' }); await input.fill('How / why'); await input.press('/'); await expect(input).toHaveValue('How / why/');
   await close(page); await expect(page.locator('[data-ask-trigger]:visible')).toBeFocused();
   await expect(cv).not.toHaveAttribute('role'); await expect(cv).toHaveAttribute('href', '/cv');
@@ -97,20 +84,18 @@ test('backend steps are validated individually against live text and older reque
   let release: (() => void) | undefined;
   await page.route('**/api/ask', async route => { await new Promise<void>(resolve => release = resolve); await route.fulfill({ json: { steps: [{ lead: '', source: 'stack', quote: 'React' }] } }).catch(() => {}); });
   await input.fill('A slow question'); await input.press('Enter'); await expect(page.locator('[data-ask-answer]')).toContainText('Connecting');
-  await page.getByRole('button', { name: 'Design background', exact: true }).click(); release?.();
+  await page.getByRole('button', { name: 'My design background', exact: true }).click(); release?.();
   await expect(page.locator('.ask-heading')).toHaveText('What does he do?');
   await expect(page.locator('[data-ask-knowledge]')).toContainText('F24');
 });
 
 test('sources changing before a phrase appears cannot produce a stale quote', async ({ page }) => {
   await open(page);
-  // Keep the click and source mutation in one task, before the scheduled quote.
-  // A separate browser round trip can arrive after the quote has already appeared.
-  await page.getByRole('button', { name: 'His stack', exact: true }).evaluate(button => {
+  await page.getByRole('button', { name: 'My stack', exact: true }).evaluate(button => {
     (button as HTMLButtonElement).click();
     document.querySelector('[data-ask-id="stack"]')!.textContent = 'Changed source';
   });
-  await expect(page.locator('[data-ask-answer]')).toContainText('Grounded in Miguel', { timeout: 7000 });
+  await expect(page.locator('[data-ask-answer]')).toContainText('Based on my published work', { timeout: 7000 });
   await expect(page.locator('[data-ask-answer] mark')).toHaveCount(0);
   await expect(page.locator('[data-ask-knowledge]')).toContainText('React');
   await expect(page.locator('[data-ask-id="stack"]')).not.toHaveClass(/is-quoted/);
@@ -141,7 +126,7 @@ test('closing hides the answer before returning the photo and re-opening waits f
   const animation = await page.locator('.portrait').evaluate(el => ({ delay: getComputedStyle(el).transitionDelay, duration: getComputedStyle(el).transitionDuration }));
   expect(animation.delay).toBe('0.28s, 0.28s'); expect(animation.duration).toBe('1.15s, 1.15s');
   await expect(page.locator('.ask-tide')).toHaveClass(/is-out/);
-  await page.keyboard.press('/');
+  await page.keyboard.press('Control+/');
   await expect(page.locator('html')).toHaveClass(/ask-on/);
   await expect(page.locator('[data-ask-panel]')).toHaveCount(1);
   await expect(page.locator('.ask-heading')).toHaveText('Ask about anything on this page');
@@ -204,7 +189,7 @@ test('twenty open/close cycles leave no styles, observers, timers or pointer wor
     EventTarget.prototype.removeEventListener = function(type: string, listener: any, options: any) { w.__askListeners.delete(listener); return remove.call(this, type, listener, options); };
   });
   for (let i = 0; i < 20; i++) {
-    await open(page); await page.getByRole('button', { name: 'His stack', exact: true }).click(); await close(page);
+    await open(page); await page.getByRole('button', { name: 'My stack', exact: true }).click(); await close(page);
     await expect(page.locator('.ask-effects,.is-lit,.is-quoted,.is-asked,.is-swaying,.ask-flag')).toHaveCount(0);
     expect(await page.locator('[data-ask-id]').evaluateAll(els => els.every(el => !el.getAttribute('style')?.includes('--p')))).toBe(true);
   }
@@ -215,26 +200,22 @@ test('twenty open/close cycles leave no styles, observers, timers or pointer wor
 });
 
 for (const [width,height] of [[1920,963],[1440,1020],[1024,768],[834,1112],[430,932],[393,852],[390,844],[375,812]]) {
-  test(`opening and closing Ask preserves the current display at ${width}`, async ({ page }) => {
+  test(`closed screenshots match the pre-change baseline at ${width}`, async ({ page }) => {
     await page.setViewportSize({ width,height }); await page.emulateMedia({ reducedMotion: 'reduce' }); await page.reload(); await page.evaluate(() => document.fonts.ready);
     await page.locator('.portrait').evaluate((img: HTMLImageElement) => img.decode());
-    await page.mouse.move(0, 0);
-    await page.evaluate(() => (document.activeElement as HTMLElement)?.blur());
-    const before = await page.screenshot({ animations: 'disabled' });
-    const expected = await sharp(before).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+    const before = await readFile(`artifacts/ask-miguelllm/baseline/closed-${width}.png`);
+    const expected = await sharp(before).raw().toBuffer();
+    expect((await sharp(await page.screenshot()).raw().toBuffer()).equals(expected)).toBe(true);
     await open(page); await close(page);
-    const menuClose = page.getByRole('button', { name: 'Close', exact: true });
-    if (await menuClose.isVisible()) await menuClose.click();
+    if(width<720) await page.getByRole('button', { name: 'Close', exact: true }).click();
     await page.mouse.move(0,0); await page.evaluate(() => (document.activeElement as HTMLElement)?.blur());
-    const after = await page.screenshot({ animations: 'disabled' });
-    const actual = await sharp(after).removeAlpha().raw().toBuffer({ resolveWithObject: true });
-    expect(actual.info).toEqual(expected.info);
-    const pixels = actual.data;
+    const after = await page.screenshot();
+    const pixels = await sharp(after).raw().toBuffer();
     // Chrome can rasterize the rounded Menu border one channel level differently
     // after focusing it. No geometry, text, color-token or content change is allowed.
     let changed = 0, maximum = 0;
     for (let i = 0; i < pixels.length; i += 3) {
-      const delta = Math.max(...[0,1,2].map(c => Math.abs(pixels[i+c] - expected.data[i+c])));
+      const delta = Math.max(...[0,1,2].map(c => Math.abs(pixels[i+c] - expected[i+c])));
       if (delta) changed++;
       maximum = Math.max(maximum, delta);
     }

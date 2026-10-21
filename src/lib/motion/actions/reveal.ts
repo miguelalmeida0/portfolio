@@ -19,6 +19,9 @@ export type RevealOptions = {
   delay?: number;
   /** Visual family: `settle` moves, `rule` draws a line, `frame` opens an aperture. */
   variant?: 'settle' | 'rule' | 'frame';
+  /** Do not hide content already in the initial viewport during hydration.
+   * Especially important when a route transition is already revealing it. */
+  skipInitialViewport?: boolean;
   /** Skip the effect entirely (kept so callers can stay declarative). */
   disabled?: boolean;
 };
@@ -51,7 +54,8 @@ export function reveal(node: HTMLElement, options: RevealOptions = {}) {
   const start = () => {
     const { reduced } = motionSnapshot();
 
-    if (current.disabled || reduced || typeof IntersectionObserver === 'undefined') {
+    if (current.disabled || reduced || typeof IntersectionObserver === 'undefined' ||
+      (current.skipInitialViewport && node.getBoundingClientRect().top < window.innerHeight)) {
       revealed(node);
       return;
     }

@@ -12,6 +12,7 @@
 </div>
 <style>
   .portrait-card { position: relative; min-width: 0; height: 500px; border-radius: var(--card-radius); background: var(--sage); overflow: hidden; }
+  picture { display: block; position: absolute; inset: 0; }
   .portrait { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); display: block; width: auto; height: calc(100% - 24px); max-width: 100%; object-fit: contain; object-position: bottom; }
   @media (min-width: 768px) and (max-width: 1023px) { .portrait-card { order: -1; height: 380px; } .portrait { height: calc(100% - 20px); } }
   @media (max-width: 767px) { .portrait-card { order: -1; height: clamp(260px, 78vw, 335px); } .portrait { height: calc(100% - 16px); } }

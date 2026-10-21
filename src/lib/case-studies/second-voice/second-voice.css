@@ -13,7 +13,7 @@
   color-scheme:light;
 }
 .cs-sv{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html:has(.cs-sv){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);background:#EFF3E3;scroll-behavior:smooth}
+html:has(.cs-sv){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);background:#EFF3E3;scroll-behavior:auto}
 .cs-sv *,.cs-sv *::before,.cs-sv *::after{box-sizing:inherit}
 .cs-sv{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
 .cs-sv a{color:inherit}
@@ -77,9 +77,9 @@ html:has(.cs-sv){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);ba
 
 /* hero */
 .cs-sv .hero{padding:clamp(40px,6vw,88px) 0 clamp(28px,3vw,44px)}
-.cs-sv .kicker{font-weight:600;font-size:15px;color:var(--plum);margin:0 0 20px}
-.cs-sv .hero h1{font-weight:800;font-size:clamp(44px,5.8vw,84px);line-height:1;letter-spacing:-.045em;margin:0;max-width:17ch}
-.cs-sv .hero .sub{font-size:clamp(18px,1.6vw,21px);line-height:1.5;color:var(--forest);max-width:46ch;margin:22px 0 28px}
+.cs-sv .kicker{font-weight:600;font-size:var(--type-meta,15px);color:var(--plum);margin:0 0 20px}
+.cs-sv .hero h1{font-weight:800;font-size:var(--type-case-display,clamp(44px,5.8vw,84px));line-height:1;letter-spacing:-.045em;margin:0;max-width:17ch}
+.cs-sv .hero .sub{font-size:var(--type-lead,clamp(18px,1.6vw,21px));line-height:1.5;color:var(--forest);max-width:46ch;margin:22px 0 28px}
 .cs-sv .ctas{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
 
 /* containers */
@@ -88,8 +88,8 @@ html:has(.cs-sv){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);ba
 .cs-sv .cap{font-size:14px;color:var(--muted);margin:14px 0 0;max-width:80ch}
 .cs-sv .chapter{padding-top:clamp(88px,11vw,160px)}
 .cs-sv .head{margin:0 0 clamp(28px,3.5vw,48px)}
-.cs-sv .head h2{font-weight:800;font-size:clamp(32px,3.6vw,52px);line-height:1.04;letter-spacing:-.045em;margin:0;max-width:21ch}
-.cs-sv .head p{font-size:clamp(17px,1.4vw,19px);color:var(--forest);margin:16px 0 0;max-width:62ch}
+.cs-sv .head h2{font-weight:800;font-size:var(--type-case-section,clamp(32px,3.6vw,52px));line-height:1.04;letter-spacing:-.045em;margin:0;max-width:21ch}
+.cs-sv .head p{font-size:var(--type-reading,clamp(17px,1.4vw,19px));color:var(--forest);margin:16px 0 0;max-width:62ch}
 
 /* stage rail (shared visual language with Flow) */
 .cs-sv .rail{list-style:none;margin:0;padding:0}
@@ -118,7 +118,7 @@ html:has(.cs-sv){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);ba
 
 /* story rows */
 .cs-sv .story{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:clamp(24px,5vw,88px);padding:clamp(32px,4vw,56px) 0;border-top:1px solid var(--line)}
-.cs-sv .story h3{font-weight:800;font-size:clamp(24px,2.4vw,34px);letter-spacing:-.04em;line-height:1.08;margin:0 0 14px}
+.cs-sv .story h3{font-weight:800;font-size:var(--type-case-subsection,clamp(24px,2.4vw,34px));letter-spacing:-.04em;line-height:1.08;margin:0 0 14px}
 .cs-sv .story .said{font-style:italic;color:var(--muted);font-size:18px;margin:0}
 .cs-sv .story dl{margin:0;display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px 24px}
 .cs-sv .story dt{font-weight:700;font-size:14.5px;color:var(--plum);padding-top:2px}
@@ -161,7 +161,7 @@ html:has(.cs-sv){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);ba
 .cs-sv .out-head .label{margin:0 auto 0 0}
 .cs-sv .run{font:600 12.5px var(--mono);color:var(--muted)}
 .cs-sv .mv-wrap{position:relative;background:var(--paper);border-radius:16px;padding:24px 26px 26px;min-height:208px;transition:opacity .3s}
-.cs-sv .mv-wrap.pending .mv{opacity:.45}
+.cs-sv .mv-wrap.pending .mv{opacity:1}
 .cs-sv .progress{position:absolute;left:26px;right:26px;top:12px;height:2px;border-radius:2px;background:var(--line);overflow:hidden;opacity:0;transition:opacity .2s}
 .cs-sv .progress::after{content:"";position:absolute;inset:0;background:var(--plum);transform-origin:left;transform:scaleX(0)}
 .cs-sv .mv-wrap.pending .progress{opacity:1}

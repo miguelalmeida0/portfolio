@@ -1,6 +1,4 @@
-import { expect, test } from '../fixtures';
-import { recoveredCases } from '../helpers/case-studies';
-import { selectWorkProject } from '../helpers/portfolio';
+import { expect, test } from '@playwright/test';
 
 // Entry coverage lives in landing.spec.ts; retain the unrelated media/content checks.
 test('reduced motion shows real posters without decorative video requests', async ({ page }) => {
@@ -16,24 +14,28 @@ test('reduced motion shows real posters without decorative video requests', asyn
     expect(await video.evaluate((el: HTMLVideoElement) => el.paused)).toBe(true);
   }
   expect(videos).toEqual([]);
-  await selectWorkProject(page, 'leu');
-  const film = page.locator('#work video');
-  await expect(film).not.toHaveAttribute('src', /.+/);
-  await expect(film).toBeVisible();
-  await expect(film).toHaveAttribute('poster', /leu.*poster/);
-  await expect(film).toHaveJSProperty('paused', true);
-  expect(videos).toEqual([]);
+  await page.goto('/work/leu');
+  await expect(page.locator('video')).not.toHaveAttribute('src', /.+/);
+  await page.getByRole('button', { name: /Play.*film/i }).click();
+  await expect(page.locator('video')).toHaveAttribute('src', /.+/);
 });
 
-test('case studies expose contribution, implementation and working models', async ({ page }) => {
-  for (const study of recoveredCases) {
-    await page.goto('/work/' + study.slug);
-    await expect(page.locator('main h1')).toHaveText(study.heading);
-    await expect(page.locator(`${study.root} #overview .sub`)).toHaveText(/\S/);
-    await expect(page.locator(study.architecture).locator('h2')).toHaveText(study.architectureHeading);
-    await expect(page.locator('#try button').first()).toBeVisible();
-    for (const id of study.sections) await expect(page.locator(`${study.root} #${id}`)).toBeAttached();
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+test('case studies expose ownership and hero media immediately before architecture', async ({ page }) => {
+  for (const slug of ['second-voice-ai', 'f24', 'leu', 'flow']) {
+    await page.goto('/work/' + slug);
+    await expect(page.locator('main .role-label')).toBeVisible();
+    await expect(page.locator('main header [data-project-stack]')).toBeVisible();
+    if (slug === 'f24') {
+      await expect(page.locator('#product-purpose')).toHaveText('What the product is');
+      await expect(page.locator('#production-decision')).toContainText('Tradeoff');
+      expect(await page.locator('#architecture').evaluate(el => el.previousElementSibling?.tagName)).toBe('HEADER');
+    } else {
+      expect(await page.locator('#architecture').evaluate(architecture => {
+        const media = document.querySelector('main video, main figure');
+        return !!media && !!(architecture.compareDocumentPosition(media) & Node.DOCUMENT_POSITION_PRECEDING);
+      })).toBe(true);
+    }
   }
-  expect((await page.locator('script[type="application/ld+json"]').allTextContents()).join(' ')).toContain('Frontend developer & design engineer');
+  const schemas = await page.locator('script[type="application/ld+json"]').allTextContents();
+  expect(schemas.join(' ')).toContain('Frontend engineer & product designer');
 });

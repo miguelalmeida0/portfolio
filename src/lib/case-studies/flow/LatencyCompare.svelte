@@ -12,7 +12,7 @@ let mode=$state('screen');const max=$derived(mode==='screen'?250:1700);const ste
 </script>
 <section class="chapter" id="latency" aria-labelledby="lat-h">
     <div class="head">
-      <h2 id="lat-h">A fast screen is not a fast assistant.</h2>
+      <h2 id="lat-h">Measuring screen response and speech processing.</h2>
       <p>The wake UI paints in tens of milliseconds. The conversation you wait through is dominated by speech infrastructure, which is a different engineering problem.</p>
     </div>
     <div class="stats">

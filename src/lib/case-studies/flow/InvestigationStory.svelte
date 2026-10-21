@@ -4,7 +4,7 @@
 </script>
 <section class="chapter" id="engineering" aria-labelledby="eng-h">
     <div class="head">
-      <h2 id="eng-h">Interpret first. Earn the right to commit.</h2>
+      <h2 id="eng-h">Validate changes before applying them.</h2>
       <p>Interpretation proposes operations. Resolution identifies their targets. Deterministic checks decide whether a candidate document is safe to return.</p>
     </div>
     <p class="early"><span>Early path:</span><s>Utterance</s><span>→</span><s>Phrase or regex match</s><span>→</span><s>Direct mutation</s></p>

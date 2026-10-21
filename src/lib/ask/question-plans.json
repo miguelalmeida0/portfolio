@@ -16,7 +16,7 @@
         {
           "lead": "a",
           "source": "role",
-          "quote": "Frontend developer & design engineer."
+          "quote": "Frontend engineer & product designer."
         },
         {
           "lead": "in",
@@ -34,7 +34,7 @@
         {
           "lead": "He describes himself as a",
           "source": "role",
-          "quote": "Frontend developer & design engineer."
+          "quote": "Frontend engineer & product designer."
         },
         {
           "lead": "His production work:",
@@ -190,7 +190,7 @@
         {
           "lead": "— the longer version of",
           "source": "role",
-          "quote": "Frontend developer & design engineer."
+          "quote": "Frontend engineer & product designer."
         }
       ]
     },
@@ -260,7 +260,7 @@
       "question": "What did Miguel build in Needle?",
       "steps": [
         {
-          "lead": "His flagship project:",
+          "lead": "My flagship project:",
           "source": "w-needle",
           "quote": "Needle"
         }
@@ -492,7 +492,7 @@
       {
         "lead": "He calls himself a",
         "source": "role",
-        "quote": "Frontend developer & design engineer."
+        "quote": "Frontend engineer & product designer."
       },
       {
         "lead": "and his own projects start with",

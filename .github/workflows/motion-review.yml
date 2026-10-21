@@ -1,0 +1,62 @@
+name: Motion review
+on:
+  push:
+    branches: ['motion-review/**']
+permissions:
+  contents: read
+concurrency:
+  group: motion-review-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        phase: [before, after]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Use the frozen production baseline for the before run
+        if: matrix.phase == 'before'
+        run: git restore --source=914c8a4 -- src package.json package-lock.json
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run check && npm run test:unit && npm run build
+      - name: Serve production build
+        run: |
+          mkdir -p .cache/tmp artifacts/motion
+          TMPDIR=$PWD/.cache/tmp WRANGLER_LOG_PATH=$PWD/.cache/wrangler.log npx wrangler pages dev .svelte-kit/cloudflare --ip 127.0.0.1 --port 4398 --log-level error --show-interactive-dev-session=false > artifacts/motion/server.log 2>&1 &
+          for i in $(seq 1 40); do curl -sf http://127.0.0.1:4398/ >/dev/null && exit 0; sleep 1; done
+          cat artifacts/motion/server.log
+          exit 1
+      - name: Motion survey and measurements
+        run: node scripts/motion-survey.mjs ${{ matrix.phase }}
+      - name: Repeated cold loads and mobile CPU measurements
+        run: node scripts/motion-performance.mjs ${{ matrix.phase }}
+      - name: Focused motion acceptance
+        id: motion_acceptance
+        if: matrix.phase == 'after'
+        run: |
+          if test -f scripts/motion-acceptance.mjs; then node scripts/motion-acceptance.mjs; fi
+      - name: Preserved case-study behavior
+        if: matrix.phase == 'after' && (success() || steps.motion_acceptance.outcome == 'failure')
+        env:
+          PARITY_IMPL_BASE: http://127.0.0.1:4398
+        run: |
+          node --test tests/f24-sv/data-diff.test.mjs
+          PARITY_REF_DIR="$PWD/tests/case-studies/reference" npx playwright test -c tests/case-studies/tests/parity/playwright.parity.config.ts --workers=1 --grep 'behaviour|motion' --reporter=list
+          PARITY_REF_DIR="$PWD/tests/f24-sv/reference" npx playwright test -c tests/f24-sv/tests/parity/playwright.parity.config.ts --workers=1 --grep 'behaviour|motion' --reporter=list
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        if: always()
+        with:
+          name: motion-${{ matrix.phase }}
+          path: artifacts/motion
+          retention-days: 7

@@ -1,11 +1,12 @@
-// Both Selected Work and /work/leu use this configuration and LeuFlowLoop.
+// Shared product-film configuration for the portfolio’s Leu media surfaces.
 export const leuMedia = {
-  src: '/projects/leu/leu-loop-v2.mp4',
-  sources: [{ src: '/projects/leu/leu-loop-v2.webm', type: 'video/webm; codecs="vp9"' }],
-  poster: '/projects/leu/leu-loop-v2-poster.avif',
-  posterFallback: '/projects/leu/leu-loop-v2-poster.jpg',
-  duration: 20,
-  label: 'Leu: reading a passage, explaining it back, and comparing with the source',
-  caption: 'Animated Leu walkthrough: open a book, highlight a passage, get a simple explanation, say it back, and compare with the source.',
+  // Reuse the original 1440×810 master unchanged. The old preferred WebM was 540p.
+  src: '/projects/leu/leu-film-original-20261009.mp4',
+  sources: [],
+  poster: '/projects/leu/leu-film-original-20261009-poster.jpg',
+  posterFallback: '/projects/leu/leu-film-original-20261009-poster.jpg',
+  duration: 40.4,
+  label: 'Leu web experience: home, library, reading, explanations, teach-back, and study trails',
+  caption: 'Leu browser product film: explore your library, read and explain passages, practise teach-back, and revisit study trails.',
   fit: 'contain' as const
 };

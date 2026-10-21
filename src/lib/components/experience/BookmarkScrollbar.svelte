@@ -1,14 +1,13 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { resetScrollMotion, syncScrollPosition } from '$lib/motion/smooth-scroll';
+  import { SCROLLBAR_EDGE_INSET } from './footer/journey-geometry';
   let enabled = $state(false);
   let top = $state(0);
   let height = $state(44);
   let maximum = $state(0);
   let position = $state(0);
   let dragging = $state(false);
-  let trails = $state([0, 0]);
-  let overFooter = $state(false);
   let startY = 0;
   let startScroll = 0;
   let travel = 1;
@@ -45,53 +44,34 @@
   onMount(() => {
     const root = document.documentElement;
     const media = matchMedia('(pointer: fine) and (hover: hover) and (forced-colors: none)');
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-    let followers = [0, 0];
-    let previousTime = 0;
-    let initialized = false;
-    let frame = 0;
-    const update = (time: number) => {
-      frame = 0;
+    const update = () => {
+      position = Math.max(0, Math.min(maximum, scrollY));
+      top = maximum ? position / maximum * travel : 0;
+    };
+    const measure = () => {
       const available = Math.max(0, innerHeight - 24);
       maximum = Math.max(0, root.scrollHeight - innerHeight);
       height = Math.min(available, 44);
       travel = Math.max(1, available - height);
-      position = Math.max(0, Math.min(maximum, scrollY));
-      top = maximum ? position / maximum * travel : 0;
-      const dt = Math.min(64, Math.max(1, time - previousTime || 16));
-      previousTime = time;
-      followers = followers.map((value, index) => {
-        if (!initialized || reduced.matches || dragging || !enabled) return top;
-        const lag = (value - top) * Math.exp(-dt / (index ? 90 : 45));
-        return top + Math.max(-3, Math.min(3, lag));
-      });
-      initialized = true;
-      trails = followers.map(value => Math.abs(value - top) < .02 ? 0 : value - top);
-      const footer = document.querySelector('footer')?.getBoundingClientRect();
-      const center = 12 + top + height / 2;
-      overFooter = !!footer && center >= footer.top && center <= footer.bottom;
-      if (trails.some(value => value !== 0)) schedule();
+      update();
     };
-    const schedule = () => { frame ||= requestAnimationFrame(update); };
     const policy = () => {
       enabled = media.matches;
       if (enabled) root.dataset.bookmarkScrollbar = 'true';
       else delete root.dataset.bookmarkScrollbar;
-      release(); schedule();
+      release(); measure();
     };
-    const observer = new ResizeObserver(schedule);
+    const observer = new ResizeObserver(measure);
     observer.observe(document.body);
-    window.addEventListener('scroll', schedule, { passive: true });
-    window.addEventListener('resize', schedule, { passive: true });
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', measure, { passive: true });
     media.addEventListener('change', policy);
-    reduced.addEventListener('change', schedule);
     policy();
     return () => {
-      cancelAnimationFrame(frame); observer.disconnect();
-      window.removeEventListener('scroll', schedule);
-      window.removeEventListener('resize', schedule);
+      observer.disconnect();
+      window.removeEventListener('scroll', update);
+      window.removeEventListener('resize', measure);
       media.removeEventListener('change', policy);
-      reduced.removeEventListener('change', schedule);
       delete root.dataset.bookmarkScrollbar;
     };
   });
@@ -103,16 +83,23 @@
     aria-orientation="vertical" aria-valuemin={0} aria-valuemax={Math.round(maximum)} aria-valuenow={Math.round(position)}
     tabindex="0" onpointerdown={pointerdown} onpointermove={pointermove} onpointerup={release}
     onpointercancel={release} onlostpointercapture={release} onkeydown={keydown}
-    class="group fixed inset-y-3 right-0 z-40 w-6 touch-none select-none no-print focus-visible:outline-none"
+    class="group fixed inset-y-3 right-0 z-[60] w-6 touch-none select-none no-print focus-visible:outline-none"
     class:bookmark-dragging={dragging}>
-    <div data-bookmark-thumb class="absolute inset-x-0 top-0 flex justify-center" style:height={`${height}px`} style:transform={`translateY(${top}px)`}>
-      <div data-pixel-traveller class="pointer-events-none flex h-full flex-col items-center justify-center gap-1 opacity-60 transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100 group-[.bookmark-dragging]:opacity-100 motion-reduce:transition-none group-focus-visible:outline group-focus-visible:outline-1 group-focus-visible:outline-offset-4"
-        class:text-paper={overFooter} class:text-forest={!overFooter}>
-        {#each [0, ...trails] as offset, index}
-          <span data-pixel={index} class="block size-1.5 shrink-0 bg-current" style:transform={`translateY(${offset}px)`}></span>
-        {/each}
-      </div>
+    <div data-bookmark-thumb class="absolute inset-x-0 top-0 flex justify-end" style:padding-right={`${SCROLLBAR_EDGE_INSET-1}px`} style:height={`${height}px`} style:transform={`translateY(${top}px)`}>
+      <div data-scroll-handle class="pointer-events-none h-full w-0.5 rounded bg-plum opacity-30"></div>
     </div>
   </div>
   </aside>
 {/if}
+
+<style>
+  /* Entry is one visual handoff. Keep the real hit area operable, and reveal its
+     handle on deliberate pointer/keyboard use rather than leaving a second line. */
+  :global(html[data-line-m-traveller='journey']) [data-bookmark-rail] [data-scroll-handle] { opacity:0; }
+  :global(html[data-line-m-traveller='journey']) [data-bookmark-rail]:is(:hover,:focus-visible,.bookmark-dragging) [data-scroll-handle] { opacity:1; }
+  /* Solid thumb color indicates keyboard focus without an enclosing border. */
+  [data-bookmark-rail]:is(:hover,:focus-visible) [data-scroll-handle] { opacity:1; }
+  /* Coincident shapes share the same fade so the first morph never disappears. */
+  :global(html[data-line-m-traveller='rail']) [data-bookmark-rail] [data-scroll-handle] { opacity:calc(.3 * var(--line-m-thumb-opacity, 0)); }
+  :global(html[data-line-m-traveller='rail']) [data-bookmark-rail]:is(:hover,:focus-visible,.bookmark-dragging) [data-scroll-handle] { opacity:var(--line-m-thumb-opacity, 0); }
+</style>

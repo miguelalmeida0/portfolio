@@ -3,7 +3,7 @@ import {VOICES,label,same} from './content';import RadioGroup from '../shared/Ra
 </script>
   <section class="chapter" id="state" aria-labelledby="state-h">
     <div class="head">
-      <h2 id="state-h">A rewrite remembers how it was made.</h2>
+      <h2 id="state-h">Keep the settings used for each rewrite.</h2>
       <p>Change the voice without pressing Rewrite. A naive interface relabels the old rewrite with the new controls. Second Voice keeps a snapshot of what was actually submitted.</p>
     </div>
     <div class="state-grid">
@@ -13,7 +13,7 @@ import {VOICES,label,same} from './content';import RadioGroup from '../shared/Ra
         <div class="mini-ctl"><span class="label" id="mini-l" style="margin:0">Voice</span><div class="seg" role="radiogroup" aria-labelledby="mini-l" id="miniVoice"><RadioGroup items={VOICES} value={S.controls.voice} onchange={v=>S.controls.voice=v}/></div></div>
       </div>
       <aside class="inspect" aria-labelledby="ins-h">
-        <h3 id="ins-h">Seven truths the interface keeps apart</h3>
+        <h3 id="ins-h">Seven separate interface states</h3>
         <p>Live, from the workspace above.</p>
         <dl class="truths" id="truths">{#each rows as [k,v,d]}<dt>{k}</dt><dd class:diff={d}>{v}</dd>{/each}</dl>
       </aside>

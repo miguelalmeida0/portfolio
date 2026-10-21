@@ -4,7 +4,7 @@ let { demo }=$props();function launch(key){document.getElementById('try').scroll
 </script>
 <section class="chapter" aria-labelledby="cap-h">
     <div class="head">
-      <h2 id="cap-h">Natural language is fuzzy. Your calendar is not.</h2>
+      <h2 id="cap-h">Handling unclear or conflicting requests</h2>
       <p>Flow understands, proposes and validates, then waits for you.</p>
     </div>
     <div class="bento">
@@ -14,6 +14,6 @@ let { demo }=$props();function launch(key){document.getElementById('try').scroll
       <article class="tile blush w2"><h3>It catches conflicts.</h3><p>Moving lunch into planning surfaces the overlap and offers a fix that fits.</p><button class="btn primary sm go" data-run="conflict" onclick={() => launch('conflict')}>Try “Move lunch to 2pm”</button></article>
       <article class="tile sage w4"><h3>All or nothing.</h3><p>A compound command commits as one write. If any part fails, nothing changes and the calendar is exactly as before.</p>
         <button class="btn primary sm go" data-run="compound" onclick={() => launch('compound')}>Try the compound command</button></article>
-      <article class="tile well w6"><h3>“Yes” means the latest yes.</h3><p>Correct yourself mid-proposal and approval binds to the new proposal only.</p><button class="btn primary sm go" data-run="correction" onclick={() => launch('correction')}>Try a correction</button></article>
+      <article class="tile well w6"><h3>Approve the current proposal</h3><p>Correct yourself mid-proposal and approval binds to the new proposal only.</p><button class="btn primary sm go" data-run="correction" onclick={() => launch('correction')}>Try a correction</button></article>
     </div>
   </section>

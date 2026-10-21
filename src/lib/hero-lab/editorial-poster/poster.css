@@ -1,0 +1,29 @@
+/* Direction A — The Editorial Poster. One serif family in two styles, local OFL
+ * files under a direction-only name so no other route's typography changes. */
+@font-face { font-family: 'Poster Serif'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/newsreader-400-latin.woff2') format('woff2'); }
+@font-face { font-family: 'Poster Serif'; font-style: italic; font-weight: 400; font-display: swap; src: url('/fonts/newsreader-400-italic-latin.woff2') format('woff2'); }
+
+[data-direction='editorial-poster'] {
+  --ep-paper: #F9F7EE;
+  --ep-ink: #142A22;
+  --ep-plum: #59163C;
+  --ep-forest: #1C362D;
+  --ep-muted: #4E5C54;
+  --ep-rule: rgb(20 42 34 / .22);
+  --ep-serif: 'Poster Serif', 'Iowan Old Style', Georgia, serif;
+  --ep-mono: 'Lab Mono', ui-monospace, monospace;
+  --ep-sans: var(--hero-font, 'Figtree', sans-serif);
+  --ep-hair: max(1px, calc(1.25px / var(--lab-zoom, 1)));
+  --ep-ease: cubic-bezier(.16, 1, .3, 1);
+  background: var(--ep-paper);
+  color: var(--ep-ink);
+  font-family: var(--ep-sans);
+}
+[data-direction='editorial-poster'] :focus-visible { outline: 2px solid var(--ep-plum); outline-offset: 4px; }
+
+/* Anchors clear the fixed masthead. */
+html:has([data-direction='editorial-poster']) { scroll-padding-top: 88px; }
+
+/* Reading masks used by the shared poster reading motion. */
+[data-direction='editorial-poster'] .ep-mask { display: inline-block; overflow: clip; vertical-align: top; padding-block: .08em; margin-block: -.08em; }
+[data-direction='editorial-poster'] .ep-mask > span { display: inline-block; }

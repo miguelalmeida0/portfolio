@@ -1,0 +1,77 @@
+# Typographic portfolio release — 19 October 2026
+
+The selected animated FRONTEND / DESIGNER portfolio is published on canonical
+home, Story and CV routes. Case studies retain the selected typography, demos,
+chapter navigation and full project tour. The initial loading/portrait overlay,
+pre-hydration input interception and scroll lock are removed. Existing local
+work and the historical production checkout are preserved.
+
+## Verification before publication
+
+- Reproduced the intro failure: fresh-entry browser regression failed because
+  the old overlay was present.
+- Svelte check: 0 errors, 0 warnings.
+- Unit tests: 355 passed.
+- Route suite against the built Cloudflare worker: 56 passed.
+- Current release browser suite: 99 passed in Chromium and WebKit; one WebKit
+  skip because Layout Shift API/CDP throttling is Chromium-specific.
+- Production build passed, including server/client bootstrap integrity.
+- Desktop 1440px and mobile 390px screenshots inspected; no horizontal overflow.
+- Browser coverage includes fresh entry before hydration, old replay URL,
+  role changes and resizing, Story/CV navigation, PDF links/rendering, Ask,
+  keyboard and pointer scrolling, and all five interactive case studies.
+- Compared the existing public homepage and Needle case before publication.
+
+Commands:
+
+    npm run check
+    npm run test:unit
+    npm run build
+    node node_modules/wrangler/bin/wrangler.js pages dev .svelte-kit/cloudflare --ip 127.0.0.1 --port 4285 --show-interactive-dev-session=false
+    ROUTE_HEALTH_BASE_URL=http://localhost:4285 npm run test:routes
+    PORTFOLIO_AUDIT_URL=http://localhost:4285 npx playwright test -c tests/e2e/portfolio-release.config.ts
+
+CI now exercises this current release suite against a production build.
+Historical prototype and removed-intro tests remain available separately; the
+release config is the current acceptance suite.
+
+## Release boundary
+
+Prepared from GitHub main 6ce6c4894a8dcae7367f5dfe29ebdea1655f22b2 on local test.
+No remote test/dev history was reset or merged. No tracked source or asset was
+deleted. Cloudflare's existing GitHub main integration is the deployment path.
+The deployment check and public-domain verification must pass before reporting
+the release live.
+
+## Public verification
+
+Cloudflare Pages completed successfully for 1e6cc73. The public domain serves
+the 2026.10.19-typographic-direct-entry build marker and canonical is-a.dev URL.
+Twelve targeted Chromium browser checks passed on the live domain at desktop
+and mobile widths, covering direct entry, role controls, Story, CV/PDF, and
+the complete case-study tour.
+
+The first GitHub browser jobs failed before tests ran because Playwright used
+the config directory as the server working directory. The release config now
+sets the project root explicitly. A local run with CI=1 started the built worker
+and passed both fresh-entry checks. This correction changes test setup only.
+
+The next remote run passed 98 browser tests but one WebKit footer/PDF assertion
+expired while the popup's bootstrap scripts were still loading. Its trace showed
+successful responses arriving beyond the assertion window and no reader error.
+The footer test now waits for the popup document load before asserting canvas
+visibility; the assertion timeout is unchanged. Mobile WebKit also passed with
+both entry scripts deliberately delayed 10 seconds (canvas visible at 10.838s).
+
+The PDF's Portfolio annotation now uses SITE_ORIGIN, keeping the authored PDF
+unchanged while pointing its interactive link to is-a.dev. The new assertion
+first reproduced the old xyz link. A fresh build and Svelte check passed, followed
+by all 18 targeted PDF/footer tests in Chromium and WebKit.
+
+The following remote run passed all PDF checks and exposed a static-layout test
+sampling the header's staggered entrance: its trace recorded translations of
+12.0721px and 16px while opacity was still below one. The layout test now waits
+for initialization and both column entrances before its unchanged one-pixel
+alignment assertion. Both engines passed two repetitions across all six widths
+(24 viewport checks). Browser engines run in separate CI matrix jobs with the
+same complete suite and aggregate validation gate. No UI code changed.

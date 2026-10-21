@@ -8,18 +8,72 @@ export const PROJECT_TRANSITION_MS = 280;
 export const SCROLL_TRANSITION_MS = 320;
 const easeTravel = (t: number) => (1 - Math.cos(Math.PI * t)) / 2;
 
+/** An optional external frame owner (GSAP's ticker) replacing Lenis' own RAF loop. */
+export type ScrollDriver = {
+  add: (tick: (time: number) => void) => void;
+  remove: (tick: (time: number) => void) => void;
+  onScroll?: () => void;
+};
+let driver: ScrollDriver | undefined;
+let driverTick: ((time: number) => void) | undefined;
+let wheelSmoothing = true;
+let installed = false;
+
+function createLenis() {
+  const instance = new Lenis({
+    // Gentle wheel response with a short, controlled settling tail.
+    autoRaf: !driver, smoothWheel: wheelSmoothing, syncTouch: false, lerp: 0.18,
+    wheelMultiplier: 0.9,
+    anchors: false, stopInertiaOnNavigate: true, allowNestedScroll: true,
+    prevent: node => ['TEXTAREA', 'SELECT'].includes(node.tagName) || node.hasAttribute('data-scroll-native')
+  });
+  if (driver) {
+    const tick = (time: number) => instance.raf(time * 1000);
+    driverTick = tick;
+    driver.add(tick);
+    if (driver.onScroll) instance.on('scroll', driver.onScroll);
+  }
+  return instance;
+}
+
+function destroyLenis() {
+  if (driverTick) driver?.remove(driverTick);
+  driverTick = undefined;
+  lenis?.destroy();
+  lenis = undefined;
+}
+
+/**
+ * Hand Lenis to an external ticker (GSAP) so smooth scrolling and ScrollTrigger
+ * share one frame loop. Returns a disposer that restores Lenis' own RAF.
+ */
+export function driveSmoothScroll(next: ScrollDriver) {
+  cancelJourney?.();
+  if (lenis) destroyLenis();
+  driver = next;
+  if (installed && !prefersReducedMotion()) lenis = createLenis();
+  return () => {
+    if (driver !== next) return;
+    const restore = Boolean(lenis);
+    destroyLenis();
+    driver = undefined;
+    if (restore && installed) lenis = createLenis();
+  };
+}
+
+/** Read-only access for route-level choreography and QA inspection. */
+export function smoothScrollInstance() {
+  return lenis;
+}
+
 /** One scroll owner for wheel input, project changes, and in-page links. */
-export function installSmoothScroll() {
+export function installSmoothScroll({ smoothWheel = true } = {}) {
+  wheelSmoothing = smoothWheel;
+  installed = true;
   const unsubscribe = motionState.subscribe(({ reduced }) => {
     cancelJourney?.();
-    if (reduced) { lenis?.destroy(); lenis = undefined; return; }
-    lenis ??= new Lenis({
-      // Gentle wheel response with a short, controlled settling tail.
-      autoRaf: true, smoothWheel: true, syncTouch: false, lerp: 0.18,
-      wheelMultiplier: 0.9,
-      anchors: false, stopInertiaOnNavigate: true,
-      prevent: node => ['TEXTAREA', 'SELECT'].includes(node.tagName) || node.hasAttribute('data-scroll-native')
-    });
+    if (reduced) { destroyLenis(); return; }
+    lenis ??= createLenis();
   });
   const click = (event: MouseEvent) => {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -34,10 +88,21 @@ export function installSmoothScroll() {
     if (location.hash !== url.hash) pushState(url, {});
     scrollToElement(target, { focus: true, duration: target.id === 'main' ? 0 : undefined });
   };
+  // Native keyboard scrolling must take ownership immediately, even halfway
+  // through a wheel tween. Otherwise its next frame restores the wheel target.
+  const keyboard = (event: KeyboardEvent) => {
+    if (event.defaultPrevented || !['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) return;
+    const target = event.target instanceof Element ? event.target : null;
+    if (target?.closest('input,textarea,select,[contenteditable="true"],[role="slider"],[role="scrollbar"]')) return;
+    if (event.key === ' ' && target?.closest('button,a')) return;
+    resetScrollMotion();
+  };
   document.addEventListener('click', click, true);
+  window.addEventListener('keydown', keyboard, true);
   return () => {
-    cancelJourney?.(); unsubscribe(); lenis?.destroy(); lenis = undefined;
+    cancelJourney?.(); unsubscribe(); destroyLenis(); installed = false;
     document.removeEventListener('click', click, true);
+    window.removeEventListener('keydown', keyboard, true);
   };
 }
 
@@ -79,9 +144,16 @@ export function scrollToPosition(top: number, duration = SCROLL_TRANSITION_MS, o
 }
 
 export function scrollToElement(target: HTMLElement, options: { offset?: number; duration?: number; focus?: boolean } = {}) {
-  const top = window.scrollY + target.getBoundingClientRect().top - (options.offset ?? 40);
-  const duration = options.duration ?? Math.min(420, Math.max(240, Math.abs(top - window.scrollY) * 0.2));
-  return scrollToPosition(top, duration, options.focus ? () => focusTarget(target) : undefined);
+  // Honor case-study sticky navigation while keeping the homepage's 40px inset.
+  const pageInset = Math.max(40, parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0);
+  // A section's authored scroll margin takes precedence over the generic page
+  // inset. This also keeps chapter links clear of the Story page's sticky UI.
+  const sectionInset = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+  const top = window.scrollY + target.getBoundingClientRect().top - (options.offset ?? Math.max(pageInset, sectionInset));
+  // Time the actual reachable distance, including pages shorter than the viewport.
+  const destination = Math.max(0, Math.min(top, document.documentElement.scrollHeight - window.innerHeight));
+  const duration = options.duration ?? Math.min(1250, Math.max(650, Math.abs(destination - window.scrollY) * 0.65));
+  return scrollToPosition(destination, duration, options.focus ? () => focusTarget(target) : undefined);
 }
 
 /** Stop the outgoing page's inertia before SvelteKit restores the next position. */

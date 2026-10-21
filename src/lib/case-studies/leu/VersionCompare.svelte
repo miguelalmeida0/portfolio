@@ -2,7 +2,7 @@
 <script>let version=$state('v37');function key(e,v){const keys=['early','v36','v37'];let n;if(e.key==='ArrowRight')n=(keys.indexOf(v)+1)%3;if(e.key==='ArrowLeft')n=(keys.indexOf(v)+2)%3;if(e.key==='Home')n=0;if(e.key==='End')n=2;if(n===undefined)return;e.preventDefault();version=keys[n];e.currentTarget.parentElement.children[n].focus();}</script>
 <section class="chapter" aria-labelledby="who-h">
     <div class="head">
-      <h2 id="who-h">Change who is allowed to decide.</h2>
+      <h2 id="who-h">Separating model feedback from learning credit.</h2>
       <p>V36's sealed evaluation ended the assumption that more matching rules would become reasoning. V37 kept the judge and changed what fed it: structured model observations, checked before they can influence learning credit.</p>
     </div>
     <div class="frame">
@@ -57,7 +57,7 @@
             <dt>Checks</dt><dd><ul><li class="p">Conclusion supported by ¶2</li><li class="f">Reason contradicts ¶3: closest in January</li></ul></dd>
             <dt>Judge</dt><dd class="verdict ask">Ask a follow-up. No mastery.</dd>
           </dl>
-          <p class="pull">The model reads. Code checks. The judge decides. Checks may downgrade, ask or reject; they cannot manufacture mastery.</p>
+          <p class="pull">The model proposes feedback, then validation rules decide whether to award learning credit. Checks may downgrade, ask or reject; they cannot manufacture mastery.</p>
         </div>
       </div>
     </div>

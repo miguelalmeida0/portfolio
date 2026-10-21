@@ -1,5 +1,4 @@
-import { expect, test } from '../fixtures';
-import { selectWorkProject } from '../helpers/portfolio';
+import { expect, test } from '@playwright/test';
 import { variants, notes } from '../../../src/lib/content/second-voice';
 import { originalDraft, sampleFor, type Author, type Strength } from '../../../src/lib/experience/samples';
 
@@ -7,16 +6,15 @@ test.beforeEach(async ({ page }, testInfo) => {
   await page.setViewportSize(testInfo.project.use.viewport ?? { width: 1440, height: 1020 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/#work');
-  await expect(page.locator('.project-index button')).toHaveCount(5);
+  await expect(page.locator('.project-index button')).toHaveCount(4);
   await expect(page.locator('[data-ask-trigger]').first()).toBeEnabled();
-  await selectWorkProject(page, 'second-voice');
 });
 
-test('five projects, selected demo, grounded F24 decision and solo stages', async ({ page }) => {
+test('four projects, initial demo, grounded F24 decision and solo stages', async ({ page }) => {
   const buttons = page.locator('.project-index button');
-  await expect(buttons.nth(1)).toHaveAttribute('aria-current', 'true');
-  expect(await buttons.allTextContents()).toEqual(expect.arrayContaining([expect.stringContaining('Needle'), expect.stringContaining('Second Voice AI'), expect.stringContaining('F24'), expect.stringContaining('Flow'), expect.stringContaining('Leu')]));
-  for (const [index, id, color] of [[2,'f24','rgb(28, 54, 45)'],[3,'flow','rgb(231, 236, 216)'],[4,'leu','rgb(89, 22, 60)']] as const) {
+  await expect(buttons.nth(0)).toHaveAttribute('aria-current', 'true');
+  expect(await buttons.allTextContents()).toEqual(expect.arrayContaining([expect.stringContaining('Second Voice AI'), expect.stringContaining('F24'), expect.stringContaining('Flow'), expect.stringContaining('Leu')]));
+  for (const [index, id, color] of [[1,'f24','rgb(28, 54, 45)'],[2,'flow','rgb(231, 236, 216)'],[3,'leu','rgb(89, 22, 60)']] as const) {
     // Keyboard activation must retain focus. WebKit does not focus pointer clicks.
     await buttons.nth(index).focus();
     await buttons.nth(index).press('Enter');
@@ -112,9 +110,9 @@ test('rapid control changes and unmount cancel older playback timers', async ({ 
   await expect(page.locator('.submitted')).toHaveText('Hemingway · Strong');
   await expect(page.locator('.rewrite')).toHaveText(sampleFor('Hemingway', 'Strong'));
   await page.getByRole('button', { name: 'Regenerate', exact: true }).click();
-  await selectWorkProject(page, 'flow');
+  await page.locator('.project-index button').nth(2).click();
   await page.waitForTimeout(3500);
-  await selectWorkProject(page, 'second-voice');
+  await page.locator('.project-index button').first().click();
   await expect(page.locator('.rewrite')).toHaveText(sampleFor('Tolkien', 'Balanced'));
   expect(errors).toEqual([]);
 });
@@ -124,8 +122,8 @@ test('all four stage shells have identical geometry at every requested breakpoin
     await page.setViewportSize({ width, height });
     const boxes = [];
     const stages = [];
-    for (const id of ['second-voice','f24','flow','leu'] as const) {
-      await selectWorkProject(page, id);
+    for (const button of await page.locator('.project-index button').all()) {
+      await button.click();
       boxes.push((await page.locator('.frame').boundingBox())!);
       stages.push((await page.locator('.stage').boundingBox())!);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -159,16 +157,15 @@ test('unselected films fetch nothing; reduced motion requires explicit playback'
   const requests: string[] = [];
   page.on('request', req => { if (/\.(mp4|webm)(?:\?|$)/.test(req.url())) requests.push(req.url()); });
   await page.reload();
-  await expect(page.locator('.project-index button')).toHaveCount(5);
+  await expect(page.locator('.project-index button')).toHaveCount(4);
   await page.waitForTimeout(400);
   expect(requests).toEqual([]);
-  await selectWorkProject(page, 'flow');
+  await page.locator('.project-index button').nth(2).click();
   await expect(page.locator('video')).not.toHaveAttribute('src');
   await expect(page.locator('video')).toHaveJSProperty('networkState', 0);
   await expect(page.locator('video')).toHaveJSProperty('paused', true);
   await expect(page.locator('video')).toHaveAttribute('preload', 'none');
   expect(requests).toEqual([]);
-  await page.locator('video').scrollIntoViewIfNeeded();
   await page.getByRole('button', { name: 'Play film' }).click();
   await expect(page.locator('video')).toHaveJSProperty('paused', false);
   await expect.poll(() => requests.some(url => url.includes('/flow/'))).toBe(true);
@@ -180,12 +177,11 @@ test('normal film playback pauses offscreen and while document is hidden', async
   page.on('request', req => { if (/\.(mp4|webm)(?:\?|$)/.test(req.url())) requests.push(req.url()); });
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.reload();
-  await expect(page.locator('.project-index button')).toHaveCount(5);
+  await expect(page.locator('.project-index button')).toHaveCount(4);
   await page.waitForTimeout(300);
   expect(requests).toEqual([]);
-  await selectWorkProject(page, 'flow');
+  await page.locator('.project-index button').nth(2).click();
   const video = page.locator('video');
-  await video.scrollIntoViewIfNeeded();
   await expect(video).toHaveJSProperty('paused', false);
   await expect(video).toHaveJSProperty('muted', true);
   await expect(video).toHaveJSProperty('loop', true);
@@ -221,14 +217,14 @@ test('work preserves the tidy spacing and stacked minimum card height', async ({
   }
 });
 
-test('no JavaScript leaves five posters and working links', async ({ browser, baseURL }) => {
-  const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
+test('no JavaScript leaves four posters and working links', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto('/');
-  await expect(page.locator('.static-projects article')).toHaveCount(5);
-  await expect(page.locator('.static-projects img')).toHaveCount(5);
-  await expect(page.locator('.static-projects a')).toHaveCount(10);
-  await expect(page.locator('h1')).toHaveAccessibleName('Frontend developer & design engineer.');
+  await expect(page.locator('.static-projects article')).toHaveCount(4);
+  await expect(page.locator('.static-projects img')).toHaveCount(4);
+  await expect(page.locator('.static-projects a')).toHaveCount(8);
+  await expect(page.locator('h1')).toHaveAccessibleName('Frontend engineer & product designer.');
   await expect(page.locator('[data-pixel-intro]')).toBeHidden();
   await context.close();
 });

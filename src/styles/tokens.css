@@ -10,7 +10,7 @@
 }
 @media (max-width: 767px) { :root { --page-x: 20px; } }
 /* Shared palette and geometry. The homepage keeps its portrait and stage contracts. */
-.wind-theme {
+.wind-theme, .route-shutter {
   --page: #F0F3E4;
   --lime: #E4EDBF;
   --sage: #E7ECD8;
@@ -19,6 +19,11 @@
   --ink: #142A22;
   --plum: #59163C;
   --plum-700: #3E0F2C;
+  --cv-fill: #F1F3E4;
+  --cv-label: #FFFFFF;
+  --action-plum: var(--plum);
+  --action-fill: var(--cv-fill);
+  --action-label: var(--cv-label);
   --muted: #4E5C54;
   --rule-ink: rgba(20, 42, 34, 0.18);
   --rule-pg: rgba(20, 42, 34, 0.15);
@@ -56,7 +61,7 @@
 #portfolio-content[data-homepage] .content-card { padding: var(--s-7); border-radius: var(--r-card); }
 #portfolio-content[data-homepage] .top-group { gap: var(--s-4); }
 #portfolio-content[data-homepage] .bottom-group { gap: var(--s-5); }
-#portfolio-content[data-homepage] .hero-stack { font-size: 20px; line-height: 1.4; font-weight: 500; color: var(--muted); }
+#portfolio-content[data-homepage] .hero-stack { font-size: var(--type-lead, 20px); line-height: 1.4; font-weight: 500; color: var(--muted); }
 #portfolio-content[data-homepage] .supporting-copy { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--s-5); border-top: var(--rule-w) solid var(--rule); padding-top: var(--s-4); }
 #portfolio-content[data-homepage] .supporting-copy p { font: 600 16px/1.4 var(--hero-font); color: var(--ink); }
 #portfolio-content[data-homepage] .hero-actions { gap: var(--s-5); }

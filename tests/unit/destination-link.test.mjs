@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { loadLocalTs } from '../../scripts/lib/load-local-ts.mjs';
 const { destinationLink } = await loadLocalTs('src/lib/navigation/destination-link.ts');
 test('external sources, live apps and contact profiles open a separate tab', () => {
-  for (const href of ['https://github.com/miguelalmeida0', 'https://www.linkedin.com/in/miguelalmeida1/', 'https://second-voice-ai.vercel.app', '//example.com']) {
+  for (const href of ['https://github.com/miguelalmeida0', 'https://www.linkedin.com/in/miguelalmeida1/', 'https://secondvoice.miguelalmeida.xyz', '//example.com']) {
     assert.equal(destinationLink(href).target, '_blank');
     assert.equal(destinationLink(href).rel, 'noopener noreferrer');
   }
@@ -22,4 +22,11 @@ test('resume PDFs open in a new tab, including direct and canonical URLs', () =>
     assert.equal(destinationLink(href).target, '_blank');
     assert.equal(destinationLink(href).rel, 'noopener noreferrer');
   }
+});
+test('the CV reader opens separately while ordinary CV navigation stays in this tab', () => {
+  for (const href of ['/cv/pdf', '/cv/pdf#page=1', 'https://miguelalmeida.is-a.dev/cv/pdf']) {
+    assert.equal(destinationLink(href).target, '_blank');
+    assert.equal(destinationLink(href).rel, 'noopener noreferrer');
+  }
+  assert.equal(destinationLink('/cv').target, undefined);
 });

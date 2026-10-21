@@ -1,39 +1,39 @@
 {
-  "$comment": "Content for the Story page (Split · Try it). Every visible string lives here; the component renders it. Edit copy here, not in components.",
+  "$comment": "Story page content. Keep first-person biography factual and copy separate from layout. Fictional UI examples remain illustrative.",
   "questions": [
     {
       "id": "hi",
-      "question": "So, who are you?",
-      "lead": "I’m Miguel.",
-      "answer": "A frontend developer in Berlin who started out in UX. I like interfaces that stay calm when things go wrong.",
+      "question": "How do you get started?",
+      "lead": "I need to understand what the interface has to do.",
+      "answer": "I like working through an example before adding more detail. A screen has to show the right information, make the next action clear and stay usable when data changes. The example beside this text lets you change what appears.",
       "scene": {
-        "caption": "Two views of the same person",
+        "caption": "My background",
         "actions": [
-          "For a recruiter",
-          "For an engineer"
+          "The journey",
+          "What stayed with me"
         ]
       }
     },
     {
       "id": "ux",
-      "question": "Where did you start?",
-      "lead": "I started in UX.",
-      "answer": "Studying it taught me to ask what someone needs to understand — and what they’ll do next.",
+      "question": "How does UX affect your frontend work?",
+      "lead": "I think about the person using the screen.",
+      "answer": "UX design taught me to ask what someone is trying to do before choosing a layout. When I implement it, that includes the order of information, clear controls and the feedback after an action.",
       "scene": {
-        "caption": "Questions before pixels",
+        "caption": "Questions I ask before designing",
         "actions": [
           "Ask what they need",
-          "Clear"
+          "Start again"
         ]
       }
     },
     {
       "id": "build",
-      "question": "How did you end up in frontend?",
-      "lead": "I learned to build what I drew.",
-      "answer": "The states, the interactions, the implementation. I stopped handing designs over and started finishing them.",
+      "question": "What happens beyond the mockup?",
+      "lead": "I work through the states the design needs.",
+      "answer": "A finished mockup usually shows one moment. I also need to build what happens while data loads, when there are no results and when a request fails. Try those states in the example.",
       "scene": {
-        "caption": "Every state, designed",
+        "caption": "An interface in different states",
         "actions": [
           "Loading",
           "Empty",
@@ -45,10 +45,10 @@
     {
       "id": "f24",
       "question": "What do you do at F24?",
-      "lead": "Four years at F24.",
-      "answer": "Crisis-management software, used when things are already going wrong. I built the original Svelte frontend and I’ve kept delivering in React since.",
+      "lead": "I build software for critical situations.",
+      "answer": "I've spent four years at F24 working on crisis management and critical communication software. I built the original Svelte frontend, and now I work in React. It matters that the information is clear and the interface stays reliable when people need it.",
       "scene": {
-        "caption": "Software for the worst day",
+        "caption": "An example of a crisis management workflow",
         "actions": [
           "Trigger an alarm",
           "All clear"
@@ -57,11 +57,11 @@
     },
     {
       "id": "fail",
-      "question": "What did four years there teach you?",
-      "lead": "Design for the bad moment.",
-      "answer": "Keep the rows on screen when a request fails. Ignore answers that arrive out of date. Put keyboard focus back where it was. Small promises, big difference.",
+      "question": "What details do you care about?",
+      "lead": "The things that make a product reliable.",
+      "answer": "If a request fails, the data already on screen should stay there. A slow response shouldn't overwrite newer results. Closing a panel should return keyboard focus to the right place. They're not big visual features, but they make an interface much easier to use.",
       "scene": {
-        "caption": "Built for the bad moment",
+        "caption": "Handling errors and keyboard focus",
         "actions": [
           "Drop the connection",
           "Race two filters",
@@ -71,11 +71,11 @@
     },
     {
       "id": "own",
-      "question": "What do you build for yourself?",
-      "lead": "I build my own tools.",
-      "answer": "Second Voice rewrites your writing and shows exactly what changed. Flow turns spoken requests into calendar actions you can still edit.",
+      "question": "What do you build in your spare time?",
+      "lead": "I also work on my own products.",
+      "answer": "Second Voice is a writing tool that shows what changed in a rewrite. Flow turns spoken requests into editable actions. I've also built Leu, focused on reading and learning, and Needle, an artwork search project. I enjoy being able to design and build the whole thing myself.",
       "scene": {
-        "caption": "My own products, end to end",
+        "caption": "Examples from Second Voice and Flow",
         "actions": [
           "Rewrite a sentence",
           "Say something to Flow"
@@ -84,11 +84,11 @@
     },
     {
       "id": "love",
-      "question": "What do you love doing?",
-      "lead": "Making complicated things simple to see.",
-      "answer": "DNS, TLS, containers, a single web request — drawn so they finally click, and useful enough to come back to.",
+      "question": "What do you like learning about?",
+      "lead": "How things work behind the screen.",
+      "answer": "I like understanding the technical details behind things we use every day. DNS, TLS and what happens when you open a website are good examples. I also enjoy turning those explanations into interactive demos.",
       "scene": {
-        "caption": "One request, drawn",
+        "caption": "What happens during a web request",
         "actions": [
           "Send a request",
           "Explain each stop"
@@ -97,11 +97,11 @@
     },
     {
       "id": "care",
-      "question": "What do you care about in code?",
-      "lead": "Things that actually work.",
-      "answer": "Typed contracts, real tests, accessibility, performance. No portfolio theatre.",
+      "question": "What matters to you when writing code?",
+      "lead": "Keeping it readable and reliable.",
+      "answer": "I care about accessibility, performance, tests and code that's easy for someone else to maintain. I don't want a project to be hard to use or hard to change because I rushed the implementation.",
       "scene": {
-        "caption": "Contracts at the boundary",
+        "caption": "Checking a response before rendering",
         "actions": [
           "Send a bad field",
           "Send a good response"
@@ -119,9 +119,9 @@
     "Docker"
   ],
   "ending": {
-    "label": "And finally",
-    "question": "Can we talk?",
-    "answer": "If you’re building something people rely on when things go wrong, I’d love to hear about it.",
+    "label": "Contact",
+    "question": "Want to talk?",
+    "answer": "If you'd like to discuss my work, have a question or want to talk about a project, feel free to get in touch.",
     "ctas": [
       {
         "label": "Get in touch",
@@ -129,30 +129,40 @@
         "primary": true
       },
       {
-        "label": "View my CV",
-        "href": "/cv"
+        "label": "See my work",
+        "href": "/#work"
       },
       {
-        "label": "See the work",
-        "href": "/#work"
+        "label": "View my CV",
+        "href": "/cv"
       }
     ]
   },
   "shortVersion": {
-    "kicker": "You read all eight — here’s the short version",
-    "title": "Miguel Almeida",
-    "lines": [
-      "Frontend developer in Berlin, with a UX background",
-      "Four years at F24 — built the original Svelte frontend, now delivering in React",
-      "Designs every state, not just the happy path",
-      "Keeps data on failed requests, rejects stale responses, restores focus",
-      "Builds crisis-management software, where clarity matters most",
-      "Validates data at the boundary — typed contracts, real end-to-end tests",
-      "Builds his own products end to end: Second Voice and Flow",
-      "Explains complicated systems simply — DNS, TLS, a single request"
+    "kicker": "The short version",
+    "title": "Hi, I'm Miguel.",
+    "intro": "I started my career in aviation, then moved into UX design and frontend engineering. Computers have been an interest of mine since I was a kid.",
+    "chapters": [
+      {
+        "period": "First",
+        "title": "Aviation",
+        "text": "I started my career in aviation. Later I decided to move into UX design."
+      },
+      {
+        "period": "Then",
+        "title": "UX design",
+        "text": "Studying UX taught me to think about the people using a product and the problems they're trying to solve."
+      },
+      {
+        "period": "Now",
+        "title": "Frontend engineering",
+        "text": "I wanted to build the interfaces I designed, so I learned frontend development. Today I work with React, TypeScript and Svelte."
+      }
     ],
-    "copyLabel": "Copy the short version",
-    "copyText": "Miguel Almeida — the short version\n01. Frontend developer in Berlin, with a UX background\n02. Four years at F24 — built the original Svelte frontend, now delivering in React\n03. Designs every state, not just the happy path\n04. Keeps data on failed requests, rejects stale responses, restores focus\n05. Builds crisis-management software, where clarity matters most\n06. Validates data at the boundary — typed contracts, real end-to-end tests\n07. Builds his own products end to end: Second Voice and Flow\n08. Explains complicated systems simply — DNS, TLS, a single request\nmiguelalmeida1592@gmail.com"
+    "outro": "I'm based in Berlin and have worked at F24 for four years on crisis management software. Outside work, I've built Second Voice, Flow, Leu and Needle.",
+    "copyLabel": "Copy my introduction",
+    "copyText": "Hi, I'm Miguel Almeida.\n\nI've been interested in computers since I was a kid. I started my career in aviation, then moved into UX design and frontend engineering.\n\nI'm based in Berlin and work at F24 on crisis management and critical communication software. I built the original Svelte frontend and now work in React.\n\nI also build my own projects, including Second Voice, Flow, Leu and Needle.\n\nmiguelalmeida1592@gmail.com",
+    "compactIntro": "I’m a frontend engineer in Berlin with a background in UX design. I work with React, TypeScript and Svelte. At F24, I build production software; outside work, I design and build my own projects."
   },
   "progress": {
     "format": "Question {n} of {total} · {left} left",
@@ -161,7 +171,7 @@
   },
   "ui": {
     "title": "Story",
-    "tryIt": "Try it",
+    "tryIt": "Explore the example",
     "illustration": "Illustration for: {question}",
     "example": "Illustrative example · fictional data",
     "question": "Question {n} of {total}",
@@ -172,46 +182,46 @@
     "backTip": "Back: {question}",
     "keys": "or press",
     "copied": "Copied",
-    "copyFailed": "Couldn’t copy — select the text",
+    "copyFailed": "Couldn't copy. You can still select the text.",
     "nextLabel": "Next: {question}"
   },
   "scenes": {
     "hi": {
-      "title": "At a glance",
+      "title": "My background",
       "recruiter": [
         [
-          "Role",
-          "Frontend developer"
+          "Growing up",
+          "Interested in computers"
         ],
         [
-          "Based in",
-          "Berlin"
+          "Started in",
+          "Aviation"
         ],
         [
-          "Experience",
-          "Four years at F24, since 2022"
+          "Then",
+          "UX design"
         ],
         [
-          "Background",
-          "UX, 2020–2022"
+          "Today",
+          "Frontend engineering"
         ]
       ],
       "engineer": [
         [
-          "Stack",
-          "TypeScript · React · Svelte"
+          "Aviation",
+          "Where my career started"
         ],
         [
-          "Built",
-          "F24’s original Svelte frontend"
+          "UX",
+          "I learned to think about users"
         ],
         [
-          "Testing",
-          "Playwright, end to end"
+          "Frontend",
+          "I build working interfaces"
         ],
         [
-          "Cares about",
-          "Types, accessibility, performance"
+          "Outside work",
+          "I build my own projects"
         ]
       ]
     },
@@ -299,13 +309,13 @@
       "listening": "Listening…",
       "transcript": "“Lunch with Ana, Friday at one.”",
       "event": "Lunch with Ana · Friday 13:00",
-      "draft": "Draft — nothing booked until you confirm"
+      "draft": "Draft. Nothing is booked until you confirm."
     },
     "love": {
       "title": "One web request",
       "ready": "ready",
       "flight": "in flight",
-      "intro": "One web request, drawn so it finally clicks. Hover a stop.",
+      "intro": "A web request, step by step. Hover, focus or tap a step to learn more.",
       "stops": [
         [
           "You",
@@ -315,17 +325,17 @@
         [
           "DNS",
           "where is it?",
-          "DNS turns a name into an address — like looking up a phone number."
+          "DNS turns a name into an address, a little like looking up a phone number."
         ],
         [
           "TLS",
           "is it really them?",
-          "TLS checks the server is who it claims to be, then encrypts the line."
+          "TLS checks the server is who it claims to be and encrypts the connection."
         ],
         [
           "Server",
           "here you go",
-          "The server finally answers, and the page travels back to you."
+          "The server sends a response and your browser displays the page."
         ]
       ]
     },
@@ -349,7 +359,7 @@
       ],
       "invalid": "“yesterday-ish”",
       "acknowledged": "Acknowledged by Tomás R.",
-      "unavailable": "Time unavailable — reported, rest of the page works",
+      "unavailable": "Time unavailable. The rest of the page still works.",
       "time": "at 09:43",
       "checks": [
         "Response checked against the contract",
@@ -357,5 +367,22 @@
         "Page stays usable"
       ]
     }
+  },
+  "editorial": {
+    "eyebrow": "A bit about me",
+    "title": "A bit about me.",
+    "intro": "I've been interested in computers since I was a kid, but I started my career in aviation. After that I studied UX design, then moved into frontend engineering. These days I'm based in Berlin, working at F24 and building my own projects outside work.",
+    "indexTitle": "On this page",
+    "topics": [
+      "Getting started",
+      "UX in practice",
+      "Interface states",
+      "Working at F24",
+      "Details that matter",
+      "Personal projects",
+      "Things I like learning",
+      "How I work"
+    ],
+    "summaryLink": "The short version"
   }
 }

@@ -1,5 +1,11 @@
 <script lang="ts">
-  import StoryPage from "$lib/components/story/StoryPage.svelte";
+  import '$lib/hero-lab/lab.css';
+  import '$lib/hero-lab/typographic/typographic.css';
+  import TypographicStory from '$lib/hero-lab/typographic/pages/TypographicStory.svelte';
 </script>
-<svelte:head><title>Story | Miguel Almeida</title><meta name="description" content="Eight questions about Miguel Almeida: UX, frontend engineering, four years at F24 and independent products, illustrated through small interactive scenes." /></svelte:head>
-<StoryPage />
+<svelte:head>
+  <title>Story · Miguel Almeida</title>
+  <meta name="description" content="About Miguel Almeida, from aviation and UX design to frontend engineering, with work at F24 and independent projects." />
+  <link rel="preload" href="/fonts/antonio-700-latin.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+</svelte:head>
+<TypographicStory />

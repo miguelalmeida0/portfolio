@@ -1,14 +1,14 @@
-import { expect, test } from '../fixtures';
-import { openPortfolioHome, openSecondVoiceStudio } from '../helpers/portfolio';
+import { expect, test } from '@playwright/test';
+import { openPortfolioHome } from '../helpers/portfolio';
 
 test('mobile menu closes on Escape and restores focus', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openPortfolioHome(page);
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
-  await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', { name: 'Story' }).focus();
+  await page.getByRole('navigation', { name: 'Fullscreen navigation' }).getByRole('link', { name: 'Story' }).focus();
   await page.keyboard.press('Escape');
   await expect(page.getByRole('button', { name: 'Menu', exact: true })).toBeFocused();
-  await expect(page.getByRole('navigation', { name: 'Mobile navigation' })).toHaveCount(0);
+  await expect(page.getByRole('navigation', { name: 'Fullscreen navigation' })).toHaveCount(0);
 });
 
 test('intro is decorative, skippable and never creates a second page heading', async ({ page }) => {
@@ -25,8 +25,8 @@ test('intro is decorative, skippable and never creates a second page heading', a
 
 test('reduced motion keeps content visible and disables decorative transitions', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await openSecondVoiceStudio(page);
-  await expect(page.getByRole('heading', { level: 1, name: /Frontend developer.*design engineer/i })).toBeVisible();
+  await page.goto('/');
+  await expect(page.getByRole('heading', { level: 1, name: /Frontend engineer.*product designer/i })).toBeVisible();
   const mark = page.locator('mark').first();
   await expect(mark).toBeVisible();
   const styles = await mark.evaluate(el => ({ duration: getComputedStyle(el).animationDuration, opacity: getComputedStyle(el).opacity }));
@@ -41,9 +41,7 @@ test('public controls have accessible names and content has one main landmark an
     else await page.goto(route);
     await expect(page.getByRole('main')).toHaveCount(1);
     await expect(page.locator('h1')).toHaveCount(1);
-    // Decorative departure-board clones are aria-hidden. Audit the controls
-    // actually exposed to assistive technology, including their visible names.
-    const controls = page.getByRole('button').or(page.getByRole('link'));
+    const controls = page.locator('button:not([inert] button), a:not([inert] a)');
     for (const control of await controls.all()) {
       if (await control.isVisible()) await expect(control).toHaveAccessibleName(/\S/);
     }

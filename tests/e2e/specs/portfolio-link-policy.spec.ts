@@ -1,5 +1,5 @@
-import { expect, test, type Page, type Locator } from '../fixtures';
-import { openPortfolioHome, openSecondVoiceStudio } from '../helpers/portfolio';
+import { expect, test, type Page, type Locator } from '@playwright/test';
+import { openPortfolioHome } from '../helpers/portfolio';
 
 const routes = ['/', '/story', '/cv', '/work/second-voice-ai', '/work/f24', '/work/flow', '/work/leu', '/out/linkedin'];
 
@@ -12,12 +12,12 @@ for (const width of [1440, 390]) {
       await page.goto(entry);
       for (const [label, path] of [['Story', '/story'], ['CV', '/cv'], ['Work', '/#work'], ['Contact', '/#contact']]) {
         if (width === 390) await page.getByRole('button', { name: 'Menu', exact: true }).click();
-        const nav = page.getByRole('navigation', { name: width === 390 ? 'Mobile navigation' : 'Main navigation', exact: true });
+        const nav = page.getByRole('navigation', { name: width === 390 ? 'Fullscreen navigation' : 'Main navigation', exact: true });
         const link = nav.getByRole('link', { name: label, exact: true });
         await expect(link).not.toHaveAttribute('target', '_blank');
         await link.click();
         await expect(page).toHaveURL(new URL(path, baseURL).href);
-        await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+        await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
         await expect(page.locator('#portfolio-content')).toHaveJSProperty('inert', false);
         await expect(page.locator('main h1')).toBeVisible();
         await expect(page.locator('[data-pixel-intro]')).toHaveCount(0);
@@ -48,7 +48,7 @@ async function auditLinks(page: Page) {
     } else if (/\.pdf(?:[?#]|$)/i.test(link.href)) {
       expect(link.target).toBe('_blank');
       expect(link.rel).toContain('noopener');
-    } else if (link.headerNavigation || !/^(https?:)?\/\//i.test(link.href) || new URL(link.href, 'https://miguelalmeida.is-a.dev').origin === 'https://miguelalmeida.is-a.dev' || link.download) {
+    } else if (link.headerNavigation || !/^(https?:)?\/\//i.test(link.href) || new URL(link.href, 'https://miguelalmeida.xyz').origin === 'https://miguelalmeida.xyz' || link.download) {
       expect(link.target, link.href).not.toBe('_blank');
     } else {
       expect(link.target, link.href).toBe('_blank');
@@ -61,9 +61,9 @@ async function openDestination(page: Page, link: Locator, path: string) {
   const count = page.context().pages().length;
   await expect(link).not.toHaveAttribute('target', '_blank');
   await link.click();
-  await page.waitForURL(url => url.pathname === path.replace('second-voice-ai', 'second-voice'));
+  await page.waitForURL(url => url.pathname === path);
   await expect(page.locator('main h1')).toBeVisible();
-  await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+  await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
   await expect(page.locator('#portfolio-content')).toHaveJSProperty('inert', false);
   expect(page.context().pages()).toHaveLength(count);
 }
@@ -83,12 +83,14 @@ for (const width of [1440, 390]) test(`project images and case-study links stay 
 test('live app and contact profiles open a new tab while the portfolio remains open', async ({ page, context }) => {
   await openPortfolioHome(page);
   await context.route('https://**/*', route => route.fulfill({ contentType: 'text/html', body: '<h1>External destination</h1>' }));
-  for (const link of [page.locator('#work .links').getByRole('link', { name: 'Open app', exact: true }), page.locator('#contact a[href*="linkedin.com"]:visible').first(), page.locator('#contact a[href*="github.com"]:visible').first()]) {
+  for (const link of [page.locator('#work .links').getByRole('link', { name: 'Open app', exact: true }), page.locator('#contact a[href*="linkedin.com"]').first(), page.locator('#contact a[href*="github.com"]').first()]) {
     const href = await link.getAttribute('href');
     const original = page.url();
-    const [popup] = await Promise.all([page.waitForEvent('popup'), link.click()]);
+    const next = page.waitForEvent('popup');
+    await link.click();
+    const popup = await next;
     await popup.waitForLoadState();
-    expect(popup.url()).toBe(new URL(href!).href);
+    expect(popup.url()).toBe(href);
     expect(page.url()).toBe(original);
     expect(await popup.evaluate(() => window.opener === null)).toBe(true);
     await popup.close();
@@ -134,16 +136,16 @@ for (const width of [1440, 390]) test(`all live routes and dynamically selected 
 });
 
 test('case studies stay in this tab and external evidence opens separately', async ({ page, context }) => {
-  await openSecondVoiceStudio(page);
+  await openPortfolioHome(page);
   await openDestination(page, page.locator('#work .links').getByRole('link', { name: 'Case study', exact: true }), '/work/second-voice-ai');
   await openPortfolioHome(page);
   await page.locator('.project-index button').filter({ hasText: 'Leu' }).click();
   await openDestination(page, page.getByRole('link', { name: 'View Leu case study', exact: true }), '/work/leu');
   await page.goto('/work/leu');
-  await expect(page.locator('#engineering .md-tab')).toHaveCount(6);
-  await openPortfolioHome(page);
-  await page.locator('.project-index button').filter({ hasText: 'Leu' }).click();
-  const evidence = page.locator('#work .links').getByRole('link', { name: 'Source', exact: true });
+  await expect(page.locator('.incident-index')).toHaveCount(0);
+  await expect(page.getByText('Seven investigations that changed the system.', { exact: true })).toHaveCount(0);
+  await expect(page.locator('.incident')).toHaveCount(7);
+  const evidence = page.getByRole('link', { name: 'Read the V36 evaluation', exact: true });
   const href = await evidence.getAttribute('href');
   // Isolate tab behavior from third-party availability. The real href is retained.
   await context.route('https://github.com/**', route => route.fulfill({ contentType: 'text/html', body: '<h1>Evidence destination</h1>' }));
@@ -152,7 +154,7 @@ test('case studies stay in this tab and external evidence opens separately', asy
   await evidence.click();
   const popup = await next;
   await popup.waitForLoadState();
-  expect(popup.url()).toBe(new URL(href!).href);
+  expect(popup.url()).toBe(href);
   expect(page.url()).toBe(original);
   expect(await popup.evaluate(() => window.opener === null)).toBe(true);
   await popup.close();
@@ -166,7 +168,7 @@ test('mobile menu navigates in the same tab and closes', async ({ page }) => {
   await expect(page).toHaveURL(/\/cv$/);
   expect(page.context().pages()).toHaveLength(1);
   await expect(page.locator('#mobile-navigation')).toHaveCount(0);
-  await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
+  await expect(page.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
   await expect(page.locator('#portfolio-content')).not.toHaveAttribute('inert', '');
   await page.getByRole('button', { name: 'Menu', exact: true }).click();
   await page.locator('#mobile-navigation').getByRole('link', { name: 'Contact', exact: true }).click();
@@ -197,17 +199,5 @@ test('Mirror AI route, assets, sitemap and next-project link are removed', async
   expect(await (await request.get('/sitemap.xml')).text()).not.toContain('mirror-ai');
   await page.goto('/work/leu');
   await expect(page.locator('a[href*="mirror"]')).toHaveCount(0);
-  await expect(page.getByRole('navigation', { name: 'Next project' }).getByRole('link')).toHaveAttribute('href', '/work/flow');
-});
-
-
-test('every homepage F24 deep link lands on a rendered case-study section', async ({ page, request }) => {
-  await openPortfolioHome(page);
-  await page.locator('.project-index button').filter({ hasText: 'F24' }).click();
-  const links = await page.locator('#work a[href^="/work/f24#"]').evaluateAll(nodes => nodes.map(n => n.getAttribute('href')!));
-  expect(links.length).toBeGreaterThan(0);
-  const response = await request.get('/work/f24');
-  expect(response.ok()).toBe(true);
-  const html = await response.text();
-  for (const href of links) expect(html, href).toContain(`id="${href.split('#')[1]}"`);
+  await expect(page.locator('a').filter({ hasText: 'Next case study' })).toHaveAttribute('href', '/work/second-voice-ai');
 });

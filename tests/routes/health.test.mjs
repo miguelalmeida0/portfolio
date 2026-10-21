@@ -4,14 +4,14 @@ import { writeFile } from 'node:fs/promises';
 
 const baseURL = process.env.ROUTE_HEALTH_BASE_URL || 'http://localhost:4173';
 const routes = [
-  ['/', /^Frontend developer & design engineer\b/],
-  ['/cv', /^Miguel Almeida\b/],
-  ['/story', /^Story$/],
-  ['/work/needle', /^Needle$/],
-  ['/work/second-voice-ai', /^Second Voice\b/],
-  ['/work/f24', /^F24\b/],
-  ['/work/leu', /^Leu\b/],
-  ['/work/flow', /^Flow\b/]
+  ['/', /^Miguel Almeida, frontend engineer and product designer in Berlin$/],
+  ['/cv', /^Experience\.$/],
+  ['/story', /^Frontend engineer\. UX background\.$/],
+  ['/work/needle', /^Search a collection of 10,000 artworks\.$/],
+  ['/work/second-voice', /^Choose a literary voice\. See exactly what changes\.$/],
+  ['/work/f24', /^Building Connectivity Hub’s frontend\.$/],
+  ['/work/leu', /^Read a passage\. Work through a question\.$/],
+  ['/work/flow', /^Change your schedule by voice\.$/]
 ];
 const results = [];
 

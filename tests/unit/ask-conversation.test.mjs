@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { loadLocalTs } from '../../scripts/lib/load-local-ts.mjs';
 const { prepareAskAnswer, assembleAskAnswer, validateConversationAnswer, resolveAskQuestion, sanitizeAskHistory } = await loadLocalTs('src/lib/miguel-llm/askConversation.ts');
 const { validateQuestion } = await loadLocalTs('src/lib/miguel-llm/guardrails.ts');
+const { asFirstPersonAnswer } = await loadLocalTs('src/lib/miguel-llm/firstPersonVoice.ts');
 const answer = (q, history = []) => assembleAskAnswer(prepareAskAnswer(q, history));
 const text = result => [...result.paragraphs, ...result.bullets].join(' ');
 
@@ -11,7 +12,8 @@ test('CV and Story answers use the same authored records across the portfolio', 
   for (const area of pageAreas) {
     const prepared = prepareAskAnswer(area.question, [], area.id);
     const result = assembleAskAnswer(prepared);
-    assert.equal(text(result), area.text);
+    const context = area.id.startsWith('cv-') ? 'cv' : area.id.startsWith('story-') ? 'story' : 'work';
+    assert.equal(text(result), asFirstPersonAnswer(area.text, true, context));
     assert.deepEqual(validateConversationAnswer(result, area.question, [], area.id), result);
   }
   assert.ok(answer('What did Miguel study?').sources.includes('Education|/cv#education'));

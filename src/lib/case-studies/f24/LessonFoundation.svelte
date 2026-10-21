@@ -4,7 +4,7 @@ import {onMount,flushSync} from 'svelte';import {FOUND,SVF,RXF,ESTAGES} from './
     <div class="frame lesson" id="evolve" bind:this={root} style="margin-top:clamp(28px,4vw,48px)"><div class="window">
       <div class="lesson-head">
         <p class="lesson-n">Lesson 2</p>
-        <h3>Share the foundation. Keep shipping.</h3>
+        <h3>Sharing common code between the two applications.</h3>
         <p>Rewriting everything at once would have stopped the product. Instead, the parts every screen needs moved into one shared foundation, and new work joins it.</p>
       </div>
       <div class="sit-tabs evo-tabs" role="tablist" aria-label="Migration steps" id="evoTabs">{#each ESTAGES as x,i}<button type="button" class="stab" class:seen={seen.includes(i)} role="tab" id={'et'+i} aria-controls="evoPanel" aria-selected={stage===i} tabindex={stage===i?0:-1} onclick={()=>setStage(i)} onkeydown={e=>tabKey(e,i)}><span class="sn">Step {i+1}</span><b>{x.tab}</b></button>{/each}</div>

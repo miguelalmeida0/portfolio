@@ -1,78 +1,45 @@
-import { STOP_AT } from './contact';
-
-export const initialTrain = () => ({ pos: 0, dur: 0, rev: false, at: -1, open: false, hot: -1 });
-type Train = ReturnType<typeof initialTrain>;
-const ORDER = [0, 1, 2, 3, 2, 1];
-
-/** Event-driven service: no polling or animation frame loop while out of view. */
-export function createLineService(root: HTMLElement, line: HTMLElement, publish: (state: Train) => void) {
-  let state = initialTrain(), visible = false, over = false, engaged = false, destroyed = false;
-  let next = 0, target = -1;
-  let arrival: ReturnType<typeof setTimeout> | undefined;
-  let departure: ReturnType<typeof setTimeout> | undefined;
-  const motion = matchMedia('(prefers-reduced-motion: reduce)');
-  const set = (patch: Partial<Train>) => { state = { ...state, ...patch }; publish(state); };
-  const allowed = () => !destroyed && !engaged && !over && visible && !document.hidden && !motion.matches;
-  const stopDeparture = () => { clearTimeout(departure); departure = undefined; };
-  function schedule(ms = 2600) {
-    stopDeparture();
-    if (allowed() && !arrival) departure = setTimeout(() => { departure = undefined; go(ORDER[next++ % ORDER.length]); }, ms);
+import type { JourneyController, StopIndex } from './journey-controller';
+export const LINE_M = Symbol('Line M');
+export const initialTrain = () => ({ at:-1, requested:-1, held:false, reduced:false });
+export type Train = ReturnType<typeof initialTrain>;
+/** Layout-scoped bindings, never a module-global controller. Links work without a host. */
+export function createLineService() {
+  let controller: JourneyController | undefined;
+  let wake = () => {};
+  let root: HTMLElement | undefined;
+  let state = initialTrain();
+  let earlyIntent: {index: StopIndex; source: 'pointer'|'focus'|'activate'} | undefined;
+  const listeners = new Set<(value: Train) => void>();
+  const roots = new Set<(value: HTMLElement | undefined) => void>();
+  function publish() {
+    const s=controller?.snapshot();if(!s)return;
+    const value={at:s.at,requested:s.desiredStop,held:s.owner==='manual'||s.paused,reduced:s.reduced};
+    if(JSON.stringify(value)===JSON.stringify(state))return;
+    state=value;listeners.forEach(fn=>fn(state));
   }
-  function currentPosition() {
-    const vertical = line.offsetHeight > line.offsetWidth;
-    const train = line.querySelector<HTMLElement>('[data-train]')!;
-    const length = vertical ? line.clientHeight : line.clientWidth;
-    const rendered = parseFloat(getComputedStyle(train)[vertical ? 'top' : 'left']);
-    return { length, percent: Math.max(0, Math.min(100, rendered / length * 100)) };
-  }
-  function go(i: number) {
-    if (destroyed || (target === i && (arrival || state.at === i))) return;
-    stopDeparture(); clearTimeout(arrival); arrival = undefined;
-    const from = currentPosition(), to = STOP_AT[i]; target = i;
-    const dur = motion.matches ? 0 : Math.min(2200, 700 + Math.abs(to - from.percent) / 100 * from.length * 1.1);
-    set({ pos: to, dur, rev: to < from.percent, at: -1, open: false });
-    const arrive = () => { arrival = undefined; set({ at: i, open: !motion.matches }); schedule(); };
-    if (dur === 0) arrive(); else arrival = setTimeout(arrive, dur);
-  }
-  function freeze() {
-    stopDeparture();
-    if (arrival) {
-      const { percent } = currentPosition();
-      clearTimeout(arrival); arrival = undefined;
-      set({ pos: percent, dur: 0, open: false });
-      if (!engaged) next = Math.max(0, next - 1);
-    }
-  }
-  function visibilityChanged() {
-    if (!visible || document.hidden) freeze();
-    else if (!engaged) schedule(900);
-    else if (target >= 0 && state.at < 0) go(target);
-  }
-  const observer = new IntersectionObserver(([entry]) => {
-    visible = entry.isIntersecting && entry.intersectionRatio >= .2;
-    visibilityChanged();
-  }, { threshold: [0, .2] });
-  observer.observe(root);
-  const motionChanged = () => {
-    stopDeparture(); clearTimeout(arrival); arrival = undefined;
-    if (motion.matches) set({ pos: target >= 0 ? STOP_AT[target] : 0, dur: 0, at: target, open: false });
-    else schedule(900);
-  };
-  const resized = () => {
-    if (arrival && target >= 0) { clearTimeout(arrival); arrival = undefined; set({ pos: STOP_AT[target], dur: 0, at: target, open: !motion.matches }); schedule(); }
-  };
-  document.addEventListener('visibilitychange', visibilityChanged);
-  window.addEventListener('resize', resized);
-  motion.addEventListener('change', motionChanged);
   return {
-    aim(i: number) { engaged = true; stopDeparture(); set({ hot: i }); go(i); },
-    leave() { set({ hot: -1 }); },
-    over(value: boolean) { over = value; if (over && !engaged) freeze(); else if (over) stopDeparture(); else schedule(); },
-    destroy() {
-      destroyed = true; stopDeparture(); clearTimeout(arrival); observer.disconnect();
-      document.removeEventListener('visibilitychange', visibilityChanged);
-      window.removeEventListener('resize', resized);
-      motion.removeEventListener('change', motionChanged);
-    }
+    attach(value: JourneyController, schedule: () => void) {
+      controller=value;wake=schedule;
+      if(earlyIntent){controller.requestStop(earlyIntent.index,earlyIntent.source);earlyIntent=undefined;}
+      publish();wake();
+      return()=>{if(controller===value){controller=undefined;wake=()=>{};}};
+    },
+    register(value: HTMLElement) {root=value;roots.forEach(fn=>fn(root));return()=>{root=undefined;roots.forEach(fn=>fn(root));};},
+    observeRoot(fn: (value: HTMLElement | undefined)=>void) {roots.add(fn);fn(root);return()=>{roots.delete(fn);};},
+    subscribe(fn: (value: Train)=>void) {listeners.add(fn);fn(state);return()=>{listeners.delete(fn);};},
+    aim(i: number, source: 'pointer'|'focus'|'activate'='pointer') {
+      if(!Number.isInteger(i)||i<0||i>3)return;
+      if(controller){controller.requestStop(i as StopIndex,source);publish();}
+      else {
+        // Bindings can mount before the decorative layer. Publish immediately;
+        // the first host consumes only the latest explicit selection.
+        earlyIntent={index:i as StopIndex,source};
+        state={...state,requested:i,at:-1,held:true};listeners.forEach(fn=>fn(state));
+      }
+      wake();
+    },
+    toggle() {if(state.held)controller?.resumeAuto();else controller?.pauseAuto();publish();wake();},
+    publish
   };
 }
+export type LineService = ReturnType<typeof createLineService>;

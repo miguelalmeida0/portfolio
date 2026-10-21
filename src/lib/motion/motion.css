@@ -18,6 +18,7 @@
   --motion-media-reveal: 620ms;
   --motion-hero-max: 900ms;
 
+  --motion-shutter: cubic-bezier(0.76, 0, 0.24, 1);
   --motion-settle: cubic-bezier(0.22, 1, 0.36, 1);
   --motion-ease-feedback: cubic-bezier(0.2, 0.8, 0.2, 1);
 
@@ -130,6 +131,8 @@
     animation-timing-function: var(--motion-settle);
     mix-blend-mode: normal;
   }
+
+
 }
 
 /* ---------------------------------------------------------------------------

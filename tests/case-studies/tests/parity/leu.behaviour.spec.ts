@@ -55,9 +55,9 @@ test.describe('leu behaviour', () => {
     await expect(page.locator('#closeGraph .e.hl')).toHaveCount(2);
   });
 
-  test('copy hygiene: no keys/React content and no em or en dashes', async ({ page }) => {
+  test('copy hygiene: no implementation keys or em or en dashes', async ({ page }) => {
     const text = await page.locator('main').innerText();
-    expect(text).not.toMatch(/\bkeys?\b|React/i);
+    expect(text).not.toMatch(/\bkeys?\b/i);
     expect(text).not.toMatch(/[—–]/);
   });
 

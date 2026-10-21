@@ -1,7 +1,7 @@
 <script lang="ts">
+  import { buildInfo } from '$lib/build-info';
   import { destinationLink } from '$lib/navigation/destination-link';
-  import { onMount } from 'svelte';
-  import { browser } from '$app/environment';
+  import { onMount, setContext } from 'svelte';
   import { afterNavigate, beforeNavigate } from '$app/navigation';
   import { installSmoothScroll, syncScrollPosition } from '$lib/motion/smooth-scroll';
   import { page } from '$app/stores';
@@ -15,21 +15,22 @@
   } from '$lib/config/site';
   import entryStyles from '../app.css?inline';
   import 'lenis/dist/lenis.css';
+  import LineMJourney from '$lib/components/experience/footer/LineMJourney.svelte';
+  import { LINE_M, createLineService } from '$lib/components/experience/footer/service';
+  setContext(LINE_M, createLineService());
   import BookmarkScrollbar from '$lib/components/experience/BookmarkScrollbar.svelte';
   import Header from '$lib/components/experience/Header.svelte';
   import Contact from '$lib/components/experience/footer/LineMFooter.svelte';
-  import IntroWelcome from '$lib/components/experience/IntroWelcome.svelte';
-  import PixelIntroduction from '$lib/components/experience/PixelIntroduction.svelte';
   import AskExperience from '$lib/components/ask/AskExperience.svelte';
   import { askView, askController, createAskController } from '$lib/ask/state';
 
   let guideReady = false;
   function openGuide(event: Event) { window.dispatchEvent(new CustomEvent('ask:open', { detail: (event as CustomEvent).detail })); }
+  // Header click toggles the current controller. Contextual/API events remain
+  // open-only and do not accidentally dismiss an ongoing answer.
+  function toggleGuide(restoreFocusOnClose: boolean) { $askController?.toggle(restoreFocusOnClose); }
   beforeNavigate(() => $askController?.dismiss());
 
-  // SSR supplies the intro markup. The synchronous head policy controls its first
-  // paint; a seen session never instantiates the component during hydration.
-  let introAvailable = !browser || document.documentElement.dataset.presentation === 'pending';
 
   const personStructuredData = JSON.stringify({
     '@context': 'https://schema.org',
@@ -37,7 +38,7 @@
     name: 'Miguel Almeida',
     url: SITE_ORIGIN,
     image: SITE_IMAGE_URL,
-    jobTitle: 'Frontend developer & design engineer',
+    jobTitle: 'Frontend engineer & product designer',
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Berlin',
@@ -46,41 +47,26 @@
     sameAs: ['https://github.com/miguelalmeida0', 'https://www.linkedin.com/in/miguelalmeida1/']
   });
 
-  $: canonicalUrl = `${SITE_ORIGIN}${$page.url.pathname}`;
+  $: canonicalUrl = `${SITE_ORIGIN}${$page.url.pathname.replace(/^\/hero-lab\/typographic(?=\/|$)/, '') || '/'}`;
+  // Hero-lab prototypes supply their own navigation. A direction's home keeps the
+  // unchanged homepage sections; its Story and CV pages are full-page previews.
+  $: typographicCase = /^\/work\/(f24|needle|second-voice|leu|flow)\/?$/.test($page.url.pathname);
+  $: heroLab = ['/', '/story', '/cv'].includes($page.url.pathname) || typographicCase || /^\/hero-lab\/[^/]+(\/(story|cv))?\/?$/.test($page.url.pathname);
+  $: heroLabHome = $page.url.pathname === '/' || heroLab && /^\/hero-lab\/[^/]+\/?$/.test($page.url.pathname);
 
   // `onNavigate` has to be registered while the layout initialises.
-  let routeVeil: HTMLDivElement;
-  const { mobileState, navigationError, navigateFromMenu } = installRouteTransitions(() => routeVeil);
+  let routeShutter: HTMLDivElement;
+  const { mobileState, navigationError, routeLabel, navigateFromMenu } = installRouteTransitions(() => routeShutter);
 
-  afterNavigate(({ from, to, type }) => {
-    syncScrollPosition();
-    if (!to?.url.hash || type === 'popstate' || from?.url.pathname === to.url.pathname) return;
-    // A case-study font can change section heights after Kit's first fragment
-    // scroll. Align once after the destination has finished laying out.
-    const destination = to.url.href;
-    let cancelled = false;
-    const cancel = () => { cancelled = true; };
-    const inputs = ['wheel', 'touchstart', 'keydown'] as const;
-    inputs.forEach(name => window.addEventListener(name, cancel, { once: true, passive: true }));
-    void document.fonts.ready.then(() => requestAnimationFrame(() => {
-      inputs.forEach(name => window.removeEventListener(name, cancel));
-      if (cancelled || location.href !== destination) return;
-      try {
-        document.getElementById(decodeURIComponent(to.url.hash.slice(1)))?.scrollIntoView({ block: 'start', behavior: 'instant' });
-        syncScrollPosition();
-      } catch { /* A malformed fragment keeps the browser's normal position. */ }
-    }));
-  });
+  setContext('route-navigation', navigateFromMenu);
+  afterNavigate(() => syncScrollPosition());
   onMount(() => {
+    if ($page.url.pathname === '/cv/pdf') return;
     window.addEventListener('miguel-llm:open', openGuide);
     const controller = createAskController();
     askController.set(controller);
     guideReady = true;
     const disposePolicy = initMotionPolicy();
-    const presentation = new MutationObserver(() => {
-      if (document.documentElement.dataset.presentation === 'complete') introAvailable = false;
-    });
-    presentation.observe(document.documentElement, { attributes: true, attributeFilter: ['data-presentation'] });
     let disposeScroll: (() => void) | undefined;
     let scrollPath: string | undefined;
     const disposePage = page.subscribe(current => {
@@ -88,13 +74,16 @@
       if (current.url.pathname === scrollPath) return;
       scrollPath = current.url.pathname;
       disposeScroll?.();
-      disposeScroll = ['/','/work/flow','/work/leu','/work/f24','/work/second-voice','/work/needle'].includes(current.url.pathname) ? undefined : installSmoothScroll();
+      disposeScroll = current.url.pathname === '/cv/pdf' ? undefined : installSmoothScroll();
     });
-    return () => { controller.destroy(); askController.set(undefined); window.removeEventListener('miguel-llm:open', openGuide); presentation.disconnect(); disposePage(); disposeScroll?.(); disposePolicy(); };
+    return () => { controller.destroy(); askController.set(undefined); window.removeEventListener('miguel-llm:open', openGuide); disposePage(); disposeScroll?.(); disposePolicy(); };
   });
 </script>
 
 <svelte:head>
+  <meta name="portfolio-build" content={buildInfo.commit} />
+  <meta name="portfolio-build-time" content={buildInfo.builtAt} />
+  <meta name="portfolio-build-dirty" content={String(buildInfo.dirty)} />
   {@html `<style data-entry-styles>${entryStyles}</style>`}
   <link rel="canonical" href={canonicalUrl} />
   <meta property="og:type" content="website" />
@@ -109,33 +98,54 @@
   {@html `<script type="application/ld+json">${personStructuredData}</script>`}
 </svelte:head>
 
-{#if $page.url.pathname === '/' && introAvailable}<PixelIntroduction />{/if}
-<IntroWelcome />
+{#if $page.url.pathname === '/cv/pdf'}
+  <slot />
+{:else}
 <!-- Keep guide isolation independent of the landing's inert lifecycle. -->
 <div data-guide-background>
-<div class="wind-theme" data-homepage={$page.url.pathname === '/' ? '' : undefined} id="portfolio-content" inert={$mobileState !== 'idle'}>
+<div class="wind-theme" data-homepage={$page.url.pathname === '/' || heroLabHome ? '' : undefined} data-hero-lab={heroLab || undefined} id="portfolio-content" inert={$mobileState !== 'idle'}>
   <a href="#main" class="wind-skip sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded focus:bg-plum focus:px-5 focus:py-3 focus:text-white" {...destinationLink("#main")}>Skip to content</a>
-  <Header guideOpen={$askView.state !== 'idle'} {guideReady} homepage={$page.url.pathname === '/'} askActive={$askView.state !== 'idle'} {navigateFromMenu} navigationTransitionActive={$mobileState !== 'idle'} />
+  {#if !heroLab}<Header guideOpen={$askView.state !== 'idle'} {guideReady} homepage={$page.url.pathname === '/'} story={$page.url.pathname === '/story'} askActive={$askView.state !== 'idle'} {navigateFromMenu} onGuideToggle={toggleGuide} navigationTransitionActive={$mobileState !== 'idle'} />{/if}
   {#if ['/work/flow','/work/leu','/work/f24','/work/second-voice','/work/needle'].includes($page.url.pathname)}<slot />{:else}<main id="main"><slot /></main>{/if}
   <section class="contact" aria-label="Contact"><Contact /></section>
 </div>
 
-{#if $page.url.pathname !== '/'}<div inert={$mobileState !== 'idle'}><BookmarkScrollbar /></div>{/if}
+<div inert={$mobileState !== 'idle'}><BookmarkScrollbar /></div>
 </div>
 
-{#if $page.url.pathname !== '/'}<AskExperience floating />{/if}
+<AskExperience floating />
+
+{#key $page.url.pathname}<LineMJourney suppressed={$mobileState !== 'idle' || $askView.state !== 'idle'} />{/key}
+
+
+{/if}
 
 <!-- Root sibling: never inherits a page/header transform or stacking context. -->
-<div bind:this={routeVeil} data-route-veil data-phase={$mobileState} hidden aria-hidden="true" class="route-veil no-print"></div>
+<div bind:this={routeShutter} data-route-shutter data-phase={$mobileState} hidden aria-hidden="true" popover="manual" class="route-shutter no-print">
+  {#each Array(6) as _, i}<span class="route-strip" style:--i={i}></span>{/each}
+  <p class="route-title"><span class="route-title-mask"><span class="route-title-text">{$routeLabel}</span></span></p>
+</div>
 <p role="status" class="sr-only">{$navigationError}</p>
 
 <style>
-  .route-veil {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    background: var(--color-paper);
-    opacity: 0;
-    touch-action: none;
+  .route-shutter {
+    position: fixed; inset: 0; z-index: 1000; display: grid;
+    width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0;
+    grid-template-columns: repeat(var(--route-strips, 6), 1fr);
+    background: transparent; pointer-events: auto; touch-action: none; contain: layout paint;
   }
+  .route-shutter[hidden] { display: none; }
+  .route-shutter::backdrop { background: transparent; }
+  .route-strip { background: var(--forest); transform: scaleY(0); }
+  .route-strip:nth-child(even) { background: var(--ink); }
+  .route-title { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; pointer-events: none;
+    font: 800 clamp(72px, 11vw, 184px)/.9 'Figtree', sans-serif; letter-spacing: -.035em; color: var(--lime); }
+  .route-title-mask { display: block; overflow: clip; padding: .08em .04em; max-width: 94vw; text-align: center; }
+  .route-title-text { display: block; transform: translateY(110%); }
+  @media (max-width: 767px) {
+    .route-shutter { --route-strips: 4; }
+    .route-strip:nth-child(n + 5) { display: none; }
+    .route-title { font-size: clamp(56px, 17vw, 104px); }
+  }
+  @media print { .route-shutter { display: none !important; } }
 </style>

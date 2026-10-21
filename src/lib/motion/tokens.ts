@@ -20,6 +20,7 @@ export const duration = {
 } as const;
 
 export const easing = {
+  shutter: 'cubic-bezier(0.76, 0, 0.24, 1)',
   /** Long settles: arrival, reveals, chapter entrances. */
   settle: 'cubic-bezier(0.22, 1, 0.36, 1)',
   /** Short responses: press, hover, state swaps. */
@@ -42,3 +43,22 @@ export const limits = {
 
 /** Small-screen budget for the opening sequence (decoration only). */
 export const compactHeroSettleMs = 420;
+
+/** GSAP uses seconds; derive its grammar from the existing timing contract. */
+export const motion = {
+  micro: duration.feedback / 1000,
+  standard: duration.route / 1000,
+  chapter: duration.section / 1000,
+  cinematic: duration.mediaReveal / 1000,
+  stagger: 0.055,
+  mobileStagger: 0.025,
+  revealPx: limits.sectionTranslatePx,
+  photoTravel: 12,
+  mobilePhotoTravel: 4,
+  pointerPx: limits.portraitPointerTranslatePx,
+  scrub: 0.45,
+  primary: 'portfolio-settle',
+  secondary: 'portfolio-feedback',
+  exit: 'power2.in',
+  pointer: 'power3.out'
+} as const;

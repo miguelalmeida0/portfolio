@@ -1,10 +1,16 @@
 <script lang="ts">
+  import { answerAnnouncement } from '$lib/ask/announcement';
+  import { page } from '$app/stores';
+  import { directionHref } from '$lib/navigation/direction-href';
+  import { tick } from 'svelte';
   import { destinationLink } from '$lib/navigation/destination-link';
   import { INTRO, FOOTER, REFUSAL, DEFAULT_HEADING } from '$lib/ask/plan';
   import type { AskView } from '$lib/ask/types';
   import type { AskController } from '$lib/ask/state';
   let { controller, view }: { controller: AskController; view: AskView } = $props();
   let question = $state('');
+  let questionInput: HTMLInputElement;
+  async function editQuestion() { question = view.question; await tick(); questionInput?.focus(); }
   let start: { x: number; y: number } | undefined;
   function submit(event: SubmitEvent) { event.preventDefault(); if (question.trim()) { void controller.free(question); question = ''; } }
   function swipeStart(event: TouchEvent) {
@@ -17,21 +23,22 @@
     if (start && touch.clientY - start.y > 80 && Math.abs(touch.clientX - start.x) < 60) controller.close();
     start = undefined;
   }
-  const announcement = $derived(view.error || (view.complete ? view.refusal ? REFUSAL : [...(view.knowledge?.paragraphs ?? []), ...(view.knowledge?.bullets ?? []), ...view.fragments.map(f => `“${f.step.quote}” ${f.number}`), ...(view.knowledge?.conversational ? [] : [FOOTER])].join(' ') : ''));
+  const announcement = $derived(answerAnnouncement(view, FOOTER, REFUSAL));
 </script>
 <section class="ask-panel" data-ask-panel aria-label="Ask MiguelLLM" inert={view.state === 'closing'} data-scroll-native>
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div class="ask-panel-top" ontouchstart={swipeStart} ontouchend={swipeEnd} ontouchcancel={() => start = undefined}>
     <div class="ask-handle" aria-hidden="true"></div>
   </div>
-  <div class="ask-heading" role="status" aria-live="polite" aria-atomic="true">{view.question}</div>
   <!-- Keyboard users need to focus this region to scroll long answers. -->
   <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
   <div class="ask-answer-scroll" data-scroll-native tabindex="0" role="region" aria-label="Answer and sources">
-    <div class="ask-answer" data-ask-answer aria-hidden="true">
+    <div class="ask-heading" role="status" aria-live="polite" aria-atomic="true">{view.question}</div>
+    <p class="ask-disclosure">My public portfolio, in my voice · Not a live chat</p>
+    <div class="ask-answer" class:loading={view.loading} data-ask-answer aria-hidden="true">
       {#if !view.knowledge && !view.complete && !view.loading && !view.error}<p class="ask-intro">{INTRO}</p>{/if}
       {#if view.error}<p class="ask-intro">{view.error}</p>{/if}
-      {#if view.loading}<p class="ask-intro">Connecting this topic to Miguel’s work…</p>{/if}
+      {#if view.loading}<p class="ask-intro">Reviewing the most relevant project notes…</p>{/if}
       {#if view.refusal}<p class="ask-intro">{REFUSAL}</p>{/if}
       {#if view.knowledge}
         <div class="ask-knowledge" data-ask-knowledge>
@@ -46,25 +53,25 @@
       </p>{/if}
       {#if view.complete && !view.refusal && !view.knowledge?.conversational}<p class="ask-answer-footer ask-phrase">{FOOTER}</p>{/if}
     </div>
-    <div class="sr-only" aria-live="polite" aria-atomic="true" data-ask-announcement>{announcement || (view.question === DEFAULT_HEADING ? INTRO : '')}</div>
-    {#if view.error}<button class="ink-link" type="button" onclick={() => controller.free(view.question)}>Try again</button>{/if}
+    <div class="sr-only" aria-live="polite" aria-atomic="true" data-ask-announcement>{view.loading ? 'Reviewing the relevant project notes.' : announcement || (view.question === DEFAULT_HEADING ? INTRO : '')}</div>
+    {#if view.error}<button class="ink-link" type="button" onclick={() => controller.free(view.question)}>Try again</button><button class="ink-link" type="button" onclick={editQuestion}>Edit question</button>{/if}
     {#if view.knowledge?.sources.length}<nav class="ask-sources" aria-label="Answer sources">{#each view.knowledge.sources as source}
-      <a href={source.split('|')[1]} {...destinationLink(source.split('|')[1])}>{source.split('|')[0]}</a>
+      <a href={directionHref(source.split('|')[1], $page.url.pathname)} {...destinationLink(directionHref(source.split('|')[1], $page.url.pathname))}>{source.split('|')[0]}</a>
     {/each}</nav>{/if}
     {#if view.complete && view.knowledge?.followups?.length}<nav class="ask-followups" aria-label="Follow-up questions">{#each view.knowledge.followups as next}<button type="button" onclick={() => controller.free(next)}>{next}</button>{/each}</nav>{/if}
   </div>
   <div class="ask-try"><span>Try</span>
     <button data-ask-try type="button" onclick={() => controller.ask('w-f24')}>F24</button>
     <button data-ask-try type="button" onclick={() => controller.ask('w-sv')}>Second Voice</button>
-    <button data-ask-try type="button" onclick={() => controller.ask('stack')}>His stack</button>
-    <button data-ask-try type="button" onclick={() => controller.ask('role')}>Design background</button>
+    <button data-ask-try type="button" onclick={() => controller.ask('stack')}>My stack</button>
+    <button data-ask-try type="button" onclick={() => controller.ask('role')}>My design background</button>
   </div>
   <form class="ask-form" onsubmit={submit}>
-    <input aria-label="Type your own question" placeholder="Or type your own question…" autocomplete="off" maxlength="320" bind:value={question} />
+    <input bind:this={questionInput} aria-label="Type your own question" placeholder="Or type your own question…" autocomplete="off" maxlength="320" bind:value={question} />
     <button class="action-button hover:bg-ink" type="submit" aria-label="Ask your question" disabled={!question.trim()}>Ask</button>
   </form>
 </section>
-<button type="button" class="ask-close" aria-label="Close and return to the page — Back to the page Esc" onclick={controller.close}>Back to the page <kbd>Esc</kbd></button>
+<button type="button" class="ask-close" aria-label="Close LLM" onclick={controller.close}>Close LLM <kbd aria-hidden="true">Esc</kbd></button>
 
 <style>
   .ask-followups { display: flex; flex-direction: column; align-items: flex-start; gap: .2rem; margin-top: .5rem; }

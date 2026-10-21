@@ -1,11 +1,11 @@
 name: CI
 
 on:
-  # Dev/test validation is available on PRs or by manual dispatch.
+  # Validate test before promotion and main after release; manual dispatch remains available.
   push:
-    branches: [main]
+    branches: [main, test]
   pull_request:
-    branches: [main, dev, test]
+    branches: [main, test]
   workflow_dispatch:
 
 permissions:
@@ -18,13 +18,13 @@ concurrency:
 jobs:
   checks:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
 
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version-file: .node-version
           cache: npm
@@ -33,55 +33,82 @@ jobs:
       - run: npm run test:unit
       - run: npm run build
 
-  browser-tests:
+  browser-smoke:
     needs: checks
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+        browser: [chromium, webkit]
+
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version-file: .node-version
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium firefox webkit
-      - run: mkdir -p .cache/tmp && TMPDIR=$PWD/.cache/tmp npx playwright test --shard=${{ matrix.shard }}/20
-      - name: Upload compact failure evidence
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - run: npm run build
+      - name: Test the published portfolio in Chromium and WebKit
+        env:
+          PORTFOLIO_AUDIT_OUTPUT: ${{ github.workspace }}/test-results/release
+        run: npx playwright test -c tests/e2e/portfolio-release.config.ts --project=${{ matrix.browser }}
+      - name: Upload browser failure evidence
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
-          name: browser-evidence-${{ matrix.shard }}
-          path: |
-            test-results/**/*.png
-            test-results/**/error-context.md
-            test-results/e2e-results.json
-            tests/**/*-snapshots/*linux.png
-          if-no-files-found: ignore
-          retention-days: 3
-      - name: Upload browser test results
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
-        with:
-          name: browser-test-results-${{ matrix.shard }}
+          name: browser-smoke-failure-${{ matrix.browser }}
           path: |
             playwright-report/
             test-results/
           if-no-files-found: ignore
-          retention-days: 3
+          retention-days: 2
+
+  scrollbar-regression:
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm run build
+      - name: Test scrollbar input, footer contacts and PDF navigation
+        env:
+          PORTFOLIO_AUDIT_OUTPUT: ${{ github.workspace }}/test-results/scrollbar
+        run: npx playwright test -c tests/e2e/portfolio-release.config.ts --grep 'scrollbar|footer keyboard'
+      - name: Upload browser failure evidence
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: scrollbar-regression-failure
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 2
 
   validate:
-    if: ${{ always() && !cancelled() }}
-    needs: [checks, browser-tests]
+    if: ${{ always() }}
+    needs: [checks, browser-smoke, scrollbar-regression]
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
-      - name: Require every check and browser shard to pass
+      - name: Require blocking checks to pass
         env:
           CHECKS_RESULT: ${{ needs.checks.result }}
-          BROWSER_RESULT: ${{ needs.browser-tests.result }}
-        run: test "$CHECKS_RESULT" = success && test "$BROWSER_RESULT" = success
+          SCROLLBAR_RESULT: ${{ needs.scrollbar-regression.result }}
+          BROWSER_RESULT: ${{ needs.browser-smoke.result }}
+        run: test "$CHECKS_RESULT" = success && test "$BROWSER_RESULT" = success && test "$SCROLLBAR_RESULT" = success

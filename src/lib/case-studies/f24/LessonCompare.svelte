@@ -4,7 +4,7 @@ import {onMount,flushSync} from 'svelte';import {QP} from './data';import {lifec
     <div class="frame lesson" id="parity" bind:this={root}><div class="window">
       <div class="lesson-head">
         <p class="lesson-n">Lesson 1</p>
-        <h3>A copy can look perfect and still be wrong.</h3>
+        <h3>Checking the rebuilt screen’s API request.</h3>
         <p>One screen, rebuilt in React, looked right but showed nothing. Every screen asks the server a question. The copy has to ask exactly the same one.</p>
       </div>
       <div class="par2">
@@ -24,5 +24,5 @@ import {onMount,flushSync} from 'svelte';import {QP} from './data';import {lifec
           <div class="scr-sec" data-dep="list" class:hit={deps.includes('list')}><span class="scr-l">Latest entries</span><ul class="scr-list" id="newList">{#if finished}{#each ['Site closure','Power outage','Practice drill'] as t,i}<li style:--i={i+2}>{t}<b>Delivered</b></li>{/each}{:else}<li class="none">Nothing to show</li>{/if}</ul></div>
         </article>
       </div>
-      <div class="verdict" id="verdict" role="status" aria-live="polite" hidden={!finished}>{#if finished}<h4>Same question. Same answer.</h4><div><p>Once every part of the question matches, both screens show the same thing. That comparison, not a matching screenshot, is what makes a migration safe to ship.</p><small>An illustration of the method, with invented data.</small></div>{/if}</div>
+      <div class="verdict" id="verdict" role="status" aria-live="polite" hidden={!finished}>{#if finished}<h4>The requests now match.</h4><div><p>Once every part of the question matches, both screens show the same thing. That comparison, not a matching screenshot, is what makes a migration safe to ship.</p><small>An illustration of the method, with invented data.</small></div>{/if}</div>
     </div></div>

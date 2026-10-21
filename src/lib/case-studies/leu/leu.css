@@ -17,7 +17,7 @@
   --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
 }
 .cs-leu{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html:has(.cs-leu){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);background:#EFF3E3;scroll-behavior:smooth}
+html:has(.cs-leu){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);background:#EFF3E3;scroll-behavior:auto}
 .cs-leu *,.cs-leu *::before,.cs-leu *::after{box-sizing:inherit}
 .cs-leu{margin:0;background:var(--canvas);color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
 .cs-leu a{color:inherit}
@@ -55,9 +55,9 @@ html:has(.cs-leu){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);b
 .cs-leu .btn.sm{padding:9px 18px;font-size:14.5px}
 
 .cs-leu .hero{text-align:center;padding:clamp(40px,6vw,88px) 0 clamp(36px,4vw,56px)}
-.cs-leu .kicker{font-weight:600;font-size:15px;color:var(--muted);margin:0 0 20px}
-.cs-leu .hero h1{font-weight:800;font-size:clamp(46px,6.8vw,96px);line-height:1;letter-spacing:-.045em;margin:0 auto;max-width:14ch;text-wrap:balance}
-.cs-leu .hero .sub{font-size:clamp(18px,1.6vw,21px);line-height:1.5;color:var(--ink-2);max-width:48ch;margin:24px auto 32px;text-wrap:balance}
+.cs-leu .kicker{font-weight:600;font-size:var(--type-meta,15px);color:var(--muted);margin:0 0 20px}
+.cs-leu .hero h1{font-weight:800;font-size:var(--type-case-display,clamp(46px,6.8vw,96px));line-height:1;letter-spacing:-.045em;margin:0 auto;max-width:14ch;text-wrap:balance}
+.cs-leu .hero .sub{font-size:var(--type-lead,clamp(18px,1.6vw,21px));line-height:1.5;color:var(--ink-2);max-width:48ch;margin:24px auto 32px;text-wrap:balance}
 .cs-leu .ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .cs-leu .cap{font-size:14px;color:var(--muted);text-align:center;margin:18px auto 0;max-width:76ch}
 
@@ -134,8 +134,8 @@ html:has(.cs-leu){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);b
 .cs-leu .chapter{padding-top:clamp(88px,11vw,168px)}
 .cs-leu .head{text-align:center;max-width:860px;margin:0 auto clamp(36px,4.5vw,64px)}
 .cs-leu .head .eyebrow{font-weight:600;font-size:15px;color:var(--indigo-ink);margin:0 0 14px}
-.cs-leu .head h2{font-weight:800;font-size:clamp(36px,4.8vw,64px);line-height:1.04;letter-spacing:-.04em;margin:0;text-wrap:balance}
-.cs-leu .head p{font-size:clamp(17px,1.4vw,19px);color:var(--ink-2);margin:20px auto 0;max-width:58ch}
+.cs-leu .head h2{font-weight:800;font-size:var(--type-case-section,clamp(36px,4.8vw,64px));line-height:1.04;letter-spacing:-.04em;margin:0;text-wrap:balance}
+.cs-leu .head p{font-size:var(--type-reading,clamp(17px,1.4vw,19px));color:var(--ink-2);margin:20px auto 0;max-width:58ch}
 
 /* extraction */
 .cs-leu .segwrap{display:flex;justify-content:center}
@@ -172,7 +172,7 @@ html:has(.cs-leu){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);b
 .cs-leu .steps{padding-bottom:18vh}
 .cs-leu .step{min-height:62vh;display:flex;flex-direction:column;justify-content:center;padding-block:4vh}
 .cs-leu .step:first-child{min-height:40vh;justify-content:flex-start}
-.cs-leu .step h3{font-weight:800;font-size:clamp(28px,2.8vw,40px);letter-spacing:-.04em;line-height:1.05;margin:0 0 12px}
+.cs-leu .step h3{font-weight:800;font-size:var(--type-case-subsection,clamp(28px,2.8vw,40px));letter-spacing:-.04em;line-height:1.05;margin:0 0 12px}
 .cs-leu .step .tag{font-weight:600;color:var(--indigo-ink);font-size:14.5px;margin:0 0 10px}
 .cs-leu .step p{margin:0 0 12px;color:var(--ink-2);max-width:50ch}
 .cs-leu .step .warn{color:var(--peach-ink);background:var(--peach);display:inline-block;padding:8px 14px;border-radius:12px;font-weight:600;font-size:15px}
@@ -299,11 +299,7 @@ html:has(.cs-leu){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);b
 .cs-leu .next .lbl{color:var(--muted);font-size:14.5px}
 .cs-leu .next a{font-weight:800;font-size:clamp(34px,4vw,56px);letter-spacing:-.045em;text-decoration:none}
 .cs-leu .next a:hover{color:var(--indigo-ink)}
-@media (prefers-reduced-motion: reduce){
-  html:has(.cs-leu){scroll-behavior:auto}
-  .cs-leu *,.cs-leu *::before,.cs-leu *::after{transition-duration:0s!important;animation-duration:0s!important;transition-delay:0s!important}
-  .cs-leu .psg[aria-pressed="true"]{transform:none}
-}
+
 
 /* portfolio identity */
 .cs-leu .top{display:flex;align-items:baseline;gap:18px;padding-block:26px 14px}
@@ -354,14 +350,14 @@ html:has(.cs-leu){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);b
 .cs-leu p,.cs-leu dd,.cs-leu li{text-wrap:pretty}
 .cs-leu h1,.cs-leu h2,.cs-leu h3{text-wrap:balance}
 .cs-leu .hero{text-align:left!important;padding-bottom:clamp(28px,3vw,44px)!important}
-.cs-leu .hero h1{font-size:clamp(44px,5.8vw,84px)!important;max-width:17ch!important;margin:0!important}
+.cs-leu .hero h1{font-size:var(--type-case-display,clamp(44px,5.8vw,84px))!important;max-width:17ch!important;margin:0!important}
 .cs-leu .hero .sub{margin:22px 0 28px!important;max-width:44ch!important}
 .cs-leu .ctas{justify-content:flex-start!important;align-items:center;gap:22px!important}
 .cs-leu .tlink{color:var(--plum);font-weight:600;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1.5px}
 .cs-leu .tlink:hover{text-decoration-thickness:2.5px}
 .cs-leu .cap{text-align:left!important;margin:14px 0 0!important}
 .cs-leu .head{text-align:left!important;margin:0 0 clamp(28px,3.5vw,48px)!important;max-width:none!important}
-.cs-leu .head h2{font-size:clamp(32px,3.6vw,52px)!important;max-width:20ch}
+.cs-leu .head h2{font-size:var(--type-case-section,clamp(32px,3.6vw,52px))!important;max-width:20ch}
 .cs-leu .head p{margin:16px 0 0!important;max-width:60ch!important}
 .cs-leu .segwrap{justify-content:flex-start!important}
 .cs-leu .tabs{margin-left:0!important}
@@ -422,7 +418,7 @@ html:has(.cs-leu){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);b
 .cs-leu .graph g.weak .nb{fill:var(--amber-tint)!important;stroke:var(--amber)!important;stroke-width:2!important;stroke-dasharray:5 3!important}
 .cs-leu .graph g.missed .nb{fill:var(--fail-tint)!important;stroke:var(--fail)!important;stroke-width:2!important}
 .cs-leu .graph g.node:focus-visible .nb{stroke:var(--plum)!important;stroke-width:2.6!important}
-.cs-leu .graph.focus .e:not(.hl),.cs-leu .graph.focus .lab:not(.hl),.cs-leu .graph.focus g.node:not(.hl){opacity:.18}
+.cs-leu .graph.focus .e:not(.hl){opacity:.18}
 .cs-leu .graph.focus .e.hl:not(.neg){stroke:var(--forest)!important}
 .cs-leu .dstages{position:relative;--prog:0}
 .cs-leu .dstages::before,.cs-leu .dstages::after{content:"";position:absolute;left:17px;top:30px;bottom:30px;width:2px;border-radius:2px}
@@ -472,6 +468,12 @@ html:has(.cs-leu){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);b
 /* closing */
 @media (prefers-reduced-motion: reduce){
   .cs-leu.cs-leu *,.cs-leu.cs-leu *::before,.cs-leu.cs-leu *::after{transition-duration:0s!important;animation-duration:0s!important;transition-delay:0s!important}
+@media (prefers-reduced-motion: reduce){
+  html:has(.cs-leu){scroll-behavior:auto}
+  .cs-leu *,.cs-leu *::before,.cs-leu *::after{transition-duration:0s!important;animation-duration:0s!important;transition-delay:0s!important}
+  .cs-leu .psg[aria-pressed="true"]{transform:none}
+}
+
 }
 
 /* portfolio identity */
@@ -489,3 +491,8 @@ html:has(.cs-leu){scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);b
 }
 
 .cs-leu{--cs-alpha-06:.06;--cs-alpha-22:.22;--cs-alpha-55:.55;--cs-alpha-12:.12;--cs-alpha-25:.25;--cs-alpha-08:.08;--cs-alpha-82:.82;--cs-alpha-28:.28;--cs-alpha-14:.14;--cs-alpha-6:.6;--cs-alpha-35:.35;--cs-alpha-8:.8}
+
+@layer base {
+@media (prefers-reduced-motion: reduce) { .cs-leu.cs-leu.cs-leu *, .cs-leu.cs-leu.cs-leu *::before, .cs-leu.cs-leu.cs-leu *::after, .cs-leu.cs-leu #perf.on .val { transition: none !important; animation: none !important; } }
+html[data-motion='reduced'] .cs-leu.cs-leu.cs-leu *, html[data-motion='reduced'] .cs-leu.cs-leu.cs-leu *::before, html[data-motion='reduced'] .cs-leu.cs-leu.cs-leu *::after, html[data-motion='reduced'] .cs-leu.cs-leu #perf.on .val { transition: none !important; animation: none !important; }
+}

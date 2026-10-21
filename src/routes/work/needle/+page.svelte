@@ -2,8 +2,8 @@
   import NeedlePage from '$lib/case-studies/needle/NeedlePage.svelte';
 </script>
 <svelte:head>
-  <title>Needle — Engineering a 10,000-artwork visual search | Miguel Almeida</title>
-  <meta name="description" content="From a query to a visible artwork: explore Needle’s search, image delivery, cache identity and rendering budgets across 10,000 Met artworks." />
+  <title>Needle: search 10,000 artworks | Miguel Almeida</title>
+  <meta name="description" content="An artwork search app I designed and built with React and TypeScript. Read about the search worker, image loading, caching and collection view." />
   <link rel="stylesheet" href="/fonts/case-studies/fonts.css" />
 </svelte:head>
 <NeedlePage />

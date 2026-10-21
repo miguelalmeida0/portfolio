@@ -17,3 +17,5 @@ docs/private-media-review/
 !.env.example
 
 tmp/
+
+.svelte-kit-dev

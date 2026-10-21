@@ -1,0 +1,5 @@
+/* Optional: skip this file if the site already loads these faces (SIL Open Font License, see assets/fonts). */
+@font-face{font-family:'Big Shoulders Display';font-style:normal;font-weight:800;font-display:swap;src:url('/turntable-header/fonts/big-shoulders-display-latin-800-normal.woff2') format('woff2')}
+@font-face{font-family:'Big Shoulders Display';font-style:normal;font-weight:900;font-display:swap;src:url('/turntable-header/fonts/big-shoulders-display-latin-900-normal.woff2') format('woff2')}
+@font-face{font-family:'Schibsted Grotesk';font-style:normal;font-weight:400;font-display:swap;src:url('/turntable-header/fonts/schibsted-grotesk-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Schibsted Grotesk';font-style:normal;font-weight:600;font-display:swap;src:url('/turntable-header/fonts/schibsted-grotesk-latin-600-normal.woff2') format('woff2')}

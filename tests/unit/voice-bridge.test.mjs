@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import ts from 'typescript';
 const source=ts.transpileModule(fs.readFileSync('src/lib/experience/voice-bridge.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
 const { VoiceBridge }=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
-const origin='https://secondvoice-ai.vercel.app';
+const origin='https://secondvoice.miguelalmeida.xyz';
 function setup(t) {
   const frames=[],sent=[];
   const previous={window:globalThis.window,document:globalThis.document};

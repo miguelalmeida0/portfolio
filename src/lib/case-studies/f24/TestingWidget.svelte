@@ -3,7 +3,7 @@ import {onMount,flushSync} from 'svelte';import RadioGroup from '../shared/Radio
 </script>
   <section class="chapter" aria-labelledby="test-h">
     <div class="head">
-      <h2 id="test-h">Test consequences, not components.</h2>
+      <h2 id="test-h">Checking save behaviour.</h2>
       <p>A save button that looks right can still fire twice, send the wrong data or lose focus. Click Save, try a double click, or take the network away. The checks on the right run against this widget's own behaviour.</p>
     </div>
     <div class="frame" id="testing"><div class="window">

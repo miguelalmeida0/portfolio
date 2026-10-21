@@ -1,15 +1,14 @@
-import { expect, test } from '../fixtures';
+import { expect, test } from '@playwright/test';
 import { openPortfolioHome } from '../helpers/portfolio';
 
 const routes = [
-  ['/', /Frontend developer\s*& design engineer\./],
+  ['/', /Frontend engineer\s*& product designer\./],
   ['/cv', /Miguel\s*Almeida\./],
-  ['/story', /^Story$/],
-  ['/work/needle', /^From a query to a visible artwork\.$/],
-  ['/work/second-voice-ai', /^Choose a literary voice\. See exactly what changes\.$/],
-  ['/work/f24', /^From mockup to production system\.$/],
-  ['/work/leu', /^From PDF text to learner state\.$/],
-  ['/work/flow', /^From speech to deterministic state\.$/]
+  ['/story', /I started in UX\.\s*Then built the frontend\./],
+  ['/work/second-voice-ai', /^Second Voice$/],
+  ['/work/f24', /^F24$/],
+  ['/work/leu', /^Leu: from PDF text\s*to learner state\.$/],
+  ['/work/flow', /^Flow$/]
 ] as const;
 
 for (const [path, heading] of routes) {
@@ -23,15 +22,13 @@ for (const [path, heading] of routes) {
     expect(serverHeading).toMatch(heading);
     expect((await page.goto(path))?.status()).toBe(200);
     await expect(page.locator('main h1')).toHaveText(heading);
-    // Firefox exposes a successful conditional reload as 304; the rendered
-    // heading and subsequent navigation still verify the cached document.
-    expect([200, 304]).toContain((await page.reload())?.status());
+    expect((await page.reload())?.status()).toBe(200);
     await expect(page.locator('main h1')).toHaveText(heading);
     if (path !== '/') {
       await openPortfolioHome(page);
       const isProject = path.startsWith('/work/');
       if (isProject) {
-        const names: Record<string, string> = { needle: 'Needle', 'second-voice-ai': 'Second Voice AI', f24: 'F24', flow: 'Flow', leu: 'Leu' };
+        const names: Record<string, string> = { 'second-voice-ai': 'Second Voice AI', f24: 'F24', flow: 'Flow', leu: 'Leu' };
         await page.locator('.project-index button').filter({ hasText: names[path.split('/').at(-1)!] }).click();
       }
       const link = isProject
@@ -43,19 +40,21 @@ for (const [path, heading] of routes) {
         await page.getByRole('button', { name: 'Menu', exact: true }).click();
         destinationLink = page.locator(`#mobile-navigation a[href="${path}"]`);
       }
-      await expect(destinationLink).not.toHaveAttribute('target', '_blank');
+      const popup = page.waitForEvent('popup');
       await destinationLink.click();
-      await expect(page).toHaveURL(new RegExp(`${path.replace('second-voice-ai', 'second-voice')}$`));
-      await expect(page.locator('main h1')).toHaveText(heading);
-      await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
-      await page.goBack();
+      const destination = await popup;
+      destination.on('pageerror', error => errors.push(error.message));
+      await expect(destination.locator('main h1')).toHaveText(heading);
+      await expect(destination.locator('[data-route-shutter]')).toHaveAttribute('data-phase', 'idle');
       await expect(page.locator('main h1')).toHaveText(routes[0][1]);
       await expect(page.locator('[data-pixel-intro]')).toBeHidden();
-      await expect(page.locator('[data-route-veil]')).toHaveAttribute('data-phase', 'idle');
-      await page.goForward();
-      await expect(page).toHaveURL(new RegExp(`${path.replace('second-voice-ai', 'second-voice')}$`));
-      await expect(page.locator('main h1')).toHaveText(heading);
-      await expect(page.locator('[data-route-veil]')).toBeHidden();
+      await destination.goto(path === '/story' ? '/cv' : '/story');
+      await destination.goBack();
+      await expect(destination.locator('main h1')).toHaveText(heading);
+      await destination.goForward();
+      await expect(destination).toHaveURL(path === '/story' ? /\/cv$/ : /\/story$/);
+      await expect(destination.locator('[data-route-shutter]')).toBeHidden();
+      await destination.close();
     }
     expect(errors).toEqual([]);
   });

@@ -2,19 +2,19 @@
 
 **A portfolio of interactive systems, product interfaces and engineering decisions.** Built with Svelte 5, SvelteKit, TypeScript and Tailwind CSS.
 
-[Visit the portfolio](https://miguelalmeida.xyz/) · [Deployment contract](DEPLOYMENT.md) · [Engineering guide](docs/README.md) · [Contributing](CONTRIBUTING.md)
+[Visit the portfolio](https://miguelalmeida.is-a.dev/) · [Deployment contract](DEPLOYMENT.md) · [Engineering guide](docs/README.md) · [Contributing](CONTRIBUTING.md)
 
 ## Selected work
 
 | Project | What to inspect |
 | --- | --- |
-| [Needle](https://needle.miguelalmeida.xyz/) | Semantic artwork search over a prepared 10,000-work museum corpus, with a [case study](https://miguelalmeida.xyz/work/needle) |
-| [Second Voice](https://secondvoice-ai.vercel.app/second-voice) | Writing interactions, editorial typography and honest prepared-versus-live states |
-| [Flow](https://miguelalmeida0.github.io/flow/) | Voice-driven actions in a directly editable personal computing workspace |
-| [Leu](https://leu-desktop.vercel.app/) | Local-first reading and source-linked learning, with a separate native iOS implementation |
+| [Needle](https://needle.miguelalmeida.xyz/) | Semantic artwork search over a prepared 10,000-work museum corpus, with a [case study](https://miguelalmeida.is-a.dev/work/needle) |
+| [Second Voice](https://secondvoice.miguelalmeida.xyz/) | Writing interactions, editorial typography and honest prepared-versus-live states |
+| [Flow case study](https://miguelalmeida.is-a.dev/work/flow) | Voice-driven actions in a directly editable personal computing workspace; [source](https://github.com/miguelalmeida0/flow) |
+| [Leu](https://leu.miguelalmeida.xyz/) | Local-first reading and source-linked learning, with a separate native iOS implementation |
 | F24 | Public-safe production engineering case study; private employer source and deployment are not linked |
 
-Case studies live at `/work/needle`, `/work/second-voice-ai`, `/work/f24`, `/work/flow`, `/work/leu` and `/work/mirror-ai`. Supporting routes include `/cv`, `/story` and `/portfolio.pdf`. The Second Voice interaction distinguishes **prepared examples** from live inference; a demo state is never presented as a verified paid-provider response.
+Case studies live at `/work/needle`, `/work/second-voice`, `/work/f24`, `/work/flow` and `/work/leu`. Historical Second Voice slugs redirect permanently to `/work/second-voice`. Supporting routes include `/cv`, `/story` and `/portfolio.pdf`. The Second Voice interaction distinguishes **prepared examples** from live inference; a demo state is never presented as a verified paid-provider response.
 
 ## Develop
 
@@ -45,7 +45,7 @@ The Playwright suite covers Chromium, Firefox and WebKit, including mobile profi
 | Path | Responsibility |
 | --- | --- |
 | `src/routes/` | SvelteKit pages, data and navigation |
-| `src/lib/components/experience/` | Portfolio surfaces, case-study entrypoints and selected-work interactions |
+| `src/lib/components/experience/` | Current homepage, navigation, footer and selected-work interactions |
 | `src/lib/case-studies/` | Project narratives and source-grounded engineering evidence |
 | `src/lib/ask/` | Guided question planning and state |
 | `src/lib/motion/` | Interaction choreography, reduced-motion behavior and cleanup |
@@ -60,3 +60,5 @@ For source-of-truth deployment and CV handling, read [`DEPLOYMENT.md`](DEPLOYMEN
 Films and screenshots demonstrate recorded interactions, not current third-party service availability. F24 examples are intentionally bounded to publicly shareable decisions and outcomes. Source references and prepared examples are labeled where they differ from production behavior.
 
 Maintained by [Miguel Almeida](https://github.com/miguelalmeida0).
+
+[Cleanup and preservation record](docs/CLEANUP_2026-10-09.md)
