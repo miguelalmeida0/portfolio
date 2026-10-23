@@ -56,7 +56,7 @@ jobs:
       - name: Test the published portfolio in Chromium and WebKit
         env:
           PORTFOLIO_AUDIT_OUTPUT: ${{ github.workspace }}/test-results/release
-        run: npx playwright test -c tests/e2e/portfolio-release.config.ts --project=${{ matrix.browser }}
+        run: npx playwright test -c tests/e2e/human-input-release.config.ts --project=${{ matrix.browser }}
       - name: Upload browser failure evidence
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
@@ -87,7 +87,7 @@ jobs:
       - name: Test scrollbar input, footer contacts and PDF navigation
         env:
           PORTFOLIO_AUDIT_OUTPUT: ${{ github.workspace }}/test-results/scrollbar
-        run: npx playwright test -c tests/e2e/portfolio-release.config.ts --grep 'scrollbar|footer keyboard'
+        run: npx playwright test -c tests/e2e/human-input-release.config.ts --grep 'scrollbar|footer keyboard'
       - name: Upload browser failure evidence
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
