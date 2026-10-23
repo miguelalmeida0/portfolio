@@ -111,7 +111,7 @@
         eventBus.on('pagerendered', ({ error }: { error?: unknown }) => {
           if (error && !disposed) failed = true;
         });
-        loadingTask = pdfjs.getDocument({ url: '/files/miguel-almeida-cv.pdf' });
+        loadingTask = pdfjs.getDocument({ url: '/files/Miguel_Almeida_CV.pdf' });
         const pdf = await loadingTask.promise;
         if (disposed) return;
         links.setDocument(pdf);
@@ -144,14 +144,14 @@
     <div class="reader-title"><h1>Miguel Almeida · CV</h1><p>Links open in new tabs.</p></div>
     <div class="reader-actions">
       <CvZoom ready={ready && !failed} {percent} mode={scale} onscale={changeScale} />
-      <a class="download" href="/files/miguel-almeida-cv.pdf" download="Miguel-Almeida-CV.pdf">Download PDF</a>
+      <a class="download" href="/files/Miguel_Almeida_CV.pdf" download="Miguel_Almeida_CV.pdf">Download PDF</a>
     </div>
   </header>
   <div class="reader-body">
     {#if failed}
       <div class="reader-message" role="alert">
         <p>The PDF preview couldn’t load.</p>
-        <a href="/files/miguel-almeida-cv.pdf" download="Miguel-Almeida-CV.pdf">Download the PDF</a>
+        <a href="/files/Miguel_Almeida_CV.pdf" download="Miguel_Almeida_CV.pdf">Download the PDF</a>
         <a href="/cv" target="_blank" rel="noopener noreferrer">Read the web CV</a>
       </div>
     {:else if !ready}
@@ -196,7 +196,7 @@
   .cv-reader :global(.pdfViewer .annotationLayer .linkAnnotation > a:hover) {
     opacity: 1;
     background: transparent;
-    box-shadow: inset 0 0 0 2px #12372d, inset 0 0 0 4px #fffdf8;
+    box-shadow: none;
   }
   .cv-reader :global(.pdfViewer .annotationLayer .linkAnnotation > a:focus-visible) {
     opacity: 1;

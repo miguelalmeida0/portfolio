@@ -42,7 +42,7 @@
           </a>
         </div>
         <div class="c-action-arrival" data-cv-action>
-          <a class="c-pdf-action c-pdf-download" href="/files/miguel-almeida-cv.pdf" download="Miguel-Almeida-CV.pdf" {...destinationLink('/files/miguel-almeida-cv.pdf', 'Miguel-Almeida-CV.pdf')}>
+          <a class="c-pdf-action c-pdf-download" href="/files/Miguel_Almeida_CV.pdf" download="Miguel_Almeida_CV.pdf" {...destinationLink('/files/Miguel_Almeida_CV.pdf', 'Miguel_Almeida_CV.pdf')}>
             <span class="c-action-label">Download PDF</span>
             <span class="c-action-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M16 5v18m-7-7 7 7 7-7M6 27h20" /></svg></span>
           </a>

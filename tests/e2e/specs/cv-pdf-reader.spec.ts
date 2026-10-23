@@ -50,7 +50,7 @@ test('PDF links have readable names and opaque hover and keyboard indicators', a
   const bounds = await github.boundingBox();
   await github.hover();
   await expect(github).toHaveCSS('opacity', '1');
-  await expect(github).not.toHaveCSS('box-shadow', 'none');
+  await expect(github).toHaveCSS('box-shadow', 'none');
   expect(await github.boundingBox()).toEqual(bounds);
   await page.mouse.move(0, 0);
   await page.getByRole('region', { name: 'CV pages', exact: true }).focus();
@@ -93,13 +93,13 @@ test('PDF links open separately and preserve the rendered CV', async ({ page, co
     await popup.close();
   }
   const download = page.getByRole('link', { name: 'Download PDF', exact: true });
-  await expect(download).toHaveAttribute('download', 'Miguel-Almeida-CV.pdf');
+  await expect(download).toHaveAttribute('download', 'Miguel_Almeida_CV.pdf');
   const response = await request.get((await download.getAttribute('href'))!);
   expect((await response.body()).subarray(0, 5).toString()).toBe('%PDF-');
 });
 
 test('failed PDF loading keeps a usable download and web CV', async ({ page }) => {
-  await page.route('**/files/miguel-almeida-cv.pdf', route => route.abort());
+  await page.route('**/files/Miguel_Almeida_CV.pdf', route => route.abort());
   await page.goto('/cv/pdf');
   await expect(page.getByRole('alert')).toContainText('The PDF preview couldn’t load.');
   await expect(page.getByRole('link', { name: 'Download PDF', exact: true })).toBeVisible();
