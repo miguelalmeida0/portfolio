@@ -44,7 +44,7 @@ jobs:
     timeout-minutes: 20
     container:
       image: ${{ needs.checks.outputs.playwright-image }}
-      options: --init --ipc=host
+      options: --user 1001 --init --ipc=host
     strategy:
       fail-fast: false
       matrix:
@@ -81,7 +81,7 @@ jobs:
     timeout-minutes: 20
     container:
       image: ${{ needs.checks.outputs.playwright-image }}
-      options: --init --ipc=host
+      options: --user 1001 --init --ipc=host
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
