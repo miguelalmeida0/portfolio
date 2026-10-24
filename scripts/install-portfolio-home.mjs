@@ -1,7 +1,8 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import assert from 'node:assert/strict';
+import { patchHomeNav } from './patch-home-nav.mjs';
 const output = '.svelte-kit/cloudflare';
-const html = await readFile('release/home.html', 'utf8');
+const html = patchHomeNav(await readFile('release/home.html', 'utf8'));
 assert.ok(html.includes('id="contact"') && html.includes('sv-world') && html.includes('leu-nook-world'), 'Expected the reviewed Human Input portfolio');
 assert.ok(!html.includes('src="/workspace/'), 'Local asset paths cannot be published');
 await writeFile(`${output}/index.html`, html);
