@@ -43,3 +43,21 @@ test('reduced motion preserves project previews and all existing public routes',
  const pdf=await request.get('/files/miguel-almeida-cv.pdf');
  expect(pdf.headers()['content-type']).toContain('application/pdf');
 });
+
+for (const width of [320,390,430,768]) {
+ test(`mobile ${width}: opaque navigation and readable Needle in reduced motion`,async({page})=>{
+  await page.setViewportSize({width,height:844});
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.goto('/');
+  const nav=page.locator('.nav');
+  const title=page.locator('.hero-name');
+  expect((await title.boundingBox())!.y).toBeGreaterThan((await nav.boundingBox())!.height+15);
+  await page.evaluate(()=>scrollTo(0,70));
+  expect(await nav.evaluate(el=>getComputedStyle(el).backgroundColor)).not.toBe('rgba(0, 0, 0, 0)');
+  const preview=page.locator('.needle-peek');
+  expect((await preview.boundingBox())!.width).toBeGreaterThan(width*.8);
+  await expect(preview.locator('a svg')).toBeVisible();
+  await expect(preview.locator('.peek-mobile-search')).toBeVisible();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+ });
+}
