@@ -1,0 +1,316 @@
+/* The selected role-first composition. Desktop keeps its existing choreography. */
+.mobile-role, .mobile-menu, .brand-name, .hero-actions, .work-count,
+.project-case-fallback { display: none; }
+.mobile-case-arrow { display: none; }
+.fold-contact .footer-illustration {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  :root {
+    --nav-h: calc(72px + env(safe-area-inset-top, 0px));
+    --gutter: clamp(20px, 6.15vw, 40px);
+    --gut: var(--gutter);
+    --hand-size: clamp(100px, 29vw, 184px);
+  }
+
+  html { scroll-padding-top: calc(var(--nav-h) + 20px); }
+  .nav {
+    display: flex;
+    height: var(--nav-h);
+    padding: env(safe-area-inset-top, 0px) var(--edge) 0;
+    gap: 12px;
+    background: transparent;
+  }
+  .brand { gap: 10px; min-width: 0; letter-spacing: -.025em; }
+  .brand .brand-logo { width: 43px; height: 30px; }
+  .brand-name { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 15px; font-weight: 400; white-space: nowrap; }
+  .nav-end { display: none; }
+  body:not(.nav-scrolled) .nav { background: var(--pink); border-bottom-color: transparent; }
+  .mobile-menu { display: block; flex: none; font-size: 14px; }
+  .mobile-menu > summary {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 12px;
+    min-width: 72px;
+    min-height: 44px;
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+  }
+  .mobile-menu > summary::-webkit-details-marker { display: none; }
+  .mobile-menu > summary svg { width: 32px; height: 28px; }
+  .mobile-menu[open] > summary { text-decoration: underline; text-underline-offset: 5px; }
+  .mobile-menu-panel {
+    position: absolute;
+    inset: var(--nav-h) 0 auto;
+    display: grid;
+    padding: 12px var(--edge) 24px;
+    background: var(--paper);
+    border-block: 1px solid var(--line);
+    max-height: calc(100dvh - var(--nav-h));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .mobile-menu-panel a {
+    display: flex;
+    align-items: center;
+    min-height: 52px;
+    font-size: 20px;
+    text-decoration: none;
+  }
+  body:has(.mobile-menu[open]) .nav { background: var(--paper); border-bottom-color: var(--line); }
+
+  body .hero, body.pause-motion .hero {
+    display: block;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    overflow: visible;
+    padding: 0;
+    isolation: isolate;
+  }
+  body .hero .hero-front, body.pause-motion .hero .hero-front {
+    position: relative;
+    inset: auto;
+    min-height: 0;
+    padding: calc(var(--nav-h) + 16px) var(--edge) max(62px, calc(var(--hand-size) / 1.6));
+    background: var(--pink);
+    border-radius: 0 0 50% 50% / 0 0 12px 12px;
+    transform: none !important;
+    will-change: auto;
+    pointer-events: auto;
+  }
+  body .hero .hero-content, body.pause-motion .hero .hero-content {
+    position: static;
+    width: auto;
+    max-width: 760px;
+    margin: 0;
+    padding: 0;
+    opacity: 1 !important;
+    transform: none !important;
+    will-change: auto;
+    pointer-events: auto;
+  }
+  .hero-name > h1:not(.mobile-role), .hero-meta .hero-role { display: none; }
+  .hero .hero-name .mobile-role {
+    display: block;
+    font-size: clamp(46px, 16.2vw, 88px);
+    line-height: .98;
+    letter-spacing: -.055em;
+    font-weight: 400;
+  }
+  .hero .mobile-role .role-pair, .hero .mobile-role .role-pair > span { display: block; }
+  .hero .hero-meta { margin-top: 20px; }
+  .hero .hero-experience {
+    display: block;
+    margin: 0;
+    font-size: clamp(17px, 4.6vw, 21px);
+    line-height: 1.3;
+    letter-spacing: -.025em;
+  }
+  .hero-experience > span { display: block; white-space: normal; }
+  .hero .hero-location {
+    max-width: none;
+    margin-top: 18px;
+    color: #5d6c8c;
+    font-size: 14px;
+    line-height: 1.5;
+    letter-spacing: -.01em;
+    text-wrap: initial;
+  }
+  .hero-stack { display: block; }
+  .hero-stack .stack-divider { display: none; }
+  .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .hero-actions .button { min-height: 46px; padding: 10px 12px; font-size: 16px; border-color: var(--ink); gap: 12px; }
+  .hero-actions svg { width: 20px; height: 20px; }
+  body .hero .hero-under, body .hero .sheet, body .hero .edge-handle,
+  body .hero .edge-label, body .hero .needle-peek { display: none !important; }
+  body .hero .hand, body.pause-motion .hero .hand {
+    display: block;
+    top: auto;
+    bottom: -16px;
+    left: -10px;
+    width: var(--hand-size) !important;
+    height: calc(var(--hand-size) / 1.6) !important;
+    transform: none !important;
+    /* Desktop writes a 0 0 pivot inline; reset it when the viewport narrows. */
+    transform-origin: center !important;
+    will-change: auto;
+  }
+  body .hero .hand.right { left: auto; right: -10px; transform: scaleX(-1) !important; }
+  .hand .hand-photo-point { display: none !important; }
+
+  /* Project feed: one visual, one sentence, one visible action. */
+  .work .work-head {
+    display: block;
+    padding: 56px var(--edge) 32px;
+  }
+  .work-head .section-title {
+    font-size: clamp(30px, 8.2vw, 42px);
+    line-height: 1.12;
+    letter-spacing: -.04em;
+  }
+  .work-head > p, .work-count, .work-index { display: none !important; }
+  .work-head .text-run { transform: none !important; }
+  .work-stage { height: auto; min-height: 0; overflow: visible; }
+  .work .work-track { display: block; width: auto; padding: 0 var(--edge); transform: none !important; }
+  .project {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 16px;
+    row-gap: 0;
+    width: auto;
+    min-width: 0;
+    padding: 0 0 72px;
+    border: 0;
+  }
+  .project:last-child { padding-bottom: 16px; }
+  .project-top, .project-top > div:first-child, .project-actions, .project-bottom { display: contents; }
+  .project h3 {
+    grid-area: 2 / 1;
+    align-self: center;
+    min-width: 0;
+    font-size: clamp(26px, 7vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -.035em;
+  }
+  .project .project-kicker, .project .project-ownership,
+  .project .project-ai, .project .project-results,
+  .project .project-private, .project .project-disclosure,
+  .project-actions > button, .mobile-case-arrow { display: none; }
+  .project .project-shot {
+    grid-area: 1 / 1 / auto / -1;
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 1;
+    height: auto;
+    min-height: 0;
+    margin: 0 0 18px;
+    padding: 0;
+    border-radius: 0;
+    cursor: pointer;
+    transform: none !important;
+    clip-path: none !important;
+  }
+  #needle .project-shot { aspect-ratio: 1.45; }
+  .project-actions > a.button, #f24 .project-actions > button {
+    display: inline-flex;
+    grid-area: 2 / 2;
+    align-self: center;
+    justify-self: end;
+    min-height: 44px;
+    margin: 0;
+    padding: 4px 0 4px 8px;
+    font-size: 13px;
+    font-weight: 400;
+    gap: 7px;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    border-radius: 0;
+    text-align: end;
+  }
+  .project-actions .button:hover { background: transparent; text-decoration: underline; }
+  .project-actions .button svg { width: 17px; height: 17px; }
+  .project-bottom .project-summary {
+    display: block;
+    grid-area: 3 / 1 / auto / -1;
+    margin: 0;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.5;
+    max-width: 36ch;
+    letter-spacing: -.01em;
+  }
+  .project-shot .shot-action { display: none; }
+  .project-scene .scene-world { perspective: none; }
+
+  /* Keep Needle's original artwork and headline; remove miniature UI chrome. */
+  .needle-scene .scene-world { height: 440px; top: 50%; }
+  .needle-scene .needle-search {
+    left: 72px;
+    top: 162px;
+    width: 496px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    transform: none !important;
+  }
+  .needle-scene .needle-question { font-size: 48px; line-height: 1.05; letter-spacing: -1.6px; }
+  .needle-scene .needle-wordmark, .needle-scene .needle-description,
+  .needle-scene .needle-input, .needle-scene .needle-examples,
+  .needle-scene .needle-result, .needle-scene .art-orbit { display: none; }
+  .needle-scene [data-orbit="0"], .needle-scene [data-orbit="1"], .needle-scene [data-orbit="4"] {
+    display: block;
+    transform: none !important;
+  }
+  .needle-scene [data-orbit="0"] { left: 34px !important; top: 34px !important; }
+  .needle-scene [data-orbit="1"] { left: 480px !important; top: 28px !important; }
+  .needle-scene [data-orbit="4"] { left: 494px !important; top: 312px !important; }
+  .project .project-scene { pointer-events: none; }
+  .project .project-shot img.project-cover { object-fit: contain; clip-path: none !important; }
+  .section.about { padding-block: 48px; }
+  .about .section-title { font-size: clamp(34px, 8.7vw, 52px); }
+  /* The photo, paper and hand mask share one bounded mobile illustration. */
+  .human-contact.fold-contact {
+    --footer-art-height: clamp(340px, 106vw, 550px);
+    --person-width: min(70vw, 360px);
+    --person-left: calc(50% - min(35vw, 180px));
+    --person-top: 0px;
+    display: block;
+    height: auto;
+    min-height: 0;
+    padding: calc(var(--footer-art-height) + 32px) var(--edge) 34px;
+  }
+  .fold-contact .footer-illustration { height: var(--footer-art-height); bottom: auto; }
+  .fold-contact .footer-paper, .fold-contact .footer-front { height: 100%; }
+  .fold-contact .footer-person { top: 0; }
+  .fold-contact .footer-front-wide { display: block; }
+  .fold-contact .footer-front-compact { display: none; }
+  .human-contact.fold-contact h2 { font-size: clamp(32px, 7vw, 42px); }
+  .fold-contact .footer-signature {
+    position: relative;
+    max-width: 100%;
+    left: auto;
+    bottom: auto;
+    margin-top: 28px;
+  }
+  .fold-contact .footer-signature strong { font-size: 21px; }
+  .fold-contact .footer-back-top { bottom: 22px; right: var(--edge); }
+  .dialog-body { overflow-wrap: anywhere; }
+  .dialog-heading h2 { font-size: clamp(30px, 9vw, 48px); }
+  .no-script-note { position: relative; padding: 16px var(--edge); margin-top: var(--nav-h); font-size: 14px; }
+}
+
+@media (min-width: 600px) and (max-width: 900px) {
+  body .hero .hero-front { padding-top: calc(var(--nav-h) + 38px); padding-bottom: calc(var(--hand-size) / 1.6); }
+  .hero .mobile-role .role-pair > span { display: inline; }
+  .hero .mobile-role .role-pair { white-space: nowrap; }
+  .hero .hero-name .mobile-role { font-size: clamp(56px, 9.1vw, 80px); line-height: 1.05; }
+  .hero-actions { max-width: 390px; }
+  .hero .hero-experience > span { display: inline; }
+  #needle .project-shot { aspect-ratio: 1.45; }
+  .project-actions > a.button, #f24 .project-actions > button { font-size: 15px; }
+  .project-bottom .project-summary { font-size: 17px; max-width: 48ch; }
+}
+
+@media (max-width: 359px) {
+  .brand { gap: 7px; }
+  .brand-name { font-size: 13px; }
+  .brand .brand-logo { width: 38px; }
+  .mobile-menu > summary { min-width: 66px; gap: 8px; }
+  .hero-actions .button { padding-inline: 8px; font-size: 14px; gap: 8px; }
+  .project-actions > a.button, #f24 .project-actions > button { font-size: 12px; }
+  #second-voice h3 { font-size: 26px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu-panel, .hero-actions .button { transition: none; }
+}

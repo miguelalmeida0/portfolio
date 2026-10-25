@@ -1,0 +1,58 @@
+import { readFileSync } from 'node:fs';
+
+// Keep the reviewed self-contained release and the responsive additions separate.
+// Both development and production run the same fail-closed transformation.
+export function patchHomeMobile(html) {
+  if (html.includes('id="role-first-mobile"')) return html;
+  const replace = (before, after) => {
+    if (html.split(before).length !== 2) throw new Error(`Unexpected mobile homepage source: ${before.slice(0, 90)}`);
+    html = html.replace(before, after);
+  };
+  const arrow = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 15 15 5M5 5h10v10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  // Equal icon from Lucide (@lucide/svelte), ISC licence. Portfolio arrows reuse its existing asset.
+  const menuIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" x2="19" y1="9" y2="9"/><line x1="5" x2="19" y1="15" y2="15"/></svg>';
+  replace('</svg></a><div class="nav-end">', '</svg><span class="brand-name" aria-hidden="true">Miguel Almeida</span></a><div class="nav-end">');
+  replace('</div></div></nav>\n<main>', `</div></div><details class="mobile-menu"><summary>Menu ${menuIcon}</summary><div class="mobile-menu-panel"><a href="#work">Work</a><a href="#about">About</a><a href="https://miguelalmeida.is-a.dev/cv/pdf" target="_blank" rel="noopener">View CV</a><a href="mailto:miguelalmeida1592@gmail.com">Get in touch</a></div></details></nav>\n<main>`);
+  replace('</span></span></h1></div>', '</span></span></h1><h1 class="mobile-role"><span class="role-pair"><span>Frontend</span> <span>engineer</span></span><span class="role-pair"><span>&amp; design</span> <span>engineer.</span></span></h1></div>');
+  replace('<span class="hero-stack"> · React', '<span class="hero-stack"><span class="stack-divider"> · </span>React');
+  replace(' </div>\n </div>\n\n<div class="hand left"', ` </div><div class="hero-actions"><a class="button" href="https://miguelalmeida.is-a.dev/cv/pdf" target="_blank" rel="noopener">View CV ${arrow}</a><a class="button solid" href="mailto:miguelalmeida1592@gmail.com">Get in touch ${arrow}</a></div>\n </div>\n\n<div class="hand left"`);
+  replace('<p>F24 and three independent projects.</p></div>', '<p>F24 and three independent projects.</p><span class="work-count" aria-label="Four projects">01—04</span></div>');
+  // Public case-study routes remain available when script execution is disabled.
+  let caseLinks = 0;
+  html = html.replace(/(<button class="button" type="button" data-case="([^"]+)" aria-label="Read ([^"]+) case study">)Read case study<\/button>/g, (_, open, id, title) => {
+    caseLinks++;
+    return `${open}Read case study <span class="mobile-case-arrow">${arrow}</span></button><a class="project-case-fallback" href="https://miguelalmeida.is-a.dev/work/${id}" aria-label="Read ${title} case study">Read case study</a>`;
+  });
+  if (caseLinks !== 4) throw new Error(`Expected four case-study actions, found ${caseLinks}`);
+  replace("const reduced=matchMedia('(prefers-reduced-motion:reduce)'),wide=", "const mobileLayout=matchMedia('(max-width:900px)');\n const reduced=matchMedia('(prefers-reduced-motion:reduce)'),wide=");
+  replace("restoreTarget=project.querySelector('[data-case]');", "restoreTarget=project.querySelector(mobileLayout.matches?'.project-shot':'[data-case]');");
+  // The portrait moves during its entrance. Clip all four illustration layers
+  // together so the body cannot peek below the foreground's SVG viewport.
+  replace('<svg class="footer-paper"', '<div class="footer-illustration" aria-hidden="true"><svg class="footer-paper"');
+  replace('  <div class="footer-contact-main">', '  </div>\n  <div class="footer-contact-main">');
+  replace(' function measureHero(){', ` function measureHero(){
+  if(mobileLayout.matches){
+   layout={w:hero.clientWidth,h:hero.clientHeight,handWidth:0,handHeight:0};
+   return;
+  }`);
+  replace(' function updateNavSurface(){', ` function updateNavSurface(){
+  if(mobileLayout.matches){
+   const bottom=hero.getBoundingClientRect().bottom;
+   document.body.classList.toggle('nav-scrolled',bottom<=navigation.getBoundingClientRect().bottom+64);
+   return;
+  }`);
+  replace("  motion=hasGSAP&&!reduced.matches;window.motionEnabled=motion;", `  if(mobileLayout.matches){
+   motion=false;window.motionEnabled=false;
+   document.body.classList.remove('pause-motion');
+   galleryClock.u=0;track.style.removeProperty('transform');
+   panels.forEach(el=>el.querySelector('.project-shot').style.removeProperty('transform'));
+   projectScenes.reset(true);measureHero();updateNavigation();
+   return;
+  }
+  motion=hasGSAP&&!reduced.matches;window.motionEnabled=motion;`);
+  const css = readFileSync(new URL('../release/mobile-role.css', import.meta.url), 'utf8');
+  const js = readFileSync(new URL('../release/mobile-role.js', import.meta.url), 'utf8');
+  replace('</head>', `<style id="role-first-mobile">${css}</style></head>`);
+  replace('</body></html>', `<noscript><style>.project-actions [data-case]{display:none!important}.project-case-fallback{display:inline-flex;min-height:44px;align-items:center;padding:8px 0}@media(max-width:900px){.project-case-fallback{grid-area:4/1/auto/-1;justify-self:start;font-size:15px}#f24 .project-case-fallback{grid-area:2/2;font-size:12px}}</style></noscript><script>${js}</script></body></html>`);
+  return html;
+}

@@ -30,7 +30,7 @@ test('footer keyboard contacts and scrollbar work on a narrow screen',async({pag
  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);
  expect(overflow).toBe(false);
  await page.getByRole('link',{name:/Back to top/}).click();
- await expect(page.getByRole('heading',{name:'Miguel Almeida',exact:true})).toBeInViewport();
+ await expect(page.getByRole('heading',{name:'Frontend engineer & design engineer.',exact:true})).toBeInViewport();
 });
 
 test('reduced motion preserves project previews and all existing public routes',async({page,request})=>{
@@ -50,14 +50,39 @@ for (const width of [320,390,430,768]) {
   await page.emulateMedia({reducedMotion:'reduce'});
   await page.goto('/');
   const nav=page.locator('.nav');
-  const title=page.locator('.hero-name');
+  const title=page.locator('.mobile-role');
   expect((await title.boundingBox())!.y).toBeGreaterThan((await nav.boundingBox())!.height+15);
   await page.evaluate(()=>scrollTo(0,70));
   expect(await nav.evaluate(el=>getComputedStyle(el).backgroundColor)).not.toBe('rgba(0, 0, 0, 0)');
-  const preview=page.locator('.needle-peek');
+  const preview=page.locator('#needle .project-shot');
   expect((await preview.boundingBox())!.width).toBeGreaterThan(width*.8);
-  await expect(preview.locator('a svg')).toBeVisible();
-  await expect(preview.locator('.peek-mobile-search')).toBeVisible();
+  await expect(preview.locator('.needle-question')).toBeVisible();
+  await preview.click();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(preview).toBeFocused();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+ });
+}
+
+for (const width of [320,393,768]) {
+ test(`mobile ${width}: portrait entrance cannot expose fragments below the illustration`,async({page})=>{
+  await page.setViewportSize({width,height:852});
+  await page.goto('/');
+  await page.locator('#contact').scrollIntoViewIfNeeded();
+  // Hold the original entrance's largest downward offset, including after it settles.
+  await page.addStyleTag({content:'.footer-person{transform:translateY(18px)!important}'});
+  const illustration=page.locator('.footer-illustration');
+  const art=(await illustration.boundingBox())!;
+  const copy=(await page.locator('.footer-contact-main').boundingBox())!;
+  expect(copy.y-art.y-art.height).toBeGreaterThanOrEqual(31);
+  const {PNG}=await import('pngjs');
+  const strip=PNG.sync.read(await page.screenshot({clip:{x:0,y:art.y+art.height+2,width,height:20}}));
+  // This strip used to show detached clothing fragments during the entrance.
+  let fragments=0;
+  for(let i=0;i<strip.data.length;i+=4){
+   if(strip.data[i]!==16||strip.data[i+1]!==45||strip.data[i+2]!==136)fragments++;
+  }
+  expect(fragments).toBe(0);
  });
 }
