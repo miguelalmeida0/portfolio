@@ -5,8 +5,8 @@ const filmClamp = n => Math.max(0, Math.min(1, n));
 const filmPhase = (a, b, t) => filmClamp((t - a) / (b - a));
 const filmEase = (a, b, t) => { const n = filmPhase(a, b, t); return n * n * (3 - 2 * n); };
 
-function mobileFilmPlayback({mobile, reduced, hidden, dialog, paused, ratios}) {
-  if (!mobile || reduced || hidden || dialog || paused) return [];
+function mobileFilmPlayback({mobile, reduced, motionAllowed=false, hidden, dialog, paused, ratios}) {
+  if (!mobile || (reduced && !motionAllowed) || hidden || dialog || paused) return [];
   // Two small previews can be fully visible together. Neither should freeze
   // simply because an earlier project has the same viewport coverage.
   return ratios.flatMap((ratio, i) => ratio > .18 ? [i] : []);
@@ -47,8 +47,16 @@ function createMobileProjectFilms(panels) {
   const mobile = matchMedia('(max-width:900px)'), reduced = matchMedia('(prefers-reduced-motion:reduce)');
   const dialog = document.querySelector('#case-dialog');
   if (!window.gsap || !window.IntersectionObserver || !button) return {sync(){}, stop(){}};
-  let enabled = false, paused = false;
-  try { paused = sessionStorage.getItem('portfolio-previews-paused') === 'true'; } catch {}
+  const playRequested = new URLSearchParams(location.search).get('motion') === 'play';
+  let enabled = false, paused = false, motionAllowed = playRequested;
+  try {
+    paused = !playRequested && sessionStorage.getItem('portfolio-previews-paused') === 'true';
+    motionAllowed ||= sessionStorage.getItem('portfolio-previews-motion-allowed') === 'true';
+    if (playRequested) {
+      sessionStorage.setItem('portfolio-previews-paused','false');
+      sessionStorage.setItem('portfolio-previews-motion-allowed','true');
+    }
+  } catch {}
   const scenes = panels.map((panel,i) => {
     const host=panel.querySelector('.project-scene'), $=s=>host.querySelector(s);
     // These are visual layers inside the existing semantic preview button.
@@ -120,34 +128,53 @@ function createMobileProjectFilms(panels) {
     return {host,clock,timeline,render,save,restore,ratio:0};
   });
   const update=()=>{
-    const active=enabled?mobileFilmPlayback({mobile:mobile.matches,reduced:reduced.matches,hidden:document.hidden,dialog:dialog.open,paused,ratios:scenes.map(s=>s.ratio)}):[];
+    const active=enabled?mobileFilmPlayback({mobile:mobile.matches,reduced:reduced.matches,motionAllowed,hidden:document.hidden,dialog:dialog.open,paused,ratios:scenes.map(s=>s.ratio)}):[];
     scenes.forEach((scene,i)=>{
       const playing=active.includes(i);
       scene.host.dataset.filmPlaying=String(playing);
       scene.timeline.paused(!playing);
     });
-    button.setAttribute('aria-pressed',String(paused));button.querySelector('span').textContent=paused?'Play motion':'Pause motion';
-    button.setAttribute('aria-label',paused?'Play project preview animations':'Pause project preview animations');
+    const blocked=paused||(reduced.matches&&!motionAllowed);
+    button.setAttribute('aria-pressed',String(blocked));button.querySelector('span').textContent=blocked?'Play motion':'Pause motion';
+    button.setAttribute('aria-label',blocked?'Play project preview animations':'Pause project preview animations');
+    button.title=reduced.matches&&!motionAllowed?'Your device requests reduced motion. You can choose to play these previews.':'';
   };
   const observer=new IntersectionObserver(entries=>{
     entries.forEach(entry=>{const scene=scenes.find(s=>s.host===entry.target);if(scene)scene.ratio=entry.isIntersecting?entry.intersectionRatio:0;});
     update();
   },{threshold:[0,.18,.3,.45,.6,.75,.9,1],rootMargin:'-72px 0px 0px 0px'});
   scenes.forEach(s=>observer.observe(s.host));
-  button.addEventListener('click',()=>{paused=!paused;try{sessionStorage.setItem('portfolio-previews-paused',String(paused));}catch{}update();});
+  button.addEventListener('click',()=>{
+    if(paused||(reduced.matches&&!motionAllowed)){paused=false;motionAllowed=true;}else paused=true;
+    try{
+      sessionStorage.setItem('portfolio-previews-paused',String(paused));
+      sessionStorage.setItem('portfolio-previews-motion-allowed',String(motionAllowed));
+    }catch{}
+    sync();
+  });
   document.addEventListener('visibilitychange',update);
   new MutationObserver(update).observe(dialog,{attributes:true,attributeFilter:['open']});
   const stop=()=>{
     enabled=false;button.hidden=true;
-    scenes.forEach(s=>{s.timeline.pause();s.host.classList.remove('mobile-film');delete s.host.dataset.filmPlaying;s.restore();});
+    scenes.forEach(s=>{s.timeline.pause();s.host.classList.remove('mobile-film','film-opt-in');delete s.host.dataset.filmPlaying;s.restore();});
   };
   const sync=()=>{
-    if(!mobile.matches||reduced.matches){stop();return;}
-    enabled=true;button.hidden=false;
-    scenes.forEach(s=>{s.save();s.host.classList.add('mobile-film');s.render(s.clock.t);});update();
+    if(!mobile.matches||(reduced.matches&&!motionAllowed)){stop();button.hidden=!mobile.matches;update();return;}
+    button.hidden=false;
+    if(!enabled){
+      enabled=true;
+      scenes.forEach(s=>{s.save();s.host.classList.add('mobile-film');s.render(s.clock.t);});
+    }
+    scenes.forEach(s=>s.host.classList.toggle('film-opt-in',motionAllowed));update();
   };
-  mobile.addEventListener('change',()=>{if(!mobile.matches)stop();});
-  reduced.addEventListener('change',()=>{if(reduced.matches)stop();else if(mobile.matches)sync();});
+  mobile.addEventListener('change',sync);
+  reduced.addEventListener('change',()=>{
+    if(reduced.matches){
+      motionAllowed=false;
+      try{sessionStorage.removeItem('portfolio-previews-motion-allowed');}catch{}
+    }
+    sync();
+  });
   addEventListener('pagehide',()=>scenes.forEach(s=>s.timeline.pause()));
   addEventListener('pageshow',update);
   return {sync,stop};

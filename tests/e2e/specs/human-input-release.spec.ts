@@ -117,9 +117,48 @@ test('mobile previews autoplay independently and pause offscreen, in dialogs and
  await expect(page.locator('#needle .project-scene')).toHaveAttribute('data-film-playing','true');
  await page.emulateMedia({reducedMotion:'reduce'});
  await expect(page.locator('.project-scene.mobile-film')).toHaveCount(0);
- await expect(toggle).toBeHidden();
+ await expect(toggle).toBeVisible();
+ await page.reload();
+ await expect(toggle).toHaveAccessibleName(/Play/);
+ await expect(page.locator('.project-scene.mobile-film')).toHaveCount(0);
  await page.setViewportSize({width:1440,height:900});
  await page.emulateMedia({reducedMotion:'no-preference'});
+ await expect(page.locator('.project-scene.mobile-film')).toHaveCount(0);
+});
+
+test('reduced-motion visitors can explicitly play previews and keep that choice on reload',async({page})=>{
+ await page.setViewportSize({width:393,height:852});
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await page.goto('/');
+ const toggle=page.locator('[data-film-toggle]');
+ await expect(page.locator('.project-scene.mobile-film')).toHaveCount(0);
+ await expect(toggle).toBeVisible();
+ await expect(toggle).toHaveAccessibleName(/Play/);
+ await toggle.click();
+ const scene=page.locator('#leu .project-scene');
+ await scene.scrollIntoViewIfNeeded();
+ await expect(scene).toHaveAttribute('data-film-playing','true');
+ await expect(scene.locator('.leu-leaf')).toHaveCSS('display','block');
+ const before=await scene.getAttribute('data-film-time');
+ await expect.poll(()=>scene.getAttribute('data-film-time')).not.toBe(before);
+ await page.reload();
+ await scene.scrollIntoViewIfNeeded();
+ await expect(scene).toHaveAttribute('data-film-playing','true');
+});
+
+test('explicit play link clears a saved pause without changing desktop motion',async({page})=>{
+ await page.setViewportSize({width:393,height:852});
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await page.goto('/');
+ await page.evaluate(()=>sessionStorage.setItem('portfolio-previews-paused','true'));
+ await page.goto('/?motion=play#leu');
+ const scene=page.locator('#leu .project-scene');
+ await expect(scene).toHaveAttribute('data-film-playing','true');
+ const before=await scene.getAttribute('data-film-time');
+ await expect.poll(()=>scene.getAttribute('data-film-time')).not.toBe(before);
+ await page.goto('/#leu');
+ await expect(scene).toHaveAttribute('data-film-playing','true');
+ await page.setViewportSize({width:1440,height:900});
  await expect(page.locator('.project-scene.mobile-film')).toHaveCount(0);
 });
 
