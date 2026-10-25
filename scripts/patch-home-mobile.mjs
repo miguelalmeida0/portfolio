@@ -16,7 +16,7 @@ export function patchHomeMobile(html) {
   replace('</span></span></h1></div>', '</span></span></h1><h1 class="mobile-role"><span class="role-pair"><span>Frontend</span> <span>engineer</span></span><span class="role-pair"><span>&amp; design</span> <span>engineer.</span></span></h1></div>');
   replace('<span class="hero-stack"> · React', '<span class="hero-stack"><span class="stack-divider"> · </span>React');
   replace(' </div>\n </div>\n\n<div class="hand left"', ` </div><div class="hero-actions"><a class="button" href="https://miguelalmeida.is-a.dev/cv/pdf" target="_blank" rel="noopener">View CV ${arrow}</a><a class="button solid" href="mailto:miguelalmeida1592@gmail.com">Get in touch ${arrow}</a></div>\n </div>\n\n<div class="hand left"`);
-  replace('<p>F24 and three independent projects.</p></div>', '<p>F24 and three independent projects.</p><span class="work-count" aria-label="Four projects">01—04</span></div>');
+  replace('<p>F24 and three independent projects.</p></div>', '<p>F24 and three independent projects.</p><span class="work-count" aria-label="Four projects">01—04</span><button class="film-toggle" data-film-toggle type="button" hidden aria-pressed="false" aria-label="Pause or play project preview animations"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path class="film-pause" d="M4 3h3v10H4zm5 0h3v10H9z"/><path class="film-play" d="m4 2 10 6-10 6z"/></svg><span>Pause motion</span></button></div>');
   // Public case-study routes remain available when script execution is disabled.
   let caseLinks = 0;
   html = html.replace(/(<button class="button" type="button" data-case="([^"]+)" aria-label="Read ([^"]+) case study">)Read case study<\/button>/g, (_, open, id, title) => {
@@ -25,6 +25,10 @@ export function patchHomeMobile(html) {
   });
   if (caseLinks !== 4) throw new Error(`Expected four case-study actions, found ${caseLinks}`);
   replace("const reduced=matchMedia('(prefers-reduced-motion:reduce)'),wide=", "const mobileLayout=matchMedia('(max-width:900px)');\n const reduced=matchMedia('(prefers-reduced-motion:reduce)'),wide=");
+  const films = readFileSync(new URL('../release/mobile-project-films.js', import.meta.url), 'utf8');
+  replace('function createProjectScenes(panels){', `${films}\nfunction createProjectScenes(panels){`);
+  replace('const projectScenes=createProjectScenes(panels),galleryClock=', 'const mobileFilms=createMobileProjectFilms(panels),projectScenes=createProjectScenes(panels),galleryClock=');
+  replace(' function setupMotion(){', ' function setupMotion(){\n  mobileFilms.stop();');
   replace("restoreTarget=project.querySelector('[data-case]');", "restoreTarget=project.querySelector(mobileLayout.matches?'.project-shot':'[data-case]');");
   // Extend the cream underneath the pink sheet; its curve owns the visible
   // seam. Shared corner coordinates prevent a detached tip, and the overlap
@@ -50,11 +54,11 @@ export function patchHomeMobile(html) {
    document.body.classList.remove('pause-motion');
    galleryClock.u=0;track.style.removeProperty('transform');
    panels.forEach(el=>el.querySelector('.project-shot').style.removeProperty('transform'));
-   projectScenes.reset(true);measureHero();updateNavigation();
+   projectScenes.reset(true);mobileFilms.sync();measureHero();updateNavigation();
    return;
   }
   motion=hasGSAP&&!reduced.matches;window.motionEnabled=motion;`);
-  const css = readFileSync(new URL('../release/mobile-role.css', import.meta.url), 'utf8');
+  const css = readFileSync(new URL('../release/mobile-role.css', import.meta.url), 'utf8') + '\n' + readFileSync(new URL('../release/mobile-project-films.css', import.meta.url), 'utf8');
   const js = readFileSync(new URL('../release/mobile-role.js', import.meta.url), 'utf8');
   replace('</head>', `<style id="role-first-mobile">${css}</style></head>`);
   replace('</body></html>', `<noscript><style>.project-actions [data-case]{display:none!important}.project-case-fallback{display:inline-flex;min-height:44px;align-items:center;padding:8px 0}@media(max-width:900px){.project-case-fallback{grid-area:4/1/auto/-1;justify-self:start;font-size:15px}#f24 .project-case-fallback{grid-area:2/2;font-size:12px}}</style></noscript><script>${js}</script></body></html>`);

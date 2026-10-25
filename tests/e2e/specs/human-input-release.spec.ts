@@ -86,3 +86,41 @@ for (const width of [320,393,768]) {
   expect(fragments).toBe(0);
  });
 }
+
+test('mobile previews autoplay independently and pause offscreen, in dialogs and by choice',async({page})=>{
+ await page.setViewportSize({width:393,height:852});
+ await page.emulateMedia({reducedMotion:'no-preference'});
+ await page.goto('/');
+ for(const id of ['needle','f24','second-voice','leu']){
+  const scene=page.locator(`#${id} .project-scene`);
+  await scene.scrollIntoViewIfNeeded();
+  await expect(scene).toHaveAttribute('data-film-playing','true');
+  const before=Number(await scene.getAttribute('data-film-time'));
+  await expect.poll(async()=>Number(await scene.getAttribute('data-film-time'))).not.toBe(before);
+  const other=page.locator('.project-scene[data-film-playing=true]');
+  await expect(other).toHaveCount(1);
+ }
+ const leu=page.locator('#leu .project-scene');
+ await page.locator('#leu .project-shot').click();
+ await expect(page.getByRole('dialog')).toBeVisible();
+ await expect(page.locator('.project-scene[data-film-playing=true]')).toHaveCount(0);
+ const stopped=await leu.getAttribute('data-film-time');
+ await page.waitForTimeout(200);
+ expect(await leu.getAttribute('data-film-time')).toBe(stopped);
+ await page.keyboard.press('Escape');
+ await expect(leu).toHaveAttribute('data-film-playing','true');
+ const toggle=page.locator('[data-film-toggle]');
+ await toggle.click();
+ await expect(toggle).toHaveAttribute('aria-pressed','true');
+ await page.locator('#needle .project-scene').scrollIntoViewIfNeeded();
+ await expect(page.locator('.project-scene[data-film-playing=true]')).toHaveCount(0);
+ await toggle.click();
+ await page.locator('#needle .project-scene').scrollIntoViewIfNeeded();
+ await expect(page.locator('#needle .project-scene')).toHaveAttribute('data-film-playing','true');
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await expect(page.locator('.project-scene.mobile-film')).toHaveCount(0);
+ await expect(toggle).toBeHidden();
+ await page.setViewportSize({width:1440,height:900});
+ await page.emulateMedia({reducedMotion:'no-preference'});
+ await expect(page.locator('.project-scene.mobile-film')).toHaveCount(0);
+});
