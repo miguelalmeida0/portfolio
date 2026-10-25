@@ -153,16 +153,16 @@ test('reduced-motion visitors get gentle autoplay and can keep their pause choic
  const scene=page.locator('#leu .project-scene');
  await scene.scrollIntoViewIfNeeded();
  await expect(scene).toHaveAttribute('data-film-playing','false');
- await expect(scene.locator('.leu-leaf')).toHaveCSS('display','block');
- await expect(scene.locator('.leu-leaf')).toHaveCSS('transform','none');
+ await expect(scene.locator('.leu-leaf')).toHaveCount(0);
+ await expect(scene.locator('.leu-room')).toHaveCSS('transform','none');
  await page.reload();
  await scene.scrollIntoViewIfNeeded();
  await expect(scene).toHaveAttribute('data-film-playing','false');
  await toggle.click();
  await scene.scrollIntoViewIfNeeded();
  await expect(scene).toHaveAttribute('data-film-playing','true');
- await expect(scene.locator('.leu-leaf')).toHaveCSS('display','block');
- await expect(scene.locator('.leu-leaf')).toHaveCSS('transform','none');
+ await expect(scene.locator('.leu-leaf')).toHaveCount(0);
+ await expect(scene.locator('.leu-room')).toHaveCSS('transform','none');
 });
 
 test('explicit play link clears a saved pause without changing desktop motion',async({page})=>{
@@ -170,18 +170,18 @@ test('explicit play link clears a saved pause without changing desktop motion',a
  await page.emulateMedia({reducedMotion:'reduce'});
  await page.goto('/');
  await page.evaluate(()=>sessionStorage.setItem('portfolio-previews-paused','true'));
- await page.goto('/?motion=play#leu');
- const scene=page.locator('#leu .project-scene');
+ await page.goto('/?motion=play#second-voice');
+ const scene=page.locator('#second-voice .project-scene');
  await expect(scene).toHaveAttribute('data-film-playing','true');
- const leaf=scene.locator('.leu-leaf');
- await expect(leaf).toHaveCSS('display','block');
- const turn=await leaf.evaluate(el=>getComputedStyle(el).transform);
- await expect.poll(()=>leaf.evaluate(el=>getComputedStyle(el).transform)).not.toBe(turn);
+ const transfer=scene.locator('.sv-transfer');
+ await expect(transfer).toHaveCSS('display','block');
+ const turn=await transfer.evaluate(el=>getComputedStyle(el).transform);
+ await expect.poll(()=>transfer.evaluate(el=>getComputedStyle(el).transform)).not.toBe(turn);
  const before=await scene.getAttribute('data-film-time');
  await expect.poll(()=>scene.getAttribute('data-film-time')).not.toBe(before);
- await page.goto('/#leu');
+ await page.goto('/#second-voice');
  await expect(scene).toHaveAttribute('data-film-playing','true');
- await expect(leaf).toHaveCSS('display','block');
+ await expect(transfer).toHaveCSS('display','block');
  await page.setViewportSize({width:1440,height:900});
  await expect(page.locator('.project-scene.mobile-film')).toHaveCount(0);
 });
@@ -215,13 +215,13 @@ test('plain mobile URL visibly autoplays all four previews with gentle reduced m
   const scene=page.locator(`#${id} .project-scene`);
   await scene.scrollIntoViewIfNeeded();
   await expect(scene).toHaveAttribute('data-film-playing','true');
-  const layers=scene.locator('.scene-world,.art-orbit,.rule-save,.sv-result>span,.sv-strength-dot,.leu-room');
+  const layers=scene.locator('.scene-world,.needle-search,.rule-save,.sv-result>span,.sv-strength-dot,.leu-room');
   const positions=await layers.evaluateAll(elements=>elements.map(el=>getComputedStyle(el).transform));
-  await expectVisiblePreviewChange(scene);
-  expect(await layers.evaluateAll(elements=>elements.map(el=>getComputedStyle(el).transform)),`${id} must use fades without moving its layers`).toEqual(positions);
+  await expectVisiblePreviewChange(id==='leu'?scene.locator('.leu-arch'):scene);
+  expect(await layers.evaluateAll(elements=>elements.map(el=>getComputedStyle(el).transform)),`${id} must keep its camera and reading copy still`).toEqual(positions);
  }
- await expect(page.locator('#leu .leu-leaf')).toHaveCSS('display','block');
- await expect(page.locator('#leu .leu-leaf')).toHaveCSS('transform','none');
+ await expect(page.locator('#leu .leu-leaf')).toHaveCount(0);
+ await expect(page.locator('#leu .leu-room')).toHaveCSS('transform','none');
  await page.locator('[data-film-toggle]').click();
  await expect(page.locator('.project-scene[data-film-playing=true]')).toHaveCount(0);
 });
@@ -233,22 +233,49 @@ test('Leu visibly keeps playing through the middle of its loop',async({page})=>{
  const scene=page.locator('#leu .project-scene');
  await scene.scrollIntoViewIfNeeded();
  await expect.poll(async()=>Number(await scene.getAttribute('data-film-time'))).toBeGreaterThan(3);
- await expectVisiblePreviewChange(scene);
+ await expectVisiblePreviewChange(scene.locator('.leu-arch'));
 });
 
-test('Leu reduced-motion loop visibly crossfades the chapter page and room on the reported iPhone viewport',async({page})=>{
- await page.setViewportSize({width:393,height:637});
- await page.emulateMedia({reducedMotion:'reduce'});
- await page.goto('/#leu');
- const scene=page.locator('#leu .project-scene'),leaf=scene.locator('.leu-leaf');
- await expect(scene).toHaveAttribute('data-film-playing','true');
- await expect(leaf).toHaveCSS('display','block');
- await expect(leaf).toHaveCSS('transform','none');
- await expect.poll(async()=>Number(await leaf.evaluate(el=>getComputedStyle(el).opacity))).toBeGreaterThan(.9);
- await expectVisiblePreviewChange(scene,.15);
- await expect.poll(async()=>Number(await leaf.evaluate(el=>getComputedStyle(el).opacity))).toBeLessThan(.05);
- await expect.poll(async()=>Number(await leaf.evaluate(el=>getComputedStyle(el).opacity))).toBeGreaterThan(.9);
- await expect(leaf).toHaveCSS('transform','none');
+for(const reducedMotion of ['reduce','no-preference'] as const){
+ test(`Leu ${reducedMotion}: only rain moves and the room has no covering panel`,async({page})=>{
+  await page.setViewportSize({width:393,height:637});
+  await page.emulateMedia({reducedMotion});
+  await page.goto('/#leu');await page.evaluate(()=>document.fonts.ready);
+  const scene=page.locator('#leu .project-scene'),drop=scene.locator('.leu-rain i').first();
+  await expect(scene).toHaveAttribute('data-film-playing','true');
+  await expect(scene.locator('.leu-leaf,.leu-window-glow')).toHaveCount(0);
+  await expect(scene.locator('.leu-room')).toHaveCSS('transform','none');
+  const before=await drop.evaluate(el=>getComputedStyle(el).transform);
+  await expect.poll(()=>drop.evaluate(el=>getComputedStyle(el).transform)).not.toBe(before);
+  await expectVisiblePreviewChange(scene.locator('.leu-arch'));
+  const {PNG}=await import('pngjs');
+  const bounds=(await scene.boundingBox())!,window=(await scene.locator('.leu-arch').boundingBox())!;
+  // Compare in CSS pixels, matching boundingBox even on high-DPR phones.
+  const a=PNG.sync.read(await scene.screenshot({scale:'css'}));await page.waitForTimeout(700);const b=PNG.sync.read(await scene.screenshot({scale:'css'}));
+  let outside=0;
+  for(let y=0;y<a.height;y++)for(let x=0;x<a.width;x++){
+   if(x>window.x-bounds.x-2&&x<window.x-bounds.x+window.width+2&&y>window.y-bounds.y-2&&y<window.y-bounds.y+window.height+2)continue;
+   const p=(y*a.width+x)*4;
+   const delta=Math.abs(a.data[p]-b.data[p])+Math.abs(a.data[p+1]-b.data[p+1])+Math.abs(a.data[p+2]-b.data[p+2]);
+   // Ignore subpixel compositor rounding, using the same visible-change
+   // threshold as the rain assertion above.
+   if(delta>30)outside++;
+  }
+  expect(outside,'The room, headline and sofa must stay still').toBe(0);
+ });
+}
+
+test('Needle tells an artwork search story with a moving magnifier and a match',async({page})=>{
+ await page.setViewportSize({width:393,height:637});await page.emulateMedia({reducedMotion:'reduce'});
+ await page.goto('/#needle');const scene=page.locator('#needle .project-scene'),lens=scene.locator('.needle-lens');
+ await expect(scene).toHaveAttribute('data-film-playing','true');await expect(lens).toHaveCSS('display','block');
+ await expect(scene.locator('.needle-query')).toHaveText('Something small and golden');
+ await expect.poll(async()=>Number(await lens.evaluate(el=>getComputedStyle(el).opacity))).toBeGreaterThan(.9);
+ const before=await lens.evaluate(el=>getComputedStyle(el).transform);
+ await expect.poll(()=>lens.evaluate(el=>getComputedStyle(el).transform)).not.toBe(before);
+ await expect.poll(async()=>Number(await scene.locator('.needle-found').evaluate(el=>getComputedStyle(el).opacity)),{timeout:9000}).toBeGreaterThan(.9);
+ await expect(scene.locator('.needle-found')).toHaveText('Found it.');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
 
 test('motion diagnostics distinguish an advancing clock from a saved pause',async({page})=>{

@@ -1,5 +1,5 @@
 /* Mobile project films: one subject, one clock, stable links and typography. */
-.film-toggle,.sv-transfer,.leu-leaf,.film-check,.leu-window-glow{display:none}
+.film-toggle,.sv-transfer,.needle-lens,.needle-found,.film-check{display:none}
 @media(max-width:900px){
  .work .work-head{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:12px;text-align:left}
  .film-toggle:not([hidden]){display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:4px 0 4px 6px;border:0;background:none;color:var(--ink);font:400 12px/1.2 'Public Sans',sans-serif;white-space:nowrap;cursor:pointer}
@@ -8,9 +8,17 @@
  .mobile-film:not([data-film-playing=true]) *{animation-play-state:paused!important;will-change:auto!important}
  .mobile-film .demo-cursor{display:none}
  .mobile-film .scene-world{perspective:1000px}
- /* Needle: three real collection objects become a curated fan and a close-up. */
+ /* Needle: describe an object, inspect the collection and find the match. */
  .needle-scene.mobile-film .needle-search{left:44px;top:34px;width:552px;transform:none!important}
  .needle-scene.mobile-film .needle-question{font-size:48px;line-height:1.02;letter-spacing:-1.6px}
+ .needle-scene.mobile-film .needle-input{display:flex;position:relative;margin-top:16px;height:42px;padding:0;gap:14px;border:0;border-bottom:1px solid #829487;border-radius:0;background:none;box-shadow:none;font-size:26px;text-align:left}
+ .needle-scene.mobile-film .needle-return{display:none}
+ .needle-scene.mobile-film .search-icon{width:17px;height:17px;margin-right:4px}
+ .mobile-film .needle-found{display:block;position:absolute;left:35px;top:50%;transform:translateY(-50%);font-weight:550;opacity:0}
+ .mobile-film .needle-lens{display:block;position:absolute;left:0;top:0;width:132px;height:132px;z-index:3;pointer-events:none;will-change:transform,opacity}
+ .needle-lens-window{position:absolute;inset:0;overflow:hidden;border:3px solid #293d32;border-radius:50%;background:#e6e9dc}
+ .needle-lens-handle{position:absolute;left:111px;top:111px;width:62px;height:12px;border-radius:2px;background:#293d32;transform:rotate(45deg);transform-origin:6px 6px}
+ .mobile-film .needle-lens-art{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(1.7);box-shadow:none;outline:none;will-change:opacity}
  .needle-scene.mobile-film [data-orbit="0"],.needle-scene.mobile-film [data-orbit="1"],.needle-scene.mobile-film [data-orbit="4"]{left:0!important;top:0!important;transform:var(--film-transform)!important;transform-origin:0 0;will-change:transform,opacity}
  .needle-scene.mobile-film .art-float{animation:none;transform:none}
  /* F24: enlarge the useful state changes rather than animate a tiny dashboard. */
@@ -37,19 +45,13 @@
  /* Second Voice: a word travels into the rewrite; the original never moves. */
  .mobile-film .sv-transfer{display:block;position:absolute;left:0;top:0;font:400 31px/1.32 Georgia,serif;letter-spacing:-.7px;pointer-events:none;will-change:transform,opacity}
  .mobile-film .sv-result{overflow:hidden;padding-bottom:5px}
- /* Leu: a paper leaf turns away to uncover the original illustrated nook. */
- .leu-scene.mobile-film .leu-room{transform-origin:55% 70%}
- .mobile-film .leu-window-glow{display:block;position:absolute;inset:0;pointer-events:none;background:linear-gradient(150deg,#e4bd77bb,#dca36044 60%,#eacb8c88);will-change:opacity}
- .mobile-film .leu-leaf{display:block;position:absolute;z-index:3;left:40px;top:206px;width:560px;height:410px;transform-origin:0 50%;background:#f6f3eb;color:#293d32;border:1px solid #d5d7c4;border-radius:2px 7px 7px 2px;backface-visibility:hidden;will-change:transform,opacity;pointer-events:none}
- .leu-leaf-rule{display:block;position:absolute;top:32px;left:34px;right:34px;border-top:1px solid #c7cbbb}
- .leu-leaf-copy{display:block;padding:92px 38px 0;font:400 41px/1.22 Georgia,serif;letter-spacing:-1.2px;text-align:left}
- .leu-leaf-copy em{display:block;margin-top:18px;color:#65725b;font-size:32px}
- .leu-leaf-page{position:absolute;left:38px;bottom:25px;font:800 27px/1 LeuGabarito,sans-serif;letter-spacing:-1.8px}
+ /* Leu: leave the original room alone. Only rain inside the window moves. */
+ .leu-scene.mobile-film .leu-rain i{animation:none!important;will-change:transform,opacity}
+ .leu-scene.mobile-film .leu-steam{display:none}
 }
 @media(max-width:359px){.film-toggle:not([hidden]){min-width:44px;padding:0}.film-toggle>span{position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden}.work-head .section-title{font-size:29px}}
 @media(prefers-reduced-motion:reduce){
  .sv-transfer{display:none!important}
- /* The chapter page crossfades in place; full motion can turn it in 3D. */
  /* An explicit Play choice applies only to the bounded project previews. */
  .mobile-film.film-opt-in .sv-transfer{display:block!important}
 }

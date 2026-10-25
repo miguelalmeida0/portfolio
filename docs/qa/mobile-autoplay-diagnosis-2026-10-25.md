@@ -8,11 +8,13 @@ chapter page, leaving only a subtle window tint. Playback is running, but the
 intended reading sequence has been removed. Other projects are offscreen in
 this report, so their paused clocks are expected.
 
-The corrected reduced-motion compositions retain the stories with fades:
-stationary artwork emphasis, sequential rule fields and feedback, word-by-word
-rewrite reveals, and chapter/room crossfades. Leu's chapter layer stays displayed
-and changes opacity without a turn or zoom. No device setting change or special
-playback URL is needed. Full-motion and desktop compositions remain available.
+The first correction used stationary artwork emphasis, sequential rule fields
+and feedback, word-by-word rewrite reveals, and chapter/room crossfades. The
+owner confirmed playback, then rejected the Needle treatment and Leu chapter
+panel. The current refinement replaces Needle with a description/search/match
+sequence and removes Leu's chapter and glow entirely. Leu now keeps only the
+original rain inside its window, in both motion profiles. No device setting
+change or special playback URL is needed. Desktop compositions remain available.
 
 ## Investigation evidence
 
@@ -33,13 +35,13 @@ playback URL is needed. Full-motion and desktop compositions remain available.
   identifies build `bb522a9f2fc0`, `reducedMotion: true`, `savedPause: false`,
   `fullMotionChoice: false`, and a visible page with all dependencies present.
 
-The earlier one-percent pixel-change check could pass a window tint, so it did
-not protect the intended experience. The new regression uses the reported
-393-by-637 viewport and requires a displayed, stationary chapter page, more than
-15 percent materially changed scene pixels, a clear room reveal, and the return
-of the page through real playback. It fails on the old CSS (`display: none`) and
-passes with the crossfade. Unit checks cover all four reduced-motion stories and
-bounded opacity values through repeated cycles.
+The earlier one-percent whole-scene check could pass a window tint. The initial
+crossfade regression required a displayed chapter page, but the owner's later
+direction explicitly removes that page. Its replacement checks the reported
+393-by-637 viewport in both motion profiles: no chapter/glow nodes, a stationary
+room, visible rain inside the window and no meaningful changes outside it.
+Needle has a separate search/magnifier/match check. Unit checks cover finite
+geometry and seamless repeated cycles in both profiles.
 
 ## Diagnostic delivery
 

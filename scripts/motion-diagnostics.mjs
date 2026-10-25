@@ -26,7 +26,7 @@ function startMotionDiagnostics(build){
   };
  }
  const storageFlag=key=>{try{return sessionStorage.getItem(key)==='true';}catch{return 'unavailable';}};
- const renderSelectors={needle:['[data-orbit="1"]'],f24:['.rule-typed','.rule-preview','.rule-error','.rule-success','.save-copy'],'second-voice':['.sv-result>span','.sv-transfer'],leu:['.leu-room','.leu-leaf','.leu-window-glow']};
+ const renderSelectors={needle:['[data-orbit="0"]','.needle-query','.needle-lens','.needle-found'],f24:['.rule-typed','.rule-preview','.rule-error','.rule-success','.save-copy'],'second-voice':['.sv-result>span','.sv-transfer'],leu:['.leu-room','.leu-rain i']};
  const renderingValues=(scene,computed=false)=>(renderSelectors[scene.closest('.project')?.id]||[]).map(selector=>{
   const element=scene.querySelector(selector);if(!element)return{selector,missing:true};
   const style=computed?getComputedStyle(element):element.style;

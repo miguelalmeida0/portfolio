@@ -31,14 +31,23 @@ test('four films tell different stories and reproduce the same frame exactly',()
  assert.ok(frame('f24',4.6).error>.9);
  assert.ok(frame('f24',7.6).saved>.9);
  assert.ok(frame('second-voice',4.6).words.every(v=>v>.95));
- assert.ok(frame('leu',4).leaf < -160);
+ assert.equal(frame('leu',4).rain.length,24);
+ assert.notDeepEqual(frame('leu',4).rain,frame('leu',4.5).rain);
 });
-test('reduced-motion previews retain the project stories through distinct fades',()=>{
- const first=reducedFrame('needle',0),second=reducedFrame('needle',1/3),third=reducedFrame('needle',2/3);
- assert.equal(first.artOpacity[0],1);
- assert.ok(first.artOpacity[1]<.2);
- assert.equal(second.artOpacity[1],1);
- assert.equal(third.artOpacity[2],1);
+test('Needle searches the artwork and finds the golden object in both profiles',()=>{
+ for(const gentle of [false,true]){
+  assert.equal(frame('needle',0,gentle).typed,0);
+  assert.equal(frame('needle',2,gentle).typed,26);
+  assert.equal(frame('needle',3,gentle).lens[2],1);
+  assert.notEqual(frame('needle',3,gentle).lens[0],frame('needle',4,gentle).lens[0]);
+  const match=frame('needle',7,gentle);
+  assert.equal(match.found,1);
+  assert.equal(match.cards[0][4],1);
+  assert.ok(match.cards[1][4]<.4&&match.cards[2][4]<.4);
+ }
+ assert.ok(Math.abs(frame('needle',7,true).cards[0][0]-frame('needle',0,true).cards[0][0])<20);
+});
+test('reduced-motion UI previews retain their stories through distinct fades',()=>{
  assert.equal(reducedFrame('f24',0).fieldOpacity,0);
  assert.equal(reducedFrame('f24',.2).fieldOpacity,1);
  assert.equal(reducedFrame('f24',.4).recipientOpacity,1);
@@ -46,20 +55,17 @@ test('reduced-motion previews retain the project stories through distinct fades'
  assert.equal(reducedFrame('second-voice',.15).words[0],1);
  assert.equal(reducedFrame('second-voice',.15).words[12],0);
  assert.ok(reducedFrame('second-voice',.5).words.every(alpha=>alpha===1));
- assert.equal(reducedFrame('leu',0).pageOpacity,1);
- assert.equal(reducedFrame('leu',.2).pageOpacity,0);
- assert.equal(reducedFrame('leu',.5).pageOpacity,1);
- for(const id of ['needle','f24','second-voice','leu'])assert.deepEqual(reducedFrame(id,0),reducedFrame(id,1));
+ for(const id of ['f24','second-voice'])assert.deepEqual(reducedFrame(id,0),reducedFrame(id,1));
 });
 test('all scene values stay finite through multiple cycles and loop without a jump',()=>{
  const durations={needle:8.8,f24:8.4,'second-voice':8.8,leu:10};
  const numbers=value=>typeof value==='number'?[value]:value&&typeof value==='object'?Object.values(value).flatMap(numbers):[];
  for(const [id,duration] of Object.entries(durations)){
   for(let t=0;t<duration*3;t+=.037){
-   assert.ok(numbers(frame(id,t)).every(Number.isFinite));
-   assert.ok(numbers(reducedFrame(id,t/duration)).every(n=>Number.isFinite(n)&&n>=0&&n<=1));
+   for(const gentle of [false,true])assert.ok(numbers(frame(id,t,gentle)).every(Number.isFinite));
+   if(id==='f24'||id==='second-voice')assert.ok(numbers(reducedFrame(id,t/duration)).every(n=>Number.isFinite(n)&&n>=0&&n<=1));
   }
-  assert.deepEqual(frame(id,0),frame(id,duration));
+  for(const gentle of [false,true])assert.deepEqual(frame(id,0,gentle),frame(id,duration,gentle));
  }
 });
 test('the shipping mobile branch starts films after resetting the desktop scene',()=>{
