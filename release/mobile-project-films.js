@@ -5,8 +5,8 @@ const filmClamp = n => Math.max(0, Math.min(1, n));
 const filmPhase = (a, b, t) => filmClamp((t - a) / (b - a));
 const filmEase = (a, b, t) => { const n = filmPhase(a, b, t); return n * n * (3 - 2 * n); };
 
-function mobileFilmPlayback({mobile, reduced, motionAllowed=false, hidden, dialog, paused, ratios}) {
-  if (!mobile || (reduced && !motionAllowed) || hidden || dialog || paused) return [];
+function mobileFilmPlayback({mobile, hidden, dialog, paused, ratios}) {
+  if (!mobile || hidden || dialog || paused) return [];
   // Two small previews can be fully visible together. Neither should freeze
   // simply because an earlier project has the same viewport coverage.
   return ratios.flatMap((ratio, i) => ratio > .18 ? [i] : []);
@@ -59,12 +59,15 @@ function createMobileProjectFilms(panels) {
   } catch {}
   const scenes = panels.map((panel,i) => {
     const host=panel.querySelector('.project-scene'), $=s=>host.querySelector(s);
+    const stillCards=panel.id==='needle'?mobileFilmFrame('needle',0).cards:null;
     // These are visual layers inside the existing semantic preview button.
     if (panel.id==='second-voice') {
       const transfer=document.createElement('span'); transfer.className='sv-transfer';transfer.textContent='Rain';
       $('.scene-world').append(transfer);
     }
     if (panel.id==='leu') {
+      const glow=document.createElement('span');glow.className='leu-window-glow';
+      $('.leu-arch').append(glow);
       const leaf=document.createElement('span');leaf.className='leu-leaf';
       leaf.innerHTML='<span class="leu-leaf-rule"></span><span class="leu-leaf-copy">Your next chapter can wait.<br><em>Take a minute here.</em></span><span class="leu-leaf-page">leu.</span>';
       $('.scene-world').append(leaf);
@@ -75,7 +78,7 @@ function createMobileProjectFilms(panels) {
       tick.innerHTML='<path d="m5 12 5 5 9-10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
       $('.rule-success i').append(tick);
     }
-    const owned=[...host.querySelectorAll('.art-orbit,.needle-search,.rule-typed,.demo-caret,.rule-error,.rule-success,.rule-save,.rule-status,.save-copy,.save-spinner,.save-check,.rule-preview,.dry-copy,.preview-check,.preview-dot,.rule-recipient,.rule-connector,.sv-dark,.sv-draft-side,.sv-rewrite-side,.sv-result>span,.sv-author,.sv-strength-dot,.sv-transfer,.sv-seam,.leu-room,.leu-arch,.leu-scene-copy,.leu-leaf')];
+    const owned=[...host.querySelectorAll('.art-orbit,.needle-search,.rule-typed,.demo-caret,.rule-error,.rule-success,.rule-save,.rule-status,.save-copy,.save-spinner,.save-check,.rule-preview,.dry-copy,.preview-check,.preview-dot,.rule-recipient,.rule-connector,.sv-dark,.sv-draft-side,.sv-rewrite-side,.sv-result>span,.sv-author,.sv-strength-dot,.sv-transfer,.sv-seam,.leu-room,.leu-arch,.leu-scene-copy,.leu-leaf,.leu-window-glow')];
     let baseline=[];
     const save=()=>{baseline=owned.map(el=>[el,el.getAttribute('style')]);};
     const restore=()=>baseline.forEach(([el,style])=>style===null?el.removeAttribute('style'):el.setAttribute('style',style));
@@ -84,42 +87,48 @@ function createMobileProjectFilms(panels) {
     const text=(selector,value)=>{const el=$(selector);if(el.textContent!==value)el.textContent=value;};
     const render=t=>{
       const f=mobileFilmFrame(panel.id,t);host.dataset.filmTime=t.toFixed(3);
+      // Reduced motion changes the composition, not whether it autoplays.
+      // Gentle previews use opacity only: no page turns, travel or zoom.
+      const gentle=reduced.matches&&!motionAllowed;
+      const move=(selector,value)=>transform(selector,gentle?'none':value);
       if(panel.id==='needle') {
+        const cards=gentle?stillCards:f.cards;
         [0,1,4].forEach((n,j)=>{
-          const el=$(`[data-orbit="${n}"]`),[x,y,angle,scale,alpha]=f.cards[j];
+          const el=$(`[data-orbit="${n}"]`),[x,y,angle,scale,alpha]=cards[j];
           el.style.setProperty('--film-transform',`translate3d(${x}px,${y}px,0) rotate(${angle}deg) rotateY(${-angle*.6}deg) scale(${scale})`);
-          el.style.opacity=alpha;
+          el.style.opacity=gentle?.45+.55*(.5+.5*Math.cos((f.p*2-j/3)*Math.PI*2)):alpha;
         });
       } else if(panel.id==='f24') {
-        text('.rule-typed','Severity is Critical'.slice(0,f.typed));
-        opacity('.demo-caret',f.typed<20?1:0);opacity('.rule-error',f.error);opacity('.rule-success',f.saved);
-        transform('.rule-error',`translateY(${8*(1-f.error)}px)`);transform('.rule-success',`translateY(${8*(1-f.saved)}px)`);
-        transform('.rule-save',`scale(${1-.06*f.press})`);
+        text('.rule-typed','Severity is Critical'.slice(0,gentle?20:f.typed));
+        opacity('.demo-caret',!gentle&&f.typed<20?1:0);opacity('.rule-error',f.error);opacity('.rule-success',f.saved);
+        move('.rule-error',`translateY(${8*(1-f.error)}px)`);move('.rule-success',`translateY(${8*(1-f.saved)}px)`);
+        move('.rule-save',`scale(${1-.06*f.press})`);
         $('.rule-save').style.background=f.saved>.8?'#346747':'#244f8e';
         text('.save-copy',f.saved>.8?'Saved':f.busy?'Saving…':f.retry?'Try again':'Save rule');
         text('.rule-status',f.saved>.8?'Saved':f.busy?'Saving…':'Editing');
         $('.save-spinner').style.display=f.busy?'block':'none';$('.save-check').style.display=f.saved>.8?'block':'none';
         $('.rule-success').style.setProperty('--film-check',1-f.saved);
         $('.rule-connector').style.setProperty('--signal-y',`${f.route*30}px`);
-        $('.rule-connector').style.setProperty('--signal-alpha',f.route>0&&f.route<1?1:0);
+        $('.rule-connector').style.setProperty('--signal-alpha',!gentle&&f.route>0&&f.route<1?1:0);
         $('.rule-recipient').style.borderColor=f.dry>.8?'#6c9871':'#d4dce8';
-        opacity('.rule-preview',f.dry);transform('.rule-preview',`translateY(${12*(1-f.dry)}px)`);
+        opacity('.rule-preview',gentle?.2+.8*(.5-.5*Math.cos(f.p*4*Math.PI)):f.dry);move('.rule-preview',`translateY(${12*(1-f.dry)}px)`);
         opacity('.preview-check',f.dry);text('.dry-copy','Condition matched · no notification sent');
         $('.preview-dot').style.background='#408452';
       } else if(panel.id==='second-voice') {
         transform('.sv-dark','none');transform('.sv-draft-side','none');transform('.sv-rewrite-side','none');
-        transform('.sv-transfer',`translate3d(${90+260*f.travel}px,${330-65*Math.sin(f.travel*Math.PI)}px,0) rotate(${-8*Math.sin(f.travel*Math.PI)}deg)`);
+        move('.sv-transfer',`translate3d(${90+260*f.travel}px,${330-65*Math.sin(f.travel*Math.PI)}px,0) rotate(${-8*Math.sin(f.travel*Math.PI)}deg)`);
         opacity('.sv-transfer',f.ghost);$('.sv-transfer').style.color=f.travel>.885?'#eceee0':'#293d32';
         [...host.querySelectorAll('.sv-result>span')].forEach((el,j)=>{
-          const r=f.words[j];el.style.opacity=r;el.style.transform=`translateY(${24*(1-r)}px) rotate(${2*(1-r)}deg)`;
+          const r=gentle?.2+.8*Math.sin(f.p*2*Math.PI)**2:f.words[j];el.style.opacity=r;el.style.transform=gentle?'none':`translateY(${24*(1-r)}px) rotate(${2*(1-r)}deg)`;
         });
         opacity('.sv-author',filmEase(.53,.62,f.p)*f.clear);
-        transform('.sv-strength-dot',`translateX(${-140+240*filmEase(.1,.57,f.p)*f.clear}px)`);
-        transform('.sv-seam',`scaleY(${.25+.75*filmEase(.04,.3,f.p)*f.clear})`);
+        move('.sv-strength-dot',`translateX(${-140+240*filmEase(.1,.57,f.p)*f.clear}px)`);
+        move('.sv-seam',`scaleY(${.25+.75*filmEase(.04,.3,f.p)*f.clear})`);
       } else {
-        transform('.leu-leaf',`perspective(1000px) rotateY(${f.leaf}deg)`);
+        move('.leu-leaf',`perspective(1000px) rotateY(${f.leaf}deg)`);
         opacity('.leu-leaf',1-filmEase(80,105,-f.leaf));
-        transform('.leu-room',`scale(${f.roomScale})`);transform('.leu-arch','none');
+        move('.leu-room',`scale(${f.roomScale})`);transform('.leu-arch','none');
+        opacity('.leu-window-glow',.08+.52*(.5-.5*Math.cos(f.p*4*Math.PI)));
         transform('.leu-scene-copy','none');opacity('.leu-scene-copy',1);
       }
     };
@@ -128,16 +137,16 @@ function createMobileProjectFilms(panels) {
     return {host,clock,timeline,render,save,restore,ratio:0};
   });
   const update=()=>{
-    const active=enabled?mobileFilmPlayback({mobile:mobile.matches,reduced:reduced.matches,motionAllowed,hidden:document.hidden,dialog:dialog.open,paused,ratios:scenes.map(s=>s.ratio)}):[];
+    const active=enabled?mobileFilmPlayback({mobile:mobile.matches,hidden:document.hidden,dialog:dialog.open,paused,ratios:scenes.map(s=>s.ratio)}):[];
     scenes.forEach((scene,i)=>{
       const playing=active.includes(i);
       scene.host.dataset.filmPlaying=String(playing);
       scene.timeline.paused(!playing);
     });
-    const blocked=paused||(reduced.matches&&!motionAllowed);
+    const blocked=paused;
     button.setAttribute('aria-pressed',String(blocked));button.querySelector('span').textContent=blocked?'Play motion':'Pause motion';
     button.setAttribute('aria-label',blocked?'Play project preview animations':'Pause project preview animations');
-    button.title=reduced.matches&&!motionAllowed?'Your device requests reduced motion. You can choose to play these previews.':'';
+    button.title=reduced.matches&&!motionAllowed?'Reduced motion: previews use gentle fades.':'';
   };
   const observer=new IntersectionObserver(entries=>{
     entries.forEach(entry=>{const scene=scenes.find(s=>s.host===entry.target);if(scene)scene.ratio=entry.isIntersecting?entry.intersectionRatio:0;});
@@ -145,7 +154,7 @@ function createMobileProjectFilms(panels) {
   },{threshold:[0,.18,.3,.45,.6,.75,.9,1],rootMargin:'-72px 0px 0px 0px'});
   scenes.forEach(s=>observer.observe(s.host));
   button.addEventListener('click',()=>{
-    if(paused||(reduced.matches&&!motionAllowed)){paused=false;motionAllowed=true;}else paused=true;
+    paused=!paused;
     try{
       sessionStorage.setItem('portfolio-previews-paused',String(paused));
       sessionStorage.setItem('portfolio-previews-motion-allowed',String(motionAllowed));
@@ -159,7 +168,7 @@ function createMobileProjectFilms(panels) {
     scenes.forEach(s=>{s.timeline.pause();s.host.classList.remove('mobile-film','film-opt-in');delete s.host.dataset.filmPlaying;s.restore();});
   };
   const sync=()=>{
-    if(!mobile.matches||(reduced.matches&&!motionAllowed)){stop();button.hidden=!mobile.matches;update();return;}
+    if(!mobile.matches){stop();update();return;}
     button.hidden=false;
     if(!enabled){
       enabled=true;

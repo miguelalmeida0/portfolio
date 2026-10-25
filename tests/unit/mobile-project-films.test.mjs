@@ -13,12 +13,12 @@ test('every visible mobile preview receives an autoplay clock, including tied co
  assert.deepEqual(Array.from(play({...ready,ratios:[0,1,1,0]})),[1,2]);
  assert.deepEqual(Array.from(play({...ready,ratios:[0,0,0,0]})),[]);
  assert.deepEqual(Array.from(play({...ready,ratios:[.1,.17,0,0]})),[]);
- for(const state of [{mobile:false},{reduced:true},{hidden:true},{dialog:true},{paused:true}])assert.deepEqual(Array.from(play({...ready,...state})),[]);
+ for(const state of [{mobile:false},{hidden:true},{dialog:true},{paused:true}])assert.deepEqual(Array.from(play({...ready,...state})),[]);
 });
-test('explicit permission plays mobile previews with reduced motion while retaining suspension guards',()=>{
- const allowed={...ready,reduced:true,motionAllowed:true};
- assert.deepEqual(Array.from(play(allowed)),[0,1]);
- for(const state of [{mobile:false},{hidden:true},{dialog:true},{paused:true}])assert.deepEqual(Array.from(play({...allowed,...state})),[]);
+test('reduced motion changes the composition without blocking mobile autoplay',()=>{
+ const gentle={...ready,reduced:true};
+ assert.deepEqual(Array.from(play(gentle)),[0,1]);
+ for(const state of [{mobile:false},{hidden:true},{dialog:true},{paused:true}])assert.deepEqual(Array.from(play({...gentle,...state})),[]);
 });
 test('four films tell different stories and reproduce the same frame exactly',()=>{
  for(const id of ['needle','f24','second-voice','leu']){

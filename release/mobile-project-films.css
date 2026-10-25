@@ -1,5 +1,5 @@
 /* Mobile project films: one subject, one clock, stable links and typography. */
-.film-toggle,.sv-transfer,.leu-leaf,.film-check{display:none}
+.film-toggle,.sv-transfer,.leu-leaf,.film-check,.leu-window-glow{display:none}
 @media(max-width:900px){
  .work .work-head{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:12px;text-align:left}
  .film-toggle:not([hidden]){display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:4px 0 4px 6px;border:0;background:none;color:var(--ink);font:400 12px/1.2 'Public Sans',sans-serif;white-space:nowrap;cursor:pointer}
@@ -39,6 +39,7 @@
  .mobile-film .sv-result{overflow:hidden;padding-bottom:5px}
  /* Leu: a paper leaf turns away to uncover the original illustrated nook. */
  .leu-scene.mobile-film .leu-room{transform-origin:55% 70%}
+ .mobile-film .leu-window-glow{display:block;position:absolute;inset:0;pointer-events:none;background:linear-gradient(150deg,#e4bd77bb,#dca36044 60%,#eacb8c88);will-change:opacity}
  .mobile-film .leu-leaf{display:block;position:absolute;z-index:3;left:40px;top:206px;width:560px;height:410px;transform-origin:0 50%;background:#f6f3eb;color:#293d32;border:1px solid #d5d7c4;border-radius:2px 7px 7px 2px;backface-visibility:hidden;will-change:transform,opacity;pointer-events:none}
  .leu-leaf-rule{display:block;position:absolute;top:32px;left:34px;right:34px;border-top:1px solid #c7cbbb}
  .leu-leaf-copy{display:block;padding:92px 38px 0;font:400 41px/1.22 Georgia,serif;letter-spacing:-1.2px;text-align:left}

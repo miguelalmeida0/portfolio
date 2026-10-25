@@ -26,8 +26,12 @@ reading copy, page height and hit areas remain fixed. Every visible preview
 runs independently, including two previews that fit together at 320px. Clocks
 pause offscreen, with a case study open, on a hidden page, and via the
 “Pause motion” control. User pause persists per tab.
-Reduced motion uses completed static scenes. No-JavaScript posters and public
-case-study links remain available. Desktop retains its scroll choreography.
+Reduced motion autoplays gentle opacity compositions: stationary collection
+objects, rule feedback fades, a stationary rewrite fade, and a warm window
+glow. Page turns, zoom and traveling words remain disabled in that mode.
+The existing explicit `?motion=play` choice can enable full compositions.
+No-JavaScript posters and public case-study links remain available. Desktop
+retains its scroll choreography.
 
 ## Checks
 
@@ -41,3 +45,22 @@ case-study links remain available. Desktop retains its scroll choreography.
   visible playback, dialog suspension, pause/resume, reduced motion and resize.
 - This is browser emulation, not a physical iPhone performance trace. No device
   frame-rate claim is made.
+
+## Autoplay recovery
+
+The first follow-up fixed equally visible previews competing for a single clock.
+The next exposed a Play control and explicit playback link under reduced motion,
+but the normal URL still intentionally returned static scenes in that mode.
+That left automatic playback dependent on an extra opt-in. The user's screenshot
+cannot establish the phone's actual media preference, so that preference is not
+claimed as a confirmed on-device cause.
+
+Two regression tests now examine rendered pixels. On the deployed HTML, the
+plain reduced-motion URL never starts a clock; Leu's open middle interval changes
+less than 0.5% of its pixels above the color-difference threshold. Both tests
+fail before the fix. The candidate autoplays gentle reduced-motion compositions
+without input and keeps visible window activity during Leu's open interval.
+The tests require more than 1% changed pixels, sample several points to avoid
+equal phases of a fade, and verify the gentle scenes' transforms remain fixed.
+Pause persistence, explicit playback, dialog suspension, desktop resizing and
+simultaneous visible previews remain covered by the six-test playback group.
