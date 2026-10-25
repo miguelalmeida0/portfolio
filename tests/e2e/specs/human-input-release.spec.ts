@@ -97,8 +97,6 @@ test('mobile previews autoplay independently and pause offscreen, in dialogs and
   await expect(scene).toHaveAttribute('data-film-playing','true');
   const before=Number(await scene.getAttribute('data-film-time'));
   await expect.poll(async()=>Number(await scene.getAttribute('data-film-time'))).not.toBe(before);
-  const other=page.locator('.project-scene[data-film-playing=true]');
-  await expect(other).toHaveCount(1);
  }
  const leu=page.locator('#leu .project-scene');
  await page.locator('#leu .project-shot').click();
@@ -123,4 +121,24 @@ test('mobile previews autoplay independently and pause offscreen, in dialogs and
  await page.setViewportSize({width:1440,height:900});
  await page.emulateMedia({reducedMotion:'no-preference'});
  await expect(page.locator('.project-scene.mobile-film')).toHaveCount(0);
+});
+
+test('two fully visible mobile previews both animate without touch input',async({page})=>{
+ await page.setViewportSize({width:320,height:852});
+ await page.emulateMedia({reducedMotion:'no-preference'});
+ await page.goto('/');
+ const f24=page.locator('#f24 .project-scene');
+ const voice=page.locator('#second-voice .project-scene');
+ // This narrow layout fits both previews; the former winner-only policy froze Voice.
+ await f24.scrollIntoViewIfNeeded();
+ await voice.scrollIntoViewIfNeeded();
+ await expect(f24).toBeInViewport({ratio:.99});
+ await expect(voice).toBeInViewport({ratio:.99});
+ for(const scene of [f24,voice]){
+  await expect(scene).toHaveAttribute('data-film-playing','true');
+  const before=await scene.getAttribute('data-film-time');
+  await expect.poll(()=>scene.getAttribute('data-film-time')).not.toBe(before);
+ }
+ await page.locator('#contact').scrollIntoViewIfNeeded();
+ await expect(page.locator('.project-scene[data-film-playing=true]')).toHaveCount(0);
 });

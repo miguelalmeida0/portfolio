@@ -1,15 +1,15 @@
 // Each film is a deterministic composition of time. GSAP owns the clock;
-// visibility, dialog and user preferences decide which single clock may run.
+// visibility, dialog and user preferences decide which clocks may run.
 const MOBILE_FILM_DURATION = [8.8, 8.4, 8.8, 10];
 const filmClamp = n => Math.max(0, Math.min(1, n));
 const filmPhase = (a, b, t) => filmClamp((t - a) / (b - a));
 const filmEase = (a, b, t) => { const n = filmPhase(a, b, t); return n * n * (3 - 2 * n); };
 
 function mobileFilmPlayback({mobile, reduced, hidden, dialog, paused, ratios}) {
-  if (!mobile || reduced || hidden || dialog || paused) return -1;
-  let winner = -1, coverage = .18;
-  ratios.forEach((ratio, i) => { if (ratio > coverage) { winner = i; coverage = ratio; } });
-  return winner;
+  if (!mobile || reduced || hidden || dialog || paused) return [];
+  // Two small previews can be fully visible together. Neither should freeze
+  // simply because an earlier project has the same viewport coverage.
+  return ratios.flatMap((ratio, i) => ratio > .18 ? [i] : []);
 }
 
 function mobileFilmFrame(id, seconds) {
@@ -120,9 +120,9 @@ function createMobileProjectFilms(panels) {
     return {host,clock,timeline,render,save,restore,ratio:0};
   });
   const update=()=>{
-    const winner=enabled?mobileFilmPlayback({mobile:mobile.matches,reduced:reduced.matches,hidden:document.hidden,dialog:dialog.open,paused,ratios:scenes.map(s=>s.ratio)}):-1;
+    const active=enabled?mobileFilmPlayback({mobile:mobile.matches,reduced:reduced.matches,hidden:document.hidden,dialog:dialog.open,paused,ratios:scenes.map(s=>s.ratio)}):[];
     scenes.forEach((scene,i)=>{
-      const playing=i===winner;
+      const playing=active.includes(i);
       scene.host.dataset.filmPlaying=String(playing);
       scene.timeline.paused(!playing);
     });

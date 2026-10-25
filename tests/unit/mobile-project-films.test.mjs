@@ -8,11 +8,12 @@ import {patchHomeMobile} from '../../scripts/patch-home-mobile.mjs';
 const source=readFileSync(new URL('../../release/mobile-project-films.js',import.meta.url),'utf8');
 const {mobileFilmFrame:frame,mobileFilmPlayback:play}=runInNewContext(source+';({mobileFilmFrame,mobileFilmPlayback})');
 const ready={mobile:true,reduced:false,hidden:false,dialog:false,paused:false,ratios:[.2,.8,0,0]};
-test('only the most visible mobile preview receives an autoplay clock',()=>{
- assert.equal(play(ready),1);
- assert.equal(play({...ready,ratios:[0,0,0,0]}),-1);
- assert.equal(play({...ready,ratios:[.1,.17,0,0]}),-1);
- for(const state of [{mobile:false},{reduced:true},{hidden:true},{dialog:true},{paused:true}])assert.equal(play({...ready,...state}),-1);
+test('every visible mobile preview receives an autoplay clock, including tied coverage',()=>{
+ assert.deepEqual(Array.from(play(ready)),[0,1]);
+ assert.deepEqual(Array.from(play({...ready,ratios:[0,1,1,0]})),[1,2]);
+ assert.deepEqual(Array.from(play({...ready,ratios:[0,0,0,0]})),[]);
+ assert.deepEqual(Array.from(play({...ready,ratios:[.1,.17,0,0]})),[]);
+ for(const state of [{mobile:false},{reduced:true},{hidden:true},{dialog:true},{paused:true}])assert.deepEqual(Array.from(play({...ready,...state})),[]);
 });
 test('four films tell different stories and reproduce the same frame exactly',()=>{
  for(const id of ['needle','f24','second-voice','leu']){

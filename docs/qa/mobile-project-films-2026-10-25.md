@@ -22,20 +22,22 @@ restrictions while giving each subject a different spatial story.
 
 Needle uses a 640×440 world; the other compositions retain their 640×640 world.
 Only artwork moves inside the stable preview button. Project names, links,
-reading copy, page height and hit areas remain fixed. A single most-visible
-preview runs at a time. Clocks pause offscreen, with a case study open, on a
-hidden page, and via the “Pause motion” control. User pause persists per tab.
+reading copy, page height and hit areas remain fixed. Every visible preview
+runs independently, including two previews that fit together at 320px. Clocks
+pause offscreen, with a case study open, on a hidden page, and via the
+“Pause motion” control. User pause persists per tab.
 Reduced motion uses completed static scenes. No-JavaScript posters and public
 case-study links remain available. Desktop retains its scroll choreography.
 
 ## Checks
 
 - Deterministic frame functions, finite geometry across multiple loops, playback
-  admission, and shipping integration have dedicated unit checks.
+  admission (including equally visible previews), and shipping integration have
+  dedicated unit checks.
 - Browser inspection at 393px covers all four running scenes and case-study
   opening/closing. At 320px the pause control uses its icon with an accessible
   label; measured document overflow is zero.
-- The release browser suite additionally exercises autoplay entry, exclusive
-  clock ownership, dialog suspension, pause/resume, reduced motion and resize.
+- The release browser suite additionally exercises autoplay entry, simultaneous
+  visible playback, dialog suspension, pause/resume, reduced motion and resize.
 - This is browser emulation, not a physical iPhone performance trace. No device
   frame-rate claim is made.
