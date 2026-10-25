@@ -1,6 +1,6 @@
 import {test,expect,type Locator} from '@playwright/test';
 
-async function expectVisiblePreviewChange(scene:Locator){
+async function expectVisiblePreviewChange(scene:Locator,minimumFraction=.01){
  const {PNG}=await import('pngjs');
  const before=PNG.sync.read(await scene.screenshot());
  // Several samples avoid mistaking two equal points in a repeating fade for a freeze.
@@ -12,7 +12,7 @@ async function expectVisiblePreviewChange(scene:Locator){
    if(delta>30)changed++;
   }
   return changed/(before.width*before.height);
- },{message:'The visible preview must change without input',timeout:4000,intervals:[400,500,600]}).toBeGreaterThan(.01);
+ },{message:'The visible preview must change without input',timeout:4000,intervals:[400,500,600]}).toBeGreaterThan(minimumFraction);
 }
 
 test('reviewed homepage opens immediately with recruiter contact links',async({page})=>{
@@ -153,14 +153,16 @@ test('reduced-motion visitors get gentle autoplay and can keep their pause choic
  const scene=page.locator('#leu .project-scene');
  await scene.scrollIntoViewIfNeeded();
  await expect(scene).toHaveAttribute('data-film-playing','false');
- await expect(scene.locator('.leu-leaf')).toBeHidden();
+ await expect(scene.locator('.leu-leaf')).toHaveCSS('display','block');
+ await expect(scene.locator('.leu-leaf')).toHaveCSS('transform','none');
  await page.reload();
  await scene.scrollIntoViewIfNeeded();
  await expect(scene).toHaveAttribute('data-film-playing','false');
  await toggle.click();
  await scene.scrollIntoViewIfNeeded();
  await expect(scene).toHaveAttribute('data-film-playing','true');
- await expect(scene.locator('.leu-leaf')).toBeHidden();
+ await expect(scene.locator('.leu-leaf')).toHaveCSS('display','block');
+ await expect(scene.locator('.leu-leaf')).toHaveCSS('transform','none');
 });
 
 test('explicit play link clears a saved pause without changing desktop motion',async({page})=>{
@@ -218,7 +220,8 @@ test('plain mobile URL visibly autoplays all four previews with gentle reduced m
   await expectVisiblePreviewChange(scene);
   expect(await layers.evaluateAll(elements=>elements.map(el=>getComputedStyle(el).transform)),`${id} must use fades without moving its layers`).toEqual(positions);
  }
- await expect(page.locator('#leu .leu-leaf')).toBeHidden();
+ await expect(page.locator('#leu .leu-leaf')).toHaveCSS('display','block');
+ await expect(page.locator('#leu .leu-leaf')).toHaveCSS('transform','none');
  await page.locator('[data-film-toggle]').click();
  await expect(page.locator('.project-scene[data-film-playing=true]')).toHaveCount(0);
 });
@@ -231,6 +234,21 @@ test('Leu visibly keeps playing through the middle of its loop',async({page})=>{
  await scene.scrollIntoViewIfNeeded();
  await expect.poll(async()=>Number(await scene.getAttribute('data-film-time'))).toBeGreaterThan(3);
  await expectVisiblePreviewChange(scene);
+});
+
+test('Leu reduced-motion loop visibly crossfades the chapter page and room on the reported iPhone viewport',async({page})=>{
+ await page.setViewportSize({width:393,height:637});
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await page.goto('/#leu');
+ const scene=page.locator('#leu .project-scene'),leaf=scene.locator('.leu-leaf');
+ await expect(scene).toHaveAttribute('data-film-playing','true');
+ await expect(leaf).toHaveCSS('display','block');
+ await expect(leaf).toHaveCSS('transform','none');
+ await expect.poll(async()=>Number(await leaf.evaluate(el=>getComputedStyle(el).opacity))).toBeGreaterThan(.9);
+ await expectVisiblePreviewChange(scene,.15);
+ await expect.poll(async()=>Number(await leaf.evaluate(el=>getComputedStyle(el).opacity))).toBeLessThan(.05);
+ await expect.poll(async()=>Number(await leaf.evaluate(el=>getComputedStyle(el).opacity))).toBeGreaterThan(.9);
+ await expect(leaf).toHaveCSS('transform','none');
 });
 
 test('motion diagnostics distinguish an advancing clock from a saved pause',async({page})=>{

@@ -26,9 +26,10 @@ reading copy, page height and hit areas remain fixed. Every visible preview
 runs independently, including two previews that fit together at 320px. Clocks
 pause offscreen, with a case study open, on a hidden page, and via the
 “Pause motion” control. User pause persists per tab.
-Reduced motion autoplays gentle opacity compositions: stationary collection
-objects, rule feedback fades, a stationary rewrite fade, and a warm window
-glow. Page turns, zoom and traveling words remain disabled in that mode.
+Reduced motion autoplays complete opacity compositions: stationary collection
+objects take turns in focus, rule fields appear before their feedback, rewrite
+words fade into place, and Leu crossfades between a chapter page and the room.
+Page turns, zoom and traveling words remain disabled in that mode.
 The existing explicit `?motion=play` choice can enable full compositions.
 No-JavaScript posters and public case-study links remain available. Desktop
 retains its scroll choreography.

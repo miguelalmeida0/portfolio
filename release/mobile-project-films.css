@@ -48,7 +48,8 @@
 }
 @media(max-width:359px){.film-toggle:not([hidden]){min-width:44px;padding:0}.film-toggle>span{position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden}.work-head .section-title{font-size:29px}}
 @media(prefers-reduced-motion:reduce){
- .sv-transfer,.leu-leaf{display:none!important}
+ .sv-transfer{display:none!important}
+ /* The chapter page crossfades in place; full motion can turn it in 3D. */
  /* An explicit Play choice applies only to the bounded project previews. */
- .mobile-film.film-opt-in .sv-transfer,.mobile-film.film-opt-in .leu-leaf{display:block!important}
+ .mobile-film.film-opt-in .sv-transfer{display:block!important}
 }

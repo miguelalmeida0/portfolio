@@ -1,13 +1,23 @@
-# Mobile autoplay: unresolved device failure
+# Mobile autoplay: device report and reduced-motion fix
 
-The owner still reports all previews static after the latest release. The
-physical iPhone failure has not been reproduced or causally identified. Earlier
-passing browser checks must not be treated as confirmation of a device fix.
+The owner's iPhone report identifies the code path: the browser requests reduced
+motion and has no explicit full-motion choice. Leu is fully visible, initialized
+and enabled; its clock advances from 0 to 0.974 to 2.172 seconds with no script
+errors. The reduced-motion renderer keeps the room stationary and CSS hides the
+chapter page, leaving only a subtle window tint. Playback is running, but the
+intended reading sequence has been removed. Other projects are offscreen in
+this report, so their paused clocks are expected.
 
-## Current evidence
+The corrected reduced-motion compositions retain the stories with fades:
+stationary artwork emphasis, sequential rule fields and feedback, word-by-word
+rewrite reveals, and chapter/room crossfades. Leu's chapter layer stays displayed
+and changes opacity without a turn or zoom. No device setting change or special
+playback URL is needed. Full-motion and desktop compositions remain available.
+
+## Investigation evidence
 
 - Public homepage bytes match the tested release, including an iPhone user agent.
-- Main is `fd1d56227bdaef1bf7f873eb981656e279444cb0`; the local equivalent is
+- The diagnostic baseline is `fd1d56227bdaef1bf7f873eb981656e279444cb0`; its local equivalent is
   `266c323ff9e0f3edab4aa60203ffe85206f08cf7`.
 - The repository has no service worker registration or HTML cache handler.
 - Public HTML sends `Cache-Control: no-cache, max-age=0, must-revalidate`.
@@ -19,7 +29,17 @@ passing browser checks must not be treated as confirmation of a device fix.
   from 5.048 to 6.248 after viewport changes; and from 6.315 to 7.515 after
   background return. These are browser probes, not physical iPhone evidence.
 - A question about whether tapping the project opens its dialog received no
-  answer. Main-script execution on the failing device remains unknown.
+  answer. The subsequent device report confirms main-script execution and
+  identifies build `bb522a9f2fc0`, `reducedMotion: true`, `savedPause: false`,
+  `fullMotionChoice: false`, and a visible page with all dependencies present.
+
+The earlier one-percent pixel-change check could pass a window tint, so it did
+not protect the intended experience. The new regression uses the reported
+393-by-637 viewport and requires a displayed, stationary chapter page, more than
+15 percent materially changed scene pixels, a clear room reveal, and the return
+of the page through real playback. It fails on the old CSS (`display: none`) and
+passes with the crossfade. Unit checks cover all four reduced-motion stories and
+bounded opacity values through repeated cycles.
 
 ## Diagnostic delivery
 
@@ -41,5 +61,7 @@ and noindex. Normal homepage bytes and motion logic are unchanged.
 Fault-injection browser checks cover a main bootstrap exception, missing observer
 callbacks, a paused GSAP global timeline while the playing flag stays true,
 saved pause, JavaScript disabled, and a healthy desktop. The observer wrapper
-also preserves the native callback receiver. The next necessary evidence is a
-report from the actual failing browser, not another speculative motion patch.
+also preserves the native callback receiver. The report establishes the active
+code path and the missing chapter layer. Browser checks verify the correction
+under those same conditions; post-deployment physical-device confirmation is
+still separate from that evidence.
