@@ -26,6 +26,10 @@ export function patchHomeMobile(html) {
   if (caseLinks !== 4) throw new Error(`Expected four case-study actions, found ${caseLinks}`);
   replace("const reduced=matchMedia('(prefers-reduced-motion:reduce)'),wide=", "const mobileLayout=matchMedia('(max-width:900px)');\n const reduced=matchMedia('(prefers-reduced-motion:reduce)'),wide=");
   replace("restoreTarget=project.querySelector('[data-case]');", "restoreTarget=project.querySelector(mobileLayout.matches?'.project-shot':'[data-case]');");
+  // Extend the cream underneath the pink sheet; its curve owns the visible
+  // seam. Shared corner coordinates prevent a detached tip, and the overlap
+  // prevents antialiasing cracks between two separately painted SVG paths.
+  replace('d="M0 0H1600L735 82Q695 87 660 134L0 16Z"', 'd="M0 0H1600L704 86L708 145H0Z"');
   // The portrait moves during its entrance. Clip all four illustration layers
   // together so the body cannot peek below the foreground's SVG viewport.
   replace('<svg class="footer-paper"', '<div class="footer-illustration" aria-hidden="true"><svg class="footer-paper"');
