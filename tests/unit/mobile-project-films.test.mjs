@@ -25,7 +25,7 @@ test('four films tell different stories and reproduce the same frame exactly',()
   assert.deepEqual(frame(id,3.2),frame(id,3.2));
   assert.notDeepEqual(frame(id,0),frame(id,3.2));
  }
- assert.equal(frame('needle',0).cards.length,3);
+ assert.equal(frame('needle',0).typed,0);
  assert.equal(frame('f24',0).typed,0);
  assert.equal(frame('f24',7.6).typed,20);
  assert.ok(frame('f24',4.6).error>.9);
@@ -34,18 +34,18 @@ test('four films tell different stories and reproduce the same frame exactly',()
  assert.equal(frame('leu',4).rain.length,24);
  assert.notDeepEqual(frame('leu',4).rain,frame('leu',4.5).rain);
 });
-test('Needle searches the artwork and finds the golden object in both profiles',()=>{
+test('Needle types a real search, reveals its gallery and holds the artwork inspector',()=>{
  for(const gentle of [false,true]){
   assert.equal(frame('needle',0,gentle).typed,0);
-  assert.equal(frame('needle',2,gentle).typed,26);
-  assert.equal(frame('needle',3,gentle).lens[2],1);
-  assert.notEqual(frame('needle',3,gentle).lens[0],frame('needle',4,gentle).lens[0]);
-  const match=frame('needle',7,gentle);
-  assert.equal(match.found,1);
-  assert.equal(match.cards[0][4],1);
-  assert.ok(match.cards[1][4]<.4&&match.cards[2][4]<.4);
+  assert.equal(frame('needle',2.5,gentle).typed,20);
+  assert.equal(frame('needle',4.8,gentle).gallery,1);
+  for(const t of [7.5,8.5,9.2])assert.equal(frame('needle',t,gentle).details,1);
+  assert.equal(frame('needle',10.8,gentle).details,0);
  }
- assert.ok(Math.abs(frame('needle',7,true).cards[0][0]-frame('needle',0,true).cards[0][0])<20);
+});
+test('Needle keeps reduced-motion submit geometry static while full motion presses',()=>{
+ assert.equal(frame('needle',2.511,true).enterScale,1);
+ assert.ok(frame('needle',2.511,false).enterScale<1);
 });
 test('reduced-motion UI previews retain their stories through distinct fades',()=>{
  assert.equal(reducedFrame('f24',0).fieldOpacity,0);
@@ -58,7 +58,7 @@ test('reduced-motion UI previews retain their stories through distinct fades',()
  for(const id of ['f24','second-voice'])assert.deepEqual(reducedFrame(id,0),reducedFrame(id,1));
 });
 test('all scene values stay finite through multiple cycles and loop without a jump',()=>{
- const durations={needle:8.8,f24:8.4,'second-voice':8.8,leu:10};
+ const durations={needle:12.4,f24:8.4,'second-voice':8.8,leu:10};
  const numbers=value=>typeof value==='number'?[value]:value&&typeof value==='object'?Object.values(value).flatMap(numbers):[];
  for(const [id,duration] of Object.entries(durations)){
   for(let t=0;t<duration*3;t+=.037){

@@ -25,7 +25,11 @@ export function patchHomeMobile(html) {
   });
   if (caseLinks !== 4) throw new Error(`Expected four case-study actions, found ${caseLinks}`);
   replace("const reduced=matchMedia('(prefers-reduced-motion:reduce)'),wide=", "const mobileLayout=matchMedia('(max-width:900px)');\n const reduced=matchMedia('(prefers-reduced-motion:reduce)'),wide=");
-  const films = readFileSync(new URL('../release/mobile-project-films.js', import.meta.url), 'utf8');
+  let films = readFileSync(new URL('../release/mobile-project-films.js', import.meta.url), 'utf8');
+  const assets = JSON.parse(readFileSync(new URL('../release/needle-film-assets.json', import.meta.url), 'utf8'));
+  const assetSlot = 'const NEEDLE_FILM_ART = [];';
+  if (films.split(assetSlot).length !== 2 || assets.length !== 6) throw new Error('Unexpected Needle film asset contract');
+  films = films.replace(assetSlot, `const NEEDLE_FILM_ART = ${JSON.stringify(assets)};`);
   replace('function createProjectScenes(panels){', `${films}\nfunction createProjectScenes(panels){`);
   replace('const projectScenes=createProjectScenes(panels),galleryClock=', 'const mobileFilms=createMobileProjectFilms(panels),projectScenes=createProjectScenes(panels),galleryClock=');
   replace(' function setupMotion(){', ' function setupMotion(){\n  mobileFilms.stop();');

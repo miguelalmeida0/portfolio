@@ -1,6 +1,8 @@
 // Each film is a deterministic composition of time. GSAP owns the clock;
 // visibility, dialog and user preferences decide which clocks may run.
-const MOBILE_FILM_DURATION = [8.8, 8.4, 8.8, 10];
+const MOBILE_FILM_DURATION = [12.4, 8.4, 8.8, 10];
+// The build embeds the six actual Met images observed in Needle's live results.
+const NEEDLE_FILM_ART = [];
 const filmClamp = n => Math.max(0, Math.min(1, n));
 const filmPhase = (a, b, t) => filmClamp((t - a) / (b - a));
 const filmEase = (a, b, t) => { const n = filmPhase(a, b, t); return n * n * (3 - 2 * n); };
@@ -16,30 +18,16 @@ function mobileFilmFrame(id, seconds, gentle = false) {
   const i = ['needle', 'f24', 'second-voice', 'leu'].indexOf(id);
   const p = ((seconds % MOBILE_FILM_DURATION[i]) + MOBILE_FILM_DURATION[i]) % MOBILE_FILM_DURATION[i] / MOBILE_FILM_DURATION[i];
   if (id === 'needle') {
-    // A description becomes a search: inspect the collection, then find the
-    // little golden object. Reduced motion keeps each object near its place.
-    const home = [[64,252,-14,1.2,1],[276,238,7,1.45,1],[478,254,15,1.2,1]];
-    const match = gentle
-      ? [[66,224,-3,1.45,1],[272,226,3,1.5,.32],[478,240,8,1.22,.32]]
-      : [[240,212,-3,1.85,1],[76,252,-11,1,.32],[480,250,11,1,.32]];
-    const poses = [
-      home,
-      [[74,236,-9,1.28,1],[272,220,3,1.55,1],[474,236,10,1.28,1]],
-      [[78,234,-5,1.3,1],[274,226,6,1.48,1],[470,231,6,1.35,1]],
-      match, match, home
-    ];
-    const stops = [0,.18,.54,.72,.86,1];
-    const part = Math.max(0, stops.findIndex((_,j)=>p<stops[j+1]));
-    const u = filmEase(stops[part],stops[part+1],p);
-    const lensX = p<.35 ? 340+176*filmEase(.18,.35,p)
-      : p<.52 ? 516-381*filmEase(.35,.52,p)
-      : 135+(gentle?-5:187)*filmEase(.54,.72,p);
-    const found = filmEase(.7,.77,p)*(1-filmEase(.86,.98,p));
-    return {p, cards:poses[part].map((a,j)=>a.map((n,k)=>n+(poses[part+1][j][k]-n)*u)),
-      typed:Math.round(26*filmPhase(.02,.17,p)*(1-filmEase(.88,.98,p))),found,
-      queryOpacity:1-filmEase(.7,.77,p),
-      lens:[lensX,310+7*filmEase(.54,.72,p),filmEase(.16,.2,p)*(1-filmEase(.75,.82,p))],
-      lensArt:[filmEase(.45,.52,p),1-filmEase(.29,.35,p),filmEase(.29,.35,p)*(1-filmEase(.45,.52,p))]};
+    const dock=filmEase(.22,.31,p)*(1-filmEase(.88,.96,p));
+    const gallery=filmEase(.285,.36,p)*(1-filmEase(.88,.945,p));
+    const inspect=filmEase(.47,.56,p)*(1-filmEase(.77,.85,p));
+    const inspector=filmEase(.47,.50,p)*(1-filmEase(.82,.85,p));
+    const details=filmEase(.55,.59,p)*(1-filmEase(.775,.815,p));
+    return {p,dock,gallery,inspect,inspector,details,
+      typed:Math.round(20*filmPhase(.025,.17,p)*(1-filmEase(.965,.997,p))),
+      enterScale:gentle?1:1-.07*Math.sin(Math.PI*filmPhase(.19,.215,p)),
+      select:filmEase(.43,.45,p)*(1-filmEase(.47,.5,p)),
+      cards:Array.from({length:6},(_,j)=>filmEase(.285+j*.009,.335+j*.009,p)*(1-filmEase(.88,.945,p)))};
   }
   if (id === 'f24') {
     const exit = 1-filmEase(.95,1,p), saved = filmEase(.83,.9,p)*exit;
@@ -68,6 +56,31 @@ function mobileFilmReducedFrame(id, progress) {
   if(id==='second-voice')return {words:Array.from({length:13},(_,j)=>filmEase(.03+j*.025,.09+j*.025,p)*clear),author:filmEase(.43,.57,p)*clear};
 }
 
+function mountNeedleFilm(host) {
+  const root=document.createElement('span');root.className='needle-demo';root.setAttribute('aria-hidden','true');
+  const searchIcon='<svg viewBox="0 0 24 24" fill="none"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>';
+  const enterIcon='<svg viewBox="0 0 24 24" fill="none"><path d="M19 6v8H5m0 0 5-5m-5 5 5 5"/></svg>';
+  const field=`<span class="nd-search-icon">${searchIcon}</span><span class="nd-query"></span><span class="nd-enter">${enterIcon}</span>`;
+  root.innerHTML=`<span class="nd-brand"><svg viewBox="0 0 32 32" fill="currentColor"><path d="M14 4a2 2 0 0 0-2-2C7.582 2 4 6.477 4 12v16a2 2 0 0 0 2 2c4.418 0 8-4.477 8-10Z"/><path d="M18 4a2 2 0 0 1 2-2c4.418 0 8 4.477 8 10v16a2 2 0 0 1-2 2c-4.418 0-8-4.477-8-10Z"/></svg>Needle</span>
+    <span class="nd-intro" data-nd-animate><span class="nd-question">What would you<br>like to see?</span><span class="nd-description">Describe a picture in your own words.</span><span class="nd-examples">Or try one<span>A room with a window</span></span></span>
+    <span class="nd-field" data-nd-animate>${field}</span><span class="nd-docked" data-nd-animate>${field}</span>
+    <span class="nd-gallery" data-nd-animate><span class="nd-eyebrow">From The Met collection</span><span class="nd-results-title">A room with a window</span><span class="nd-filter">${searchIcon}Filters</span><span class="nd-grid"></span></span>
+    <span class="nd-inspector" data-nd-animate><span class="nd-inspector-heading">Artwork details</span><span class="nd-close">×</span></span>
+    <span class="nd-focus" data-nd-animate></span><span class="nd-details" data-nd-animate><span class="nd-art-title">Moonlight, Strandgade 30</span><span>Vilhelm Hammershøi · 1900–1906</span><span>European Paintings</span></span>`;
+  const grid=root.querySelector('.nd-grid');
+  NEEDLE_FILM_ART.forEach(art=>{
+    const cell=document.createElement('span');cell.className='nd-cell';cell.setAttribute('data-nd-animate','');
+    const img=document.createElement('img');img.src=art.data;img.alt='';img.width=art.width;img.height=art.height;
+    cell.append(img);grid.append(cell);
+  });
+  const selected=grid.children[2].firstChild.cloneNode(false);root.querySelector('.nd-focus').append(selected);
+  host.querySelector('.scene-world').append(root);
+  const $=s=>root.querySelector(s);
+  return {root,queries:root.querySelectorAll('.nd-query'),cells:root.querySelectorAll('.nd-cell'),
+    field:$('.nd-field'),docked:$('.nd-docked'),intro:$('.nd-intro'),gallery:$('.nd-gallery'),
+    inspector:$('.nd-inspector'),details:$('.nd-details'),focus:$('.nd-focus')};
+}
+
 function createMobileProjectFilms(panels) {
   const button = document.querySelector('[data-film-toggle]');
   const mobile = matchMedia('(max-width:900px)'), reduced = matchMedia('(prefers-reduced-motion:reduce)');
@@ -86,17 +99,6 @@ function createMobileProjectFilms(panels) {
   const scenes = panels.map((panel,i) => {
     const host=panel.querySelector('.project-scene'), $=s=>host.querySelector(s);
     // These are visual layers inside the existing semantic preview button.
-    if (panel.id==='needle') {
-      const found=document.createElement('span');found.className='needle-found';found.textContent='Found it.';
-      $('.needle-input').append(found);
-      const lens=document.createElement('span');lens.className='needle-lens';
-      lens.innerHTML='<span class="needle-lens-window"></span><span class="needle-lens-handle"></span>';
-      [0,1,4].forEach(n=>{
-        const art=$(`[data-orbit="${n}"] .art-crop`).cloneNode(false);
-        art.classList.add('needle-lens-art');lens.firstChild.append(art);
-      });
-      $('.scene-world').append(lens);
-    }
     if (panel.id==='second-voice') {
       const transfer=document.createElement('span'); transfer.className='sv-transfer';transfer.textContent='Rain';
       $('.scene-world').append(transfer);
@@ -107,9 +109,13 @@ function createMobileProjectFilms(panels) {
       tick.innerHTML='<path d="m5 12 5 5 9-10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
       $('.rule-success i').append(tick);
     }
-    const owned=[...host.querySelectorAll('.art-orbit,.needle-search,.needle-query,.needle-found,.needle-lens,.needle-lens-art,.rule-field,.rule-typed,.demo-caret,.rule-error,.rule-success,.rule-save,.rule-status,.save-copy,.save-spinner,.save-check,.rule-preview,.dry-copy,.preview-check,.preview-dot,.rule-recipient,.rule-connector,.sv-dark,.sv-draft-side,.sv-rewrite-side,.sv-result>span,.sv-author,.sv-strength-dot,.sv-transfer,.sv-seam,.leu-room,.leu-arch,.leu-scene-copy,.leu-rain i')];
-    let baseline=[];
-    const save=()=>{baseline=owned.map(el=>[el,el.getAttribute('style')]);};
+    const owned=[...host.querySelectorAll('.art-orbit,.needle-search,.rule-field,.rule-typed,.demo-caret,.rule-error,.rule-success,.rule-save,.rule-status,.save-copy,.save-spinner,.save-check,.rule-preview,.dry-copy,.preview-check,.preview-dot,.rule-recipient,.rule-connector,.sv-dark,.sv-draft-side,.sv-rewrite-side,.sv-result>span,.sv-author,.sv-strength-dot,.sv-transfer,.sv-seam,.leu-room,.leu-arch,.leu-scene-copy,.leu-rain i')];
+    let baseline=[],needle=null;
+    const save=()=>{
+      // Mount/decode the bounded artwork set only when mobile is first used.
+      if(panel.id==='needle'&&!needle){needle=mountNeedleFilm(host);owned.push(...needle.root.querySelectorAll('[data-nd-animate]'));}
+      baseline=owned.map(el=>[el,el.getAttribute('style')]);
+    };
     const restore=()=>baseline.forEach(([el,style])=>style===null?el.removeAttribute('style'):el.setAttribute('style',style));
     const transform=(selector,value)=>$(selector).style.transform=value;
     const opacity=(selector,value)=>$(selector).style.opacity=value;
@@ -122,16 +128,21 @@ function createMobileProjectFilms(panels) {
       const g=gentle&&(panel.id==='f24'||panel.id==='second-voice')?mobileFilmReducedFrame(panel.id,f.p):null;
       const move=(selector,value)=>transform(selector,gentle?'none':value);
       if(panel.id==='needle') {
-        [0,1,4].forEach((n,j)=>{
-          const el=$(`[data-orbit="${n}"]`),[x,y,angle,scale,alpha]=f.cards[j];
-          el.style.setProperty('--film-transform',`translate3d(${x}px,${y}px,0) rotate(${angle}deg) rotateY(${-angle*.6}deg) scale(${scale})`);
-          el.style.opacity=alpha;
-        });
-        text('.needle-query','Something small and golden'.slice(0,f.typed));
-        opacity('.needle-query',f.queryOpacity);opacity('.needle-found',f.found);
-        transform('.needle-lens',`translate3d(${f.lens[0]-66}px,${f.lens[1]-66}px,0)`);
-        opacity('.needle-lens',f.lens[2]);
-        [...host.querySelectorAll('.needle-lens-art')].forEach((el,j)=>el.style.opacity=f.lensArt[j]);
+        const query='A room with a window'.slice(0,f.typed);
+        needle.queries.forEach(el=>{if(el.textContent!==query)el.textContent=query;});
+        const dock=gentle?0:f.dock;
+        const {field,focus}=needle;field.style.transform=`translate3d(${70+130*dock}px,${350-318*dock}px,0)`;
+        field.style.width=`${500-92*dock}px`;field.style.height=`${62-14*dock}px`;field.style.fontSize=`${26-5*dock}px`;
+        field.style.opacity=gentle?1-f.dock:1;needle.docked.style.opacity=gentle?f.dock:0;
+        needle.intro.style.opacity=1-f.dock;needle.gallery.style.opacity=f.gallery*(1-f.inspector);
+        needle.inspector.style.opacity=f.inspector;needle.details.style.opacity=f.details;
+        const r=gentle?1:f.inspect;
+        focus.style.transform=`translate3d(${426-350*r}px,${198-82*r}px,0)`;
+        focus.style.width=`${182+306*r}px`;focus.style.height=`${181+209*r}px`;
+        focus.style.opacity=gentle?f.inspect:f.gallery;
+        needle.cells.forEach((el,j)=>{el.style.opacity=f.cards[j];el.style.transform=gentle?'none':`translateY(${12*(1-f.cards[j])}px)`;});
+        needle.root.style.setProperty('--nd-selected',f.select);needle.root.style.setProperty('--nd-enter-scale',f.enterScale);
+        needle.root.classList.toggle('nd-gentle',gentle);
       } else if(panel.id==='f24') {
         text('.rule-typed','Severity is Critical'.slice(0,gentle?20:f.typed));
         opacity('.rule-field',gentle?g.fieldOpacity:1);opacity('.rule-recipient',gentle?g.recipientOpacity:1);

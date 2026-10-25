@@ -71,7 +71,7 @@ for (const width of [320,390,430,768]) {
   expect(await nav.evaluate(el=>getComputedStyle(el).backgroundColor)).not.toBe('rgba(0, 0, 0, 0)');
   const preview=page.locator('#needle .project-shot');
   expect((await preview.boundingBox())!.width).toBeGreaterThan(width*.8);
-  await expect(preview.locator('.needle-question')).toBeVisible();
+  await expect(preview.locator('.nd-question')).toBeVisible();
   await preview.click();
   await expect(page.getByRole('dialog')).toBeVisible();
   await page.keyboard.press('Escape');
@@ -265,17 +265,63 @@ for(const reducedMotion of ['reduce','no-preference'] as const){
  });
 }
 
-test('Needle tells an artwork search story with a moving magnifier and a match',async({page})=>{
- await page.setViewportSize({width:393,height:637});await page.emulateMedia({reducedMotion:'reduce'});
- await page.goto('/#needle');const scene=page.locator('#needle .project-scene'),lens=scene.locator('.needle-lens');
- await expect(scene).toHaveAttribute('data-film-playing','true');await expect(lens).toHaveCSS('display','block');
- await expect(scene.locator('.needle-query')).toHaveText('Something small and golden');
- await expect.poll(async()=>Number(await lens.evaluate(el=>getComputedStyle(el).opacity))).toBeGreaterThan(.9);
- const before=await lens.evaluate(el=>getComputedStyle(el).transform);
- await expect.poll(()=>lens.evaluate(el=>getComputedStyle(el).transform)).not.toBe(before);
- await expect.poll(async()=>Number(await scene.locator('.needle-found').evaluate(el=>getComputedStyle(el).opacity)),{timeout:9000}).toBeGreaterThan(.9);
- await expect(scene.locator('.needle-found')).toHaveText('Found it.');
- expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+for(const reducedMotion of ['reduce','no-preference'] as const){
+ test(`Needle ${reducedMotion}: real search, six results and artwork inspector autoplay`,async({page})=>{
+  await page.setViewportSize({width:393,height:637});await page.emulateMedia({reducedMotion});
+  await page.goto('/#needle');const scene=page.locator('#needle .project-scene');
+  await expect(scene).toHaveAttribute('data-film-playing','true');
+  const fieldPosition=await scene.locator('.nd-field').evaluate(el=>getComputedStyle(el).transform);
+  const geometry=()=>scene.locator('.nd-focus').evaluate(el=>{const s=getComputedStyle(el);return {transform:s.transform,width:s.width,height:s.height};});
+  const originalGeometry=await geometry();
+  await expect(scene.locator('.needle-lens,.needle-found')).toHaveCount(0);
+  await expect(scene.locator('.nd-query').first()).toHaveText('A room with a window');
+  await expect(scene.locator('.nd-grid img')).toHaveCount(6);
+  await expect.poll(()=>scene.locator('.nd-grid img').evaluateAll(es=>es.every(el=>(el as HTMLImageElement).complete&&(el as HTMLImageElement).naturalWidth>0))).toBe(true);
+  await expect.poll(async()=>Number(await scene.locator('.nd-gallery').evaluate(el=>getComputedStyle(el).opacity))).toBeGreaterThan(.95);
+  const brand=(await scene.locator('.nd-brand').boundingBox())!;
+  const toolbar=(await scene.locator(reducedMotion==='reduce'?'.nd-docked':'.nd-field').boundingBox())!;
+  expect(toolbar.x-brand.x-brand.width,'The docked search must leave room for the Needle wordmark').toBeGreaterThanOrEqual(8);
+  const artworkFit=await scene.locator('.nd-grid img').evaluateAll(es=>es.map((el,index)=>{
+   const image=el.getBoundingClientRect(),cell=el.parentElement!.getBoundingClientRect();
+   return {result:index+1,clipPath:getComputedStyle(el).clipPath,widthDifference:Math.abs(image.width-cell.width),heightDifference:Math.abs(image.height-cell.height)};
+  }));
+  expect(artworkFit.filter(art=>art.clipPath!=='none'||art.widthDifference>1||art.heightDifference>1),'All six result artworks fill their cells without the poster clip').toEqual([]);
+  await expectVisiblePreviewChange(scene);
+  const details=scene.locator('.nd-details');
+  await expect.poll(async()=>Number(await details.evaluate(el=>getComputedStyle(el).opacity)),{timeout:10000}).toBeGreaterThan(.95);
+  await expect(details).toContainText('Moonlight, Strandgade 30');await expect(details).toContainText('Vilhelm Hammershøi');
+  if(reducedMotion==='reduce'){
+   expect(await scene.locator('.nd-field').evaluate(el=>getComputedStyle(el).transform)).toBe(fieldPosition);
+   expect(await geometry()).toEqual(originalGeometry);
+  }
+  else expect(await scene.locator('.nd-field').evaluate(el=>getComputedStyle(el).transform)).not.toBe(fieldPosition);
+  const position=await scene.locator('.nd-focus').evaluate(el=>getComputedStyle(el).transform);
+  await page.waitForTimeout(450);
+  expect(await scene.locator('.nd-focus').evaluate(el=>getComputedStyle(el).transform)).toBe(position);
+  await expect.poll(async()=>Number(await details.evaluate(el=>getComputedStyle(el).opacity)),{timeout:6000}).toBeLessThan(.05);
+  if(reducedMotion==='reduce')expect(await geometry()).toEqual(originalGeometry);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+  await page.setViewportSize({width:1440,height:900});
+  await expect(scene.locator('.needle-demo')).toBeHidden();
+  await expect(scene.locator('.needle-search')).toBeVisible();
+ });
+}
+
+test('Needle mounts once after desktop entry and resumes after mobile re-entry',async({page})=>{
+ await page.setViewportSize({width:1440,height:900});await page.emulateMedia({reducedMotion:'reduce'});
+ await page.goto('/#needle');const scene=page.locator('#needle .project-scene');
+ await expect(scene.locator('.needle-demo')).toHaveCount(0);
+ await page.setViewportSize({width:393,height:637});await scene.scrollIntoViewIfNeeded();
+ await expect(scene.locator('.needle-demo')).toHaveCount(1);await expect(scene).toHaveAttribute('data-film-playing','true');
+ await scene.locator('.needle-demo').evaluate(el=>el.setAttribute('data-reentry-probe','original'));
+ await page.setViewportSize({width:1440,height:900});await expect(scene.locator('.needle-demo')).toBeHidden();
+ await expect(scene.locator('.needle-search')).toBeVisible();
+ await page.setViewportSize({width:393,height:637});await scene.scrollIntoViewIfNeeded();
+ await expect(scene.locator('.needle-demo')).toHaveCount(1);
+ await expect(scene.locator('.needle-demo')).toHaveAttribute('data-reentry-probe','original');
+ await expect.poll(()=>scene.locator('.nd-grid img').evaluateAll(es=>es.length===6&&es.every(el=>(el as HTMLImageElement).complete&&(el as HTMLImageElement).naturalWidth>0))).toBe(true);
+ await expect(scene).toHaveAttribute('data-film-playing','true');
+ const before=await scene.getAttribute('data-film-time');await expect.poll(()=>scene.getAttribute('data-film-time')).not.toBe(before);
 });
 
 test('motion diagnostics distinguish an advancing clock from a saved pause',async({page})=>{
