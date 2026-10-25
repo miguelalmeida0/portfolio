@@ -232,3 +232,66 @@ test('Leu visibly keeps playing through the middle of its loop',async({page})=>{
  await expect.poll(async()=>Number(await scene.getAttribute('data-film-time'))).toBeGreaterThan(3);
  await expectVisiblePreviewChange(scene);
 });
+
+test('motion diagnostics distinguish an advancing clock from a saved pause',async({page})=>{
+ await page.setViewportSize({width:393,height:852});
+ await page.goto('/motion-debug/#leu');
+ await expect(page.locator('[data-motion-status]')).toHaveAttribute('data-motion-status','running');
+ await page.getByRole('button',{name:'Copy report',exact:true}).click();
+ await expect(page.locator('[data-motion-copy]')).toHaveText(/Copied|Select the report below/);
+ expect(await page.evaluate(()=>new Promise<boolean>(resolve=>{
+  new IntersectionObserver(function(this:IntersectionObserver,_entries,observer){observer.disconnect();resolve(this===observer);}).observe(document.body);
+ }))).toBe(true);
+ await page.evaluate(()=>sessionStorage.setItem('portfolio-previews-paused','true'));
+ await page.reload();
+ await expect(page.locator('[data-motion-status]')).toHaveAttribute('data-motion-status','paused');
+ await expect(page.locator('[data-motion-report]')).toContainText('"savedPause": true');
+});
+
+test('motion diagnostics survive a failure in the main animation script',async({page})=>{
+ await page.setViewportSize({width:393,height:852});
+ await page.route('**/motion-debug/',async route=>{
+  const response=await route.fetch();
+  const body=(await response.text()).replace('function createMobileProjectFilms(panels) {','function createMobileProjectFilms(panels) { throw new Error("Motion bootstrap test failure");');
+  await route.fulfill({response,body});
+ });
+ await page.goto('/motion-debug/#leu');
+ await expect(page.locator('[data-motion-status]')).toHaveAttribute('data-motion-status','initialization-failed');
+ await expect(page.locator('[data-motion-report]')).toContainText('Motion bootstrap test failure');
+});
+
+test('motion diagnostics detect a stopped clock despite the playing flag',async({page})=>{
+ await page.setViewportSize({width:393,height:852});
+ await page.goto('/motion-debug/#leu');
+ await expect(page.locator('#leu .project-scene')).toHaveAttribute('data-film-playing','true');
+ await page.evaluate(()=>{(window as unknown as {gsap:{globalTimeline:{pause():void}}}).gsap.globalTimeline.pause();});
+ await expect(page.locator('[data-motion-status]')).toHaveAttribute('data-motion-status','stalled');
+});
+
+test('motion diagnostics retain an explanation when JavaScript cannot run',async({browser})=>{
+ const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:393,height:852}});
+ const page=await context.newPage();
+ await page.goto('/motion-debug/#leu');
+ await expect(page.locator('[data-motion-status]')).toHaveText('JavaScript has not started');
+ await expect(page.locator('[data-motion-report]')).toContainText('JavaScript is disabled or blocked');
+ await context.close();
+});
+
+test('motion diagnostics identify missing visibility callbacks',async({page})=>{
+ await page.setViewportSize({width:393,height:852});
+ await page.addInitScript(()=>{
+  const Original=window.IntersectionObserver;
+  window.IntersectionObserver=class extends Original{
+   constructor(_callback:IntersectionObserverCallback,options?:IntersectionObserverInit){super(()=>{},options);}
+  };
+ });
+ await page.goto('/motion-debug/#leu');
+ await expect(page.locator('[data-motion-status]')).toHaveAttribute('data-motion-status','no-visibility');
+ await expect(page.locator('[data-motion-report]')).toContainText('"observations": []');
+});
+
+test('motion diagnostics recognize a healthy desktop layout',async({page})=>{
+ await page.setViewportSize({width:1440,height:900});
+ await page.goto('/motion-debug/');
+ await expect(page.locator('[data-motion-status]')).toHaveAttribute('data-motion-status','desktop');
+});
