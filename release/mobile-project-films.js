@@ -1,6 +1,6 @@
 // Each film is a deterministic composition of time. GSAP owns the clock;
 // visibility, dialog and user preferences decide which clocks may run.
-const MOBILE_FILM_DURATION = [12.4, 8.4, 8.8, 10];
+const MOBILE_FILM_DURATION = {needle:12.4, f24:8.4, 'second-voice':8.8, leu:10};
 // The build embeds the six actual Met images observed in Needle's live results.
 const NEEDLE_FILM_ART = [];
 const filmClamp = n => Math.max(0, Math.min(1, n));
@@ -15,8 +15,8 @@ function mobileFilmPlayback({mobile, hidden, dialog, paused, ratios}) {
 }
 
 function mobileFilmFrame(id, seconds, gentle = false) {
-  const i = ['needle', 'f24', 'second-voice', 'leu'].indexOf(id);
-  const p = ((seconds % MOBILE_FILM_DURATION[i]) + MOBILE_FILM_DURATION[i]) % MOBILE_FILM_DURATION[i] / MOBILE_FILM_DURATION[i];
+  const duration = MOBILE_FILM_DURATION[id];
+  const p = ((seconds % duration) + duration) % duration / duration;
   if (id === 'needle') {
     const dock=filmEase(.22,.31,p)*(1-filmEase(.88,.96,p));
     const gallery=filmEase(.285,.36,p)*(1-filmEase(.88,.945,p));
@@ -179,7 +179,7 @@ function createMobileProjectFilms(panels) {
       }
     };
     const clock={t:0};
-    const timeline=gsap.to(clock,{t:MOBILE_FILM_DURATION[i],duration:MOBILE_FILM_DURATION[i],repeat:-1,ease:'none',paused:true,onUpdate:()=>render(clock.t)});
+    const timeline=gsap.to(clock,{t:MOBILE_FILM_DURATION[panel.id],duration:MOBILE_FILM_DURATION[panel.id],repeat:-1,ease:'none',paused:true,onUpdate:()=>render(clock.t)});
     return {host,clock,timeline,render,save,restore,ratio:0};
   });
   const update=()=>{

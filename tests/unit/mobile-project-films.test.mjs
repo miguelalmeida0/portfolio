@@ -75,3 +75,19 @@ test('the shipping mobile branch starts films after resetting the desktop scene'
  assert.match(html,/data-film-toggle[^>]*hidden/);
  assert.equal(patchHomeMobile(html),html);
 });
+
+test('filtered and reordered scene clocks retain the duration belonging to their project',()=>{
+ const durations=[];
+ const button={addEventListener(){}};
+ const host={querySelectorAll:()=>[],querySelector:()=>null};
+ const panels=['leu','needle'].map(id=>({id,querySelector:()=>host}));
+ const gsap={to(clock,options){durations.push(options.duration);return {pause(){},paused(){}};}};
+ const document={querySelector:s=>s==='[data-film-toggle]'?button:{open:false},addEventListener(){}};
+ const IntersectionObserver=class{observe(){}};
+ const create=runInNewContext(source+';createMobileProjectFilms',{
+  document,window:{gsap,IntersectionObserver},gsap,IntersectionObserver,
+  matchMedia:()=>({matches:false,addEventListener(){}}),
+  location:{search:''},URLSearchParams,MutationObserver:class{observe(){}},addEventListener(){},
+ });
+ create(panels);assert.deepEqual(durations,[10,12.4]);
+});

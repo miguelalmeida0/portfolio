@@ -17,7 +17,8 @@ test('Bollard joins the project index and opens an accessible fictional case stu
  await page.keyboard.press('Escape');await expect(dialog).not.toBeVisible();
 });
 
-test('Bollard uses its static poster for reduced motion',async({page})=>{
+test('Bollard uses its static poster for reduced motion',async({page,isMobile})=>{
+ test.skip(isMobile,'Mobile uses gentle canvas playback');
  await page.emulateMedia({reducedMotion:'reduce'});
  await page.goto('/#bollard');
  await expect(page.locator('#bollard .project-cover')).toBeVisible();
@@ -29,14 +30,14 @@ test('Bollard uses its static poster for reduced motion',async({page})=>{
 test('global mobile pause also stops and resumes Bollard',async({page,isMobile})=>{
  test.skip(!isMobile,'Shared motion control is mobile only');
  await page.goto('/#bollard');
- await expect(page.locator('#bollard-film')).toBeVisible();
+ await expect(page.locator('#bollard-mobile-film')).toBeVisible();
  const global=page.locator('[data-film-toggle]');
  await global.click();
  await expect(page.locator('#bollard-film')).toBeHidden();
  await expect(page.locator('#bollard .project-cover')).toBeVisible();
  await global.click();
  await page.locator('#bollard .project-shot').scrollIntoViewIfNeeded();
- await expect(page.locator('#bollard-film')).toBeVisible();
+ await expect(page.locator('#bollard-mobile-film')).toBeVisible();
 });
 
 test('Bollard case content remains available without JavaScript',async({browser,baseURL})=>{
@@ -52,7 +53,8 @@ test('Bollard case content remains available without JavaScript',async({browser,
  await context.close();
 });
 
-test('visitor evidence and approval controls seek the film and resume local pause',async({page})=>{
+test('visitor evidence and approval controls seek the film and resume local pause',async({page,isMobile})=>{
+ test.skip(isMobile,'Native-video seeking remains a desktop mechanism');
  await page.goto('/#bollard');
  const video=page.locator('#bollard-film');
  await expect(video).toBeVisible();
@@ -71,7 +73,8 @@ test('visitor evidence and approval controls seek the film and resume local paus
 });
 
 
-test('explicit preview seeks work when the server ignores HTTP byte ranges',async({page})=>{
+test('explicit preview seeks work when the server ignores HTTP byte ranges',async({page,isMobile})=>{
+ test.skip(isMobile,'Mobile does not fetch or seek native media');
  const media=readFileSync(new URL('../../../static/projects/bollard/approval-v3.mp4',import.meta.url));let fetches=0;
  await page.route('**/projects/bollard/approval-v3.mp4',route=>{
   if(route.request().resourceType()==='fetch')fetches++;
@@ -91,7 +94,8 @@ test('explicit preview seeks work when the server ignores HTTP byte ranges',asyn
  expect(await video.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeLessThan(1.7);expect(fetches).toBe(1);
 });
 
-for(const failure of ['download','blob media'])test(`preview retries after a ${failure} failure`,async({page})=>{
+for(const failure of ['download','blob media'])test(`preview retries after a ${failure} failure`,async({page,isMobile})=>{
+ test.skip(isMobile,'Mobile does not fetch or seek native media');
  const media=readFileSync(new URL('../../../static/projects/bollard/approval-v3.mp4',import.meta.url));let fetches=0;
  await page.route('**/projects/bollard/approval-v3.mp4',route=>{
   if(route.request().resourceType()==='fetch'&&++fetches===1)return route.fulfill({status:failure==='download'?503:200,contentType:'video/mp4',body:Buffer.from('unavailable media')});

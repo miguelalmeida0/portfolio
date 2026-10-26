@@ -6,7 +6,7 @@ import {patchHomeMobile} from '../../scripts/patch-home-mobile.mjs';
 const raw=readFileSync(new URL('../../release/home.html',import.meta.url),'utf8');
 test('Bollard joins the shipping gallery without replacing existing projects',()=>{
  const html=patchHomeMobile(patchHomeNav(raw));
- assert.deepEqual([...html.matchAll(/<article class="project" id="([^"]+)"/g)].map(x=>x[1]),['needle','f24','second-voice','leu','bollard']);
+ assert.deepEqual([...html.matchAll(/<article class="project" id="([^"]+)"/g)].map(x=>x[1]),['f24','second-voice','leu','needle','bollard']);
  assert.match(html,/data-project="4" aria-controls="bollard"/);
  assert.match(html,/galleryEnd=panels.length-1\+\.68/);
  assert.match(html,/aria-label="Five projects"/);
@@ -14,7 +14,7 @@ test('Bollard joins the shipping gallery without replacing existing projects',()
 test('Bollard provides the live app, fictional scenario and human decision case study',()=>{
  assert.match(raw,/https:\/\/bollard-nine.vercel.app\/today/);
  const data=JSON.parse(raw.match(/const CASE_DATA=(.*);/)[1]);
- assert.equal(data.leu.next,'bollard');assert.equal(data.bollard.next,'needle');
+ assert.equal(data.leu.next,'needle');assert.equal(data.needle.next,'bollard');assert.equal(data.bollard.next,'f24');
  const text=JSON.stringify(data.bollard);
  for(const phrase of ['+€62/t','+€23/t','ore, coal, gas, power and carbon','quarterly index','€1.19M','fictional','human'])assert.ok(text.includes(phrase),phrase);
 });

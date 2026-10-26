@@ -315,3 +315,8 @@
 @media (prefers-reduced-motion: reduce) {
   .mobile-menu-panel, .hero-actions .button { transition: none; }
 }
+
+@font-face{font-family:Figtree;font-style:normal;font-weight:100 900;font-display:swap;src:url('/projects/bollard/type.woff2') format('woff2')}
+#f24 .project-shot img.f24-working-photo{object-fit:cover;object-position:center 43%;filter:none}
+#bollard-mobile-film{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none}
+#bollard-mobile-film[hidden]{display:none}

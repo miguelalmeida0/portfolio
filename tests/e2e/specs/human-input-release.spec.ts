@@ -58,7 +58,7 @@ for(const viewport of [{width:768,height:1024},{width:1024,height:700},{width:13
   const before=await track.evaluate(el=>getComputedStyle(el).transform);
   await page.mouse.wheel(0,1800);
   await expect.poll(()=>track.evaluate(el=>getComputedStyle(el).transform)).not.toBe(before);
-  for(const [index,id] of ['needle','f24','second-voice','leu'].entries()){
+  for(const [index,id] of ['f24','second-voice','leu','needle','bollard'].entries()){
    const button=page.locator('[data-project]').nth(index);
    await button.focus();await button.press('Enter');
    const project=page.locator(`#${id}`),shot=project.locator('.project-shot');
@@ -164,7 +164,7 @@ test('mobile previews autoplay independently and pause offscreen, in dialogs and
  await page.setViewportSize({width:393,height:852});
  await page.emulateMedia({reducedMotion:'no-preference'});
  await page.goto('/');
- for(const id of ['needle','f24','second-voice','leu']){
+ for(const id of ['second-voice','leu','needle']){
   const scene=page.locator(`#${id} .project-scene`);
   await scene.scrollIntoViewIfNeeded();
   await expect(scene).toHaveAttribute('data-film-playing','true');
@@ -189,11 +189,11 @@ test('mobile previews autoplay independently and pause offscreen, in dialogs and
  await page.locator('#needle .project-scene').scrollIntoViewIfNeeded();
  await expect(page.locator('#needle .project-scene')).toHaveAttribute('data-film-playing','true');
  await page.emulateMedia({reducedMotion:'reduce'});
- await expect(page.locator('.project-scene.mobile-film')).toHaveCount(4);
+ await expect(page.locator('.project-scene.mobile-film')).toHaveCount(3);
  await expect(toggle).toBeVisible();
  await page.reload();
  await expect(toggle).toHaveAccessibleName(/Pause/);
- await expect(page.locator('.project-scene.mobile-film')).toHaveCount(4);
+ await expect(page.locator('.project-scene.mobile-film')).toHaveCount(3);
  await page.setViewportSize({width:1440,height:900});
  await page.emulateMedia({reducedMotion:'no-preference'});
  await expect(page.locator('.project-scene.mobile-film')).toHaveCount(0);
@@ -204,7 +204,7 @@ test('reduced-motion visitors get gentle autoplay and can keep their pause choic
  await page.emulateMedia({reducedMotion:'reduce'});
  await page.goto('/');
  const toggle=page.locator('[data-film-toggle]');
- await expect(page.locator('.project-scene.mobile-film')).toHaveCount(4);
+ await expect(page.locator('.project-scene.mobile-film')).toHaveCount(3);
  await expect(toggle).toBeVisible();
  await expect(toggle).toHaveAccessibleName(/Pause/);
  await toggle.click();
@@ -248,14 +248,14 @@ test('two fully visible mobile previews both animate without touch input',async(
  await page.setViewportSize({width:320,height:852});
  await page.emulateMedia({reducedMotion:'no-preference'});
  await page.goto('/');
- const f24=page.locator('#f24 .project-scene');
+ const leu=page.locator('#leu .project-scene');
  const voice=page.locator('#second-voice .project-scene');
  // This narrow layout fits both previews; the former winner-only policy froze Voice.
- await f24.scrollIntoViewIfNeeded();
+ await leu.scrollIntoViewIfNeeded();
  await voice.scrollIntoViewIfNeeded();
- await expect(f24).toBeInViewport({ratio:.99});
+ await expect(leu).toBeInViewport({ratio:.99});
  await expect(voice).toBeInViewport({ratio:.99});
- for(const scene of [f24,voice]){
+ for(const scene of [leu,voice]){
   await expect(scene).toHaveAttribute('data-film-playing','true');
   const before=await scene.getAttribute('data-film-time');
   await expect.poll(()=>scene.getAttribute('data-film-time')).not.toBe(before);
@@ -264,12 +264,12 @@ test('two fully visible mobile previews both animate without touch input',async(
  await expect(page.locator('.project-scene[data-film-playing=true]')).toHaveCount(0);
 });
 
-test('plain mobile URL visibly autoplays all four previews with gentle reduced motion',async({page})=>{
+test('plain mobile URL visibly autoplays all three DOM previews with gentle reduced motion',async({page})=>{
  await page.setViewportSize({width:393,height:852});
  await page.emulateMedia({reducedMotion:'reduce'});
  await page.goto('/');
  await page.evaluate(()=>document.fonts.ready);
- for(const id of ['needle','f24','second-voice','leu']){
+ for(const id of ['second-voice','leu','needle']){
   const scene=page.locator(`#${id} .project-scene`);
   await scene.scrollIntoViewIfNeeded();
   await expect(scene).toHaveAttribute('data-film-playing','true');

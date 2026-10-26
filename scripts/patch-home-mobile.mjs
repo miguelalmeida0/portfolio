@@ -70,6 +70,8 @@ export function patchHomeMobile(html) {
   motion=hasGSAP&&!reduced.matches;window.motionEnabled=motion;`);
   const css = readFileSync(new URL('../release/mobile-role.css', import.meta.url), 'utf8') + '\n' + readFileSync(new URL('../release/mobile-project-films.css', import.meta.url), 'utf8');
   const js = readFileSync(new URL('../release/mobile-role.js', import.meta.url), 'utf8');
+  const bollardFilm = readFileSync(new URL('../docs/motion/bollard/film.js', import.meta.url), 'utf8').split('// Motion study bootstrap.')[0];
+  replace('<script id="bollard-motion-controller">', `<script>${bollardFilm}</script><script id="bollard-motion-controller">`);
   replace('</head>', `<style id="role-first-mobile">${css}</style></head>`);
   replace('</body></html>', `<noscript><style>.project-actions [data-case]{display:none!important}.project-case-fallback{display:inline-flex;min-height:44px;align-items:center;padding:8px 0}@media(max-width:767px){.project-case-fallback{grid-area:4/1/auto/-1;justify-self:start;font-size:15px}#f24 .project-case-fallback{grid-area:2/2;font-size:12px}}</style></noscript><script>${js}</script></body></html>`);
   return html;
