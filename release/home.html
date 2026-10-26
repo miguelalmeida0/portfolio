@@ -1393,24 +1393,48 @@ function initOpenCursor({
 </script><script id="bollard-motion-controller">
 (()=>{
  const video=document.querySelector('#bollard-film'),poster=document.querySelector('#bollard .project-cover'),button=document.querySelector('[data-bollard-toggle]'),dialog=document.querySelector('#case-dialog'),controls=document.querySelector('[data-bollard-controls]');
- const reduced=matchMedia('(prefers-reduced-motion:reduce)'),mobile=matchMedia('(max-width:767px)'),globalToggle=document.querySelector('[data-film-toggle]');let visible=false,paused=false,failed=false,requestId=0,globalPaused=mobile.matches&&globalToggle?.getAttribute('aria-pressed')==='true';
+ const reduced=matchMedia('(prefers-reduced-motion:reduce)'),mobile=matchMedia('(max-width:767px)'),globalToggle=document.querySelector('[data-film-toggle]');let seekPromise=null,blobUrl=null,pendingSeek=null,loadingBlob=false,seekLoadId=0;let visible=false,paused=false,failed=false,requestId=0,globalPaused=mobile.matches&&globalToggle?.getAttribute('aria-pressed')==='true';
  button.hidden=false;
  function sync(){
   const currentRequest=++requestId;
-  const play=visible&&!document.hidden&&!dialog.open&&!reduced.matches&&!paused&&!globalPaused&&!failed;
+  const play=visible&&!document.hidden&&!dialog.open&&!reduced.matches&&!paused&&!globalPaused&&!loadingBlob&&!failed;
   video.hidden=!play;poster.hidden=play;
   button.textContent=paused?'Resume':'Pause';button.setAttribute('aria-label',paused?'Resume Bollard preview':'Pause Bollard preview');button.setAttribute('aria-pressed',String(paused));controls.hidden=reduced.matches||failed;button.hidden=reduced.matches||failed;
   if(play){const request=video.play();request?.catch(error=>{if(currentRequest!==requestId||error?.name==='AbortError')return;failed=true;sync();});}else video.pause();
  }
  new IntersectionObserver(entries=>{visible=entries[0].isIntersecting&&entries[0].intersectionRatio>=.18;sync();},{threshold:[0,.18]}).observe(video.parentElement);
  button.addEventListener('click',()=>{paused=!paused;sync();});
+ function applyPendingSeek(){if(pendingSeek!==null){video.currentTime=pendingSeek;pendingSeek=null;}}
+ function seekPreview(target){
+  pendingSeek=target;paused=false;
+  if(blobUrl){if(!loadingBlob)applyPendingSeek();sync();return;}
+  const range=video.seekable;
+  if(!range||(range.length&&range.end(range.length-1)>0)){applyPendingSeek();sync();return;}
+  if(!seekPromise){
+   const loadId=++seekLoadId,sourceUrl=video.querySelector('source').src;
+   seekPromise=fetch(sourceUrl).then(response=>{if(!response.ok)throw new Error('Preview download failed');return response.blob();}).then(blob=>{
+    if(loadId!==seekLoadId)return;
+    const url=URL.createObjectURL(blob);blobUrl=url;loadingBlob=true;
+    const cleanup=()=>{video.removeEventListener('loadedmetadata',ready);video.removeEventListener('error',recover);};
+    const ready=()=>{if(loadId!==seekLoadId)return;cleanup();loadingBlob=false;applyPendingSeek();sync();};
+    const recover=()=>{
+     if(loadId!==seekLoadId)return;cleanup();++seekLoadId;++requestId;
+     URL.revokeObjectURL(url);blobUrl=null;seekPromise=null;pendingSeek=null;loadingBlob=false;
+     video.src=sourceUrl;video.load();sync();
+    };
+    video.addEventListener('loadedmetadata',ready);video.addEventListener('error',recover);
+    video.src=url;video.load();sync();
+   }).catch(()=>{if(loadId!==seekLoadId)return;seekPromise=null;pendingSeek=null;loadingBlob=false;sync();});
+  }
+  sync();
+ }
  document.querySelectorAll('[data-bollard-seek]').forEach(control=>control.addEventListener('click',()=>{
   if(reduced.matches||failed)return;
-  video.currentTime=Number(control.dataset.bollardSeek);paused=false;sync();
+  seekPreview(Number(control.dataset.bollardSeek));
  }));
  document.addEventListener('portfolio-preview-pause',event=>{globalPaused=event.detail.mobile&&event.detail.paused;sync();});
  reduced.addEventListener('change',sync);document.addEventListener('visibilitychange',sync);
  new MutationObserver(sync).observe(dialog,{attributes:true,attributeFilter:['open']});
- addEventListener('pagehide',()=>video.pause());sync();
+ addEventListener('pagehide',event=>{video.pause();if(!event.persisted&&blobUrl)URL.revokeObjectURL(blobUrl);});addEventListener('pageshow',sync);sync();
 })();
 </script></body></html>

@@ -96,3 +96,32 @@ test('visitor controls seek to evidence and approval, resume local pause and res
  events['portfolio-preview-pause']({detail:{mobile:true,paused:true}});clicks[3]();assert.equal(video.paused,true,'shared pause remains respected');
  reduced.matches=true;mediaEvents.change();assert.equal(controls.hidden,true);video.currentTime=0;clicks[8]();assert.equal(video.currentTime,0);assert.equal(video.paused,true);
 });
+
+test('zero-range preview fetches one blob, keeps latest seek, respects pause and restores on fetch failure',async()=>{
+ const {runInNewContext}=await import('node:vm');
+ async function setup(fail=false){
+  let intersection,resolveFetch,fetches=0;const events={},clicks={},videoEvents={},revoked=[];
+  const video={src:'',currentTime:0,seekable:{length:1,end:()=>0},parentElement:{},paused:true,querySelector(){return {src:'https://example.test/projects/bollard/approval-v2.mp4'};},addEventListener(k,v){videoEvents[k]=v;},removeEventListener(k,v){if(videoEvents[k]===v)delete videoEvents[k];},load(){},play(){this.paused=false;return Promise.resolve();},pause(){this.paused=true;}};
+  const button={setAttribute(){},addEventListener(k,v){clicks.pause=v;}},poster={},dialog={open:false},controls={},global={getAttribute:()=> 'false'};
+  const seek=[3,8].map(seconds=>({dataset:{bollardSeek:String(seconds)},addEventListener(k,v){clicks[seconds]=v;}}));
+  const document={hidden:false,querySelector(s){return s==='#bollard-film'?video:s==='#bollard .project-cover'?poster:s==='[data-bollard-toggle]'?button:s==='[data-bollard-controls]'?controls:s==='[data-film-toggle]'?global:dialog;},querySelectorAll(){return seek;},addEventListener(k,v){events[k]=v;}};
+  const reduced={matches:false,addEventListener(){}};
+  runInNewContext(raw.match(/<script id="bollard-motion-controller">([\s\S]*?)<\/script>/)[1],{document,matchMedia:s=>s.includes('reduced')?reduced:{matches:true},fetch:()=>{fetches++;return new Promise(resolve=>resolveFetch=resolve);},URL:{createObjectURL:()=> 'blob:test',revokeObjectURL(url){revoked.push(url);}},addEventListener(){},IntersectionObserver:class{constructor(fn){intersection=fn;}observe(){}},MutationObserver:class{observe(){}}});
+  intersection([{isIntersecting:true,intersectionRatio:1}]);clicks[3]();clicks[8]();assert.equal(fetches,1);
+  resolveFetch({ok:fail!==true,blob:async()=>({})});for(let i=0;i<8;i++)await Promise.resolve();
+  if(fail===true){
+   assert.equal(video.src,'');assert.equal(video.paused,false);assert.equal(button.hidden,false);
+   clicks[8]();assert.equal(fetches,2,'a later explicit action retries failed download');
+   resolveFetch({ok:true,blob:async()=>({})});for(let i=0;i<8;i++)await Promise.resolve();videoEvents.loadedmetadata();assert.equal(video.currentTime,8);assert.equal(video.paused,false);return;
+  }
+  if(fail==='media'){
+   const staleMetadata=videoEvents.loadedmetadata,staleError=videoEvents.error;videoEvents.error();assert.deepEqual(revoked,['blob:test']);assert.equal(video.src,'https://example.test/projects/bollard/approval-v2.mp4');assert.equal(video.paused,false,'restore original playback after blob load error');
+   clicks[3]();assert.equal(fetches,2);resolveFetch({ok:true,blob:async()=>({})});for(let i=0;i<8;i++)await Promise.resolve();
+   staleMetadata();staleError();assert.equal(video.paused,true,'stale metadata cannot complete a newer load');videoEvents.loadedmetadata();assert.equal(video.currentTime,3);assert.equal(video.paused,false);return;
+  }
+  assert.equal(video.src,'blob:test');assert.equal(video.paused,true,'wait for blob metadata');
+  clicks.pause();videoEvents.loadedmetadata();assert.equal(video.currentTime,8);assert.equal(video.paused,true,'user pause during fetch/load survives');
+  clicks[3]();assert.equal(video.currentTime,3);assert.equal(fetches,1);assert.equal(video.paused,false);
+ }
+ await setup();await setup(true);await setup('media');
+});

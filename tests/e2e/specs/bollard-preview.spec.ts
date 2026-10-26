@@ -1,3 +1,4 @@
+import {readFileSync} from 'node:fs';
 import {test,expect} from '@playwright/test';
 
 test('Bollard joins the project index and opens an accessible fictional case study',async({page})=>{
@@ -66,4 +67,43 @@ test('visitor evidence and approval controls seek the film and resume local paus
  expect(await video.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeLessThan(11);
  expect(await video.evaluate((v:HTMLVideoElement)=>v.paused)).toBe(false);
  await expect(page.getByRole('dialog')).not.toBeVisible();
+});
+
+
+test('explicit preview seeks work when the server ignores HTTP byte ranges',async({page})=>{
+ const media=readFileSync(new URL('../../../static/projects/bollard/approval-v2.mp4',import.meta.url));let fetches=0;
+ await page.route('**/projects/bollard/approval-v2.mp4',route=>{
+  if(route.request().resourceType()==='fetch')fetches++;
+  return route.fulfill({status:200,contentType:'video/mp4',body:media});
+ });
+ await page.goto('/#bollard');const video=page.locator('#bollard-film');
+ await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>v.readyState)).toBe(4);
+ expect(await video.evaluate((v:HTMLVideoElement)=>v.seekable.length?v.seekable.end(v.seekable.length-1):0)).toBe(0);
+ await page.getByRole('button',{name:'Inspect evidence',exact:true}).click();
+ await page.getByRole('button',{name:'Approve preview',exact:true}).click();
+ await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>v.src)).toMatch(/^blob:/);
+ await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeGreaterThanOrEqual(8);
+ expect(await video.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeLessThan(11);
+ expect(fetches).toBe(1);
+ await page.getByRole('button',{name:'Inspect evidence',exact:true}).click();
+ await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeGreaterThanOrEqual(3);
+ expect(await video.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeLessThan(6);expect(fetches).toBe(1);
+});
+
+for(const failure of ['download','blob media'])test(`preview retries after a ${failure} failure`,async({page})=>{
+ const media=readFileSync(new URL('../../../static/projects/bollard/approval-v2.mp4',import.meta.url));let fetches=0;
+ await page.route('**/projects/bollard/approval-v2.mp4',route=>{
+  if(route.request().resourceType()==='fetch'&&++fetches===1)return route.fulfill({status:failure==='download'?503:200,contentType:'video/mp4',body:Buffer.from('unavailable media')});
+  return route.fulfill({status:200,contentType:'video/mp4',body:media});
+ });
+ await page.goto('/#bollard');const video=page.locator('#bollard-film');
+ await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>v.readyState)).toBe(4);
+ await page.getByRole('button',{name:'Inspect evidence',exact:true}).click();await expect.poll(()=>fetches).toBe(1);
+ if(failure==='blob media')await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>v.src)).toMatch(/\/projects\/bollard\/approval-v2\.mp4$/);
+ // Retry the explicit action until the asynchronous failed request has settled.
+ await expect.poll(async()=>{await page.getByRole('button',{name:'Approve preview',exact:true}).click();return fetches;}).toBe(2);
+ await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>v.src)).toMatch(/^blob:/);
+ await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeGreaterThanOrEqual(8);
+ expect(await video.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeLessThan(11);
+ await expect(video).toBeVisible();expect(fetches).toBe(2);
 });
