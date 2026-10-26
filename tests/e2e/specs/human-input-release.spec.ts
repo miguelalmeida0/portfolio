@@ -35,6 +35,64 @@ test('project navigation, animated preview and case dialog remain usable',async(
  await expect(page.getByRole('dialog')).not.toBeVisible();
 });
 
+for(const viewport of [{width:768,height:1024},{width:1024,height:700},{width:1366,height:650},{width:1440,height:900},{width:1536,height:690}]){
+ test(`medium/large ${viewport.width}x${viewport.height}: original project layout and scroll remain active`,async({page})=>{
+  await page.setViewportSize(viewport);
+  await page.emulateMedia({reducedMotion:'no-preference'});
+  await page.goto('/');
+  await expect(page.locator('.mobile-role')).toBeHidden();
+  await expect(page.locator('.project-scene.mobile-film')).toHaveCount(0);
+  await expect(page.locator('.pin-spacer-human-hero')).toHaveCount(1);
+  const front=page.locator('#home [data-sheet-front]'),hand=page.locator('#home .hand.left');
+  const frontTop=(await front.boundingBox())!.y,handPose=await hand.evaluate(el=>getComputedStyle(el).transform);
+  await page.mouse.wheel(0,viewport.height*2.7);
+  await expect.poll(async()=>(await front.boundingBox())!.y).toBeLessThan(frontTop-100);
+  await expect.poll(()=>hand.evaluate(el=>getComputedStyle(el).transform)).not.toBe(handPose);
+  await page.mouse.wheel(0,-viewport.height*2.7);
+  await expect.poll(async()=>Math.abs((await front.boundingBox())!.y-frontTop)).toBeLessThan(2);
+  const workLink=page.locator('.nav').getByRole('link',{name:'Work',exact:true});
+  await workLink.focus();await workLink.press('Enter');
+  await expect(page.locator('body')).toHaveClass(/gallery-is-horizontal/);
+  await expect(page.locator('.pin-spacer-human-gallery')).toHaveCount(1);
+  const track=page.locator('.work-track');
+  const before=await track.evaluate(el=>getComputedStyle(el).transform);
+  await page.mouse.wheel(0,1800);
+  await expect.poll(()=>track.evaluate(el=>getComputedStyle(el).transform)).not.toBe(before);
+  for(const [index,id] of ['needle','f24','second-voice','leu'].entries()){
+   const button=page.locator('[data-project]').nth(index);
+   await button.focus();await button.press('Enter');
+   const project=page.locator(`#${id}`),shot=project.locator('.project-shot');
+   await expect(shot).toBeInViewport({ratio:.99});
+   const title=(await project.locator('h3').boundingBox())!,image=(await shot.boundingBox())!;
+   expect(title.x+title.width).toBeLessThanOrEqual(image.x+1);
+   const actions=project.locator('.project-actions');
+   await expect(actions.getByRole('button',{name:/Read .* case study/,exact:true})).toBeInViewport();
+  }
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+ });
+}
+
+test('resizing across the phone boundary restores one scroll owner and keeps phone autoplay',async({page})=>{
+ await page.setViewportSize({width:767,height:900});
+ await page.emulateMedia({reducedMotion:'no-preference'});
+ await page.goto('/');
+ for(const viewport of [{width:768,height:900},{width:1024,height:650},{width:1440,height:900}]){
+  await page.setViewportSize(viewport);
+  await expect(page.locator('.project-scene.mobile-film')).toHaveCount(0);
+  await expect(page.locator('.mobile-menu')).toBeHidden();
+  await expect(page.locator('.pin-spacer-human-hero')).toHaveCount(1);
+  await expect(page.locator('.pin-spacer-human-gallery')).toHaveCount(1);
+  await page.setViewportSize({width:767,height:900});
+  await expect(page.locator('.mobile-menu')).toBeVisible();
+  await expect(page.locator('.pin-spacer-human-hero,.pin-spacer-human-gallery')).toHaveCount(0);
+  const scene=page.locator('#needle .project-scene');
+  await scene.scrollIntoViewIfNeeded();
+  await expect(scene).toHaveAttribute('data-film-playing','true');
+  const before=await scene.getAttribute('data-film-time');
+  await expect.poll(()=>scene.getAttribute('data-film-time')).not.toBe(before);
+ }
+});
+
 test('footer keyboard contacts and scrollbar work on a narrow screen',async({page})=>{
  await page.setViewportSize({width:320,height:800});
  await page.goto('/');
@@ -59,7 +117,7 @@ test('reduced motion preserves project previews and all existing public routes',
  expect(pdf.headers()['content-type']).toContain('application/pdf');
 });
 
-for (const width of [320,390,430,768]) {
+for (const width of [320,390,430,600,767]) {
  test(`mobile ${width}: opaque navigation and readable Needle in reduced motion`,async({page})=>{
   await page.setViewportSize({width,height:844});
   await page.emulateMedia({reducedMotion:'reduce'});
@@ -80,7 +138,7 @@ for (const width of [320,390,430,768]) {
  });
 }
 
-for (const width of [320,393,768]) {
+for (const width of [320,393,767]) {
  test(`mobile ${width}: portrait entrance cannot expose fragments below the illustration`,async({page})=>{
   await page.setViewportSize({width,height:852});
   await page.goto('/');

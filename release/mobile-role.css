@@ -9,7 +9,7 @@
   pointer-events: none;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 767px) {
   :root {
     --nav-h: calc(60px + env(safe-area-inset-top, 0px));
     --gutter: clamp(20px, 6.15vw, 40px);
@@ -290,7 +290,7 @@
   .no-script-note { position: relative; padding: 16px var(--edge); margin-top: var(--nav-h); font-size: 14px; }
 }
 
-@media (min-width: 600px) and (max-width: 900px) {
+@media (min-width: 600px) and (max-width: 767px) {
   body .hero .hero-front { padding-top: calc(var(--nav-h) + 38px); padding-bottom: calc(var(--hand-size) / 1.6); }
   .hero .mobile-role .role-pair > span { display: inline; }
   .hero .mobile-role .role-pair { white-space: nowrap; }

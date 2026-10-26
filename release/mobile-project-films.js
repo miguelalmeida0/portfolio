@@ -83,7 +83,7 @@ function mountNeedleFilm(host) {
 
 function createMobileProjectFilms(panels) {
   const button = document.querySelector('[data-film-toggle]');
-  const mobile = matchMedia('(max-width:900px)'), reduced = matchMedia('(prefers-reduced-motion:reduce)');
+  const mobile = matchMedia('(max-width:767px)'), reduced = matchMedia('(prefers-reduced-motion:reduce)');
   const dialog = document.querySelector('#case-dialog');
   if (!window.gsap || !window.IntersectionObserver || !button) return {sync(){}, stop(){}};
   const playRequested = new URLSearchParams(location.search).get('motion') === 'play';

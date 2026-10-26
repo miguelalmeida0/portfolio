@@ -2,7 +2,7 @@
 (() => {
   const menu = document.querySelector('.mobile-menu');
   const summary = menu.querySelector('summary');
-  const mobile = matchMedia('(max-width: 900px)');
+  const mobile = matchMedia('(max-width: 767px)');
   const close = () => { menu.open = false; };
   menu.addEventListener('click', event => {
     if (event.target.closest('a')) close();

@@ -24,7 +24,9 @@ export function patchHomeMobile(html) {
     return `${open}Read case study <span class="mobile-case-arrow">${arrow}</span></button><a class="project-case-fallback" href="https://miguelalmeida.is-a.dev/work/${id}" aria-label="Read ${title} case study">Read case study</a>`;
   });
   if (caseLinks !== 4) throw new Error(`Expected four case-study actions, found ${caseLinks}`);
-  replace("const reduced=matchMedia('(prefers-reduced-motion:reduce)'),wide=", "const mobileLayout=matchMedia('(max-width:900px)');\n const reduced=matchMedia('(prefers-reduced-motion:reduce)'),wide=");
+  // Phone films must never select the tablet/desktop layout. Height cannot
+  // disable the original gallery on laptops with browser chrome or DevTools.
+  replace("const reduced=matchMedia('(prefers-reduced-motion:reduce)'),wide=matchMedia('(min-width:901px) and (min-height:720px)');", "const mobileLayout=matchMedia('(max-width:767px)');\n const reduced=matchMedia('(prefers-reduced-motion:reduce)'),wide=matchMedia('(min-width:768px)');");
   let films = readFileSync(new URL('../release/mobile-project-films.js', import.meta.url), 'utf8');
   const assets = JSON.parse(readFileSync(new URL('../release/needle-film-assets.json', import.meta.url), 'utf8'));
   const assetSlot = 'const NEEDLE_FILM_ART = [];';
@@ -65,6 +67,6 @@ export function patchHomeMobile(html) {
   const css = readFileSync(new URL('../release/mobile-role.css', import.meta.url), 'utf8') + '\n' + readFileSync(new URL('../release/mobile-project-films.css', import.meta.url), 'utf8');
   const js = readFileSync(new URL('../release/mobile-role.js', import.meta.url), 'utf8');
   replace('</head>', `<style id="role-first-mobile">${css}</style></head>`);
-  replace('</body></html>', `<noscript><style>.project-actions [data-case]{display:none!important}.project-case-fallback{display:inline-flex;min-height:44px;align-items:center;padding:8px 0}@media(max-width:900px){.project-case-fallback{grid-area:4/1/auto/-1;justify-self:start;font-size:15px}#f24 .project-case-fallback{grid-area:2/2;font-size:12px}}</style></noscript><script>${js}</script></body></html>`);
+  replace('</body></html>', `<noscript><style>.project-actions [data-case]{display:none!important}.project-case-fallback{display:inline-flex;min-height:44px;align-items:center;padding:8px 0}@media(max-width:767px){.project-case-fallback{grid-area:4/1/auto/-1;justify-self:start;font-size:15px}#f24 .project-case-fallback{grid-area:2/2;font-size:12px}}</style></noscript><script>${js}</script></body></html>`);
   return html;
 }

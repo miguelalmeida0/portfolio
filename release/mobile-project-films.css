@@ -1,6 +1,6 @@
 /* Mobile project films: one subject, one clock, stable links and typography. */
 .film-toggle,.sv-transfer,.needle-demo,.film-check{display:none}
-@media(max-width:900px){
+@media(max-width:767px){
  .work .work-head{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:12px;text-align:left}
  .film-toggle:not([hidden]){display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:4px 0 4px 6px;border:0;background:none;color:var(--ink);font:400 12px/1.2 'Public Sans',sans-serif;white-space:nowrap;cursor:pointer}
  .film-toggle svg{width:13px;height:13px;flex:none}

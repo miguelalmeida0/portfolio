@@ -36,7 +36,7 @@ function startMotionDiagnostics(build){
   const snapshot={
    phase,elapsedMs:Math.round(performance.now()),visibility:document.visibilityState,
    viewport:{width:innerWidth,height:innerHeight},
-   mobile:matchMedia('(max-width:900px)').matches,reducedMotion:matchMedia('(prefers-reduced-motion:reduce)').matches,
+   mobile:matchMedia('(max-width:767px)').matches,reducedMotion:matchMedia('(prefers-reduced-motion:reduce)').matches,
    savedPause:storageFlag('portfolio-previews-paused'),fullMotionChoice:storageFlag('portfolio-previews-motion-allowed'),
    dependencies:{gsap:!!window.gsap,scrollTrigger:!!window.ScrollTrigger,intersectionObserver:!!NativeObserver,resizeObserver:!!window.ResizeObserver},
    dialogOpen:!!document.querySelector('#case-dialog')?.open,
