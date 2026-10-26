@@ -50,3 +50,20 @@ test('Bollard case content remains available without JavaScript',async({browser,
  await expect(page.locator('a[href="https://miguelalmeida.is-a.dev/work/bollard"]')).toHaveCount(0);
  await context.close();
 });
+
+test('visitor evidence and approval controls seek the film and resume local pause',async({page})=>{
+ await page.goto('/#bollard');
+ const video=page.locator('#bollard-film');
+ await expect(video).toBeVisible();
+ await page.locator('[data-bollard-toggle]').click();
+ await expect(video).toBeHidden();
+ await page.getByRole('button',{name:'Inspect evidence',exact:true}).click();
+ await expect(video).toBeVisible();
+ await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeGreaterThanOrEqual(3);
+ expect(await video.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeLessThan(6);
+ await page.getByRole('button',{name:'Approve preview',exact:true}).click();
+ await expect.poll(()=>video.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeGreaterThanOrEqual(8);
+ expect(await video.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeLessThan(11);
+ expect(await video.evaluate((v:HTMLVideoElement)=>v.paused)).toBe(false);
+ await expect(page.getByRole('dialog')).not.toBeVisible();
+});

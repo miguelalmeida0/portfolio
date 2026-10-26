@@ -19,9 +19,9 @@ test('Bollard provides the live app, fictional scenario and human decision case 
  for(const phrase of ['+€62/t','+€23/t','ore, coal, gas, power and carbon','quarterly index','€1.19M','fictional','human'])assert.ok(text.includes(phrase),phrase);
 });
 test('Bollard film has a poster and accessible independent playback control',()=>{
- assert.match(raw,/<video id="bollard-film"[^>]*muted[^>]*loop[^>]*playsinline[^>]*poster="\/projects\/bollard\/poster.webp"/);
- assert.match(raw,/src="\/projects\/bollard\/negotiation.mp4" type="video\/mp4"/);
- assert.match(raw,/aria-controls="bollard-film"[^>]*>Pause Bollard preview/);
+ assert.match(raw,/<video id="bollard-film"[^>]*muted[^>]*loop[^>]*playsinline[^>]*poster="\/projects\/bollard\/approval-v2.webp"/);
+ assert.match(raw,/src="\/projects\/bollard\/approval-v2.mp4" type="video\/mp4"/);
+ assert.match(raw,/aria-controls="bollard-film"[^>]*aria-label="Pause Bollard preview"[^>]*>Pause/);
  assert.match(raw,/id="bollard-motion-controller"/);
 });
 
@@ -31,12 +31,12 @@ test('Bollard playback pauses offscreen, for reduced motion, hidden tabs, dialog
  const video={hidden:true,parentElement:{},paused:true,play(){this.paused=false;return Promise.resolve();},pause(){this.paused=true;}};
  const poster={hidden:false},button={hidden:true,setAttribute(k,v){this[k]=v;},addEventListener(k,v){buttonEvents[k]=v;}},dialog={open:false};
  const reduced={matches:false,addEventListener(k,v){mediaEvents[k]=v;}};
- const document={hidden:false,querySelector(s){return s==='#bollard-film'?video:s==='#bollard .project-cover'?poster:s==='[data-bollard-toggle]'?button:dialog;},addEventListener(k,v){listeners[k]=v;}};
+ const document={hidden:false,querySelector(s){return s==='#bollard-film'?video:s==='#bollard .project-cover'?poster:s==='[data-bollard-toggle]'?button:dialog;},querySelectorAll(){return [];},addEventListener(k,v){listeners[k]=v;}};
  const source=raw.match(/<script id="bollard-motion-controller">([\s\S]*?)<\/script>/)[1];
  runInNewContext(source,{document,matchMedia:()=>reduced,addEventListener(){},IntersectionObserver:class{constructor(fn){intersection=fn;}observe(){}},MutationObserver:class{constructor(fn){mutation=fn;}observe(){}}});
  assert.equal(video.paused,true);
  const enter=()=>intersection([{isIntersecting:true,intersectionRatio:.9}]);enter();assert.equal(video.paused,false);assert.equal(poster.hidden,true);
- buttonEvents.click();assert.equal(video.paused,true);assert.equal(button.textContent,'Resume Bollard preview');
+ buttonEvents.click();assert.equal(video.paused,true);assert.equal(button.textContent,'Resume');
  intersection([{isIntersecting:false,intersectionRatio:0}]);enter();assert.equal(video.paused,true,'user pause survives re-entry');
  buttonEvents.click();assert.equal(video.paused,false);
  document.hidden=true;listeners.visibilitychange();assert.equal(video.paused,true);document.hidden=false;listeners.visibilitychange();assert.equal(video.paused,false);
@@ -51,7 +51,7 @@ test('Bollard ignores interrupted or stale play requests and follows the global 
  let intersection,mutation;const events={},pending=[];
  const video={hidden:true,parentElement:{},paused:true,play(){this.paused=false;return new Promise((resolve,reject)=>pending.push({resolve,reject}));},pause(){this.paused=true;}};
  const poster={},button={setAttribute(){},addEventListener(){}},dialog={open:false},global={getAttribute:()=> 'false'};
- const document={hidden:false,querySelector(s){return s==='#bollard-film'?video:s==='#bollard .project-cover'?poster:s==='[data-bollard-toggle]'?button:s==='[data-film-toggle]'?global:dialog;},addEventListener(k,v){events[k]=v;}};
+ const document={hidden:false,querySelector(s){return s==='#bollard-film'?video:s==='#bollard .project-cover'?poster:s==='[data-bollard-toggle]'?button:s==='[data-film-toggle]'?global:dialog;},querySelectorAll(){return [];},addEventListener(k,v){events[k]=v;}};
  const source=raw.match(/<script id="bollard-motion-controller">([\s\S]*?)<\/script>/)[1];
  runInNewContext(source,{document,matchMedia:s=>({matches:s.includes('max-width'),addEventListener(){}}),addEventListener(){},IntersectionObserver:class{constructor(fn){intersection=fn;}observe(){}},MutationObserver:class{constructor(fn){mutation=fn;}observe(){}}});
  const enter=()=>intersection([{isIntersecting:true,intersectionRatio:.9}]);
@@ -73,4 +73,26 @@ test('no-JavaScript Bollard card keeps the live app without advertising a missin
  assert.ok(!html.includes('href="https://miguelalmeida.is-a.dev/work/bollard"'));
  assert.match(html,/<noscript><details class="bollard-case-fallback"><summary>Read Bollard case study<\/summary>/);
  for(const id of ['needle','f24','second-voice','leu'])assert.ok(html.includes(`href="https://miguelalmeida.is-a.dev/work/${id}"`));
+});
+
+
+test('Bollard offers semantic film-only evidence and approval controls outside the case button',()=>{
+ assert.match(raw,/<div[^>]*data-bollard-controls[^>]*role="group"[^>]*aria-label="Try the preview: film only"/);
+ for(const [seconds,label] of [[3,'Inspect evidence'],[8,'Approve preview']])assert.match(raw,new RegExp(`<button[^>]*data-bollard-seek="${seconds}"[^>]*>${label}</button>`));
+ assert.ok(raw.indexOf('data-bollard-seek="3"')>raw.indexOf('id="bollard-film"'));
+});
+
+test('visitor controls seek to evidence and approval, resume local pause and respect reduced motion and global pause',async()=>{
+ const {runInNewContext}=await import('node:vm');let intersection;const events={},mediaEvents={},clicks={};
+ const video={currentTime:0,parentElement:{},paused:true,play(){this.paused=false;return Promise.resolve();},pause(){this.paused=true;}};
+ const pause={setAttribute(){},addEventListener(k,v){clicks.pause=v;}},poster={},dialog={open:false},controls={},global={getAttribute:()=> 'false'};
+ const seek=[3,8].map(seconds=>({dataset:{bollardSeek:String(seconds)},addEventListener(k,v){clicks[seconds]=v;}}));
+ const reduced={matches:false,addEventListener(k,v){mediaEvents[k]=v;}};
+ const document={hidden:false,querySelector(s){return s==='#bollard-film'?video:s==='#bollard .project-cover'?poster:s==='[data-bollard-toggle]'?pause:s==='[data-bollard-controls]'?controls:s==='[data-film-toggle]'?global:dialog;},querySelectorAll(){return seek;},addEventListener(k,v){events[k]=v;}};
+ runInNewContext(raw.match(/<script id="bollard-motion-controller">([\s\S]*?)<\/script>/)[1],{document,matchMedia:s=>s.includes('reduced')?reduced:{matches:true},addEventListener(){},IntersectionObserver:class{constructor(fn){intersection=fn;}observe(){}},MutationObserver:class{observe(){}}});
+ intersection([{isIntersecting:true,intersectionRatio:1}]);clicks.pause();assert.equal(video.paused,true);
+ clicks[3]();assert.equal(video.currentTime,3);assert.equal(video.paused,false);
+ clicks[8]();assert.equal(video.currentTime,8);assert.equal(video.paused,false);
+ events['portfolio-preview-pause']({detail:{mobile:true,paused:true}});clicks[3]();assert.equal(video.paused,true,'shared pause remains respected');
+ reduced.matches=true;mediaEvents.change();assert.equal(controls.hidden,true);video.currentTime=0;clicks[8]();assert.equal(video.currentTime,0);assert.equal(video.paused,true);
 });

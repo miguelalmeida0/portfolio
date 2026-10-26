@@ -1,6 +1,10 @@
-|Time|Composition|Motion|
-|0–3.1|+€62/t request dominates cream canvas|Copy settles; established request holds|
-|3.1–7.3|Request anchors left; cost-supported +€23/t right|Shared request shrinks, evidence appears in sequence|
-|7.3–11.7|Enlarged counterproposal matching real app labels|Surface enters; cursor activates Approve|
-|11.7–16.5|€1.19M scenario opportunity, savings dots|Dot cloud reorganises into readable grid|
-|16.5–18|Return to original request|Match dissolve to identical opening composition|
+# Approval-first revision
+16 seconds, square1200×1200, muted60fps. One persistent decision panel; no title slides.
+|Time|Visible action|
+|0–2.1|Counterproposal visible immediately; cursor approaches Why|
+|2.1–5.4|Evidence sheet expands from Why; request and supported cost compared|
+|5.4–8|Sheet retracts; cursor moves to Approve and presses|
+|8–10.8|Approve surface expands through the panel; savings dots assemble|
+|10.8–13.6|Approved counterproposal and fictional modelled opportunity settle|
+|13.6–16|Surface contracts to original approval control; opening composition restored|
+Visitor controls seek to evidence3s or approval8s. Local pause, shared mobile pause, reduced-motion and offscreen lifecycle preserved.
