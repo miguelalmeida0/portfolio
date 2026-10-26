@@ -1,0 +1,4 @@
+# Verification
+18 seconds, 1200×900, 60fps H264, silent autoplay. HyperFrames0.8.203, GSAP3.15.0, bundled Figtree.
+Lint: zero errors/warnings. Inspected five storyboard frames, corrected nested alpha inheritance, separated text handoffs, and used lateral scene transitions to maintain visual continuity. Rendered MP4 sampled into eight frames and reviewed. Actual t0/t18 snapshots have zero pixel differences. Media approximately2MB.
+Integration: fifth project with existing desktop scroll retained; existing first four article blocks unchanged. Case content and scenario disclosures verified against Bollard live. Play cancellation, reduced motion, global mobile pause and no-JavaScript cases covered by tests. Full unit448 passed. Svelte check zero errors/warnings; clean production build and integrity verifier passed. Browser evidence recorded in task report; native iOS hardware not tested.

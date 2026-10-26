@@ -1,0 +1,9 @@
+# Bollard negotiation loop
+## Global constraints
+Preserve current portfolio layout, medium/desktop scroll choreography, all existing projects and mobile loops. Add Bollard, do not replace an existing project. Only main/test allowed. Do not commit unrelated untracked files. Fictional demo figures are not business achievements.
+## Task 1: Portfolio integration
+Add Bollard project to release/home.html using existing project layout, index, case dialog, automatic media controller. Case study: procurement decision prototype; evidence before approval; human-controlled counterproposal. Open app https://bollard-nine.vercel.app/today. Demo narrative verified on live: supplier requests +€62/t; twelve months of ore, coal, gas, power and carbon support +€23/t; counterproposal retains quarterly index; modelled opportunity €1.19M. Label figures fictional scenario. Video assets will be delivered by coordinator at static/projects/bollard/negotiation.mp4 and poster.webp, 1200x900, 18 seconds silent. Include accessible pause/resume, reduced motion poster, offscreen pause; respect existing controller where suitable. Add responsive accessible case study; keep text readable, no new global styling. Add focused integration tests. Do not deploy. Report changes and actual tests in /tmp/bollard-integration-report.md.
+## Task 2: Motion asset
+Code draw 18-second 1200x900 film, cream/ink/blue/amber. Demand to evidence to counterproposal to savings dots, seamless restart. Verify rendered frames, encode H264 mobile-compatible MP4, static poster. No simulated actual business outcomes.
+## Task 3: Verification/release
+Review integrated diff, verify build/check and focused tests. Inspect desktop/mobile, case dialog and open link. Publish focused change to GitHub main only after verification and check live.

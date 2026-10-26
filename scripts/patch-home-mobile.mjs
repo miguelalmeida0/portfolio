@@ -16,14 +16,18 @@ export function patchHomeMobile(html) {
   replace('</span></span></h1></div>', '</span></span></h1><h1 class="mobile-role"><span class="role-pair"><span>Frontend</span> <span>engineer</span></span><span class="role-pair"><span>&amp; design</span> <span>engineer.</span></span></h1></div>');
   replace('<span class="hero-stack"> · React', '<span class="hero-stack"><span class="stack-divider"> · </span>React');
   replace(' </div>\n </div>\n\n<div class="hand left"', ` </div><div class="hero-actions"><a class="button" href="https://miguelalmeida.is-a.dev/cv/pdf" target="_blank" rel="noopener">View CV ${arrow}</a><a class="button solid" href="mailto:miguelalmeida1592@gmail.com">Get in touch ${arrow}</a></div>\n </div>\n\n<div class="hand left"`);
-  replace('<p>F24 and three independent projects.</p></div>', '<p>F24 and three independent projects.</p><span class="work-count" aria-label="Four projects">01—04</span><button class="film-toggle" data-film-toggle type="button" hidden aria-pressed="false" aria-label="Pause or play project preview animations"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path class="film-pause" d="M4 3h3v10H4zm5 0h3v10H9z"/><path class="film-play" d="m4 2 10 6-10 6z"/></svg><span>Pause motion</span></button></div>');
+  replace('<p>F24 and four independent projects.</p></div>', '<p>F24 and four independent projects.</p><span class="work-count" aria-label="Five projects">01—05</span><button class="film-toggle" data-film-toggle type="button" hidden aria-pressed="false" aria-label="Pause or play project preview animations"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path class="film-pause" d="M4 3h3v10H4zm5 0h3v10H9z"/><path class="film-play" d="m4 2 10 6-10 6z"/></svg><span>Pause motion</span></button></div>');
   // Public case-study routes remain available when script execution is disabled.
   let caseLinks = 0;
   html = html.replace(/(<button class="button" type="button" data-case="([^"]+)" aria-label="Read ([^"]+) case study">)Read case study<\/button>/g, (_, open, id, title) => {
     caseLinks++;
+    if (id === 'bollard') {
+      const data = JSON.parse(html.match(/^const CASE_DATA=(.*);$/m)[1])[id];
+      return `${open}Read case study</button><noscript><details class="bollard-case-fallback"><summary>Read Bollard case study</summary><p>${data.summary}</p>${data.sections.map(([heading, text])=>`<section><h4>${heading}</h4><p>${text}</p></section>`).join('')}</details></noscript>`;
+    }
     return `${open}Read case study <span class="mobile-case-arrow">${arrow}</span></button><a class="project-case-fallback" href="https://miguelalmeida.is-a.dev/work/${id}" aria-label="Read ${title} case study">Read case study</a>`;
   });
-  if (caseLinks !== 4) throw new Error(`Expected four case-study actions, found ${caseLinks}`);
+  if (caseLinks !== 5) throw new Error(`Expected five case-study actions, found ${caseLinks}`);
   // Phone films must never select the tablet/desktop layout. Height cannot
   // disable the original gallery on laptops with browser chrome or DevTools.
   replace("const reduced=matchMedia('(prefers-reduced-motion:reduce)'),wide=matchMedia('(min-width:901px) and (min-height:720px)');", "const mobileLayout=matchMedia('(max-width:767px)');\n const reduced=matchMedia('(prefers-reduced-motion:reduce)'),wide=matchMedia('(min-width:768px)');");

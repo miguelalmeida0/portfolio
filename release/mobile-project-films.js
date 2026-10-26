@@ -96,7 +96,7 @@ function createMobileProjectFilms(panels) {
       sessionStorage.setItem('portfolio-previews-motion-allowed','true');
     }
   } catch {}
-  const scenes = panels.map((panel,i) => {
+  const scenes = panels.filter(panel=>panel.querySelector('.project-scene')).map((panel,i) => {
     const host=panel.querySelector('.project-scene'), $=s=>host.querySelector(s);
     // These are visual layers inside the existing semantic preview button.
     if (panel.id==='second-voice') {
@@ -193,6 +193,7 @@ function createMobileProjectFilms(panels) {
     button.setAttribute('aria-pressed',String(blocked));button.querySelector('span').textContent=blocked?'Play motion':'Pause motion';
     button.setAttribute('aria-label',blocked?'Play project preview animations':'Pause project preview animations');
     button.title=reduced.matches&&!motionAllowed?'Reduced motion: the camera stays still.':'';
+    document.dispatchEvent(new CustomEvent('portfolio-preview-pause',{detail:{paused,mobile:mobile.matches}}));
   };
   const observer=new IntersectionObserver(entries=>{
     entries.forEach(entry=>{const scene=scenes.find(s=>s.host===entry.target);if(scene)scene.ratio=entry.isIntersecting?entry.intersectionRatio:0;});
