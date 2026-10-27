@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile, stat } from 'node:fs/promises';
 import sharp from 'sharp';
 
-const photo = 'static/images/miguel-footer-hands-20261027.webp';
+const photo = 'static/images/miguel-footer-restored-hands.webp';
 
 test('footer cutout retains both complete hands and space below their fingertips', async () => {
   const [metadata, file] = await Promise.all([sharp(photo).metadata(), stat(photo)]);
@@ -44,8 +44,8 @@ test('contact footer keeps yesterday’s fold and paints both hands above blue',
   assert.match(html, /\.fold-contact \.footer-person-body \{ z-index: 2; \}/);
   assert.match(html, /\.fold-contact \.footer-front \{ z-index: 3; \}/);
   assert.match(html, /\.fold-contact \.footer-person-hands \{ z-index: 4; \}/);
-  assert.match(footer, /id="footer-person-asset" href="\/images\/miguel-footer-hands-20261027\.webp"/);
-  assert.equal((footer.match(/miguel-footer-hands-20261027\.webp/g) || []).length, 1);
+  assert.match(footer, /id="footer-person-asset" href="\/images\/miguel-footer-restored-hands\.webp"/);
+  assert.equal((footer.match(/miguel-footer-restored-hands\.webp/g) || []).length, 1);
   assert.equal((footer.match(/href="#footer-person-asset"/g) || []).length, 2);
   assert.match(footer, /id="footer-hands-clip" clipPathUnits="userSpaceOnUse"/);
   assert.ok(footer.includes('clip-path="url(#footer-hands-clip)"'));
