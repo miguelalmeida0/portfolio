@@ -508,6 +508,7 @@ body:not(.nav-scrolled) .nav{background:transparent;border-bottom-color:transpar
   .fold-contact .footer-pro-links .footer-arrow { width: 16px; height: 16px; }
 }
 @media (max-width:700px) {
+  .fold-contact .footer-person-hands use { clip-path: url(#footer-hands-clip-mobile); }
   .human-contact.fold-contact {
     --person-width: min(70vw, 360px);
     --person-left: calc(50% - min(35vw, 180px));
@@ -757,8 +758,9 @@ body:not(.nav-scrolled) .nav{background:transparent;border-bottom-color:transpar
   <!-- One quality-controlled studio portrait; two paint layers preserve hand occlusion. -->
   <svg class="footer-person footer-person-body" viewBox="0 0 1024 1536" aria-hidden="true" focusable="false">
     <defs>
-      <image id="footer-person-asset" href="/images/miguel-footer-studio.webp" width="1024" height="1536" preserveAspectRatio="none"/>
-      <clipPath id="footer-hands-clip" clipPathUnits="userSpaceOnUse"><path d="M480 1201L1024 1283V1536H480Z"/></clipPath>
+      <image id="footer-person-asset" href="/images/miguel-footer-hands-20261027.webp" width="1024" height="1536" preserveAspectRatio="none"/>
+      <clipPath id="footer-hands-clip" clipPathUnits="userSpaceOnUse"><path d="M0 1086L1024 1219V1536H0Z"/></clipPath>
+      <clipPath id="footer-hands-clip-mobile" clipPathUnits="userSpaceOnUse"><path d="M0 875L1024 965V1536H0Z"/></clipPath>
     </defs>
     <use href="#footer-person-asset"/>
   </svg>
