@@ -57,7 +57,7 @@ for (const scenario of [
     await page.setViewportSize({ width: scenario.width, height: scenario.height });
     await page.emulateMedia({ reducedMotion: scenario.motion });
     await page.goto('/');
-    await expect.poll(async () => page.evaluate(() => Boolean(window.motionEnabled))).toBe(false);
+    await expect.poll(async () => page.evaluate(() => Boolean((window as Window & { motionEnabled?: boolean }).motionEnabled))).toBe(false);
     expect(await readGallery(page)).toBeNull();
     await expect(page.locator('body')).not.toHaveClass(/gallery-is-horizontal/);
     await page.locator('#f24').scrollIntoViewIfNeeded();
