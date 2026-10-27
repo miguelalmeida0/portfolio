@@ -332,8 +332,7 @@ body:not(.nav-scrolled) .nav{background:transparent;border-bottom-color:transpar
   pointer-events: none;
   filter: grayscale(1);
 }
-.fold-contact .footer-person-body { z-index: 2; }
-.fold-contact .footer-person-hands { z-index: 4; }
+.fold-contact .footer-person-body { z-index: 4; }
 .fold-contact .footer-person use { pointer-events: none; }
 .fold-contact .footer-contact-main {
   position: relative;
@@ -508,7 +507,6 @@ body:not(.nav-scrolled) .nav{background:transparent;border-bottom-color:transpar
   .fold-contact .footer-pro-links .footer-arrow { width: 16px; height: 16px; }
 }
 @media (max-width:700px) {
-  .fold-contact .footer-person-hands use { clip-path: url(#footer-hands-clip-mobile); }
   .human-contact.fold-contact {
     --person-width: min(70vw, 360px);
     --person-left: calc(50% - min(35vw, 180px));
@@ -755,17 +753,9 @@ body:not(.nav-scrolled) .nav{background:transparent;border-bottom-color:transpar
     <path fill="url(#footer-crease-shade)" d="M605 118Q685 128 704 86Q708 149 654 148Z"/>
     <path fill="#f6d4db" d="M0 16 605 118Q667 145 704 86L752 792Q757 824 722 823L0 716Z"/>
   </svg>
-  <!-- One quality-controlled studio portrait; two paint layers preserve hand occlusion. -->
-  <svg class="footer-person footer-person-body" viewBox="0 0 1024 1536" aria-hidden="true" focusable="false">
-    <defs>
-      <image id="footer-person-asset" href="/images/miguel-footer-hands-20261027.webp" width="1024" height="1536" preserveAspectRatio="none"/>
-      <clipPath id="footer-hands-clip" clipPathUnits="userSpaceOnUse"><path d="M0 1086L1024 1219V1536H0Z"/></clipPath>
-      <clipPath id="footer-hands-clip-mobile" clipPathUnits="userSpaceOnUse"><path d="M0 875L1024 965V1536H0Z"/></clipPath>
-    </defs>
-    <use href="#footer-person-asset"/>
-  </svg>
+  <!-- Keep the original placement. Render the transparent portrait once, above the blue front, so neither hand can be divided by the panel edge. -->
+  <svg class="footer-person footer-person-body" viewBox="0 0 1024 1536" aria-hidden="true" focusable="false"><image href="/images/miguel-footer-hands-20261027.webp" width="1024" height="1536" preserveAspectRatio="none"/></svg>
   <svg class="footer-front" viewBox="0 0 1600 1000" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path class="footer-front-wide" fill="#102d88" d="M0 670 1600 950V1000H0Z"/><path class="footer-front-compact" fill="#102d88" d="M0 560 1600 900V1000H0Z"/></svg>
-  <svg class="footer-person footer-person-hands" viewBox="0 0 1024 1536" aria-hidden="true" focusable="false"><use href="#footer-person-asset" clip-path="url(#footer-hands-clip)"/></svg>
   <div class="footer-contact-main">
     <h2 id="contact-heading">Let’s talk.</h2>
     <a class="footer-email" href="mailto:miguelalmeida1592@gmail.com">miguelalmeida1592<wbr>@gmail.com</a>
@@ -1282,7 +1272,7 @@ const CASE_DATA={"needle":{"title":"Needle","summary":"Search for art by descrip
   if (window.gsap && window.ScrollTrigger) {
     gsap.registerPlugin(ScrollTrigger);
     gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-      // Both photo layers share the same translation, keeping each pixel aligned.
+      // Animate the single photo layer without changing the original placement.
       gsap.fromTo(footer.querySelectorAll('.footer-person'), {y: 18}, {
         y: 0, duration: 1, ease: 'power3.out',
         scrollTrigger: {trigger: footer, start: 'top 88%', once: true}
