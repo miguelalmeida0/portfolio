@@ -23,6 +23,9 @@ test('contact footer places both hands above the blue panel and preserves its ac
   assert.match(footer, /<image href="\/images\/miguel-footer-hands-20261027\.webp"/);
   assert.equal((footer.match(/miguel-footer-hands-20261027\.webp/g) || []).length, 1, 'photo should be painted only once');
   assert.match(html, /\.fold-contact \.footer-person-body \{ z-index: 4; \}/);
+  assert.match(footer, /id="footer-blue-fringe-key" color-interpolation-filters="sRGB"/);
+  assert.match(footer, /feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  8 0 -8 1 0"/);
+  assert.match(footer, /filter="url\\(#footer-blue-fringe-key\\)"/);
   assert.match(html, /\.fold-contact \.footer-front \{ z-index: 3; \}/);
   assert.match(footer, /class="footer-person footer-person-body"/);
   assert.doesNotMatch(footer, /footer-person-hands|footer-hands-clip/, 'no clipped foreground copy that can introduce a blue seam');

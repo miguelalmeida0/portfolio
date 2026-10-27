@@ -754,7 +754,16 @@ body:not(.nav-scrolled) .nav{background:transparent;border-bottom-color:transpar
     <path fill="#f6d4db" d="M0 16 605 118Q667 145 704 86L752 792Q757 824 722 823L0 716Z"/>
   </svg>
   <!-- Keep the original placement. Render the transparent portrait once, above the blue front, so neither hand can be divided by the panel edge. -->
-  <svg class="footer-person footer-person-body" viewBox="0 0 1024 1536" aria-hidden="true" focusable="false"><image href="/images/miguel-footer-hands-20261027.webp" width="1024" height="1536" preserveAspectRatio="none"/></svg>
+  <svg class="footer-person footer-person-body" viewBox="0 0 1024 1536" aria-hidden="true" focusable="false">
+    <defs>
+      <!-- The source alpha has a few saturated blue matte pixels along the
+           lower cutout edge. Remove those, not the portrait or its geometry. -->
+      <filter id="footer-blue-fringe-key" color-interpolation-filters="sRGB">
+        <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  8 0 -8 1 0"/>
+      </filter>
+    </defs>
+    <image href="/images/miguel-footer-hands-20261027.webp" width="1024" height="1536" preserveAspectRatio="none" filter="url(#footer-blue-fringe-key)"/>
+  </svg>
   <svg class="footer-front" viewBox="0 0 1600 1000" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path class="footer-front-wide" fill="#102d88" d="M0 670 1600 950V1000H0Z"/><path class="footer-front-compact" fill="#102d88" d="M0 560 1600 900V1000H0Z"/></svg>
   <div class="footer-contact-main">
     <h2 id="contact-heading">Let’s talk.</h2>
