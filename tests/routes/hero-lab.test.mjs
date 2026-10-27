@@ -120,7 +120,7 @@ test('/hero-lab/typographic/cv keeps the full CV in Direction 01', async () => {
   for (const [, text] of cvData.matchAll(/(?:value|label|title|detail|role|place|year|years|company|location|name|quote): '([^']+)'/g)) {
     assert.ok(html.includes(decode(text)), `CV text: ${text}`);
   }
-  for (const href of ['/cv/pdf', '/files/miguel-almeida-cv.pdf', '/work/f24#migration', '/story', '/work/needle', '/work/leu'])
+  for (const href of ['/cv/pdf', '/files/Miguel_Almeida_CV.pdf', '/work/f24#migration', '/story', '/work/needle', '/work/leu'])
     assert.ok(html.includes(`href="${href}"`), href);
   const cvProjects = readFileSync('src/lib/content/cv-projects.ts', 'utf8');
   for (const [, text] of cvProjects.matchAll(/(?:name|description): '([^']+)'/g)) assert.ok(html.includes(decode(text)), `project: ${text}`);
@@ -144,10 +144,12 @@ test('/hero-lab links all three live directions', async () => {
   for (const slug of directions) assert.ok(html.includes(`href="/hero-lab/${slug}"`), slug);
 });
 
-test('the production homepage publishes the selected typographic header', async () => {
+test('the production homepage publishes the approved paper-fold header', async () => {
   const { status, html } = await get('/');
   assert.equal(status, 200);
-  assert.ok(html.includes('data-direction="typographic"'), 'homepage must not render a lab direction');
-  assert.match(html, /<section\b[^>]*class="mah"[^>]*aria-label="Introduction"/);
-  assert.ok(html.includes('data-identity-home'), 'homepage keeps its navigation');
+  assert.match(html, /<body\b[^>]*data-direction="pink"/);
+  assert.match(html, /<section\b[^>]*id="home"[^>]*data-sheet-hero[^>]*aria-label="Introduction"/);
+  assert.match(html, /<nav\b[^>]*aria-label="Main navigation"/);
+  for(const href of ['#work','#about','https://miguelalmeida.is-a.dev/cv/pdf'])
+    assert.ok(html.includes(`href="${href}"`), `homepage navigation: ${href}`);
 });

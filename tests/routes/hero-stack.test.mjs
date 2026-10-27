@@ -3,13 +3,16 @@ import { test } from 'node:test';
 
 const baseURL = process.env.ROUTE_HEALTH_BASE_URL || 'http://localhost:4173';
 
-test('homepage renders all four core frontend technologies between the role headline and View CV', async () => {
+test('homepage introduction renders the engineering role, location and current technology stack', async () => {
   const response = await fetch(new URL('/', baseURL), { signal: AbortSignal.timeout(10_000) });
   assert.equal(response.status, 200);
   const html = await response.text();
-  const hero = html.match(/<section\b[^>]*class="mah"[^>]*>([\s\S]*?)<\/section>/)?.[1];
+  const hero = html.match(/<section\b[^>]*id="home"[^>]*data-sheet-hero[^>]*>([\s\S]*?)<\/section>/)?.[1];
   assert.ok(hero, 'The assertion must target the hero, not stack text elsewhere on the page');
-  for (const skill of ["JavaScript", "React", "Svelte", "TypeScript"]) assert.ok(hero.includes(skill), skill);
-  assert.match(hero, /Miguel Almeida, frontend engineer and product designer in Berlin/);
-  assert.ok(hero.indexOf("JavaScript") < hero.indexOf("href=\"/cv\""));
+  const stack=hero.match(/class="hero-stack"[^>]*>([\s\S]*?)<\/p>/)?.[1];
+  assert.ok(stack, 'Technology names belong to the hero stack');
+  for (const skill of ['React', 'Svelte', 'TypeScript']) assert.ok(stack.includes(skill), skill);
+  assert.match(hero, /Frontend engineer &amp; design engineer/);
+  assert.match(hero, /Berlin, Germany/);
+  assert.ok(hero.indexOf('hero-role') < hero.indexOf('hero-stack'));
 });

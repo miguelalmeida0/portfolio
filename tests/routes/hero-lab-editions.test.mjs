@@ -65,6 +65,7 @@ test('Direction 01 and production pages retain their route identity', async () =
   for (const path of ['/', '/story', '/cv']) {
     const { status, html } = await get(path);
     assert.equal(status, 200, path);
-    assert.ok(html.includes('data-direction="typographic"'), `${path} renders production`);
+    const direction=path==='/'?'pink':'typographic';
+    assert.ok(html.includes(`data-direction="${direction}"`), `${path} renders its approved production design`);
   }
 });

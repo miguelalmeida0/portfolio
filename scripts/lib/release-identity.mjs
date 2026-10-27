@@ -8,7 +8,9 @@ export function buildIdentity({sha, dirty, now = new Date(), deploymentSha}) {
   return Object.freeze({schemaVersion:1, commit:sha, builtAt:now.toISOString(), dirty:Boolean(dirty)});
 }
 export function currentBuildIdentity(reuse = true) {
-  const git = (...args) => execFileSync('git',args,{encoding:'utf8'}).trim();
+  // The original footer embeds a 2.3 MB PNG; its restoration diff exceeds
+  // Node's default 1 MB stdout buffer during local build verification.
+  const git = (...args) => execFileSync('git',args,{encoding:'utf8',maxBuffer:32*1024*1024}).trim();
   const sha=git('rev-parse','HEAD'), dirty=Boolean(git('status','--porcelain'));
   if (!reuse) return buildIdentity({sha,dirty,deploymentSha:process.env.CF_PAGES_COMMIT_SHA});
   const digest=createHash('sha256').update(sha).update(git('diff','HEAD','--binary'));

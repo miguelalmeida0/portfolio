@@ -1,4 +1,43 @@
 import {test,expect,type Locator} from '@playwright/test';
+import {createHash} from 'node:crypto';
+
+for (const [width,height] of [...[320,375,390,430,768,1024,1440,1920].map(width=>[width,1000]),[768,512],[1920,480]]) {
+ test(`footer restoration ${width}x${height}: portrait stays centered and hand layers aligned`,async({page},testInfo)=>{
+  await page.setViewportSize({width,height});
+  await page.goto('/');
+  await page.locator('#contact').scrollIntoViewIfNeeded();
+  await expect.poll(()=>page.locator('.footer-person-body').evaluate(el=>getComputedStyle(el).transform))
+   .toBe('matrix(1, 0, 0, 1, 0, 0)');
+  const asset=page.locator('#footer-person-asset');
+  const source=await asset.getAttribute('href');
+  expect(source).toMatch(/^data:image\/png;base64,/);
+  expect(createHash('sha256').update(Buffer.from(source!.split(',')[1],'base64')).digest('hex'))
+   .toBe('ca017729915b1c7bd15eab325f46011bd7c963fb00e3a5093ab8b3e4b9ad770d');
+  await expect(asset).not.toHaveAttribute('filter',/.+/);
+  const retouch=page.locator('.footer-portrait-retouch image');
+  await expect(retouch).toHaveAttribute('href','/images/miguel-footer-approved-texture.png');
+  const approved=await page.request.get('/images/miguel-footer-approved-texture.png');
+  expect(approved.ok()).toBe(true);
+  expect(createHash('sha256').update(await approved.body()).digest('hex'))
+   .toBe('e390a388fab29368981c6640e180fe367d6bdf498dc198c1d6ec31cc9936da28');
+  await expect(page.locator('#footer-hands-clip path')).toHaveCount(3);
+  const body=await page.locator('.footer-person-body').boundingBox();
+  const hands=await page.locator('.footer-person-hands').boundingBox();
+  expect(hands).toEqual(body);
+  expect(await page.locator('.footer-person-retouch').boundingBox()).toEqual(body);
+  const footer=await page.locator('#contact').boundingBox();
+  // Pink panel occupies roughly 45% on desktop; mobile uses a centered stack.
+  const targetCenter=footer!.x+footer!.width*(width<=767 ? .5 : .225);
+  expect(Math.abs(body!.x+body!.width/2-targetCenter)).toBeLessThan(1);
+  expect(await page.locator('.footer-person-body,.footer-front,.footer-person-hands')
+   .evaluateAll(elements=>elements.map(el=>getComputedStyle(el).zIndex))).toEqual(['2','3','4']);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+  await expect(page.locator('.footer-email')).toBeVisible();
+  await page.locator('.copy-email').focus();
+  await expect(page.locator('.copy-email')).toBeFocused();
+  await testInfo.attach(`restored-footer-${width}`,{body:await page.locator('#contact').screenshot(),contentType:'image/png'});
+ });
+}
 
 async function expectVisiblePreviewChange(scene:Locator,minimumFraction=.01){
  const {PNG}=await import('pngjs');
@@ -30,7 +69,7 @@ test('project navigation, animated preview and case dialog remain usable',async(
  await expect(page.locator('#second-voice')).toBeInViewport();
  await page.getByRole('button',{name:'Read Second Voice case study',exact:true}).click();
  await expect(page.getByRole('dialog')).toBeVisible();
- await expect(page.getByRole('dialog').getByRole('link',{name:/Open Second Voice app/})).toHaveAttribute('href','https://secondvoice.miguelalmeida.xyz/');
+ await expect(page.getByRole('dialog').getByRole('link',{name:'Open Second Voice AI app in a new tab',exact:true})).toHaveAttribute('href','https://secondvoice.miguelalmeida.xyz/');
  await page.keyboard.press('Escape');
  await expect(page.getByRole('dialog')).not.toBeVisible();
 });
@@ -251,8 +290,19 @@ test('two fully visible mobile previews both animate without touch input',async(
  const leu=page.locator('#leu .project-scene');
  const voice=page.locator('#second-voice .project-scene');
  // This narrow layout fits both previews; the former winner-only policy froze Voice.
- await leu.scrollIntoViewIfNeeded();
- await voice.scrollIntoViewIfNeeded();
+ await page.evaluate(()=>document.fonts.ready);
+ // Position the pair together: scrolling each separately depends on the number
+ // of lines in the project title and summary and can push the other offscreen.
+ const pair=await page.evaluate(()=>{
+  const first=document.querySelector('#second-voice .project-scene')!.getBoundingClientRect();
+  const last=document.querySelector('#leu .project-scene')!.getBoundingClientRect();
+  const navBottom=document.querySelector('.nav')!.getBoundingClientRect().bottom;
+  return {top:first.top+scrollY,height:last.bottom-first.top,navBottom,available:innerHeight-navBottom};
+ });
+ expect(pair.height).toBeLessThanOrEqual(pair.available);
+ await page.evaluate(({top,height,navBottom,available})=>{
+  window.scrollTo({top:top-navBottom-(available-height)/2,behavior:'instant'});
+ },pair);
  await expect(leu).toBeInViewport({ratio:.99});
  await expect(voice).toBeInViewport({ratio:.99});
  for(const scene of [leu,voice]){

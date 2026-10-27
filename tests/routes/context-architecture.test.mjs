@@ -7,11 +7,21 @@ test('homepage serves F24 and four independent projects with SSR posters and des
   assert.equal(response.status, 200);
   const html = await response.text();
   const work = html.slice(html.indexOf('id="work"'), html.indexOf('</main>'));
-  assert.equal((work.match(/data-f24-feature/g) || []).length, 1);
-  assert.deepEqual([...work.matchAll(/data-selected-project="([^"]+)"/g)].map(x => x[1]), ['needle', 'second-voice-ai', 'leu', 'flow']);
-  for (const slug of ['needle', 'second-voice-ai', 'f24', 'flow', 'leu']) assert.ok(work.includes(`href="/work/${slug}"`));
-  assert.equal((work.match(/<img\b/g) || []).length, 6, 'SSR retains two photographs and four project posters');
-  assert.ok(work.includes('Pause project videos'));
+  const projects=[...work.matchAll(/<article class="project" id="([^"]+)"[^>]*>([\s\S]*?)<\/article>/g)];
+  assert.deepEqual(projects.map(x=>x[1]), ['f24', 'second-voice', 'leu', 'needle', 'bollard']);
+  for(const [,id,card] of projects){
+    assert.match(card, /<img\b[^>]*class="project-cover[^\"]*"[^>]*src="[^\"]+"/, `${id} has a server-rendered poster`);
+    assert.ok(card.includes(`data-case="${id}"`), `${id} has an interactive case-study action`);
+    if(id==='bollard'){
+      assert.match(card, /<noscript><details class="bollard-case-fallback">/, 'Bollard has a complete no-script case study');
+      assert.ok(card.includes('https://bollard-nine.vercel.app/today'));
+      assert.ok(card.includes('Fictional scenario'));
+    }else{
+      assert.ok(card.includes(`href="https://miguelalmeida.is-a.dev/work/${id}"`), `${id} retains its no-script case link`);
+    }
+  }
+  assert.equal((work.match(/<img\b[^>]*class="project-cover(?:\s[^\"]*)?"/g) || []).length, 5, 'Each project retains its own poster');
+  assert.ok(work.includes('aria-label="Pause or play project preview animations"'));
   assert.ok(work.includes('href="https://leu.miguelalmeida.xyz/"'));
   assert.ok(!work.includes('https://miguelalmeida0.github.io'));
   assert.ok(!html.includes('data-pixel-intro'));

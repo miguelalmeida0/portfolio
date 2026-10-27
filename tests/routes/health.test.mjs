@@ -4,7 +4,7 @@ import { writeFile } from 'node:fs/promises';
 
 const baseURL = process.env.ROUTE_HEALTH_BASE_URL || 'http://localhost:4173';
 const routes = [
-  ['/', /^Miguel Almeida, frontend engineer and product designer in Berlin$/],
+  ['/', /^Miguel Almeida$/],
   ['/cv', /^Experience\.$/],
   ['/story', /^Frontend engineer\. UX background\.$/],
   ['/work/needle', /^Search a collection of 10,000 artworks\.$/],

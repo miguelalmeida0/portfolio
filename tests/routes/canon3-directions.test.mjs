@@ -16,7 +16,14 @@ for (const direction of ['counterform','bearing','throughline']) {
         assert.ok(html.includes('id="work"'));
       }
       if(suffix==='/story')assert.ok(html.includes('Aviation')&&html.includes('UX design')&&html.includes('Frontend'));
-      if(suffix==='/cv')assert.ok(html.includes('/files/miguel-almeida-cv.pdf'));
+      if(suffix==='/cv'){
+        assert.ok(html.includes('href="/cv/pdf"'), 'CV reader remains available');
+        const pdf='/files/Miguel_Almeida_CV.pdf';
+        assert.ok(html.includes(`href="${pdf}"`), 'CV download remains available');
+        const download=await fetch(origin+pdf);
+        assert.equal(download.status,200);
+        assert.equal(Buffer.from(await download.arrayBuffer()).subarray(0,5).toString(),'%PDF-');
+      }
     }
   });
 }
