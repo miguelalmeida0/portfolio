@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import { readFile, stat } from 'node:fs/promises';
 import sharp from 'sharp';
 
-const photo = 'static/images/miguel-footer-studio.webp';
+const photo = 'static/images/miguel-footer-hands-20261027.webp';
 
-test('footer studio portrait has a compact, transparent, full-resolution asset', async () => {
+test('footer portrait keeps the new full-resolution transparent photo', async () => {
   const [metadata, file] = await Promise.all([sharp(photo).metadata(), stat(photo)]);
   assert.equal(metadata.format, 'webp');
   assert.equal(metadata.width, 1024);
@@ -14,16 +14,18 @@ test('footer studio portrait has a compact, transparent, full-resolution asset',
   assert.ok(file.size < 250_000, 'do not regress to a megabyte-scale embedded photo');
 });
 
-test('contact footer keeps its hand occlusion and all contact actions', async () => {
+test('contact footer places both hands above the blue panel and preserves its actions', async () => {
   const html = await readFile('release/home.html', 'utf8');
   const start = html.indexOf('<footer class="human-contact fold-contact"');
   const end = html.indexOf('</footer>', start);
   assert.ok(start >= 0 && end > start);
   const footer = html.slice(start, end);
-  assert.match(footer, /id="footer-person-asset" href="\/images\/miguel-footer-studio\.webp"/);
+  assert.match(footer, /<image href="\/images\/miguel-footer-hands-20261027\.webp"/);
+  assert.equal((footer.match(/miguel-footer-hands-20261027\.webp/g) || []).length, 1, 'photo should be painted only once');
+  assert.match(html, /\.fold-contact \.footer-person-body \{ z-index: 4; \}/);
+  assert.match(html, /\.fold-contact \.footer-front \{ z-index: 3; \}/);
   assert.match(footer, /class="footer-person footer-person-body"/);
-  assert.match(footer, /class="footer-person footer-person-hands"/);
-  assert.match(footer, /clip-path="url\(#footer-hands-clip\)"/);
+  assert.doesNotMatch(footer, /footer-person-hands|footer-hands-clip/, 'no clipped foreground copy that can introduce a blue seam');
   assert.match(footer, /class="footer-front"/);
   assert.match(footer, /class="footer-paper"/);
   assert.doesNotMatch(footer, /data:image\/(?:png|jpeg|webp);base64,/);
