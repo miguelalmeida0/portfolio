@@ -462,9 +462,17 @@ test('motion diagnostics survive a failure in the main animation script',async({
 test('motion diagnostics detect a stopped clock despite the playing flag',async({page})=>{
  await page.setViewportSize({width:393,height:852});
  await page.goto('/motion-debug/#leu');
+ await expect(page.locator('[data-motion-status]')).toHaveAttribute('data-motion-status','running');
  await expect(page.locator('#leu .project-scene')).toHaveAttribute('data-film-playing','true');
  await page.evaluate(()=>{(window as unknown as {gsap:{globalTimeline:{pause():void}}}).gsap.globalTimeline.pause();});
+ // Startup samples can straddle the pause. Capture a fresh pair after stopping
+ // the clock instead of treating the one-shot startup report as a live monitor.
+ await page.getByRole('button',{name:'Capture again',exact:true}).click();
  await expect(page.locator('[data-motion-status]')).toHaveAttribute('data-motion-status','stalled');
+ await expect(page.locator('#leu .project-scene')).toHaveAttribute('data-film-playing','true');
+ const {samples}=JSON.parse((await page.locator('[data-motion-report]').textContent())!);
+ expect(samples.slice(-2).map((sample:{phase:string})=>sample.phase)).toEqual(['manual-before','manual-after']);
+ expect(samples.slice(-2).every((sample:{ticker:{globalPaused:boolean}})=>sample.ticker.globalPaused)).toBe(true);
 });
 
 test('motion diagnostics retain an explanation when JavaScript cannot run',async({browser})=>{
