@@ -16,7 +16,7 @@ test('Bollard provides the live app, fictional scenario and human decision case 
  const data=JSON.parse(raw.match(/const CASE_DATA=(.*);/)[1]);
  assert.equal(data.leu.next,'needle');assert.equal(data.needle.next,'bollard');assert.equal(data.bollard.next,'f24');
  const text=JSON.stringify(data.bollard);
- for(const phrase of ['+€62/t','+€23/t','ore, coal, gas, power and carbon','quarterly index','€1.19M','fictional','human'])assert.ok(text.includes(phrase),phrase);
+ for(const phrase of ['+€62/t','€23/t','ore, coal, gas, power and carbon','quarterly index','€1.19m','fictional','human'])assert.ok(text.includes(phrase),phrase);
 });
 test('Bollard film has a poster and accessible independent playback control',()=>{
  assert.match(raw,/<video id="bollard-film"[^>]*muted[^>]*loop[^>]*playsinline[^>]*poster="\/projects\/bollard\/approval-v3.webp"/);
