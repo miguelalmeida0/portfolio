@@ -4,6 +4,7 @@ import test from 'node:test';
 import { patchHomeNav } from '../../scripts/patch-home-nav.mjs';
 import { patchHomeMobile } from '../../scripts/patch-home-mobile.mjs';
 import { galleryTravel, patchHomeGalleryPacing } from '../../scripts/patch-home-gallery-pacing.mjs';
+import { patchCaseClose } from '../../scripts/patch-case-close.mjs';
 
 const source = readFileSync(new URL('../../release/home.html', import.meta.url), 'utf8');
 const installer = readFileSync(new URL('../../scripts/install-portfolio-home.mjs', import.meta.url), 'utf8');
@@ -18,7 +19,18 @@ test('the production installer lengthens only the pinned horizontal project gall
   assert.ok(!updated.includes(original));
   assert.equal(updated.replace(longer, original), baseline, 'no other HTML or JS changes');
   assert.match(installer, /import \{ patchHomeGalleryPacing \}/);
-  assert.match(installer, /const html = patchHomeGalleryPacing\(patchHomeMobile\(/);
+  assert.match(installer, /patchHomeGalleryPacing\(patchHomeMobile\(/);
+  assert.match(installer, /const html = patchCaseClose\(/);
+});
+
+test('the published case-study close control aligns text and an accessible icon', () => {
+  const patched = patchCaseClose(source);
+  assert.match(patched, /aria-label="Close case study"><span>Close<\/span><svg/);
+  assert.match(patched, /aria-hidden="true" focusable="false"/);
+  assert.match(patched, /#case-dialog \.dialog-close \{ display: inline-flex; align-items: center; justify-content: center; gap: 8px/);
+  assert.match(patched, /id="case-close-alignment"/);
+  assert.ok(!patched.includes('Close ×</button>'));
+  assert.throws(() => patchCaseClose(patched), /Expected exactly one original case-study close control/);
 });
 
 test('each desktop viewport gains an intentional reading interval without locking scroll', () => {
