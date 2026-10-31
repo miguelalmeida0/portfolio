@@ -29,6 +29,8 @@ test('the published case-study close control aligns text and an accessible icon'
   assert.match(patched, /aria-hidden="true" focusable="false"/);
   assert.match(patched, /#case-dialog \.dialog-close \{ display: inline-flex; align-items: center; justify-content: center; gap: 8px/);
   assert.match(patched, /id="case-close-alignment"/);
+  assert.ok(patched.includes('.button, .dialog-close, .copy-email, .fold-contact .footer-mail-button, .human-contact.fold-contact .copy-email { border: 0; box-shadow: none; }'));
+  assert.ok(patched.includes('.button:focus-visible, .dialog-close:focus-visible, .copy-email:focus-visible, .fold-contact .footer-mail-button:focus-visible, .human-contact.fold-contact .copy-email:focus-visible { outline: none; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }'));
   assert.ok(!patched.includes('Close ×</button>'));
   assert.throws(() => patchCaseClose(patched), /Expected exactly one original case-study close control/);
 });

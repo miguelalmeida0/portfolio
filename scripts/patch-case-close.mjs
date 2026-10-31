@@ -6,6 +6,10 @@ const styles = `<style id="case-close-alignment">
 #case-dialog .dialog-close { display: inline-flex; align-items: center; justify-content: center; gap: 8px; line-height: 1; white-space: nowrap; }
 #case-dialog .dialog-close > span { display: block; line-height: 1; }
 #case-dialog .dialog-close > svg { display: block; width: 16px; height: 16px; flex: 0 0 16px; }
+/* Remove decorative pill rings from portfolio actions without changing their layout or colors. */
+.button, .dialog-close, .copy-email, .fold-contact .footer-mail-button, .human-contact.fold-contact .copy-email { border: 0; box-shadow: none; }
+/* Keep keyboard focus visible without an outer outline ring. */
+.button:focus-visible, .dialog-close:focus-visible, .copy-email:focus-visible, .fold-contact .footer-mail-button:focus-visible, .human-contact.fold-contact .copy-email:focus-visible { outline: none; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
 </style>`;
 
 export function patchCaseClose(html) {
