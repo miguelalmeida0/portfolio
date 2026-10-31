@@ -7,18 +7,18 @@ import {patchHomeMobile} from '../../scripts/patch-home-mobile.mjs';
 
 const source=readFileSync(new URL('../../release/mobile-project-films.js',import.meta.url),'utf8');
 const {mobileFilmFrame:frame,mobileFilmPlayback:play,mobileFilmReducedFrame:reducedFrame}=runInNewContext(source+';({mobileFilmFrame,mobileFilmPlayback,mobileFilmReducedFrame})');
-const ready={mobile:true,reduced:false,hidden:false,dialog:false,paused:false,ratios:[.2,.8,0,0]};
+const ready={mobile:true,reduced:false,hidden:false,dialog:false,ratios:[.2,.8,0,0]};
 test('every visible mobile preview receives an autoplay clock, including tied coverage',()=>{
  assert.deepEqual(Array.from(play(ready)),[0,1]);
  assert.deepEqual(Array.from(play({...ready,ratios:[0,1,1,0]})),[1,2]);
  assert.deepEqual(Array.from(play({...ready,ratios:[0,0,0,0]})),[]);
  assert.deepEqual(Array.from(play({...ready,ratios:[.1,.17,0,0]})),[]);
- for(const state of [{mobile:false},{hidden:true},{dialog:true},{paused:true}])assert.deepEqual(Array.from(play({...ready,...state})),[]);
+ for(const state of [{mobile:false},{hidden:true},{dialog:true}])assert.deepEqual(Array.from(play({...ready,...state})),[]);
 });
 test('reduced motion changes the composition without blocking mobile autoplay',()=>{
  const gentle={...ready,reduced:true};
  assert.deepEqual(Array.from(play(gentle)),[0,1]);
- for(const state of [{mobile:false},{hidden:true},{dialog:true},{paused:true}])assert.deepEqual(Array.from(play({...gentle,...state})),[]);
+ for(const state of [{mobile:false},{hidden:true},{dialog:true}])assert.deepEqual(Array.from(play({...gentle,...state})),[]);
 });
 test('four films tell different stories and reproduce the same frame exactly',()=>{
  for(const id of ['needle','f24','second-voice','leu']){
@@ -72,17 +72,15 @@ test('the shipping mobile branch starts films after resetting the desktop scene'
  const html=patchHomeMobile(patchHomeNav(readFileSync(new URL('../../release/home.html',import.meta.url),'utf8')));
  assert.match(html,/projectScenes\.reset\(true\);mobileFilms\.sync\(\)/);
  assert.match(html,/function setupMotion\(\)\{\s+mobileFilms\.stop\(\)/);
- assert.match(html,/data-film-toggle[^>]*hidden/);
  assert.equal(patchHomeMobile(html),html);
 });
 
-test('filtered and reordered scene clocks retain the duration belonging to their project',()=>{
+test('scene clocks start without a playback button and retain their project durations',()=>{
  const durations=[];
- const button={addEventListener(){}};
  const host={querySelectorAll:()=>[],querySelector:()=>null};
  const panels=['leu','needle'].map(id=>({id,querySelector:()=>host}));
  const gsap={to(clock,options){durations.push(options.duration);return {pause(){},paused(){}};}};
- const document={querySelector:s=>s==='[data-film-toggle]'?button:{open:false},addEventListener(){}};
+ const document={querySelector:()=>({open:false}),addEventListener(){}};
  const IntersectionObserver=class{observe(){}};
  const create=runInNewContext(source+';createMobileProjectFilms',{
   document,window:{gsap,IntersectionObserver},gsap,IntersectionObserver,

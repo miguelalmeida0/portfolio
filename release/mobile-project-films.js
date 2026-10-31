@@ -7,8 +7,8 @@ const filmClamp = n => Math.max(0, Math.min(1, n));
 const filmPhase = (a, b, t) => filmClamp((t - a) / (b - a));
 const filmEase = (a, b, t) => { const n = filmPhase(a, b, t); return n * n * (3 - 2 * n); };
 
-function mobileFilmPlayback({mobile, hidden, dialog, paused, ratios}) {
-  if (!mobile || hidden || dialog || paused) return [];
+function mobileFilmPlayback({mobile, hidden, dialog, ratios}) {
+  if (!mobile || hidden || dialog) return [];
   // Two small previews can be fully visible together. Neither should freeze
   // simply because an earlier project has the same viewport coverage.
   return ratios.flatMap((ratio, i) => ratio > .18 ? [i] : []);
@@ -82,17 +82,15 @@ function mountNeedleFilm(host) {
 }
 
 function createMobileProjectFilms(panels) {
-  const button = document.querySelector('[data-film-toggle]');
   const mobile = matchMedia('(max-width:767px)'), reduced = matchMedia('(prefers-reduced-motion:reduce)');
   const dialog = document.querySelector('#case-dialog');
-  if (!window.gsap || !window.IntersectionObserver || !button) return {sync(){}, stop(){}};
+  if (!window.gsap || !window.IntersectionObserver) return {sync(){}, stop(){}};
   const playRequested = new URLSearchParams(location.search).get('motion') === 'play';
-  let enabled = false, paused = false, motionAllowed = playRequested;
+  let enabled = false, motionAllowed = playRequested;
   try {
-    paused = !playRequested && sessionStorage.getItem('portfolio-previews-paused') === 'true';
+    sessionStorage.removeItem('portfolio-previews-paused');
     motionAllowed ||= sessionStorage.getItem('portfolio-previews-motion-allowed') === 'true';
     if (playRequested) {
-      sessionStorage.setItem('portfolio-previews-paused','false');
       sessionStorage.setItem('portfolio-previews-motion-allowed','true');
     }
   } catch {}
@@ -183,40 +181,26 @@ function createMobileProjectFilms(panels) {
     return {host,clock,timeline,render,save,restore,ratio:0};
   });
   const update=()=>{
-    const active=enabled?mobileFilmPlayback({mobile:mobile.matches,hidden:document.hidden,dialog:dialog.open,paused,ratios:scenes.map(s=>s.ratio)}):[];
+    const active=enabled?mobileFilmPlayback({mobile:mobile.matches,hidden:document.hidden,dialog:dialog.open,ratios:scenes.map(s=>s.ratio)}):[];
     scenes.forEach((scene,i)=>{
       const playing=active.includes(i);
       scene.host.dataset.filmPlaying=String(playing);
       scene.timeline.paused(!playing);
     });
-    const blocked=paused;
-    button.setAttribute('aria-pressed',String(blocked));button.querySelector('span').textContent=blocked?'Play motion':'Pause motion';
-    button.setAttribute('aria-label',blocked?'Play project preview animations':'Pause project preview animations');
-    button.title=reduced.matches&&!motionAllowed?'Reduced motion: the camera stays still.':'';
-    document.dispatchEvent(new CustomEvent('portfolio-preview-pause',{detail:{paused,mobile:mobile.matches}}));
   };
   const observer=new IntersectionObserver(entries=>{
     entries.forEach(entry=>{const scene=scenes.find(s=>s.host===entry.target);if(scene)scene.ratio=entry.isIntersecting?entry.intersectionRatio:0;});
     update();
   },{threshold:[0,.18,.3,.45,.6,.75,.9,1],rootMargin:'-72px 0px 0px 0px'});
   scenes.forEach(s=>observer.observe(s.host));
-  button.addEventListener('click',()=>{
-    paused=!paused;
-    try{
-      sessionStorage.setItem('portfolio-previews-paused',String(paused));
-      sessionStorage.setItem('portfolio-previews-motion-allowed',String(motionAllowed));
-    }catch{}
-    sync();
-  });
   document.addEventListener('visibilitychange',update);
   new MutationObserver(update).observe(dialog,{attributes:true,attributeFilter:['open']});
   const stop=()=>{
-    enabled=false;button.hidden=true;
+    enabled=false;
     scenes.forEach(s=>{s.timeline.pause();s.host.classList.remove('mobile-film','film-opt-in');delete s.host.dataset.filmPlaying;s.restore();});
   };
   const sync=()=>{
     if(!mobile.matches){stop();update();return;}
-    button.hidden=false;
     if(!enabled){
       enabled=true;
       scenes.forEach(s=>{s.save();s.host.classList.add('mobile-film');s.render(s.clock.t);});

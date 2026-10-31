@@ -18,7 +18,6 @@ test('reel is responsive, scroll-visible, paused offscreen and accessible',()=>{
  const p=patchMorrowPortfolio(source);
  for(const f of ['morrow-loop-1600.mp4','morrow-loop-mobile.mp4','morrow-poster.webp'])assert.ok(p.includes('/projects/morrow/'+f));
  for(const part of ['muted loop playsinline','preload="none"','prefers-reduced-motion:reduce','document.hidden','IntersectionObserver','video.pause()','data-playing'])assert.ok(p.includes(part),part);
- assert.match(p,/Play Morrow preview/);
  assert.equal((p.match(/id="morrow-motion-controller"/g)||[]).length,1);
  assert.throws(()=>patchMorrowPortfolio(p),/Expected exactly one Morrow integration anchor/);
 });

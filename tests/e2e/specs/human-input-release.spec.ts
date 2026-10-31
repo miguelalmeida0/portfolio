@@ -199,7 +199,7 @@ for (const width of [320,393,767]) {
  });
 }
 
-test('mobile previews autoplay independently and pause offscreen, in dialogs and by choice',async({page})=>{
+test('mobile previews autoplay independently and pause offscreen and in dialogs',async({page})=>{
  await page.setViewportSize({width:393,height:852});
  await page.emulateMedia({reducedMotion:'no-preference'});
  await page.goto('/');
@@ -215,53 +215,32 @@ test('mobile previews autoplay independently and pause offscreen, in dialogs and
  await expect(page.getByRole('dialog')).toBeVisible();
  await expect(page.locator('.project-scene[data-film-playing=true]')).toHaveCount(0);
  const stopped=await leu.getAttribute('data-film-time');
- await page.waitForTimeout(200);
- expect(await leu.getAttribute('data-film-time')).toBe(stopped);
- await page.keyboard.press('Escape');
- await expect(leu).toHaveAttribute('data-film-playing','true');
- const toggle=page.locator('[data-film-toggle]');
- await toggle.click();
- await expect(toggle).toHaveAttribute('aria-pressed','true');
- await page.locator('#needle .project-scene').scrollIntoViewIfNeeded();
+ await page.waitForTimeout(200);expect(await leu.getAttribute('data-film-time')).toBe(stopped);
+ await page.keyboard.press('Escape');await expect(leu).toHaveAttribute('data-film-playing','true');
+ await page.locator('#home').scrollIntoViewIfNeeded();
  await expect(page.locator('.project-scene[data-film-playing=true]')).toHaveCount(0);
- await toggle.click();
  await page.locator('#needle .project-scene').scrollIntoViewIfNeeded();
  await expect(page.locator('#needle .project-scene')).toHaveAttribute('data-film-playing','true');
  await page.emulateMedia({reducedMotion:'reduce'});
- await expect(page.locator('.project-scene.mobile-film')).toHaveCount(3);
- await expect(toggle).toBeVisible();
- await page.reload();
- await expect(toggle).toHaveAccessibleName(/Pause/);
  await expect(page.locator('.project-scene.mobile-film')).toHaveCount(3);
  await page.setViewportSize({width:1440,height:900});
  await page.emulateMedia({reducedMotion:'no-preference'});
  await expect(page.locator('.project-scene.mobile-film')).toHaveCount(0);
 });
-
-test('reduced-motion visitors get gentle autoplay and can keep their pause choice on reload',async({page})=>{
+test('reduced-motion visitors get gentle autoplay despite an obsolete saved pause',async({page})=>{
  await page.setViewportSize({width:393,height:852});
  await page.emulateMedia({reducedMotion:'reduce'});
+ await page.addInitScript(()=>sessionStorage.setItem('portfolio-previews-paused','true'));
  await page.goto('/');
- const toggle=page.locator('[data-film-toggle]');
- await expect(page.locator('.project-scene.mobile-film')).toHaveCount(3);
- await expect(toggle).toBeVisible();
- await expect(toggle).toHaveAccessibleName(/Pause/);
- await toggle.click();
  const scene=page.locator('#leu .project-scene');
- await scene.scrollIntoViewIfNeeded();
- await expect(scene).toHaveAttribute('data-film-playing','false');
+ await scene.scrollIntoViewIfNeeded();await expect(scene).toHaveAttribute('data-film-playing','true');
  await expect(scene.locator('.leu-leaf')).toHaveCount(0);
  await expect(scene.locator('.leu-room')).toHaveCSS('transform','none');
- await page.reload();
- await scene.scrollIntoViewIfNeeded();
- await expect(scene).toHaveAttribute('data-film-playing','false');
- await toggle.click();
- await scene.scrollIntoViewIfNeeded();
+ await page.reload();await scene.scrollIntoViewIfNeeded();
  await expect(scene).toHaveAttribute('data-film-playing','true');
  await expect(scene.locator('.leu-leaf')).toHaveCount(0);
  await expect(scene.locator('.leu-room')).toHaveCSS('transform','none');
 });
-
 test('explicit play link clears a saved pause without changing desktop motion',async({page})=>{
  await page.setViewportSize({width:393,height:852});
  await page.emulateMedia({reducedMotion:'reduce'});
@@ -330,7 +309,7 @@ test('plain mobile URL visibly autoplays all three DOM previews with gentle redu
  }
  await expect(page.locator('#leu .leu-leaf')).toHaveCount(0);
  await expect(page.locator('#leu .leu-room')).toHaveCSS('transform','none');
- await page.locator('[data-film-toggle]').click();
+ await page.locator('#home').scrollIntoViewIfNeeded();
  await expect(page.locator('.project-scene[data-film-playing=true]')).toHaveCount(0);
 });
 
