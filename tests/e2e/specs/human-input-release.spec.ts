@@ -411,7 +411,7 @@ test('Needle mounts once after desktop entry and resumes after mobile re-entry',
  const before=await scene.getAttribute('data-film-time');await expect.poll(()=>scene.getAttribute('data-film-time')).not.toBe(before);
 });
 
-test('motion diagnostics distinguish an advancing clock from a saved pause',async({page})=>{
+test('motion diagnostics ignore an obsolete saved pause and continue automatic playback',async({page})=>{
  await page.setViewportSize({width:393,height:852});
  await page.goto('/motion-debug/#leu');
  await expect(page.locator('[data-motion-status]')).toHaveAttribute('data-motion-status','running');
@@ -422,8 +422,8 @@ test('motion diagnostics distinguish an advancing clock from a saved pause',asyn
  }))).toBe(true);
  await page.evaluate(()=>sessionStorage.setItem('portfolio-previews-paused','true'));
  await page.reload();
- await expect(page.locator('[data-motion-status]')).toHaveAttribute('data-motion-status','paused');
- await expect(page.locator('[data-motion-report]')).toContainText('"savedPause": true');
+ await expect(page.locator('[data-motion-status]')).toHaveAttribute('data-motion-status','running');
+ await expect(page.locator('[data-motion-report]')).toContainText('"savedPause": false');
 });
 
 test('motion diagnostics survive a failure in the main animation script',async({page})=>{
