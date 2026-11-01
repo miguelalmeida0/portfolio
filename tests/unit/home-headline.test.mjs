@@ -14,8 +14,8 @@ test('production desktop and mobile use the selected value headline', () => {
   assert.match(html, /<h1 class="mobile-role"><span class="role-pair">I build the interfaces<\/span>/);
   assert.ok(html.includes('<span class="role-pair">when seconds matter.</span>'));
   assert.match(html, /id="home-value-headline-style"/);
-  assert.match(html, /\\.hero \\.mobile-role \\.role-pair\\{white-space:normal\\}/);
-  assert.match(html, /<meta name="description" content="I build the interfaces teams rely on when seconds matter\\./);
+  assert.ok(html.includes('.hero .mobile-role .role-pair{white-space:normal}'));
+  assert.ok(html.includes('<meta name="description" content="' + headline));
   assert.match(html, /<h1 aria-label="Miguel Almeida">/);
   assert.match(html, /data-sheet-statement>At F24, I built the original Svelte frontend/);
 });
