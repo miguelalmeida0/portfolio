@@ -57,6 +57,7 @@ async function expectVisiblePreviewChange(scene:Locator,minimumFraction=.01){
 test('reviewed homepage opens immediately with recruiter contact links',async({page})=>{
  await page.goto('/');
  await expect(page.getByRole('heading',{name:'Miguel Almeida',exact:true})).toBeVisible();
+ await expect(page.locator('#home .hero-role')).toHaveText('I build the interfaces teams rely on when seconds matter.');
  await expect(page.locator('.brand-logo')).toBeVisible();
  await expect(page.locator('.nav').getByRole('link',{name:'View CV'})).toHaveAttribute('href',/\/cv\/pdf$/);
  await expect(page.getByRole('link',{name:'Get in touch',exact:true})).toHaveAttribute('href',/^mailto:/);
@@ -142,7 +143,7 @@ test('footer keyboard contacts and scrollbar work on a narrow screen',async({pag
  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);
  expect(overflow).toBe(false);
  await page.getByRole('link',{name:/Back to top/}).click();
- await expect(page.getByRole('heading',{name:'Frontend engineer & design engineer.',exact:true})).toBeInViewport();
+ await expect(page.getByRole('heading',{name:'I build the interfaces teams rely on when seconds matter.',exact:true})).toBeInViewport();
 });
 
 test('reduced motion preserves project previews and all existing public routes',async({page,request})=>{
