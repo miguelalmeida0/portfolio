@@ -132,7 +132,7 @@
   body .hero .hero-under, body .hero .sheet, body .hero .edge-handle,
   body .hero .edge-label, body .hero .needle-peek { display: none !important; }
   body .hero .hand, body.pause-motion .hero .hand {
-    display: block;
+    display: none !important;
     top: auto;
     bottom: -16px;
     left: -10px;
