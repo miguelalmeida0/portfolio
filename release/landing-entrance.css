@@ -1,0 +1,50 @@
+/* Geometry is ready before JavaScript, font loading or scroll setup. */
+@media (min-width: 1100px) {
+  .hero-content { --hero-left: 24vw; --hero-width: 52vw; }
+}
+@media (min-width: 1100px) and (min-height: 720px) {
+  .hero-content { --hero-left: 30vw; --hero-width: 40vw; }
+}
+
+/* Public Sans side bearings, in em so the first frame already aligns. */
+.hero-name h1[aria-label] .text-line:first-child .text-run { left: -.0954em; }
+.hero-name h1[aria-label] .text-line:nth-child(2) .text-run { left: -.0413em; }
+.landing-word { display: block; }
+
+/* The reduced-motion reading layout also exists before its JS controller. */
+@media (prefers-reduced-motion: reduce) and (min-width: 768px) {
+  body .hero { overflow: visible; height: auto; max-height: none; min-height: 0; display: flex; flex-direction: column; padding: 0; }
+  .hero .hero-front { position: relative; order: 0; min-height: 0; background: var(--pink); padding: var(--nav-h) 0 40px; transform: none !important; }
+  .hero .hero-content { position: relative; top: auto; left: auto; margin: 28px var(--edge) 36px; width: auto; transform: none !important; }
+  body:not(.pause-motion) .hero h1 { font-size: clamp(54px,min(calc(20px + 12vw),clamp(12svh,calc(12svh + 4vw - 24px),16.5svh)),184px); }
+  .hero .hero-under { position: relative; inset: auto; order: 1; clip-path: none !important; padding: calc(var(--nav-h) + 32px) var(--edge) 40px; background: var(--paper); border-top: 1px solid var(--line); }
+  .hero-under h2, .hero-under p { transform: none !important; clip-path: none !important; opacity: 1 !important; visibility: visible !important; }
+  .sheet, .hand, .edge-handle, .edge-label { display: none; }
+  .hero .sheet-statement .w { opacity: 1 !important; }
+  .hero .sheet-hero__row { opacity: 1 !important; visibility: visible !important; transform: none !important; }
+}
+
+@keyframes landing-name {
+  from { transform: translate3d(0, 104%, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+@keyframes landing-copy {
+  from { opacity: 0; transform: translate3d(0, 10px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+/* Inner wrappers own the entrance; the existing scroll motion owns their
+   parents and text runs. No shared transforms or changing hit targets. */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-landing-enter] .hero-name .landing-word {
+    animation: landing-name 740ms cubic-bezier(.22, 1, .36, 1) both;
+  }
+  html[data-landing-enter] .hero-name .text-line:nth-child(2) .landing-word { animation-delay: 70ms; }
+  html[data-landing-enter] .hero-meta { animation: landing-copy 560ms cubic-bezier(.22, 1, .36, 1) 140ms both; }
+  @media (max-width: 767px) {
+    html[data-landing-enter] .mobile-role .role-pair { animation: landing-copy 480ms cubic-bezier(.22, 1, .36, 1) both; }
+    html[data-landing-enter] .mobile-role .role-pair:nth-child(2) { animation-delay: 45ms; }
+    html[data-landing-enter] .mobile-role .role-pair:nth-child(3) { animation-delay: 90ms; }
+    html[data-landing-enter] .hero-meta { animation-duration: 420ms; animation-delay: 110ms; }
+  }
+}
