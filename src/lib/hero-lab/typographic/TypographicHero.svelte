@@ -17,8 +17,12 @@
     back: '/turntable-header/miguel-back-repaired.webp',
     room: '/turntable-header/room.jpg'
   };
+  const headline = 'I build the interfaces teams rely on when seconds matter.';
   const content: HeaderContent = {
     ...DEFAULT_CONTENT,
+    heading: headline,
+    proof: headline,
+    proofAsHeading: true,
     ctas: [
       { ...hero.cv, href: d1Href(hero.cv.href, 'home'), variant: 'primary' },
       { ...hero.contact, variant: 'link' }

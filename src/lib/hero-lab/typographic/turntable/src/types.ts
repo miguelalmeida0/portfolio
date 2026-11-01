@@ -32,6 +32,8 @@ export interface HeaderContent {
   /** Shown while the designer state is active. */
   designerLine: string;
   proof: string;
+  /** Use the proof copy as the visible semantic heading instead of an off-screen duplicate. */
+  proofAsHeading?: boolean;
   ctas: HeaderCta[];
   /** Accessible description of the photo. */
   photoLabel: string;

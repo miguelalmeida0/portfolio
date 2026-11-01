@@ -21,7 +21,10 @@ export function renderRoleControls(c: HeaderContent, role: Role, compact = false
 
 /** Markup for the whole header. Every changing element carries `data-mah-part`. */
 export function renderHeader(c: HeaderContent, a: HeaderAssets, role: Role, theme: string, includeControls = true): string {
-  const heading = c.headingLevel ? `<h${c.headingLevel} id="intro-heading" class="mah-sr">${esc(c.heading)}</h${c.headingLevel}>` : '';
+  const heading = c.headingLevel && !c.proofAsHeading ? `<h${c.headingLevel} id="intro-heading" class="mah-sr">${esc(c.heading)}</h${c.headingLevel}>` : '';
+  const proof = c.proofAsHeading && c.headingLevel
+    ? `<h${c.headingLevel} id="intro-heading" class="mah-big mah-proof" data-ask-id="f24" data-mah-part>${esc(c.proof)}</h${c.headingLevel}>`
+    : `<p class="mah-big mah-proof" data-ask-id="f24" data-mah-part>${esc(c.proof)}</p>`;
   const ctas = c.ctas
     .map((x) => `<a class="${x.variant === 'primary' ? 'mah-btn' : 'mah-link'}" data-mah-part href="${esc(x.href)}" data-ask-id="${x.variant === 'primary' ? 'cv' : 'touch'}"><span class="mah-cta-label">${esc(x.label)}</span></a>`)
     .join('');
@@ -50,7 +53,7 @@ export function renderHeader(c: HeaderContent, a: HeaderAssets, role: Role, them
       </div>
     </div>
     <div class="mah-col mah-col--right">
-      <p class="mah-big mah-proof" data-ask-id="f24" data-mah-part>${esc(c.proof)}</p>
+      ${proof}
       <div class="mah-ctas">${ctas}</div>
     </div>
   </div>
