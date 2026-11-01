@@ -50,3 +50,29 @@ test('reduced motion shows readable copy immediately', async ({page}) => {
   await expect(page.locator('.hero-meta')).toHaveCSS('animation-name','none');
   await expect(page.getByRole('heading',{name:'Miguel Almeida',exact:true})).toBeVisible();
 });
+
+
+test('the name reveal runs through one pending, playing and settled sequence', async ({page}) => {
+  await page.addInitScript(() => {
+    const host = window as typeof window & {__landingPhases: Array<string | null>};
+    host.__landingPhases = [];
+    new MutationObserver(records => {
+      for (const record of records) {
+        if (record.target === document.documentElement) {
+          host.__landingPhases.push(document.documentElement.getAttribute('data-landing-enter'));
+        }
+      }
+    }).observe(document, {subtree: true, attributes: true, attributeFilter: ['data-landing-enter']});
+  });
+  await page.goto('/', {waitUntil: 'domcontentloaded'});
+  await expect.poll(() => page.evaluate(() =>
+    (window as typeof window & {__landingPhases: Array<string | null>}).__landingPhases
+  ), {timeout: 5000}).toEqual(['pending', 'playing', null]);
+  await expect(page.getByRole('heading', {name: 'Miguel Almeida', exact: true})).toBeVisible();
+  await expect(page.locator('html')).not.toHaveAttribute('data-landing-enter');
+  await page.reload();
+  expect(await page.evaluate(() =>
+    (window as typeof window & {__landingPhases: Array<string | null>}).__landingPhases
+  )).toEqual([]);
+});
+

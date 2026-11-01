@@ -47,4 +47,13 @@
     html[data-landing-enter] .mobile-role .role-pair:nth-child(3) { animation-delay: 90ms; }
     html[data-landing-enter] .hero-meta { animation-duration: 420ms; animation-delay: 110ms; }
   }
+
+  /* A ScrollTrigger pin can reparent the hero while the page is booting.
+     Hold the animation at frame zero until layout and font measurement settle. */
+  html[data-landing-enter="pending"] .hero-name .landing-word,
+  html[data-landing-enter="pending"] .hero-meta,
+  html[data-landing-enter="pending"] .mobile-role .role-pair {
+    animation-play-state: paused;
+  }
+
 }

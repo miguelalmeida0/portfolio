@@ -28,19 +28,25 @@ for (const [w, h, left, width, nameHeight] of [[1440, 900, 432, 576, 292], [1512
 }
 
 function visit({storage = new Map(), reduced = false, hash = '', type = 'navigate'} = {}) {
-  const attributes = new Set(), events = new Map(), mediaEvents = new Map();
+  const attributes = new Set(), attributeValues = new Map(), events = new Map(), mediaEvents = new Map(), frames = [], timers = new Map();
+  let nextTimer = 0, resolveFonts;
+  const fontsReady = new Promise(resolve => { resolveFonts = resolve; });
   const scope = {
     document: {
-      documentElement: {setAttribute: name => attributes.add(name), removeAttribute: name => attributes.delete(name)},
+      documentElement: {setAttribute: (name, value) => { attributes.add(name); attributeValues.set(name, value); }, removeAttribute: name => { attributes.delete(name); attributeValues.delete(name); }},
+      fonts: {ready: fontsReady},
       addEventListener: (name, handler) => events.set(name, handler), removeEventListener: name => events.delete(name),
     },
     window: {addEventListener: (name, handler) => events.set(name, handler), removeEventListener: name => events.delete(name)},
     sessionStorage: {getItem: key => storage.get(key), setItem: (key, value) => storage.set(key, value)},
     matchMedia: () => ({matches: reduced, addEventListener: (name, handler) => mediaEvents.set(name, handler), removeEventListener: name => mediaEvents.delete(name)}),
-    performance: {getEntriesByType: () => [{type}]}, location: {hash}, setTimeout() {}, clearTimeout() {},
+    performance: {getEntriesByType: () => [{type}]}, location: {hash},
+    setTimeout: handler => {const id = ++nextTimer; timers.set(id, handler); return id;},
+    clearTimeout: id => timers.delete(id),
+    requestAnimationFrame: callback => frames.push(callback),
   };
   runInNewContext(entrance, scope);
-  return {attributes, events, mediaEvents};
+  return {attributes, attributeValues, events, mediaEvents, frames, timers, resolveFonts};
 }
 
 test('the entrance plays only on the first landing in a session', () => {
@@ -56,7 +62,7 @@ test('deep links, history restoration and reduced motion show settled content', 
 });
 
 test('interaction immediately settles the entrance and removes its listeners', () => {
-  for (const action of ['wheel','touchstart','pointerdown','keydown','resize','pagehide']) {
+  for (const action of ['wheel','touchstart','pointerdown','keydown','pagehide']) {
     const {attributes,events,mediaEvents} = visit();
     events.get(action)();
     assert.equal(attributes.size, 0);
@@ -70,6 +76,57 @@ test('enabling reduced motion during the entrance settles immediately', () => {
   mediaEvents.get('change')();
   assert.equal(attributes.size, 0);
   assert.equal(events.size, 0);
+});
+
+
+test('the landing reveal waits for fonts and two layout frames before playing once', async () => {
+  const {attributeValues,events,frames,resolveFonts} = visit();
+  assert.equal(attributeValues.get('data-landing-enter'), 'pending');
+  events.get('DOMContentLoaded')();
+  resolveFonts();
+  await new Promise(setImmediate);
+  assert.equal(attributeValues.get('data-landing-enter'), 'pending');
+  assert.equal(frames.length, 1);
+  frames.shift()();
+  assert.equal(attributeValues.get('data-landing-enter'), 'pending');
+  frames.shift()();
+  assert.equal(attributeValues.get('data-landing-enter'), 'playing');
+  assert.equal(frames.length, 0, 'No second animation scheduled');
+});
+
+test('bootstrap resize does not truncate the first reveal', async () => {
+  const {attributeValues,events,frames,resolveFonts} = visit();
+  events.get('resize')?.();
+  assert.equal(attributeValues.get('data-landing-enter'), 'pending');
+  events.get('DOMContentLoaded')();
+  resolveFonts();
+  await new Promise(setImmediate);
+  frames.shift()(); frames.shift()();
+  assert.equal(attributeValues.get('data-landing-enter'), 'playing');
+});
+
+test('user interaction cancels pending animation without restarting on fonts readiness', async () => {
+  const {attributes,events,frames,resolveFonts} = visit();
+  events.get('DOMContentLoaded')();
+  events.get('pointerdown')();
+  resolveFonts();
+  await new Promise(setImmediate);
+  assert.equal(attributes.has('data-landing-enter'), false);
+  assert.equal(frames.length, 0);
+});
+
+test('font stalls reveal the title without leaving it masked', () => {
+  const {attributes,events,timers} = visit();
+  events.get('DOMContentLoaded')();
+  const guard = [...timers.values()][0];
+  assert.equal(typeof guard, 'function');
+  guard();
+  assert.equal(attributes.has('data-landing-enter'), false);
+});
+
+test('the pending animation is CSS-paused during scroll pinning', () => {
+  const css = readFileSync(new URL('../../release/landing-entrance.css', import.meta.url), 'utf8');
+  assert.match(css, /html\[data-landing-enter="pending"\][\s\S]*animation-play-state:\s*paused/);
 });
 
 test('publishing rejects a missing or duplicate entrance anchor', () => {
