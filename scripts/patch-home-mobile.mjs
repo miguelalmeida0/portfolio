@@ -39,7 +39,7 @@ export function patchHomeMobile(html) {
   replace('function createProjectScenes(panels){', `${films}\nfunction createProjectScenes(panels){`);
   replace('const projectScenes=createProjectScenes(panels),galleryClock=', 'const mobileFilms=createMobileProjectFilms(panels),projectScenes=createProjectScenes(panels),galleryClock=');
   replace(' function setupMotion(){', ' function setupMotion(){\n  mobileFilms.stop();');
-  replace("restoreTarget=project.querySelector('[data-case]');", "restoreTarget=project.querySelector(mobileLayout.matches?'.project-shot':'[data-case]');");
+  replace("restoreTarget=project.querySelector('[data-case]');", "restoreTarget=project.querySelector(mobileLayout.matches?'.project-preview-action,button.project-shot':'[data-case]');");
   // Extend the cream underneath the pink sheet; its curve owns the visible
   // seam. Shared corner coordinates prevent a detached tip, and the overlap
   // prevents antialiasing cracks between two separately painted SVG paths.

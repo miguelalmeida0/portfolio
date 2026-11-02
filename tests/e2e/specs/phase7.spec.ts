@@ -72,6 +72,14 @@ for (const [width,height] of sizes) test.describe(`${width}x${height}`, () => {
         await info.attach(`${id}-${selector.includes('actions')?'action':'preview'}`, {body:await page.screenshot(),contentType:'image/png'});
         await page.keyboard.press('Escape'); await expect(dialog).toBeHidden();
         await expect(trigger).toBeFocused();
+        if(id==='f24' && !selector.includes('actions')){
+          await trigger.click();
+          await dialog.locator('.dialog-next').click();
+          await expect(page.locator('#case-title')).toHaveText('Second Voice');
+          await page.keyboard.press('Escape');
+          await expect(dialog).toBeHidden();
+          await expect(page.locator(width<768?'#second-voice .project-preview-action':'#second-voice .project-actions [data-case]')).toBeFocused();
+        }
       }
     }
   });

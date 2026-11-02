@@ -103,8 +103,10 @@ for(const viewport of [{width:768,height:1024},{width:1024,height:700},{width:13
   await expect(page.locator('.pin-spacer-human-gallery')).toHaveCount(1);
   const track=page.locator('.work-track');
   const before=await track.evaluate(el=>getComputedStyle(el).transform);
-  await page.mouse.wheel(0,1800);
-  await expect.poll(()=>track.evaluate(el=>getComputedStyle(el).transform)).not.toBe(before);
+  await expect(async()=>{
+   await page.mouse.wheel(0,viewport.height*.75);
+   expect(await track.evaluate(el=>getComputedStyle(el).transform)).not.toBe(before);
+  }).toPass({timeout:15000,intervals:[150,300,500]});
   for(const [index,id] of ['f24','second-voice','leu','needle','bollard'].entries()){
    const button=page.locator('[data-project]').nth(index);
    await button.focus();await button.press('Enter');
@@ -180,7 +182,7 @@ for (const width of [320,390,430,600,767]) {
   await preview.click();
   await expect(page.getByRole('dialog')).toBeVisible();
   await page.keyboard.press('Escape');
-  await expect(preview).toBeFocused();
+  await expect(preview.locator('.project-preview-action')).toBeFocused();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  });
 }
