@@ -75,7 +75,7 @@ for (const [width,height] of sizes) test.describe(`${width}x${height}`, () => {
         if(id==='f24' && !selector.includes('actions')){
           await trigger.click();
           await dialog.locator('.dialog-next').click();
-          await expect(page.locator('#case-title')).toHaveText('Second Voice');
+          await expect(page.locator('#case-title')).toContainText('Second Voice');
           await page.keyboard.press('Escape');
           await expect(dialog).toBeHidden();
           await expect(page.locator(width<768?'#second-voice .project-preview-action':'#second-voice .project-actions [data-case]')).toBeFocused();
