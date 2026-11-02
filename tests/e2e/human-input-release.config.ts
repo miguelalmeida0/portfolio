@@ -3,7 +3,7 @@ import audit from './portfolio-audit.config';
 import {fileURLToPath} from 'node:url';
 export default defineConfig({
  ...audit,
- testMatch:['human-input-release.spec.ts','landing-entrance.spec.ts','cv-pdf-reader.spec.ts','case-demo-recovery.spec.ts','morrow-preview-fit.spec.ts','automatic-previews.spec.ts','bollard-mobile-pixels.spec.ts'],
+ testMatch:['phase7.spec.ts','human-input-release.spec.ts','landing-entrance.spec.ts','cv-pdf-reader.spec.ts','case-demo-recovery.spec.ts','morrow-preview-fit.spec.ts','automatic-previews.spec.ts','bollard-mobile-pixels.spec.ts'],
  use:{...audit.use,baseURL:process.env.PORTFOLIO_AUDIT_URL||'http://localhost:4285'},
  timeout:45000,
  webServer:process.env.CI ? {

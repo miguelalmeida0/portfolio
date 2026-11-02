@@ -28,9 +28,9 @@ export function patchHomeMobile(html) {
     return `${open}Read case study <span class="mobile-case-arrow">${arrow}</span></button><a class="project-case-fallback" href="https://miguelalmeida.is-a.dev/work/${id}" aria-label="Read ${title} case study">Read case study</a>`;
   });
   if (caseLinks !== 5) throw new Error(`Expected five case-study actions, found ${caseLinks}`);
-  // Phone films must never select the tablet/desktop layout. Height cannot
-  // disable the original gallery on laptops with browser chrome or DevTools.
-  replace("const reduced=matchMedia('(prefers-reduced-motion:reduce)'),wide=matchMedia('(min-width:901px) and (min-height:720px)');", "const mobileLayout=matchMedia('(max-width:767px)');\n const reduced=matchMedia('(prefers-reduced-motion:reduce)'),wide=matchMedia('(min-width:768px)');");
+  // Phone films stay width-based. Short landscape viewports use the existing
+  // vertical gallery so the 620px pinned stage cannot trap controls offscreen.
+  replace("const reduced=matchMedia('(prefers-reduced-motion:reduce)'),wide=matchMedia('(min-width:901px) and (min-height:720px)');", "const mobileLayout=matchMedia('(max-width:767px)');\n const reduced=matchMedia('(prefers-reduced-motion:reduce)'),wide=matchMedia('(min-width:768px) and (min-height:600px)');");
   let films = readFileSync(new URL('../release/mobile-project-films.js', import.meta.url), 'utf8');
   const assets = JSON.parse(readFileSync(new URL('../release/needle-film-assets.json', import.meta.url), 'utf8'));
   const assetSlot = 'const NEEDLE_FILM_ART = [];';

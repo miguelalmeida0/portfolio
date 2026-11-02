@@ -68,9 +68,9 @@ test('project navigation, animated preview and case dialog remain usable',async(
  await page.getByRole('link',{name:'Work',exact:true}).click();
  await page.getByRole('button',{name:'Second Voice',exact:true}).click();
  await expect(page.locator('#second-voice')).toBeInViewport();
- await page.getByRole('button',{name:'Read Second Voice case study',exact:true}).click();
+ await page.getByRole('button',{name:'Read case study — Second Voice',exact:true}).click();
  await expect(page.getByRole('dialog')).toBeVisible();
- await expect(page.getByRole('dialog').getByRole('link',{name:'Open Second Voice AI app in a new tab',exact:true})).toHaveAttribute('href','https://secondvoice.miguelalmeida.xyz/');
+ await expect(page.getByRole('dialog').getByRole('link',{name:'Open app — Second Voice AI (new tab)',exact:true})).toHaveAttribute('href','https://secondvoice.miguelalmeida.xyz/');
  await page.keyboard.press('Escape');
  await expect(page.getByRole('dialog')).not.toBeVisible();
 });
@@ -85,11 +85,18 @@ for(const viewport of [{width:768,height:1024},{width:1024,height:700},{width:13
   await expect(page.locator('.pin-spacer-human-hero')).toHaveCount(1);
   const front=page.locator('#home [data-sheet-front]'),hand=page.locator('#home .hand.left');
   const frontTop=(await front.boundingBox())!.y,handPose=await hand.evaluate(el=>getComputedStyle(el).transform);
-  await page.mouse.wheel(0,viewport.height*2.7);
-  await expect.poll(async()=>(await front.boundingBox())!.y).toBeLessThan(frontTop-100);
+  await page.mouse.move(viewport.width/2,viewport.height/2);
+  // Engines apply different per-event wheel limits; verify real scrolling
+  // reaches the same exit instead of assuming one large delta moves 2.7 screens.
+  await expect(async()=>{
+   await page.mouse.wheel(0,viewport.height*.75);
+   expect((await front.boundingBox())!.y).toBeLessThan(frontTop-100);
+  }).toPass({timeout:15000,intervals:[150,300,500]});
   await expect.poll(()=>hand.evaluate(el=>getComputedStyle(el).transform)).not.toBe(handPose);
-  await page.mouse.wheel(0,-viewport.height*2.7);
-  await expect.poll(async()=>Math.abs((await front.boundingBox())!.y-frontTop)).toBeLessThan(2);
+  await expect(async()=>{
+   await page.mouse.wheel(0,-viewport.height*.75);
+   expect(Math.abs((await front.boundingBox())!.y-frontTop)).toBeLessThan(2);
+  }).toPass({timeout:15000,intervals:[150,300,500]});
   const workLink=page.locator('.nav').getByRole('link',{name:'Work',exact:true});
   await workLink.focus();await workLink.press('Enter');
   await expect(page.locator('body')).toHaveClass(/gallery-is-horizontal/);
@@ -106,7 +113,7 @@ for(const viewport of [{width:768,height:1024},{width:1024,height:700},{width:13
    const title=(await project.locator('h3').boundingBox())!,image=(await shot.boundingBox())!;
    expect(title.x+title.width).toBeLessThanOrEqual(image.x+1);
    const actions=project.locator('.project-actions');
-   await expect(actions.getByRole('button',{name:/Read .* case study/,exact:true})).toBeInViewport();
+   await expect(actions.getByRole('button',{name:/Read case study — /,exact:true})).toBeInViewport();
   }
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
  });

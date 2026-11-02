@@ -25,7 +25,7 @@ test('all four contact cards fit evenly inside the PDF green header', async ({ p
 test('PDF canvas and interactive layers stay aligned at every reading scale', async ({ page }) => {
   await page.goto('/cv/pdf');
   await expect(page.locator('.annotationLayer a').first()).toBeVisible();
-  const adjust = page.getByRole('button', { name: 'Adjust zoom', exact: true });
+  const adjust = page.getByRole('button', { name: /% — Adjust zoom$/ });
   for (const zoom of ['125', '200', '75']) {
     await adjust.click();
     await page.getByRole('slider', { name: 'Zoom percentage' }).fill(zoom);
@@ -108,7 +108,7 @@ test('failed PDF loading keeps a usable download and web CV', async ({ page }) =
 
 test('reading scale supports keyboard precision, bounded zoom and fit recovery', async ({ page }) => {
   await page.goto('/cv/pdf');
-  const adjust = page.getByRole('button', { name: 'Adjust zoom', exact: true });
+  const adjust = page.getByRole('button', { name: /% — Adjust zoom$/ });
   await expect(adjust).toBeEnabled();
   await adjust.press('Enter');
   const slider = page.getByRole('slider', { name: 'Zoom percentage' });
@@ -137,7 +137,7 @@ test('reading scale stays inside a phone viewport and respects reduced motion', 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/cv/pdf');
-  const adjust = page.getByRole('button', { name: 'Adjust zoom', exact: true });
+  const adjust = page.getByRole('button', { name: /% — Adjust zoom$/ });
   await expect(adjust).toBeEnabled();
   await adjust.click();
   const panel = page.getByRole('region', { name: 'Reading scale', exact: true });

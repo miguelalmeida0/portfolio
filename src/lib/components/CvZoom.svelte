@@ -63,7 +63,7 @@
     <button class="step" aria-label="Zoom out" disabled={!ready || percent <= minimum} onclick={() => step(-1)}>
       <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 10h10" /></svg>
     </button>
-    <button class="zoom-trigger" bind:this={trigger} disabled={!ready} aria-label="Adjust zoom" aria-expanded={open} aria-controls="cv-zoom-panel" onclick={toggle}>
+    <button class="zoom-trigger" bind:this={trigger} disabled={!ready} aria-label={`${ready ? percent : '—'}% — Adjust zoom`} aria-expanded={open} aria-controls="cv-zoom-panel" onclick={toggle}>
       <span class="trigger-value">{ready ? percent : '—'}<span class="unit">%</span></span>
       <svg class="chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m5 6 3 3 3-3" /></svg>
       <span class="capsule-track" aria-hidden="true"><span style={`transform: scaleX(${position})`}></span></span>
@@ -101,7 +101,7 @@
       <div class="fit-options" role="group" aria-label="Fit document">
         {#if fitIndex >= 0}<span class="fit-highlight" aria-hidden="true" style={`transform: translateX(${fitIndex * 100}%)`}></span>{/if}
         {#each fits as fit}
-          <button aria-label={fit.value === 'auto' ? 'Automatic fit' : fit.value === 'page-fit' ? 'Fit page' : 'Fit width'} aria-pressed={mode === fit.value} onclick={() => onscale(fit.value)}>
+          <button aria-label={fit.value === 'auto' ? 'Auto — Automatic fit' : fit.value === 'page-fit' ? 'Fit page' : 'Fit width'} aria-pressed={mode === fit.value} onclick={() => onscale(fit.value)}>
             <svg viewBox="0 0 20 20" aria-hidden="true">
               {#if fit.value === 'auto'}<path d="M6 3H3v3m11-3h3v3M3 14v3h3m11-3v3h-3M7 7h6v6H7z" />
               {:else if fit.value === 'page-fit'}<rect x="5" y="3" width="10" height="14" rx="1" /><path d="M8 7h4M8 10h4" />

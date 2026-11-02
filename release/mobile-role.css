@@ -118,7 +118,7 @@
   .hero .hero-location {
     max-width: none;
     margin-top: 14px;
-    color: #5d6c8c;
+    color: var(--muted);
     font-size: 13px;
     line-height: 1.5;
     letter-spacing: -.01em;

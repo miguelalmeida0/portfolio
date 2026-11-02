@@ -6,6 +6,8 @@
   import 'pdfjs-dist/web/pdf_viewer.css';
   import type { PDFViewer } from 'pdfjs-dist/web/pdf_viewer.mjs';
   import CvZoom from '$lib/components/CvZoom.svelte';
+  import CvLinks from '$lib/components/CvLinks.svelte';
+  let documentLinks: {href:string;label:string}[] = [];
 
   let container: HTMLDivElement;
   let pages: HTMLDivElement;
@@ -89,6 +91,9 @@
               || email || (url.hostname === portfolioHost && url.pathname === '/');
             section.classList.toggle('contact-link', contact);
           }
+          // Equivalent full-size controls preserve PDF artwork and annotations
+          // even when a phone's fit scale makes contact cards too small.
+          documentLinks=[...new Map([...pages.querySelectorAll<HTMLAnchorElement>('.linkAnnotation > a[href]')].map(link=>[link.href,{href:link.href,label:(link.getAttribute('aria-label') || link.hostname).split(' — ')[0].replace(/^Email .+$/, 'Email')}])).values()];
         });
         const links = new PDFLinkService({
           eventBus,
@@ -145,6 +150,7 @@
     <div class="reader-actions">
       <CvZoom ready={ready && !failed} {percent} mode={scale} onscale={changeScale} />
       <a class="download" href="/files/Miguel_Almeida_CV.pdf" download="Miguel_Almeida_CV.pdf">Download PDF</a>
+      {#if documentLinks.length}<CvLinks links={documentLinks} />{/if}
     </div>
   </header>
   <div class="reader-body">
