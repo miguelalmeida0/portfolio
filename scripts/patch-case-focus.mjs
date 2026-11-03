@@ -6,10 +6,14 @@ export const caseFocusScript = `(() => {
   if(event.key!=='Tab'||!dialog.open)return;
   const controls=[...dialog.querySelectorAll('a[href],button,input,select,textarea,[tabindex]')]
    .filter(el=>el.tabIndex>=0&&!el.disabled&&el.getClientRects().length&&getComputedStyle(el).visibility!=='hidden');
-  const first=controls[0],last=controls.at(-1),active=document.activeElement;
-  if(!first){event.preventDefault();dialog.focus();return;}
-  if(event.shiftKey&&(active===first||active===dialog)){event.preventDefault();last.focus();}
-  else if(!event.shiftKey&&(active===last||active===dialog)){event.preventDefault();first.focus();}
+  event.preventDefault();
+  if(!controls.length){dialog.focus();return;}
+  // WebKit may skip buttons during native Tab navigation. Advance every step,
+  // not only the boundaries, so every visible control stays keyboard reachable.
+  const active=controls.indexOf(document.activeElement);
+  const next=active<0?(event.shiftKey?controls.length-1:0)
+   :(active+(event.shiftKey?-1:1)+controls.length)%controls.length;
+  controls[next].focus();
  });
 })();`;
 export function patchCaseFocus(html){

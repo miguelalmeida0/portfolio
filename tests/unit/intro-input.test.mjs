@@ -8,7 +8,7 @@ const source = ts.transpileModule(fs.readFileSync('src/lib/motion/intro-scroll-g
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 }
 }).outputText;
 const { introScrollGate } = await import('data:text/javascript;base64,' + Buffer.from(source).toString('base64'));
-const bootstrap = fs.readFileSync('src/app.html', 'utf8').match(/<script>([\s\S]*?)<\/script>/)[1];
+const bootstrap = fs.readFileSync('src/app.html', 'utf8').match(/<script\b[^>]*>([\s\S]*?)<\/script>/)[1];
 
 function eventTarget() {
   const listeners = new Map();

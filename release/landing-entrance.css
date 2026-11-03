@@ -29,8 +29,9 @@
   to { transform: translate3d(0, 0, 0); }
 }
 @keyframes landing-copy {
-  from { opacity: 0; transform: translate3d(0, 10px, 0); }
-  to { opacity: 1; transform: translate3d(0, 0, 0); }
+  /* Readable copy retains its authored contrast at every animation frame. */
+  from { transform: translate3d(0, 10px, 0); }
+  to { transform: translate3d(0, 0, 0); }
 }
 
 /* Inner wrappers own the entrance; the existing scroll motion owns their

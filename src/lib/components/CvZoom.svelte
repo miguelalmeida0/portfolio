@@ -10,6 +10,7 @@
   let root: HTMLDivElement;
   let trigger: HTMLButtonElement;
   let slider: HTMLInputElement;
+  let availableHeight = 0;
   const minimum = 25;
   // Wide-window fit modes can exceed 200%; keep the rail and ARIA value honest.
   $: maximum = Math.max(200, Math.ceil(percent / 50) * 50);
@@ -33,10 +34,15 @@
 
   async function toggle(event: MouseEvent) {
     open = !open;
+    if (open) fitPanel();
     if (open && event.detail === 0) {
       await tick();
       slider?.focus({ preventScroll: true });
     }
+  }
+
+  function fitPanel() {
+    if (root) availableHeight = Math.max(0, window.innerHeight - root.getBoundingClientRect().bottom - 24);
   }
 
   function outside(event: PointerEvent) {
@@ -56,7 +62,7 @@
   }
 </script>
 
-<svelte:window onpointerdown={outside} onkeydown={escape} />
+<svelte:window onpointerdown={outside} onkeydown={escape} onresize={fitPanel} />
 
 <div class="zoom" class:open bind:this={root} onfocusout={leave}>
   <div class="zoom-capsule" role="group" aria-label="PDF zoom">
@@ -74,7 +80,7 @@
   </div>
 
   {#if open}
-    <section id="cv-zoom-panel" class="zoom-panel" aria-label="Reading scale">
+    <section id="cv-zoom-panel" class="zoom-panel" aria-label="Reading scale" style:max-height={`${availableHeight}px`}>
       <div class="panel-top">
         <div>
           <h2>READING SCALE</h2>
@@ -133,6 +139,7 @@
   .capsule-track span { display: block; height: 100%; background: #789268; transform-origin: left; transition: transform 160ms ease-out; }
   .zoom-panel { position: absolute; top: calc(100% + 12px); right: 0; width: min(304px, calc(100vw - 24px)); box-sizing: border-box; padding: 24px 22px 16px; border: 1px solid #375347; border-radius: 22px; color: #f5f6ed; background: #173c32; box-shadow: 0 24px 60px -12px #112e3045, 0 4px 12px #112e3020, inset 0 1px 0 #ffffff12; transform-origin: top right; animation: reveal 240ms cubic-bezier(.16,1,.3,1) both; }
   .panel-top { display: flex; justify-content: space-between; align-items: center; }
+  .zoom-panel { overflow-y: auto; overscroll-behavior: contain; }
   h2 { margin: 0 0 8px; font-size: 10px; letter-spacing: .16em; font-weight: 500; color: #b0c5b5; }
   .large-value { display: flex; align-items: baseline; height: 56px; font-variant-numeric: tabular-nums; letter-spacing: -.04em; line-height: 1; }
   .number { font-size: 52px; font-weight: 400; animation: settle 160ms ease-out; }
@@ -162,8 +169,10 @@
   .ruler-labels { position: relative; display: flex; justify-content: space-between; margin: 1px 6px 21px; color: #a6bcac; font-size: 10px; font-variant-numeric: tabular-nums; }
   .ruler-labels span:nth-child(2) { position: absolute; transform: translateX(-50%); }
   .fit-options { position: relative; display: grid; grid-template-columns: repeat(3,1fr); padding: 4px; border-radius: 12px; background: #0c2b2366; }
-  .fit-highlight { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / 3); border-radius: 9px; background: var(--accent); transition: transform 240ms cubic-bezier(.2,.8,.2,1); }
-  .fit-options button { position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; gap: 6px; height: 44px; border-radius: 9px; background: transparent; color: #c0d0c3; font-size: 12px; transition: color 160ms, background 160ms; }
+  /* Selection text and its background change together; animating either one
+     independently creates unreadable intermediate colour combinations. */
+  .fit-highlight { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / 3); border-radius: 9px; background: var(--accent); }
+  .fit-options button { position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; gap: 6px; height: 44px; border-radius: 9px; background: transparent; color: #c0d0c3; font-size: 12px; transition: background 160ms; }
   .fit-options button[aria-pressed='true'] { color: #173c32; }
   .fit-options button:hover:not([aria-pressed='true']) { color: white; background: #ffffff0a; }
   .fit-options svg { width: 17px; height: 17px; }
@@ -172,8 +181,8 @@
   kbd { display: grid; place-items: center; width: 17px; height: 17px; border: 1px solid #527164; border-radius: 4px; font: inherit; }
   button:focus-visible { outline: 2px solid #610d3d; outline-offset: 2px; }
   .zoom-panel button:focus-visible { outline-color: var(--accent); outline-offset: 1px; }
-  @keyframes reveal { from { opacity: 0; transform: translateY(-6px) scale(.975); } to { opacity: 1; transform: none; } }
-  @keyframes settle { from { opacity: .65; transform: translateY(2px); } to { opacity: 1; transform: none; } }
+  @keyframes reveal { from { transform: translateY(-6px) scale(.975); } to { transform: none; } }
+  @keyframes settle { from { transform: translateY(2px); } to { transform: none; } }
   @media (max-width: 600px) { .zoom-panel { right: auto; left: 0; transform-origin: top left; } .key-hint { display: none; } }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>

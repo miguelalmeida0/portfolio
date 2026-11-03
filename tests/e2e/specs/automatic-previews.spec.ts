@@ -13,7 +13,9 @@ for (const width of [390, 1440]) {
       name: /^(play|pause|resume)|^inspect evidence$|^approve preview$/i
     });
     await expect(controls).toHaveCount(0);
-    await expect(page.locator('#morrow').getByRole('link', { name: 'Open Morrow app in a new tab' })).toHaveCount(1);
+    const morrowApp = page.locator('#morrow').getByRole('link', { name: 'Open app — Morrow (new tab)', exact: true });
+    await expect(morrowApp).toHaveCount(1);
+    await expect(morrowApp).toHaveAttribute('href', 'https://morrow.miguelalmeida.xyz/');
     await expect(page.locator('#bollard .project-shot')).toHaveAttribute('data-case', 'bollard');
   });
 }

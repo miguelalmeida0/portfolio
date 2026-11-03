@@ -173,7 +173,7 @@
 
 <style>
   .cv-reader { height: 100dvh; display: flex; flex-direction: column; color: #12372d; background: #e8ecdf; font-family: Figtree, Arial, sans-serif; }
-  .reader-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; padding: 12px 24px; background: #f5f6ed; border-bottom: 1px solid #c5ccba; }
+  .reader-toolbar { position: relative; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; padding: 12px 24px; background: #f5f6ed; border-bottom: 1px solid #c5ccba; }
   h1 { margin: 0; font-size: 17px; font-weight: 600; line-height: 1.4; }
   .reader-title p { margin: 3px 0 0; font-size: 13px; color: #506353; }
   .reader-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
@@ -181,7 +181,7 @@
   .download { display: inline-flex; align-items: center; background: #12372d; color: white; text-decoration: none; font-size: 14px; }
   .download:hover { background: #244f3d; }
   .download:active { transform: translateY(1px); }
-  .reader-body { position: relative; flex: 1; min-height: 0; }
+  .reader-body { position: relative; z-index: 0; flex: 1; min-height: 0; }
   .reader-scroll { position: absolute; inset: 0; overflow: auto; overscroll-behavior: contain; }
   .reader-message { position: relative; z-index: 1; margin: 24px; padding: 20px; background: #f5f6ed; }
   .reader-message a { display: inline-block; margin: 12px 20px 0 0; text-decoration: underline; }

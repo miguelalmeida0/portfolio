@@ -2,13 +2,13 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 const base = process.env.ROUTE_HEALTH_BASE_URL || 'http://localhost:4173';
 
-test('homepage serves F24 and four independent projects with SSR posters and destinations', async () => {
+test('homepage serves F24 and five independent projects with SSR posters and destinations', async () => {
   const response = await fetch(base);
   assert.equal(response.status, 200);
   const html = await response.text();
   const work = html.slice(html.indexOf('id="work"'), html.indexOf('</main>'));
   const projects=[...work.matchAll(/<article class="project" id="([^"]+)"[^>]*>([\s\S]*?)<\/article>/g)];
-  assert.deepEqual(projects.map(x=>x[1]), ['f24', 'second-voice', 'leu', 'needle', 'bollard']);
+  assert.deepEqual(projects.map(x=>x[1]), ['f24', 'second-voice', 'leu', 'needle', 'bollard', 'morrow']);
   for(const [,id,card] of projects){
     assert.match(card, /<img\b[^>]*class="project-cover[^\"]*"[^>]*src="[^\"]+"/, `${id} has a server-rendered poster`);
     assert.ok(card.includes(`data-case="${id}"`), `${id} has an interactive case-study action`);
@@ -16,12 +16,15 @@ test('homepage serves F24 and four independent projects with SSR posters and des
       assert.match(card, /<noscript><details class="bollard-case-fallback">/, 'Bollard has a complete no-script case study');
       assert.ok(card.includes('https://bollard-nine.vercel.app/today'));
       assert.ok(card.includes('Fictional scenario'));
+    }else if(id==='morrow'){
+      assert.match(card, /<a\b[^>]*href="https:\/\/morrow\.miguelalmeida\.xyz\/"[^>]*>/, 'Morrow retains its direct app link');
+      assert.ok(card.includes('Working prototype · respondent preview, not response collection.'));
     }else{
       assert.ok(card.includes(`href="https://miguelalmeida.is-a.dev/work/${id}"`), `${id} retains its no-script case link`);
     }
   }
-  assert.equal((work.match(/<img\b[^>]*class="project-cover(?:\s[^\"]*)?"/g) || []).length, 5, 'Each project retains its own poster');
-  assert.ok(work.includes('aria-label="Pause or play project preview animations"'));
+  assert.equal((work.match(/<img\b[^>]*class="project-cover(?:\s[^\"]*)?"/g) || []).length, 6, 'Each project retains its own poster');
+  assert.ok(!work.includes('aria-label="Pause or play project preview animations"'), 'Automatic previews do not expose the retired playback control');
   assert.ok(work.includes('href="https://leu.miguelalmeida.xyz/"'));
   assert.ok(!work.includes('https://miguelalmeida0.github.io'));
   assert.ok(!html.includes('data-pixel-intro'));

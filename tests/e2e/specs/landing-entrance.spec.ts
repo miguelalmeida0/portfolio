@@ -33,9 +33,13 @@ for (const viewport of [{width:1440,height:900}, {width:1512,height:682}, {width
  }
 }
 
-test('first entrance settles on keyboard intent and does not replay on reload', async ({page}) => {
+test('first entrance settles on keyboard intent and does not replay on reload', async ({page,browserName}, info) => {
   await page.goto('/', {waitUntil:'domcontentloaded'});
-  await page.keyboard.press('Tab');
+  // macOS WebKit uses Option-Tab for links when full keyboard access is off.
+  // https://support.apple.com/guide/safari/keyboard-shortcuts-and-gestures-cpsh003/mac
+  const key=browserName==='webkit' && process.platform==='darwin' ? 'Alt+Tab' : 'Tab';
+  info.annotations.push({type:'keyboard-navigation', description:key});
+  await page.keyboard.press(key);
   await expect(page.locator('html')).not.toHaveAttribute('data-landing-enter');
   await expect(page.getByRole('link',{name:'Skip to selected work'})).toBeFocused();
   await page.reload();

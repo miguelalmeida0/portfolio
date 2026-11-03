@@ -164,3 +164,102 @@ test('static homepage sends HSTS and an executable CSP', async ({page},info) => 
   await info.attach('csp-violations',{body:JSON.stringify(violations),contentType:'application/json'});
   expect(violations).toEqual([]);
 });
+
+test('worker routes enforce CSP while the PDF reader remains usable', async ({page}, info) => {
+  const violations: {directive:string; blocked:string}[]=[];
+  await page.exposeFunction('recordCspViolation', (value:{directive:string; blocked:string})=>violations.push(value));
+  await page.addInitScript(()=>document.addEventListener('securitypolicyviolation', event=>
+    (window as any).recordCspViolation({directive:event.effectiveDirective, blocked:event.blockedURI})));
+  const response=await page.goto('/cv/pdf');
+  const policy=response?.headers()['content-security-policy'] || '';
+  expect(policy).toMatch(/script-src[^;]*'self'[^;]*'nonce-[^']+'/);
+  expect(policy).not.toContain("'unsafe-eval'");
+  expect(policy).toContain("object-src 'none'");
+  await expect(page.locator('.annotationLayer a').first()).toBeVisible();
+  const trigger=page.locator('.zoom-trigger');
+  const initial=await trigger.innerText();
+  await page.getByRole('button',{name:'Zoom in',exact:true}).click();
+  await expect(trigger).not.toHaveText(initial);
+  await expect(page.locator('canvas').first()).toBeVisible();
+  for(const path of ['/story','/cv','/work/needle']) {
+    const route=await page.goto(path);
+    expect(route?.headers()['content-security-policy']).toMatch(/script-src[^;]*'nonce-/);
+    await expect(page.locator('h1').first()).toBeVisible();
+    await expect(page.locator('html')).toHaveAttribute('data-motion', /full|reduced/);
+  }
+  await info.attach('worker-csp-violations',{body:JSON.stringify(violations),contentType:'application/json'});
+  expect(violations).toEqual([]);
+});
+
+test('hero copy keeps full contrast throughout its entrance animation', async ({page}) => {
+  await page.setViewportSize({width:390,height:844});
+  await page.goto('/');
+  // Sample the actual CSS animation, not wall-clock-dependent screenshot timing.
+  const samples=await page.locator('.hero-meta').evaluate(element=>{
+    document.documentElement.setAttribute('data-landing-enter','playing');
+    const animations=element.getAnimations();
+    if(animations.length!==1) throw Error('Expected the authored hero copy entrance');
+    const animation=animations[0];animation.pause();
+    return [0,110,180,320,530].map(time=>{
+      animation.currentTime=time;
+      return {time,opacity:getComputedStyle(element).opacity};
+    });
+  });
+  expect(samples.map(sample=>sample.opacity)).toEqual(['1','1','1','1','1']);
+});
+
+test('CV zoom panel fits short landscape and keeps every fit control reachable', async ({page}) => {
+  await page.setViewportSize({width:844,height:390});
+  await page.goto('/cv/pdf');
+  await expect(page.locator('.zoom-trigger')).toBeEnabled();
+  await page.locator('.zoom-trigger').click();
+  const panel=page.locator('#cv-zoom-panel');
+  await expect(panel).toHaveCSS('opacity','1');
+  const fits=async()=>{
+    const rect=await panel.boundingBox();
+    expect(rect!.y).toBeGreaterThanOrEqual(0);
+    expect(rect!.y+rect!.height).toBeLessThanOrEqual(page.viewportSize()!.height-8);
+  };
+  await fits();
+  await panel.getByRole('button',{name:'Fit width',exact:true}).focus();
+  await page.keyboard.press('Enter');
+  await expect(panel.getByRole('button',{name:'Fit width',exact:true})).toHaveAttribute('aria-pressed','true');
+  await page.setViewportSize({width:844,height:320});
+  await expect(async()=>{await fits();}).toPass();
+  await panel.getByRole('button',{name:'Fit page',exact:true}).focus();
+  await page.keyboard.press('Enter');
+  await expect(panel.getByRole('button',{name:'Fit page',exact:true})).toHaveAttribute('aria-pressed','true');
+  await page.keyboard.press('Escape');
+  await expect(page.locator('.zoom-trigger')).toBeFocused();
+});
+
+test('CV scale copy stays opaque during opening', async ({page}) => {
+  await page.goto('/cv/pdf');
+  await page.locator('.zoom-trigger').click();
+  const opacity=await page.locator('#cv-zoom-panel').evaluate(element=>{
+    const animation=element.getAnimations()[0];
+    if(!animation)throw Error('Expected the authored panel entrance');
+    animation.pause();animation.currentTime=60;
+    return getComputedStyle(element).opacity;
+  });
+  expect(opacity).toBe('1');
+});
+
+test('CV fit labels retain contrast when the selected mode changes', async ({page}) => {
+  await page.goto('/cv/pdf');
+  await page.locator('.zoom-trigger').click();
+  const panel=page.locator('#cv-zoom-panel');
+  await expect(panel).toHaveCSS('opacity','1');
+  for(const label of ['Fit page','Fit width','Auto — Automatic fit']) {
+    await panel.getByRole('button',{name:label,exact:true}).click();
+    // Freeze any selection transitions midway so transient low contrast cannot
+    // be hidden by waiting for the final state before auditing.
+    await panel.locator('.fit-options').evaluate(element=>{
+      for(const animation of element.getAnimations({subtree:true})){
+        const timing=animation.effect!.getTiming();
+        animation.pause();animation.currentTime=Number(timing.duration)/2;
+      }
+    });
+    expect((await new AxeBuilder({page}).include('.fit-options').withRules(['color-contrast']).analyze()).violations).toEqual([]);
+  }
+});

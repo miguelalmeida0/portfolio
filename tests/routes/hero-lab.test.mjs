@@ -10,7 +10,7 @@ const get = async path => {
 };
 const decode = html => html.replaceAll('&amp;', '&').replaceAll('&#39;', "'").replaceAll('&nbsp;', ' ');
 
-// The production hero is the source of truth for every string a direction shows.
+// Cinematic and kinetic retain the legacy hero copy; typographic has its own headline.
 const productionHero = readFileSync('src/lib/components/experience/Hero.svelte', 'utf8');
 const exact = [
   'Hi, I’m Miguel.',
@@ -20,7 +20,7 @@ const exact = [
   'Get in touch'
 ];
 
-test('every lab string is the production hero string', () => {
+test('shared legacy lab content retains the original hero strings', () => {
   for (const text of exact) assert.ok(productionHero.includes(text), `production hero no longer says: ${text}`);
   assert.ok(productionHero.includes('React&nbsp;· TypeScript&nbsp;· Svelte&nbsp;· JavaScript'));
   const lab = readFileSync('src/lib/hero-lab/content.ts', 'utf8');
@@ -34,10 +34,13 @@ for (const slug of directions) {
     const { status, html: raw } = await get(`/hero-lab/${slug}`);
     assert.equal(status, 200);
     const html = decode(raw);
-    for (const text of slug === 'typographic' ? exact.slice(1) : exact) assert.ok(html.includes(text), `${slug}: missing ${text}`);
+    const expectedCopy = slug === 'typographic'
+      ? ['4+ years building production software.', 'I build the interfaces teams rely on when seconds matter.', 'View CV', 'Get in touch']
+      : exact;
+    for (const text of expectedCopy) assert.ok(html.includes(text), `${slug}: missing ${text}`);
     if (slug === 'typographic') {
       for (const tech of ['React', 'TypeScript', 'Svelte', 'JavaScript']) assert.ok(html.includes(`<li>${tech}</li>`), `Turntable stack: ${tech}`);
-      assert.match(html, /<h1 id="intro-heading"[^>]*>Miguel Almeida, frontend engineer and product designer in Berlin<\/h1>/);
+      assert.match(html, /<h1 id="intro-heading"[^>]*>I build the interfaces teams rely on when seconds matter\.<\/h1>/);
     } else {
       assert.ok(html.includes('React · TypeScript · Svelte · JavaScript'), `${slug}: stack line`);
       assert.match(html, /<h1 id="intro-heading"[^>]*aria-label="Frontend engineer & product designer\."/);
