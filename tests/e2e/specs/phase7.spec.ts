@@ -211,6 +211,7 @@ test('hero copy keeps full contrast throughout its entrance animation', async ({
 test('CV zoom panel fits short landscape and keeps every fit control reachable', async ({page}) => {
   await page.setViewportSize({width:844,height:390});
   await page.goto('/cv/pdf');
+  await expect(page.locator('.annotationLayer a').first()).toBeVisible();
   await expect(page.locator('.zoom-trigger')).toBeEnabled();
   await page.locator('.zoom-trigger').click();
   const panel=page.locator('#cv-zoom-panel');
@@ -235,6 +236,7 @@ test('CV zoom panel fits short landscape and keeps every fit control reachable',
 
 test('CV scale copy stays opaque during opening', async ({page}) => {
   await page.goto('/cv/pdf');
+  await expect(page.locator('.annotationLayer a').first()).toBeVisible();
   await page.locator('.zoom-trigger').click();
   const opacity=await page.locator('#cv-zoom-panel').evaluate(element=>{
     const animation=element.getAnimations()[0];
@@ -247,6 +249,7 @@ test('CV scale copy stays opaque during opening', async ({page}) => {
 
 test('CV fit labels retain contrast when the selected mode changes', async ({page}) => {
   await page.goto('/cv/pdf');
+  await expect(page.locator('.annotationLayer a').first()).toBeVisible();
   await page.locator('.zoom-trigger').click();
   const panel=page.locator('#cv-zoom-panel');
   await expect(panel).toHaveCSS('opacity','1');
@@ -262,4 +265,24 @@ test('CV fit labels retain contrast when the selected mode changes', async ({pag
     });
     expect((await new AxeBuilder({page}).include('.fit-options').withRules(['color-contrast']).analyze()).violations).toEqual([]);
   }
+});
+
+test('CV zoom trigger stays in place while PDF links become available', async ({page}) => {
+  let releasePdf!:()=>void;
+  const heldPdf=new Promise<void>(resolve=>{releasePdf=resolve;});
+  await page.route('**/files/Miguel_Almeida_CV.pdf',async route=>{
+    await heldPdf;
+    await route.continue();
+  });
+  await page.goto('/cv/pdf',{waitUntil:'domcontentloaded'});
+  await page.evaluate(()=>document.fonts.ready);
+  const trigger=page.locator('.zoom-trigger');
+  await expect(trigger).toBeDisabled();
+  const before=await trigger.boundingBox();
+  releasePdf();
+  await expect(page.locator('.annotationLayer a').first()).toBeVisible();
+  await expect(trigger).toBeEnabled();
+  const after=await trigger.boundingBox();
+  expect(after!.x).toBeCloseTo(before!.x,0);
+  expect(after!.y).toBeCloseTo(before!.y,0);
 });

@@ -12,6 +12,8 @@ The canonical source is `miguelalmeida0/portfolio`. Clean `main` ba6046d built a
 - Approved CV journeys found transient low contrast in the popup entrance and fit-selection transition. Copy now remains opaque and selection text/background change together; translation and scale motion remain. Fifteen three-engine CV journeys passed135/135 assertions with zero confirmed contrast observations. Raw PDF target-size observations remain unresolved by the engine gate.
 - Pointer regression exposed PDF annotation links intercepting fit controls at1280×720. The toolbar and reader body now form ordered stacking contexts so PDF annotations cannot cover the toolbar popup.
 
+- A delayed-PDF regression reproduced a90.7px toolbar shift when the links menu appeared, enough to lose an early zoom click. The menu now reserves its intrinsic space while hidden until annotations load; the completed layout is unchanged.
+
 ## Regression maintenance
 
 The automatic-preview test now matches the current Morrow accessible name and still verifies the exact destination. Actual live playback passed12/12 Chromium/WebKit checks without interception; a local WebKit preview-server media limitation is recorded separately.
@@ -28,6 +30,6 @@ A fresh pre-change live rerun, `run-f6ec5444-9310-42f9-a457-98edc77b0ca3`, compl
 
 The homepage remains heavy: one 390px live navigation transferred3,584,830 bytes for5,244,044 decoded HTML bytes; the largest embedded image string was3,029,894 characters. Initial subresources measured2.26MB phone/3.64MB desktop, dominated by the unchanged2.07MB footer portrait and desktop-only1.40MB pointing hand. All intended animations and image bytes are retained. The five public app URLs returned200.
 
-Fresh local validation includes TypeScript/lint,493 unit tests,56 route tests, the three-engine Phase7 matrix (90 passed,9 authored-layout skips), three native focus-cycle tests, and27 affected CV/CSP/landscape/contrast checks after the final layering fix. A prior87-case regression run had86 passes and the macOS skip-link test failure described above; the corrected full suite passed all 87 cases before promotion. No stale-header or interrupted runs count as acceptance.
+Fresh local validation includes TypeScript/lint,493 unit tests,56 route tests, the three-engine Phase7 matrix (90 passed,9 authored-layout skips), three native focus-cycle tests, and30 affected CV/CSP/landscape/contrast/loading checks after the final loading fix. A prior87-case regression run had86 passes and the macOS skip-link test failure described above; the corrected full suite passed all 87 cases before promotion. No stale-header or interrupted runs count as acceptance.
 
 Screenshots and final execution/deployment ledger are preserved outside the source checkout at `/Users/malmeida/Downloads/portfolio-phase7-evidence-20261103/`. Its final report records exact source commit, pipeline outcome and public verification. The Stress Lab repository and its fail-closed release verdict remain separate; passing UI assertions do not clear capped or missing coverage.

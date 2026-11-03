@@ -150,7 +150,9 @@
     <div class="reader-actions">
       <CvZoom ready={ready && !failed} {percent} mode={scale} onscale={changeScale} />
       <a class="download" href="/files/Miguel_Almeida_CV.pdf" download="Miguel_Almeida_CV.pdf">Download PDF</a>
-      {#if documentLinks.length}<CvLinks links={documentLinks} />{/if}
+      <!-- Reserve the menu width while PDF annotations load so an enabled zoom
+           button cannot move between pointer down and pointer up. -->
+      <div style:visibility={documentLinks.length ? 'visible' : 'hidden'}><CvLinks links={documentLinks} /></div>
     </div>
   </header>
   <div class="reader-body">
