@@ -16,12 +16,20 @@
   body .hero { overflow: visible; height: auto; max-height: none; min-height: 0; display: flex; flex-direction: column; padding: 0; }
   .hero .hero-front { position: relative; order: 0; min-height: 0; background: var(--pink); padding: var(--nav-h) 0 40px; transform: none !important; }
   .hero .hero-content { position: relative; top: auto; left: auto; margin: 28px var(--edge) 36px; width: auto; transform: none !important; }
-  body:not(.pause-motion) .hero h1 { font-size: clamp(54px,min(calc(20px + 12vw),clamp(12svh,calc(12svh + 4vw - 24px),16.5svh)),184px); }
+  @media (min-width: 1100px) {
+    body:not(.pause-motion) .hero h1 { font-size: clamp(54px,min(calc(20px + 12vw),clamp(12svh,calc(12svh + 4vw - 24px),16.5svh)),184px); }
+  }
   .hero .hero-under { position: relative; inset: auto; order: 1; clip-path: none !important; padding: calc(var(--nav-h) + 32px) var(--edge) 40px; background: var(--paper); border-top: 1px solid var(--line); }
   .hero-under h2, .hero-under p { transform: none !important; clip-path: none !important; opacity: 1 !important; visibility: visible !important; }
   .sheet, .hand, .edge-handle, .edge-label { display: none; }
   .hero .sheet-statement .w { opacity: 1 !important; }
   .hero .sheet-hero__row { opacity: 1 !important; visibility: visible !important; transform: none !important; }
+  /* Reserve the existing reading preview before the controller reveals it. */
+  .hero .needle-peek { display: block !important; position: relative; left: auto !important; top: auto !important; max-width: calc(100% - var(--edge)*2); margin: 0 var(--edge) 40px; }
+  @media (max-width: 900px) {
+    body .hero .needle-peek { max-width: none; margin: 0 var(--edge); }
+    body .hero .hero-under { padding: 48px var(--edge); }
+  }
 }
 
 @keyframes landing-name {

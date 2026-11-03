@@ -33,3 +33,13 @@ The homepage remains heavy: one 390px live navigation transferred3,584,830 bytes
 Fresh local validation includes TypeScript/lint,493 unit tests,56 route tests, the three-engine Phase7 matrix (90 passed,9 authored-layout skips), three native focus-cycle tests, and30 affected CV/CSP/landscape/contrast/loading checks after the final loading fix. A prior87-case regression run had86 passes and the macOS skip-link test failure described above; the corrected full suite passed all 87 cases before promotion. No stale-header or interrupted runs count as acceptance.
 
 Screenshots and final execution/deployment ledger are preserved outside the source checkout at `/Users/malmeida/Downloads/portfolio-phase7-evidence-20261103/`. Its final report records exact source commit, pipeline outcome and public verification. The Stress Lab repository and its fail-closed release verdict remain separate; passing UI assertions do not clear capped or missing coverage.
+
+## Final audit-driven corrections
+
+The exact original 300-case matrix completed on deployed1d650c9 as `run-cfe768f9-5320-4485-b182-c89839f49853`, with0 execution errors and0 confirmed findings in all30 baseline cases. It still remains limited; its configuration has no approved interaction/history journey. The original audit had202 baseline confirmed observations; the immediate pre-change rerun had2.
+
+The remaining stress results exposed two independently reproduced product defects. At320px, doubled skip-link text exceeded its fixed100px offscreen offset and covered29.375px of the header. The skip link now hides by its own intrinsic height, with2px clearance for WebKit fractional transform rounding, and reveals fully on native keyboard focus. The fixed assertion still requires its unfocused bottom to be outside the viewport.
+
+Under native reduced motion, the controller revealed the existing Needle preview and changed heading size/padding after first paint, producing CLS0.297 at844×390 and0.478 at768×1024. The under-section was pushed below the viewport, not removed. Initial CSS now matches the existing final reading layout, including preview space and the tablet/landscape typography and padding. A controlled controller-delay regression compares actual geometry before/after initialization across five sizes and three engines, including the separate mobile layout.
+
+These two corrections are a subsequent source snapshot. The completed300-case audit remains attributed to1d650c9; affected public baseline, large-type and reduced-motion cases are rerun separately after promotion. Synthetic long-text name mismatches, raw PDF target findings and reported offline import failures remain unsuppressed. Exact final scope and pipeline identity are recorded in the external final ledger.

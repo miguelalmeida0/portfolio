@@ -286,3 +286,52 @@ test('CV zoom trigger stays in place while PDF links become available', async ({
   expect(after!.x).toBeCloseTo(before!.x,0);
   expect(after!.y).toBeCloseTo(before!.y,0);
 });
+
+for(const [width,height] of sizes) test(`enlarged skip link stays hidden until focused at ${width}x${height}`, async ({page,browserName})=>{
+  await page.setViewportSize({width,height});
+  await page.goto('/');
+  await page.evaluate(()=>document.fonts.ready);
+  const skip=page.getByRole('link',{name:'Skip to selected work'});
+  await skip.evaluate(element=>element.style.setProperty('font-size','34px','important'));
+  const hidden=await skip.boundingBox();
+  expect(hidden!.y+hidden!.height).toBeLessThanOrEqual(0);
+  // Native keyboard navigation must still reveal the complete expanded label.
+  await page.keyboard.press(browserName==='webkit' && process.platform==='darwin'?'Alt+Tab':'Tab');
+  await expect(skip).toBeFocused();
+  const revealed=await skip.boundingBox();
+  expect(revealed!.x).toBeGreaterThanOrEqual(0);
+  expect(revealed!.y).toBeGreaterThanOrEqual(0);
+  expect(revealed!.x+revealed!.width).toBeLessThanOrEqual(width);
+  expect(revealed!.y+revealed!.height).toBeLessThanOrEqual(height);
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/\/#work$/);
+  await expect(page.locator('#work-heading')).toBeInViewport();
+});
+
+for(const [width,height] of sizes) test(`reduced-motion layout is ready before its controller at ${width}x${height}`, async ({browser,baseURL})=>{
+  const context=await browser.newContext({viewport:{width,height},reducedMotion:'reduce'});
+  try{
+    const initial=await context.newPage(), initialized=await context.newPage();
+    // Hold only the scroll controller to inspect the real CSS first-paint layout.
+    await initial.route('**/',async route=>{
+      const response=await route.fetch();let controllers=0;
+      const body=(await response.text()).replace(/<script>([\s\S]*?)<\/script>/g,(tag,code)=>{
+        if(!code.includes('let motion=false,context=null,galleryTween'))return tag;
+        controllers++;return '<script type="application/json" data-deferred-scroll-controller>'+code+'</script>';
+      });
+      expect(controllers).toBe(1);await route.fulfill({response,body});
+    });
+    await initial.goto(baseURL!);await initial.evaluate(()=>document.fonts.ready);
+    await initialized.goto(baseURL!);await initialized.evaluate(()=>document.fonts.ready);
+    // Mobile has a separate authored controller and no pause-motion class.
+    if(width>=768)await expect(initialized.locator('body')).toHaveClass(/pause-motion/);
+    for(const selector of ['.hero-front','.hero-content','.hero-name','.hero-meta','.hero-under','.needle-peek']){
+      const before=await initial.locator(selector).boundingBox();
+      const after=await initialized.locator(selector).boundingBox();
+      if(!before||!after){expect(after,selector).toEqual(before);continue;}
+      for(const property of ['x','y','width','height'] as const){
+        expect(Math.abs(before[property]-after[property]),`${selector} ${property}`).toBeLessThan(1);
+      }
+    }
+  }finally{await context.close();}
+});
