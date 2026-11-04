@@ -72,3 +72,14 @@ await writeFile(output + '/_headers', (await readFile(output + '/_headers', 'utf
   + '  X-Content-Type-Options: nosniff\n'
   + '  X-Robots-Tag: noindex, nofollow\n');
 console.log('Installed content-addressed optical portfolio preview; production homepage unchanged.');
+
+/* Promote the exact reviewed optical source without changing existing worker routes. */
+const previousRootPolicy = homepageHeaders(publishedHome);
+const promotedRootPolicy = '\n/\n  Strict-Transport-Security: max-age=31536000\n'
+  + '  Content-Security-Policy: ' + opticalCsp + '\n'
+  + '  X-Portfolio-Revision: optical-2026-11-04-44597bfe\n';
+const originalHeaders = await readFile(output + '/_headers', 'utf8');
+assert.ok(originalHeaders.includes(previousRootPolicy), 'Expected previous homepage security headers');
+await writeFile(output + '/_headers', originalHeaders.replace(previousRootPolicy, promotedRootPolicy));
+await writeFile(output + '/index.html', opticalHtml);
+console.log('Promoted optical homepage; existing CV and case-study routes preserved.');

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const preview = '/optical-preview/';
+const preview = '/';
 
 test('optical portfolio retains its approved project content and source policy', async ({ page }) => {
   await page.setViewportSize({width: 1440, height: 900});
