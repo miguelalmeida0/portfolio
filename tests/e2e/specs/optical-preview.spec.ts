@@ -34,7 +34,8 @@ test('mobile restores the full portrait and visible project previews under the h
   const work=await page.locator('#work').boundingBox();
   expect(work!.y-(hero!.y+hero!.height)).toBeLessThan(45);
   await expect(page.locator('#work .card')).toHaveCount(4);
-  await expect(page.locator('#work .project-toggle')).toBeHidden();
+  await expect(page.locator('#work .project-toggle')).toHaveCount(4);
+  for (const toggle of await page.locator('#work .project-toggle').all()) await expect(toggle).toBeHidden();
   for(const id of ['morrow','second-voice','leu','needle']){
     await expect(page.locator('#panel-'+id+' .frame')).toBeVisible();
     await expect(page.locator('#panel-'+id)).not.toHaveAttribute('aria-hidden','true');
