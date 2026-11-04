@@ -58,7 +58,16 @@ assert.ok(opticalHtml.includes('id="toggle-morrow"') && opticalHtml.includes('id
   && opticalHtml.includes('id="toggle-needle"') && opticalHtml.includes('id="portfolio-data"'),
   'Required optical portfolio project controls are missing');
 await mkdir(output + '/optical-preview', {recursive:true});
-await writeFile(output + '/optical-preview/index.html', opticalHtml);
+/* Recover the approved mobile page without modifying the verified optical source.
+   The extra assets are same-origin and allowed by the existing CSP. */
+assert.ok(opticalHtml.includes('<body class="ready mobile-index">'), 'Optical mobile index source has changed');
+const restoredHtml = opticalHtml
+  .replace('<body class="ready mobile-index">', '<body class="ready">')
+  .replace('</head>', '<link rel="stylesheet" href="/optical-mobile-restoration.css"><script defer src="/optical-ola.js"></script></head>');
+assert.ok(restoredHtml.includes('<body class="ready">'), 'Full mobile hero could not be restored');
+await writeFile(output + '/optical-mobile-restoration.css', await readFile('release/optical-mobile-restoration.css', 'utf8'));
+await writeFile(output + '/optical-ola.js', await readFile('release/optical-ola.js', 'utf8'));
+await writeFile(output + '/optical-preview/index.html', restoredHtml);
 const opticalRoutesPath = output + '/_routes.json';
 const opticalRoutes = JSON.parse(await readFile(opticalRoutesPath, 'utf8'));
 opticalRoutes.exclude = [...new Set([...opticalRoutes.exclude, '/optical-preview', '/optical-preview/*'])];
@@ -77,9 +86,9 @@ console.log('Installed content-addressed optical portfolio preview; production h
 const previousRootPolicy = homepageHeaders(publishedHome);
 const promotedRootPolicy = '\n/\n  Strict-Transport-Security: max-age=31536000\n'
   + '  Content-Security-Policy: ' + opticalCsp + '\n'
-  + '  X-Portfolio-Revision: optical-2026-11-04-44597bfe\n';
+  + '  X-Portfolio-Revision: optical-2026-11-04-mobile-restored\n';
 const originalHeaders = await readFile(output + '/_headers', 'utf8');
 assert.ok(originalHeaders.includes(previousRootPolicy), 'Expected previous homepage security headers');
 await writeFile(output + '/_headers', originalHeaders.replace(previousRootPolicy, promotedRootPolicy));
-await writeFile(output + '/index.html', opticalHtml);
+await writeFile(output + '/index.html', restoredHtml);
 console.log('Promoted optical homepage; existing CV and case-study routes preserved.');
