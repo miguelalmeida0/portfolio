@@ -31,7 +31,16 @@ test('mobile restores the full portrait and visible project previews under the h
   expect(stage).not.toBeNull();
   expect(stage!.width).toBeGreaterThanOrEqual(375);
   expect(stage!.height).toBeGreaterThanOrEqual(400);
-  expect(await page.locator('#photoImg').evaluate((img) => getComputedStyle(img).objectFit)).toBe('cover');
+  // Photo asset includes the old desktop layout on its right. Its mobile crop
+  // must cover only the left half and stop above the embedded Leu preview.
+  const portrait = await page.locator('#photoImg').boundingBox();
+  expect(portrait).not.toBeNull();
+  expect(portrait!.x).toBeCloseTo(stage!.x, 0);
+  expect(portrait!.y).toBeCloseTo(stage!.y, 0);
+  expect(portrait!.width / stage!.width).toBeGreaterThan(1.86);
+  expect(portrait!.width / stage!.width).toBeLessThan(1.88);
+  expect(portrait!.height).toBeGreaterThan(stage!.height);
+  expect(await page.locator('#photoImg').evaluate((img) => getComputedStyle(img).objectFit)).toBe('fill');
   const hero=await page.locator('#hero').boundingBox();
   const work=await page.locator('#work').boundingBox();
   expect(work!.y-(hero!.y+hero!.height)).toBeLessThan(45);

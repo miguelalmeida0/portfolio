@@ -6,7 +6,10 @@
   .hero .stage { display:block; order:1; width:100%; max-width:none; height:auto; aspect-ratio:715/787; margin:0; align-self:stretch; border-radius:0; overflow:hidden; }
   .hero .photo { inset:0; clip-path:none!important; mask-image:none!important; -webkit-mask-image:none!important; }
   .hero .ph-in { inset:0; transform:none!important; }
-  .hero .ph-in>img { display:block; top:0; left:0; width:100%; height:100%; max-width:none; object-fit:cover; object-position:50% 42%; transform:none!important; }
+  /* The approved optical asset is a composite desktop scene. On mobile the
+     original 186.853% image geometry isolates Miguel's portrait on the left.
+     A 100% object-fit:cover crop reveals the DESKTOP HEADER and Leu artwork. */
+  .hero .ph-in>img { display:block; position:absolute; top:0; left:0; width:186.853%; height:auto; max-width:none; object-fit:unset; object-position:left top; transform:none!important; }
   .hero .portal,.hero .dialwrap,.hero .mobile-work-link { display:none!important; }
   #work { padding:20px 20px 64px; margin:0; }
   #work .wk-head { display:block; margin:0 0 20px; }
