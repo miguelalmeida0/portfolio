@@ -37,3 +37,38 @@ await writeFile(`${output}/_headers`, (await readFile(`${output}/_headers`, 'utf
 await writeFile(`${output}/_headers`,(await readFile(`${output}/_headers`,'utf8'))+'\n/motion-debug\n  Cache-Control: no-store\n  X-Robots-Tag: noindex, nofollow\n\n/motion-debug/*\n  Cache-Control: no-store\n  X-Robots-Tag: noindex, nofollow\n');
 console.log('Installed reviewed static homepage; existing worker routes preserved.');
 await writeFile(`${output}/_headers`, (await readFile(`${output}/_headers`, 'utf8')) + homepageHeaders(publishedHome));
+
+
+/*
+ * Verified standalone optical portfolio (4 Nov 2026).
+ * Keep the existing SvelteKit routes and reviewed homepage during CI preview.
+ * Promote only after the preview's Chromium/WebKit checks pass.
+ */
+const opticalSources = Array.from({length: 17}, (_, i) =>
+  'release/optical-index/' + String(i).padStart(2, '0') + '.txt'
+);
+const opticalHtml = (await Promise.all(opticalSources.map(path => readFile(path, 'utf8')))).join('');
+const { createHash } = await import('node:crypto');
+assert.equal(
+  createHash('sha256').update(opticalHtml).digest('hex'),
+  '44597bfe6fcfe67df6739f8e058ec6e4876273355a2d3d3f31f8c0cfe07e399c',
+  'Optical portfolio source bytes changed'
+);
+assert.ok(opticalHtml.includes('id="toggle-morrow"') && opticalHtml.includes('id="toggle-leu"')
+  && opticalHtml.includes('id="toggle-needle"') && opticalHtml.includes('id="portfolio-data"'),
+  'Required optical portfolio project controls are missing');
+await mkdir(output + '/optical-preview', {recursive:true});
+await writeFile(output + '/optical-preview/index.html', opticalHtml);
+const opticalRoutesPath = output + '/_routes.json';
+const opticalRoutes = JSON.parse(await readFile(opticalRoutesPath, 'utf8'));
+opticalRoutes.exclude = [...new Set([...opticalRoutes.exclude, '/optical-preview', '/optical-preview/*'])];
+assert.ok(opticalRoutes.include.length + opticalRoutes.exclude.length <= 100, 'Cloudflare routing limit exceeded');
+await writeFile(opticalRoutesPath, JSON.stringify(opticalRoutes, null, 2) + '\n');
+const opticalCsp = opticalHtml.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)">/i)?.[1]?.replaceAll('&#x27;', "'").replaceAll('&amp;', '&');
+assert.ok(opticalCsp && opticalCsp.includes("default-src 'none'"), 'Optical portfolio CSP is missing');
+await writeFile(output + '/_headers', (await readFile(output + '/_headers', 'utf8'))
+  + '\n/optical-preview/*\n  Cache-Control: no-cache, max-age=0, must-revalidate\n'
+  + '  Content-Security-Policy: ' + opticalCsp + '\n'
+  + '  X-Content-Type-Options: nosniff\n'
+  + '  X-Robots-Tag: noindex, nofollow\n');
+console.log('Installed content-addressed optical portfolio preview; production homepage unchanged.');
