@@ -34,7 +34,7 @@ test('320px index expands one project without creating horizontal scroll', async
   expect(sizes.content).toBeLessThanOrEqual(sizes.viewport + 1);
 });
 
-test('mobile navigation and project case studies remain available', async ({ page }) => {
+test('footer keyboard, mobile navigation and project case studies remain available', async ({ page }) => {
   await page.setViewportSize({width: 390, height: 844});
   await page.goto(preview, { waitUntil: 'domcontentloaded' });
   await page.locator('#burger').click();
@@ -47,4 +47,8 @@ test('mobile navigation and project case studies remain available', async ({ pag
   await expect(page.locator('#csTitle')).toBeVisible();
   await page.locator('#csBack').click();
   await expect(page.locator('#work')).toBeVisible();
+  const mail = page.locator('#frMail');
+  await mail.scrollIntoViewIfNeeded();
+  await mail.focus();
+  await expect(mail).toBeFocused();
 });
