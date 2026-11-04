@@ -70,7 +70,7 @@ await writeFile(output + '/optical-ola.js', await readFile('release/optical-ola.
 await writeFile(output + '/optical-preview/index.html', restoredHtml);
 const opticalRoutesPath = output + '/_routes.json';
 const opticalRoutes = JSON.parse(await readFile(opticalRoutesPath, 'utf8'));
-opticalRoutes.exclude = [...new Set([...opticalRoutes.exclude, '/optical-preview', '/optical-preview/*'])];
+opticalRoutes.exclude = [...new Set([...opticalRoutes.exclude, '/optical-preview', '/optical-preview/*', '/optical-mobile-restoration.css', '/optical-ola.js'])];
 assert.ok(opticalRoutes.include.length + opticalRoutes.exclude.length <= 100, 'Cloudflare routing limit exceeded');
 await writeFile(opticalRoutesPath, JSON.stringify(opticalRoutes, null, 2) + '\n');
 const opticalCsp = opticalHtml.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)">/i)?.[1]?.replaceAll('&#x27;', "'").replaceAll('&amp;', '&');

@@ -11,6 +11,10 @@ test('optical portfolio retains its approved project content and source policy',
   await expect(page.locator('#experience')).toHaveCount(1);
   await expect(page.locator('#about')).toHaveCount(1);
   await expect(page.locator('.ola-voice')).toHaveAttribute('aria-label', /Olá/i);
+  for (const asset of ['/optical-mobile-restoration.css', '/optical-ola.js']) {
+    const response = await page.request.get(asset);
+    expect(response.status(), asset).toBe(200);
+  }
   const meta = await page.locator('meta[http-equiv="Content-Security-Policy"]').getAttribute('content');
   expect(meta).toContain("default-src 'none'");
   for (const id of ['morrow', 'second-voice', 'leu', 'needle']) {
