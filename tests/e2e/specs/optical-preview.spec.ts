@@ -26,10 +26,12 @@ test('mobile restores the full portrait and visible project previews under the h
   await page.setViewportSize({width:390,height:844});
   await page.goto(preview,{waitUntil:'domcontentloaded'});
   await expect(page.locator('body')).not.toHaveClass(/mobile-index/);
+  await expect(page.locator('#hero .dialwrap')).toBeHidden(); // No project-scale selector on phones
   const stage=await page.locator('#stage').boundingBox();
   expect(stage).not.toBeNull();
   expect(stage!.width).toBeGreaterThanOrEqual(375);
   expect(stage!.height).toBeGreaterThanOrEqual(400);
+  expect(await page.locator('#photoImg').evaluate((img) => getComputedStyle(img).objectFit)).toBe('cover');
   const hero=await page.locator('#hero').boundingBox();
   const work=await page.locator('#work').boundingBox();
   expect(work!.y-(hero!.y+hero!.height)).toBeLessThan(45);
@@ -39,6 +41,7 @@ test('mobile restores the full portrait and visible project previews under the h
   for(const id of ['morrow','second-voice','leu','needle']){
     await expect(page.locator('#panel-'+id+' .frame')).toBeVisible();
     await expect(page.locator('#panel-'+id)).not.toHaveAttribute('aria-hidden','true');
+    expect(await page.locator('#panel-'+id).evaluate((node: HTMLElement) => node.inert)).toBe(false);
   }
   const sizes=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,content:document.documentElement.scrollWidth}));
   expect(sizes.content).toBeLessThanOrEqual(sizes.viewport+1);
@@ -80,9 +83,11 @@ test('the Olá speaker uses a single accented word and keeps native audio access
   const voice=page.locator('.ola-voice');
   await voice.scrollIntoViewIfNeeded();
   await expect(voice).toHaveAttribute('aria-label',/Olá/i);
-  await expect(voice.locator('.ola-glyph')).toHaveCount(3);
+  await expect(voice.locator('.ola-word')).toHaveText('olá');
+  await expect(voice.locator('.ola-glyph')).toHaveCount(0);
   await expect(voice.locator('.ola-a')).toHaveCount(0);
   await expect(voice.locator('.ola-speaker')).toBeVisible();
   await voice.click();
+  await expect(voice).toHaveClass(/ola-active/);
   await expect(page.locator('#olaVoiceStatus')).toContainText(/Miguel says olá|recording could not play/i);
 });

@@ -22,28 +22,45 @@
   #work .cap b,#work .cap small { display:block; }
   #work .project-actions { margin-top:10px; }
 }
-/* One kinetic word with a real accented letter; no duplicated accent glyph. */
+/* A single, intact accented word. The response to a click is a short
+   typographic ink accent and a drawn sound wave, not moving glyphs. */
 .ola-voice { text-decoration:none; vertical-align:baseline; }
 .ola-voice .ola-letter { clip-path:none!important; }
 .ola-voice .ola-a::after,.ola-voice .ola-accent { display:none!important; content:none!important; }
-.ola-word { position:relative; display:inline-flex; align-items:baseline; white-space:nowrap; isolation:isolate; }
-.ola-word::after { content:''; position:absolute; left:0; right:0; bottom:-.09em; height:.035em; background:var(--red-text,#b32f20); transform:scaleX(0); transform-origin:left center; opacity:0; pointer-events:none; }
-.ola-glyph { display:inline-block; transform-origin:center 85%; backface-visibility:hidden; transform-style:preserve-3d; }
-.ola-voice .ola-speaker { transform-origin:center; }
-.ola-voice.voice-playing .ola-glyph { animation:optical-ola-type 580ms cubic-bezier(.2,.75,.25,1) both; animation-delay:calc(var(--letter-index) * 72ms); }
-.ola-voice.voice-playing .ola-word::after { animation:optical-ola-trace 550ms cubic-bezier(.22,1,.36,1) 100ms both; }
-.ola-voice.voice-playing .ola-speaker { animation:optical-ola-speaker 600ms cubic-bezier(.22,1,.36,1) both; }
-@keyframes optical-ola-type {
-  0% { opacity:.65; transform:translate3d(0,.17em,0) rotateX(-18deg); }
-  55% { opacity:1; transform:translate3d(0,-.035em,0) rotateX(2deg); }
-  100% { opacity:1; transform:none; }
+.ola-word { position:relative; display:inline-block; white-space:nowrap; }
+.ola-word::after {
+  content:''; position:absolute; left:0; right:0; bottom:-.065em;
+  height:max(2px,.028em); background:var(--red-text,#b32f20);
+  transform:scaleX(0); transform-origin:left center; opacity:0; pointer-events:none;
 }
-@keyframes optical-ola-trace {
-  0% { transform:scaleX(0); opacity:1; }
-  80% { transform:scaleX(1); opacity:1; }
+.ola-voice.ola-active .ola-word {
+  animation:optical-ola-ink 940ms cubic-bezier(.22,1,.36,1) both;
+}
+.ola-voice.ola-active .ola-word::after {
+  animation:optical-ola-line 900ms cubic-bezier(.22,1,.36,1) both;
+}
+.ola-voice.ola-active .ola-speaker path:nth-child(2) {
+  animation:optical-ola-wave 700ms cubic-bezier(.22,1,.36,1) 70ms both;
+}
+.ola-voice.ola-active .ola-speaker path:nth-child(3) {
+  animation:optical-ola-wave 740ms cubic-bezier(.22,1,.36,1) 170ms both;
+}
+@keyframes optical-ola-ink {
+  0%,100% { color:inherit; }
+  28%,55% { color:var(--red-text,#b32f20); }
+}
+@keyframes optical-ola-line {
+  0% { transform:scaleX(0); opacity:0; }
+  12% { opacity:1; }
+  58% { transform:scaleX(1); opacity:1; }
   100% { transform:scaleX(1); opacity:0; }
 }
-@keyframes optical-ola-speaker { 0%,100% { transform:scale(1); } 32% { transform:scale(1.12); } 65% { transform:scale(.98); } }
+@keyframes optical-ola-wave {
+  0% { opacity:0; stroke-dasharray:0 48; }
+  30% { opacity:1; }
+  82%,100% { opacity:1; stroke-dasharray:48 0; }
+}
 @media (prefers-reduced-motion:reduce) {
-  .ola-voice .ola-glyph,.ola-voice .ola-word::after,.ola-voice .ola-speaker { animation:none!important; }
+  .ola-voice .ola-word,.ola-voice .ola-word::after,
+  .ola-voice .ola-speaker path { animation:none!important; }
 }
