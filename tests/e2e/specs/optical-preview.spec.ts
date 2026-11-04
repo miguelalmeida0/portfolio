@@ -46,6 +46,8 @@ test('footer keyboard, mobile navigation and project case studies remain availab
   await page.locator('#panel-leu .cap-cs').click();
   await expect(page.locator('#csTitle')).toBeVisible();
   await page.locator('#csBack').click();
+  // The native dialog animates its close for 560ms. Focus must not escape it early.
+  await expect(page.locator('#cs')).toBeHidden({timeout:4000});
   await expect(page.locator('#work')).toBeVisible();
   const mail = page.locator('#frMail');
   await mail.scrollIntoViewIfNeeded();
