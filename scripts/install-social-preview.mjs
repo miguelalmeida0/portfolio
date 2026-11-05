@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import sharp from 'sharp';
 
 const origin = 'https://miguelalmeida.is-a.dev';
-const image = origin + '/images/portfolio-social-preview.jpg';
+const image = origin + '/images/portfolio-social-hero-2026.jpg';
 const title = 'Miguel Almeida — Frontend & Product Engineer';
 const description = 'Explore Morrow, Second Voice, Leu and Needle: four interactive projects by Miguel Almeida, a frontend and product engineer based in Berlin.';
 
@@ -66,41 +66,61 @@ async function externalizeEmbeddedAssets(output, html) {
 }
 
 export async function installSocialPreview(output) {
-  // Static preview for crawlers. Keep the interactive portfolio unchanged.
-  const photo = await sharp('static/images/miguel-original.webp')
-    .rotate()
-    .resize(520, 630, { fit: 'cover', position: sharp.strategy.attention })
-    .greyscale()
-    .jpeg({ quality: 86 })
+  // Build from the *current portfolio hero photograph*, not an unrelated
+  // historical portrait. The approved optical index includes this exact image.
+  // Its media assets have already been externalized into content-hashed files.
+  const homePath = join(output, 'index.html');
+  const lightweight = await externalizeEmbeddedAssets(output, await readFile(homePath, 'utf8'));
+  const heroSource = lightweight.match(/<img id="photoImg" src="(\\/images\\/embedded\\/[a-f0-9]{64}\\.png)"/);
+  assert.ok(heroSource, 'Current optical hero portrait must be present');
+  const source = join(output, heroSource[1].slice(1));
+  const sourceMetadata = await sharp(source).metadata();
+  assert.ok(sourceMetadata.width >= 785 && sourceMetadata.height >= 875,
+    'Expected the current magnifying-glass hero composition');
+  // The optical source includes an earlier version of the page in the
+  // photograph's right half. Crop *only* its actual lens portrait, then lay
+  // out the current headline separately to avoid stale UI or duplicated text.
+  const photo = await sharp(source)
+    .extract({ left: 0, top: 0, width: 785, height: 875 })
+    .resize(562, 630, { fit: 'cover', position: 'left' })
+    .jpeg({ quality: 90, mozjpeg: true })
     .toBuffer();
   const svg = [
     '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">',
-    '<rect x="520" width="680" height="630" fill="#ece9e4"/>',
-    '<rect x="520" width="8" height="630" fill="#c93a26"/>',
-    '<text x="586" y="83" fill="#c93a26" font-family="Lato,Arial,sans-serif" font-size="19" font-weight="800" letter-spacing="4">SELECTED WORK  /  2026</text>',
-    '<text x="582" y="209" fill="#151515" font-family="Lato,Arial,sans-serif" font-size="86" font-weight="900" letter-spacing="-4">Miguel</text>',
-    '<text x="582" y="297" fill="#151515" font-family="Lato,Arial,sans-serif" font-size="86" font-weight="900" letter-spacing="-4">Almeida.</text>',
-    '<rect x="586" y="339" width="66" height="5" fill="#c93a26"/>',
-    '<text x="586" y="394" fill="#151515" font-family="Lato,Arial,sans-serif" font-size="27" font-weight="700">Frontend &amp; Product Engineer</text>',
-    '<text x="586" y="433" fill="#4a4743" font-family="Lato,Arial,sans-serif" font-size="21">Berlin · 6+ years of experience</text>',
-    '<rect x="586" y="476" width="548" height="1" fill="#c7c3bc"/>',
-    '<text x="586" y="529" fill="#151515" font-family="Lato,Arial,sans-serif" font-size="20">Morrow   /   Second Voice   /   Leu   /   Needle</text>',
-    '<text x="586" y="578" fill="#4a4743" font-family="Lato,Arial,sans-serif" font-size="18">miguelalmeida.is-a.dev</text>',
+    '<rect x="562" y="0" width="638" height="630" fill="#ece9e4"/>',
+    '<text x="628" y="69" fill="#151515" font-family="Arial,sans-serif" font-size="21" font-weight="600">Miguel Almeida</text>',
+    '<g fill="#151515" font-family="Arial,sans-serif" font-size="49" font-weight="500" letter-spacing="-1.8">',
+    '<text x="628" y="166">I build the interfaces</text>',
+    '<text x="628" y="221">teams rely on when</text>',
+    '<text x="628" y="276">seconds matter.</text>',
+    '</g>',
+    '<text x="628" y="350" fill="#4a4743" font-family="Arial,sans-serif" font-size="23">Frontend &amp; Product Engineer · Berlin</text>',
+    '<text x="628" y="389" fill="#4a4743" font-family="Arial,sans-serif" font-size="18">6+ years of experience</text>',
+    '<text x="628" y="506" fill="#151515" font-family="Arial,sans-serif" font-size="17">Change focus</text>',
+    '<path d="M 754 502 H 791" stroke="#151515" stroke-width="1"/>',
+    '<path d="M 815 449 V 600" stroke="#68645f" stroke-width="1"/>',
+    '<path d="M 811 473 H 842" stroke="#c93a26" stroke-width="4"/>',
+    '<g fill="#151515" font-family="Arial,sans-serif" font-size="21">',
+    '<text x="858" y="481" font-weight="700">Opening</text>',
+    '<text x="858" y="520">Morrow</text>',
+    '<text x="858" y="559">Second Voice</text>',
+    '<text x="858" y="598">Leu · Needle</text>',
+    '</g>',
     '</svg>'
   ].join('');
-  const preview = await sharp({ create: { width: 1200, height: 630, channels: 3, background: '#ece9e4' } })
+  const preview = await sharp({
+    create: { width: 1200, height: 630, channels: 3, background: '#ece9e4' }
+  })
     .composite([{ input: photo, left: 0, top: 0 }, { input: Buffer.from(svg), left: 0, top: 0 }])
-    .jpeg({ quality: 88, mozjpeg: true })
+    .jpeg({ quality: 90, mozjpeg: true })
     .toBuffer();
   const dimensions = await sharp(preview).metadata();
   assert.equal(dimensions.width, 1200);
   assert.equal(dimensions.height, 630);
   assert.ok(preview.length < 5_000_000, 'Preview must be under LinkedIn 5MB limit');
   await mkdir(join(output, 'images'), { recursive: true });
-  await writeFile(join(output, 'images', 'portfolio-social-preview.jpg'), preview);
+  await writeFile(join(output, 'images', 'portfolio-social-hero-2026.jpg'), preview);
 
-  const homePath = join(output, 'index.html');
-  const lightweight = await externalizeEmbeddedAssets(output, await readFile(homePath, 'utf8'));
   await writeFile(homePath, injectSocialMetadata(lightweight));
   console.log('LinkedIn-compatible Open Graph preview installed.');
 }
