@@ -33,9 +33,9 @@ export function injectSocialMetadata(html) {
   // The optical homepage contains hundreds of KB of inline CSS in <head>.
   // Crawlers may stop reading before the closing tag, so place social metadata
   // immediately after the existing charset declaration instead.
-  const charset = /<meta\\s+charset=["'][^"']+["']\\s*\\/?>/i;
-  assert.match(html, charset, 'Homepage must declare a character encoding');
-  const withMetadata = html.replace(charset, (tag) => tag + '\\n' + socialTags);
+  const charset = '<meta charset="UTF-8">';
+  assert.ok(html.includes(charset), 'Homepage must declare UTF-8');
+  const withMetadata = html.replace(charset, charset + '\n' + socialTags);
   assert.ok(withMetadata.indexOf('property="og:image"') < 4096, 'OG tags must appear in the first 4 KB');
   return withMetadata;
 }
