@@ -67,3 +67,46 @@
   .ola-voice .ola-word,.ola-voice .ola-word::after,
   .ola-voice .ola-speaker path { animation:none!important; }
 }
+
+/*
+ * Desktop portrait edge: let the photographed sweater dissolve into the
+ * paper instead of ending in a hard rectangle. The cool-blue wash is barely
+ * perceptible and is confined to the bottom edge; the face and lens stay intact.
+ * Mobile intentionally keeps its approved, separate crop.
+ */
+@media (min-width: 901px) {
+  .hero > #stage {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 0,
+      #000 calc(100% - 25px),
+      rgba(0, 0, 0, .96) calc(100% - 18px),
+      rgba(0, 0, 0, .35) calc(100% - 7px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      #000 0,
+      #000 calc(100% - 25px),
+      rgba(0, 0, 0, .96) calc(100% - 18px),
+      rgba(0, 0, 0, .35) calc(100% - 7px),
+      transparent 100%
+    );
+  }
+
+  .hero > #stage::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 34px;
+    z-index: 5;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(103, 150, 183, .012) 40%,
+      rgba(103, 150, 183, .04) 85%,
+      rgba(103, 150, 183, .045) 100%
+    );
+  }
+}
