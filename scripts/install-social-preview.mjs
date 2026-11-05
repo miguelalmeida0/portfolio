@@ -30,7 +30,14 @@ const socialTags = [
 export function injectSocialMetadata(html) {
   assert.ok(html.includes('<head>') && html.includes('</head>'), 'Homepage must have a head element');
   assert.ok(!html.includes('property="og:image"'), 'Expected the standalone homepage without duplicate OG tags');
-  return html.replace('</head>', socialTags + '\n</head>');
+  // The optical homepage contains hundreds of KB of inline CSS in <head>.
+  // Crawlers may stop reading before the closing tag, so place social metadata
+  // immediately after the existing charset declaration instead.
+  const charset = /<meta\\s+charset=["'][^"']+["']\\s*\\/?>/i;
+  assert.match(html, charset, 'Homepage must declare a character encoding');
+  const withMetadata = html.replace(charset, (tag) => tag + '\\n' + socialTags);
+  assert.ok(withMetadata.indexOf('property="og:image"') < 4096, 'OG tags must appear in the first 4 KB');
+  return withMetadata;
 }
 
 export async function installSocialPreview(output) {
