@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import sharp from 'sharp';
@@ -40,6 +41,30 @@ export function injectSocialMetadata(html) {
   return withMetadata;
 }
 
+const MEDIA_EXT = { 'font/ttf':'ttf', 'image/png':'png', 'image/jpeg':'jpg', 'image/webp':'webp', 'audio/x-wav':'wav', 'video/mp4':'mp4' };
+
+async function externalizeEmbeddedAssets(output, html) {
+  const files = new Map();
+  let count = 0;
+  const compact = html.replace(
+    /data:(font\/ttf|image\/png|image\/jpeg|image\/webp|audio\/x-wav|video\/mp4);base64,([A-Za-z0-9+/]+={0,2})/g,
+    (_source, mime, encoded) => {
+      const bytes = Buffer.from(encoded, 'base64');
+      const name = createHash('sha256').update(bytes).digest('hex') + '.' + MEDIA_EXT[mime];
+      files.set(name, bytes);
+      count += 1;
+      return '/images/embedded/' + name;
+    }
+  );
+  assert.ok(count >= 20, 'Expected optical portfolio embedded assets');
+  assert.ok(Buffer.byteLength(compact, 'utf8') < 1024 * 1024, 'Homepage too large for link previews');
+  const dir = join(output, 'images', 'embedded');
+  await mkdir(dir, { recursive: true });
+  await Promise.all([...files].map(([name, data]) => writeFile(join(dir, name), data)));
+  console.log('Externalized ' + count + ' inline assets; homepage now ' + Buffer.byteLength(compact, 'utf8') + ' bytes');
+  return compact;
+}
+
 export async function installSocialPreview(output) {
   // Static preview for crawlers. Keep the interactive portfolio unchanged.
   const photo = await sharp('static/images/miguel-original.webp')
@@ -75,6 +100,7 @@ export async function installSocialPreview(output) {
   await writeFile(join(output, 'images', 'portfolio-social-preview.jpg'), preview);
 
   const homePath = join(output, 'index.html');
-  await writeFile(homePath, injectSocialMetadata(await readFile(homePath, 'utf8')));
+  const lightweight = await externalizeEmbeddedAssets(output, await readFile(homePath, 'utf8'));
+  await writeFile(homePath, injectSocialMetadata(lightweight));
   console.log('LinkedIn-compatible Open Graph preview installed.');
 }
