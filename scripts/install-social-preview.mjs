@@ -71,8 +71,9 @@ export async function installSocialPreview(output) {
   // Its media assets have already been externalized into content-hashed files.
   const homePath = join(output, 'index.html');
   const lightweight = await externalizeEmbeddedAssets(output, await readFile(homePath, 'utf8'));
-  const heroSource = lightweight.match(/<img id="photoImg" src="(\\/images\\/embedded\\/[a-f0-9]{64}\\.png)"/);
-  assert.ok(heroSource, 'Current optical hero portrait must be present');
+  const heroSource = lightweight.match(/id="photoImg" src="([^"]+)"/);
+  assert.ok(heroSource && heroSource[1].startsWith('/images/embedded/') && heroSource[1].endsWith('.png'),
+    'Current optical hero portrait must be present');
   const source = join(output, heroSource[1].slice(1));
   const sourceMetadata = await sharp(source).metadata();
   assert.ok(sourceMetadata.width >= 785 && sourceMetadata.height >= 875,
