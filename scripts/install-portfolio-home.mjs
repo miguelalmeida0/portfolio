@@ -1,4 +1,5 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { installSocialPreview } from './install-social-preview.mjs';
 import assert from 'node:assert/strict';
 import { patchHomeNav } from './patch-home-nav.mjs';
 import { patchHomeMobile } from './patch-home-mobile.mjs';
@@ -92,3 +93,4 @@ assert.ok(originalHeaders.includes(previousRootPolicy), 'Expected previous homep
 await writeFile(output + '/_headers', originalHeaders.replace(previousRootPolicy, promotedRootPolicy));
 await writeFile(output + '/index.html', restoredHtml);
 console.log('Promoted optical homepage; existing CV and case-study routes preserved.');
+await installSocialPreview(output);
