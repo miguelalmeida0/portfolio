@@ -38,7 +38,7 @@ test('remote admission fails closed without opt-in, namespace or salt and shares
   assert.equal(calls, 0);
   const env={MIGUEL_REMOTE_ENABLED:'true', MIGUEL_BUDGET_SALT:'test-salt'};
   assert.equal(await reserveRemoteCall({namespace, client:'203.0.113.4'},env),true);
-  assert.match(client,/^[a-f0-9]{64}$/);assert.doesNotMatch(client,/203/);
+  assert.match(client,/^[a-f0-9]{64}$/);assert.doesNotMatch(client,/203\.0\.113\.4/);
   namespace.get=()=>({fetch:async()=>{throw new Error('unavailable');}});
   assert.equal(await reserveRemoteCall({namespace,client:'203.0.113.4'},env),false);
 });

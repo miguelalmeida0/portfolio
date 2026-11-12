@@ -1,4 +1,5 @@
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, cp } from 'node:fs/promises';
+import { patchCaseStudyMotion } from './patch-case-study-motion.mjs';
 import { installSocialPreview } from './install-social-preview.mjs';
 import assert from 'node:assert/strict';
 import { patchHomeNav } from './patch-home-nav.mjs';
@@ -62,16 +63,17 @@ await mkdir(output + '/optical-preview', {recursive:true});
 /* Recover the approved mobile page without modifying the verified optical source.
    The extra assets are same-origin and allowed by the existing CSP. */
 assert.ok(opticalHtml.includes('<body class="ready mobile-index">'), 'Optical mobile index source has changed');
-const restoredHtml = opticalHtml
+const restoredHtml = patchCaseStudyMotion(opticalHtml
   .replace('<body class="ready mobile-index">', '<body class="ready">')
-  .replace('</head>', '<link rel="stylesheet" href="/optical-mobile-restoration.css"><script defer src="/optical-ola.js"></script></head>');
+  .replace('</head>', '<link rel="stylesheet" href="/optical-mobile-restoration.css"><script defer src="/optical-ola.js"></script></head>'));
+await cp('release/case-motion', output + '/case-motion', {recursive:true});
 assert.ok(restoredHtml.includes('<body class="ready">'), 'Full mobile hero could not be restored');
 await writeFile(output + '/optical-mobile-restoration.css', await readFile('release/optical-mobile-restoration.css', 'utf8'));
 await writeFile(output + '/optical-ola.js', await readFile('release/optical-ola.js', 'utf8'));
 await writeFile(output + '/optical-preview/index.html', restoredHtml);
 const opticalRoutesPath = output + '/_routes.json';
 const opticalRoutes = JSON.parse(await readFile(opticalRoutesPath, 'utf8'));
-opticalRoutes.exclude = [...new Set([...opticalRoutes.exclude, '/optical-preview', '/optical-preview/*', '/optical-mobile-restoration.css', '/optical-ola.js'])];
+opticalRoutes.exclude = [...new Set([...opticalRoutes.exclude, '/optical-preview', '/optical-preview/*', '/optical-mobile-restoration.css', '/optical-ola.js', '/case-motion/*'])];
 assert.ok(opticalRoutes.include.length + opticalRoutes.exclude.length <= 100, 'Cloudflare routing limit exceeded');
 await writeFile(opticalRoutesPath, JSON.stringify(opticalRoutes, null, 2) + '\n');
 const opticalCsp = opticalHtml.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)">/i)?.[1]?.replaceAll('&#x27;', "'").replaceAll('&amp;', '&');
