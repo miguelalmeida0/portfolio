@@ -18,7 +18,7 @@ export function patchCaseNavigation(html, source) {
   replace("  dialog.addEventListener('close',", "  /* case-navigation-v1 */\n" + source.replace('export function createCaseNavigation','function createCaseNavigation') + "\n  const caseNavigation=createCaseNavigation({studies,dialog,open:index=>openCase(index,null,true),close:(after,destination)=>closeCase(false,after,destination)});\n  dialog.addEventListener('close',");
   replace("function returnHome(e){e.preventDefault();caseInput(e);closeCase(false,()=>{$('#top-nav .brand').focus({preventScroll:true});},'#top');}", "function returnHome(e){e.preventDefault();caseInput(e);closeCase();}");
   replace("  const initialCase=location.hash.startsWith('#case/')?studies.findIndex(c=>c.id===location.hash.slice(6)):-1;\n  if(initialCase>=0)openCase(initialCase,null);", "  caseNavigation.start();");
-  replace('id="csBack" href="#top" style="--d:0">Back to home', 'id="csBack" href="/#work" style="--d:0"><span aria-hidden="true">&lt;</span> Back to home');
+  replace('id="csBack" href="#top" style="--d:0">Back to home', 'id="csBack" href="/#work" style="--d:0;text-decoration:none"><span aria-hidden="true">&lt;</span> <span style="text-decoration:underline">Back to home</span>');
   replace('href="#footer" id="csContact"','href="/#footer" id="csContact"');
   html = html.replace(match[0], () => '<script' + match[1] + '>' + script + '</script>');
   html = html.replace('id="csHome" href="#top"', 'id="csHome" href="/#work"');

@@ -9,7 +9,7 @@ const controller='export function createCaseNavigation(){return {start(){},enter
 test('case links have real routes and a visible back chevron',()=>{
  const html=patchCaseNavigation(original,controller);
  assert.match(html, /class="media-link cs-open" data-case="1" href="\/case\/morrow\/"/);
- assert.match(html, /id="csBack" href="\/#work"[^>]*><span aria-hidden="true">&lt;<\/span> Back to home/);
+ assert.match(html, /id="csBack" href="\/#work"[^>]*><span aria-hidden="true">&lt;<\/span> <span style="text-decoration:underline">Back to home<\/span>/);
 });
 test('modified executable scripts remain covered by the strict CSP',()=>{
  const html=patchCaseNavigation(original,controller);
