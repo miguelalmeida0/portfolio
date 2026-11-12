@@ -1,3 +1,4 @@
+import {patchCaseNavigation, caseStudyDocument} from './patch-case-navigation.mjs';
 import { readFile, writeFile, mkdir, cp } from 'node:fs/promises';
 import { patchCaseStudyMotion } from './patch-case-study-motion.mjs';
 import { installSocialPreview } from './install-social-preview.mjs';
@@ -63,9 +64,9 @@ await mkdir(output + '/optical-preview', {recursive:true});
 /* Recover the approved mobile page without modifying the verified optical source.
    The extra assets are same-origin and allowed by the existing CSP. */
 assert.ok(opticalHtml.includes('<body class="ready mobile-index">'), 'Optical mobile index source has changed');
-const restoredHtml = patchCaseStudyMotion(opticalHtml
+const restoredHtml = patchCaseNavigation(patchCaseStudyMotion(opticalHtml
   .replace('<body class="ready mobile-index">', '<body class="ready">')
-  .replace('</head>', '<link rel="stylesheet" href="/optical-mobile-restoration.css"><script defer src="/optical-ola.js"></script></head>'));
+  .replace('</head>', '<link rel="stylesheet" href="/optical-mobile-restoration.css"><script defer src="/optical-ola.js"></script></head>')), await readFile('release/case-navigation.js', 'utf8'));
 await cp('release/case-motion', output + '/case-motion', {recursive:true});
 assert.ok(restoredHtml.includes('<body class="ready">'), 'Full mobile hero could not be restored');
 await writeFile(output + '/optical-mobile-restoration.css', await readFile('release/optical-mobile-restoration.css', 'utf8'));
@@ -73,10 +74,10 @@ await writeFile(output + '/optical-ola.js', await readFile('release/optical-ola.
 await writeFile(output + '/optical-preview/index.html', restoredHtml);
 const opticalRoutesPath = output + '/_routes.json';
 const opticalRoutes = JSON.parse(await readFile(opticalRoutesPath, 'utf8'));
-opticalRoutes.exclude = [...new Set([...opticalRoutes.exclude, '/optical-preview', '/optical-preview/*', '/optical-mobile-restoration.css', '/optical-ola.js', '/case-motion/*'])];
+opticalRoutes.exclude = [...new Set([...opticalRoutes.exclude, '/optical-preview', '/optical-preview/*', '/optical-mobile-restoration.css', '/optical-ola.js', '/case-motion/*', '/case/*'])];
 assert.ok(opticalRoutes.include.length + opticalRoutes.exclude.length <= 100, 'Cloudflare routing limit exceeded');
 await writeFile(opticalRoutesPath, JSON.stringify(opticalRoutes, null, 2) + '\n');
-const opticalCsp = opticalHtml.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)">/i)?.[1]?.replaceAll('&#x27;', "'").replaceAll('&amp;', '&');
+const opticalCsp = restoredHtml.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)">/i)?.[1]?.replaceAll('&#x27;', "'").replaceAll('&amp;', '&');
 assert.ok(opticalCsp && opticalCsp.includes("default-src 'none'"), 'Optical portfolio CSP is missing');
 await writeFile(output + '/_headers', (await readFile(output + '/_headers', 'utf8'))
   + '\n/optical-preview/*\n  Cache-Control: no-cache, max-age=0, must-revalidate\n'
@@ -96,3 +97,17 @@ await writeFile(output + '/_headers', originalHeaders.replace(previousRootPolicy
 await writeFile(output + '/index.html', restoredHtml);
 console.log('Promoted optical homepage; existing CV and case-study routes preserved.');
 await installSocialPreview(output);
+
+// Share the compact asset references; deep links must never fall through to the older app.
+const compactHome = await readFile(output + '/index.html', 'utf8');
+for (const [id, shortName] of Object.entries({morrow:'Morrow','second-voice':'Second Voice',leu:'Leu',needle:'Needle',f24:'F24'})) {
+  await mkdir(output + '/case/' + id, {recursive:true});
+  await writeFile(output + '/case/' + id + '/index.html', caseStudyDocument(compactHome,{id,shortName}));
+}
+await writeFile(output + '/_headers', (await readFile(output + '/_headers', 'utf8'))
+  + '\n/case/*\n  Cache-Control: no-cache, max-age=0, must-revalidate\n'
+  + '  Content-Security-Policy: ' + opticalCsp + '\n'
+  + '  Strict-Transport-Security: max-age=31536000\n'
+  + '  X-Content-Type-Options: nosniff\n  X-Frame-Options: DENY\n'
+  + '  Referrer-Policy: strict-origin-when-cross-origin\n'
+  + '  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()\n');
