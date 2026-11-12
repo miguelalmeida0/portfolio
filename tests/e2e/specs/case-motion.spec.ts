@@ -83,7 +83,7 @@ test('mobile figures stay inside the case study',async({page}) => {
  await page.locator('.cs-open[href="#case/leu"]').first().click();
  await page.getByRole('button',{name:'Return to source passage',exact:true}).click();
  await page.waitForTimeout(300);
- await expect(page.locator('.cm-passage-highlight')).toHaveCSS('clip-path','inset(0px)');
+ await expect(page.locator('.cm-passage-highlight')).toHaveCSS('clip-path',/^inset\(0(?:px|%)(?: 0(?:px|%)){0,3}\)$/);
  for (const word of await page.locator('.cm-reading-question .cm-word-mask > span').all()) {
   await expect(word).toHaveCSS('transform','matrix(1, 0, 0, 1, 0, 0)');
  }
